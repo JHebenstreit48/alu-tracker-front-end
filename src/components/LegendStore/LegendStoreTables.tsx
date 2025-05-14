@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+// ✅ Use env-based backend URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+
 interface BlueprintCar {
   Class: string;
   Brand: string;
@@ -32,7 +35,7 @@ const LegendStoreTables: React.FC<{
     const fetchCars = async () => {
       setLoading(true);
       try {
-        const response = await fetch("/api/blueprints");
+        const response = await fetch(`${API_BASE_URL}/api/blueprints`);
         const data = await response.json();
         setCars(data);
       } catch (err) {
