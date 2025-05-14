@@ -20,8 +20,7 @@ interface Car {
 export default function Cars() {
   const location = useLocation();
   const [cars, setCars] = useState<Car[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [carsPerPage, setCarsPerPage] = useState(25);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,8 +40,6 @@ export default function Cars() {
     }
   );
 
-  const limit = 25;
-
   const normalize = (text: string): string =>
     text
       .normalize("NFD")
@@ -50,14 +47,14 @@ export default function Cars() {
       .toLowerCase();
 
   const loadCars = useCallback(
-    async (customOffset: number) => {
+    async () => {
       setLoading(true);
       setError(null);
 
       try {
         const endpoint =
           selectedClass === "All Classes"
-            ? `${API_BASE_URL}/api/cars?limit=${limit}&offset=${customOffset}`
+            ? `${API_BASE_URL}/api/cars?limit=${carsPerPage}&offset=0`
             : `${API_BASE_URL}/api/cars/${selectedClass}`;
 
         const response = await fetch(endpoint);
@@ -66,20 +63,7 @@ export default function Cars() {
         }
 
         const newData = await response.json();
-
-        if (Array.isArray(newData)) {
-          setCars((prev) => [...prev, ...newData]);
-
-          if (selectedClass === "All Classes") {
-            if (newData.length < limit) setHasMore(false);
-            setOffset((prev) => prev + limit);
-          } else {
-            setHasMore(false);
-          }
-        } else {
-          setCars([]);
-          setHasMore(false);
-        }
+        setCars(Array.isArray(newData) ? newData : []);
       } catch (error) {
         setError("Failed to fetch cars. Please try again later.");
         console.error(error);
@@ -87,15 +71,12 @@ export default function Cars() {
         setLoading(false);
       }
     },
-    [selectedClass, limit]
+    [selectedClass, carsPerPage]
   );
 
   useEffect(() => {
-    setCars([]);
-    setOffset(0);
-    setHasMore(true);
-    loadCars(0); // ✅ pass initial offset explicitly
-  }, [selectedClass, location.state, loadCars]);
+    loadCars();
+  }, [selectedClass, location.state, loadCars, carsPerPage]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -126,6 +107,11 @@ export default function Cars() {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    setCars([]);
+    setCarsPerPage(size);
   };
 
   const filteredCars = cars
@@ -227,19 +213,24 @@ export default function Cars() {
           {filteredCars.length !== 1 ? "s" : ""}
         </p>
 
+        <div className="page-size-control">
+          <span>Cars per page: </span>
+          {[25, 50, 100].map((size) => (
+            <button
+              key={size}
+              onClick={() => handlePageSizeChange(size)}
+              disabled={carsPerPage === size}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+
         <ClassTables
           cars={filteredCars}
           selectedClass={selectedClass}
           loading={loading}
         />
-
-        {hasMore && selectedClass === "All Classes" && (
-          <div className="load-more-container">
-            <button onClick={() => loadCars(offset)} disabled={loading}>
-              {loading ? "Loading..." : "Load More Cars"}
-            </button>
-          </div>
-        )}
       </PageTab>
     </div>
   );
