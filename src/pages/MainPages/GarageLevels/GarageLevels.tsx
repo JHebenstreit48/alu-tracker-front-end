@@ -8,6 +8,9 @@ import { GarageLevelsInterface } from "@/components/GarageLevels/interface";
 import "@/SCSS/GarageLevels/GarageLevelTracker.scss";
 import "@/SCSS/GarageLevels/GarageLevels.scss";
 
+// ✅ Pull from environment just like on Cars page
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+
 export default function GarageLevelsPage() {
   const [garageLevels, setGarageLevels] = useState<GarageLevelsInterface[]>([]);
   const [isTrackerMode, setIsTrackerMode] = useState(() => {
@@ -17,7 +20,8 @@ export default function GarageLevelsPage() {
   useEffect(() => {
     const fetchGarageLevels = async () => {
       try {
-        const res = await fetch("/api/garage-levels");
+        const res = await fetch(`${API_BASE_URL}/api/garage-levels`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: GarageLevelsInterface[] = await res.json();
         setGarageLevels(data);
       } catch (err) {
