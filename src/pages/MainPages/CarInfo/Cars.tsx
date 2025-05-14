@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
 import Header from "@/components/Shared/Header";
@@ -8,7 +8,8 @@ import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import "@/SCSS/Cars/CarsByClass.scss";
 
 // API base URL
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
 
 interface Car {
   _id: string;
@@ -20,6 +21,11 @@ interface Car {
 export default function Cars() {
   const location = useLocation();
   const [cars, setCars] = useState<Car[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [searchTerm, setSearchTerm] = useState<string>(
     localStorage.getItem("searchTerm") || ""
   );
@@ -27,41 +33,70 @@ export default function Cars() {
   const [selectedClass, setSelectedClass] = useState<string>(
     sessionStorage.getItem("selectedClass") || "All Classes"
   );
-  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(() => {
-    const savedUnit = localStorage.getItem("preferredUnit");
-    return savedUnit === "imperial" || savedUnit === "metric" ? savedUnit : "metric";
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // ✅ new
+  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
+    () => {
+      const savedUnit = localStorage.getItem("preferredUnit");
+      return savedUnit === "imperial" || savedUnit === "metric"
+        ? savedUnit
+        : "metric";
+    }
+  );
+
+  const limit = 25;
 
   const normalize = (text: string): string =>
-    text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
-  useEffect(() => {
-    setError(null);
-    setLoading(true); // ✅ start loading
+  const loadCars = useCallback(
+    async (customOffset = offset) => {
+      setLoading(true);
+      setError(null);
 
-    const endpoint =
-      selectedClass === "All Classes"
-        ? `${API_BASE_URL}/api/cars`
-        : `${API_BASE_URL}/api/cars/${selectedClass}`;
+      try {
+        const endpoint =
+          selectedClass === "All Classes"
+            ? `${API_BASE_URL}/api/cars?limit=${limit}&offset=${customOffset}`
+            : `${API_BASE_URL}/api/cars/${selectedClass}`;
 
-    fetch(endpoint)
-      .then((response) => {
+        const response = await fetch(endpoint);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
-      })
-      .then((data) => {
-        setCars(data);
-      })
-      .catch((error) => {
+
+        const newData = await response.json();
+
+        if (Array.isArray(newData)) {
+          setCars((prev) => [...prev, ...newData]);
+
+          if (selectedClass === "All Classes") {
+            if (newData.length < limit) setHasMore(false);
+            setOffset((prev) => prev + limit);
+          } else {
+            setHasMore(false); // class-based results aren't paginated
+          }
+        } else {
+          setCars([]);
+          setHasMore(false);
+        }
+      } catch (error) {
         setError("Failed to fetch cars. Please try again later.");
         console.error(error);
-      })
-      .finally(() => setLoading(false)); // ✅ end loading
-  }, [selectedClass, location.state]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [selectedClass, limit, offset]
+  );
+
+  useEffect(() => {
+    setCars([]);
+    setOffset(0);
+    setHasMore(true);
+    loadCars(0);
+  }, [selectedClass, location.state, loadCars]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -86,7 +121,9 @@ export default function Cars() {
     sessionStorage.removeItem("selectedClass");
   };
 
-  const handleUnitPreferenceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleUnitPreferenceChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
@@ -108,13 +145,15 @@ export default function Cars() {
 
       return matchesSearch && matchesStars;
     })
-    .filter((car, index, self) =>
-      index === self.findIndex(
-        (c) =>
-          c.Brand === car.Brand &&
-          c.Model === car.Model &&
-          c.Stars === car.Stars
-      )
+    .filter(
+      (car, index, self) =>
+        index ===
+        self.findIndex(
+          (c) =>
+            c.Brand === car.Brand &&
+            c.Model === car.Model &&
+            c.Stars === car.Stars
+        )
     )
     .sort((a, b) => {
       if (selectedClass === "All Classes") {
@@ -130,7 +169,11 @@ export default function Cars() {
           <Header text="Cars" />
           <div className="error-message">{error}</div>
           <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
-          <ClassTables cars={[]} selectedClass={selectedClass} loading={loading} />
+          <ClassTables
+            cars={[]}
+            selectedClass={selectedClass}
+            loading={loading}
+          />
         </PageTab>
       </div>
     );
@@ -141,6 +184,7 @@ export default function Cars() {
       <PageTab title="Cars">
         <Header text="Cars" />
         <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
+
         <div className="settings-row">
           <select
             onChange={handleClassChange}
@@ -178,11 +222,25 @@ export default function Cars() {
             </span>
           </div>
         </div>
+
+        <p className="car-count">
+          Showing {filteredCars.length} car
+          {filteredCars.length !== 1 ? "s" : ""}
+        </p>
+
         <ClassTables
           cars={filteredCars}
           selectedClass={selectedClass}
-          loading={loading} // ✅ new prop passed
+          loading={loading}
         />
+
+        {hasMore && selectedClass === "All Classes" && (
+          <div className="load-more-container">
+            <button onClick={() => loadCars()} disabled={loading}>
+              {loading ? "Loading..." : "Load More Cars"}
+            </button>
+          </div>
+        )}
       </PageTab>
     </div>
   );
