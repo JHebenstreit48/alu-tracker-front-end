@@ -54,8 +54,9 @@ export default function Cars() {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
-      setCars(result.cars ?? []);
-      setTotalCount(result.total ?? 0);
+
+      setCars(Array.isArray(result.cars) ? result.cars : []);
+      setTotalCount(typeof result.total === "number" ? result.total : 0);
     } catch (err) {
       console.error(err);
       setError("Failed to fetch cars. Please try again later.");
@@ -73,7 +74,9 @@ export default function Cars() {
     localStorage.setItem("searchTerm", term);
   };
 
-  const handleStarFilter = (stars: number | null) => setSelectedStars(stars);
+  const handleStarFilter = (stars: number | null) => {
+    setSelectedStars(stars);
+  };
 
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
@@ -106,11 +109,14 @@ export default function Cars() {
       const brand = normalize(car.Brand);
       const model = normalize(car.Model);
       const combined = `${brand} ${model}`;
+
       const matchesSearch =
         brand.includes(normalizedSearch) ||
         model.includes(normalizedSearch) ||
         combined.includes(normalizedSearch);
+
       const matchesStars = selectedStars ? car.Stars === selectedStars : true;
+
       return matchesSearch && matchesStars;
     })
     .filter(
