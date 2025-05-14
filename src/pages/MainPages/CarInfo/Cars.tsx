@@ -7,7 +7,6 @@ import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import "@/SCSS/Cars/CarsByClass.scss";
 
-// API base URL
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
 
@@ -51,7 +50,7 @@ export default function Cars() {
       .toLowerCase();
 
   const loadCars = useCallback(
-    async (customOffset = offset) => {
+    async (customOffset: number) => {
       setLoading(true);
       setError(null);
 
@@ -75,7 +74,7 @@ export default function Cars() {
             if (newData.length < limit) setHasMore(false);
             setOffset((prev) => prev + limit);
           } else {
-            setHasMore(false); // class-based results aren't paginated
+            setHasMore(false);
           }
         } else {
           setCars([]);
@@ -88,14 +87,14 @@ export default function Cars() {
         setLoading(false);
       }
     },
-    [selectedClass, limit, offset]
+    [selectedClass, limit]
   );
 
   useEffect(() => {
     setCars([]);
     setOffset(0);
     setHasMore(true);
-    loadCars(0);
+    loadCars(0); // ✅ pass initial offset explicitly
   }, [selectedClass, location.state, loadCars]);
 
   const handleSearch = (term: string) => {
@@ -236,7 +235,7 @@ export default function Cars() {
 
         {hasMore && selectedClass === "All Classes" && (
           <div className="load-more-container">
-            <button onClick={() => loadCars()} disabled={loading}>
+            <button onClick={() => loadCars(offset)} disabled={loading}>
               {loading ? "Loading..." : "Load More Cars"}
             </button>
           </div>
