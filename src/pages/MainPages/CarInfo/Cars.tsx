@@ -7,8 +7,7 @@ import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import "@/SCSS/Cars/CarsByClass.scss";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
 
 interface Car {
   _id: string;
@@ -32,48 +31,34 @@ export default function Cars() {
   const [selectedClass, setSelectedClass] = useState<string>(
     sessionStorage.getItem("selectedClass") || "All Classes"
   );
-  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
-    () => {
-      const savedUnit = localStorage.getItem("preferredUnit");
-      return savedUnit === "imperial" || savedUnit === "metric"
-        ? savedUnit
-        : "metric";
-    }
-  );
+  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(() => {
+    const savedUnit = localStorage.getItem("preferredUnit");
+    return savedUnit === "imperial" || savedUnit === "metric" ? savedUnit : "metric";
+  });
 
   const normalize = (text: string): string =>
-    text
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
+    text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const loadCars = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const endpoint =
-        selectedClass === "All Classes"
-          ? `${API_BASE_URL}/api/cars?limit=${carsPerPage}&offset=0`
-          : `${API_BASE_URL}/api/cars/${selectedClass}`;
+      const params = new URLSearchParams({
+        limit: carsPerPage.toString(),
+        offset: "0",
+        class: selectedClass,
+      });
 
-      const response = await fetch(endpoint);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
-
-      if (selectedClass === "All Classes") {
-        setCars(result.cars ?? []);
-        setTotalCount(result.total ?? 0);
-      } else {
-        setCars(Array.isArray(result) ? result : []);
-        setTotalCount(Array.isArray(result) ? result.length : 0);
-      }
-    } catch (error) {
+      setCars(result.cars ?? []);
+      setTotalCount(result.total ?? 0);
+    } catch (err) {
+      console.error(err);
       setError("Failed to fetch cars. Please try again later.");
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -88,9 +73,7 @@ export default function Cars() {
     localStorage.setItem("searchTerm", term);
   };
 
-  const handleStarFilter = (stars: number | null) => {
-    setSelectedStars(stars);
-  };
+  const handleStarFilter = (stars: number | null) => setSelectedStars(stars);
 
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
@@ -106,9 +89,7 @@ export default function Cars() {
     sessionStorage.removeItem("selectedClass");
   };
 
-  const handleUnitPreferenceChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleUnitPreferenceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
@@ -125,14 +106,11 @@ export default function Cars() {
       const brand = normalize(car.Brand);
       const model = normalize(car.Model);
       const combined = `${brand} ${model}`;
-
       const matchesSearch =
         brand.includes(normalizedSearch) ||
         model.includes(normalizedSearch) ||
         combined.includes(normalizedSearch);
-
       const matchesStars = selectedStars ? car.Stars === selectedStars : true;
-
       return matchesSearch && matchesStars;
     })
     .filter(
@@ -145,12 +123,7 @@ export default function Cars() {
             c.Stars === car.Stars
         )
     )
-    .sort((a, b) => {
-      if (selectedClass === "All Classes") {
-        return a.Stars - b.Stars;
-      }
-      return 0;
-    });
+    .sort((a, b) => (selectedClass === "All Classes" ? a.Stars - b.Stars : 0));
 
   if (error) {
     return (
@@ -159,11 +132,7 @@ export default function Cars() {
           <Header text="Cars" />
           <div className="error-message">{error}</div>
           <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
-          <ClassTables
-            cars={[]}
-            selectedClass={selectedClass}
-            loading={loading}
-          />
+          <ClassTables cars={[]} selectedClass={selectedClass} loading={loading} />
         </PageTab>
       </div>
     );
@@ -176,11 +145,7 @@ export default function Cars() {
         <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
 
         <div className="settings-row">
-          <select
-            onChange={handleClassChange}
-            value={selectedClass}
-            className="classSelect"
-          >
+          <select onChange={handleClassChange} value={selectedClass} className="classSelect">
             <option value="All Classes">All Classes</option>
             <option value="D">D</option>
             <option value="C">C</option>
@@ -194,43 +159,26 @@ export default function Cars() {
           </button>
 
           <div className="unitSelection">
-            <select
-              onChange={handleUnitPreferenceChange}
-              value={unitPreference}
-              className="unitSelect"
-            >
+            <select onChange={handleUnitPreferenceChange} value={unitPreference} className="unitSelect">
               <option value="metric">Metric (km/h, m/s²)</option>
               <option value="imperial">Imperial (mph, ft/s²)</option>
             </select>
-            <span
-              className="infoTooltip"
-              data-bs-toggle="tooltip"
-              data-bs-placement="right"
-              title="This setting applies units of measurement for individual car details pages."
-            >
+            <span className="infoTooltip" title="This setting applies units of measurement for individual car details pages.">
               &#9432;
             </span>
           </div>
         </div>
 
         <p className="car-count">
-          Showing {cars.length} of {totalCount} car{totalCount !== 1 ? "s" : ""}
+          Showing {filteredCars.length} of {totalCount} car{totalCount !== 1 ? "s" : ""}
         </p>
 
-        <ClassTables
-          cars={filteredCars}
-          selectedClass={selectedClass}
-          loading={loading}
-        />
+        <ClassTables cars={filteredCars} selectedClass={selectedClass} loading={loading} />
 
         <div className="page-size-control">
-          <span>Cars per page: </span>
+          <span>Cars per page:</span>
           {[25, 50, 100, 200, 300].map((size) => (
-            <button
-              key={size}
-              onClick={() => handlePageSizeChange(size)}
-              disabled={carsPerPage === size}
-            >
+            <button key={size} onClick={() => handlePageSizeChange(size)} disabled={carsPerPage === size}>
               {size}
             </button>
           ))}
