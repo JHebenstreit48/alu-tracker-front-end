@@ -21,6 +21,7 @@ export default function Cars() {
   const location = useLocation();
   const [cars, setCars] = useState<Car[]>([]);
   const [carsPerPage, setCarsPerPage] = useState(25);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,33 +47,37 @@ export default function Cars() {
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-  const loadCars = useCallback(
-    async () => {
-      setLoading(true);
-      setError(null);
+  const loadCars = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const endpoint =
-          selectedClass === "All Classes"
-            ? `${API_BASE_URL}/api/cars?limit=${carsPerPage}&offset=0`
-            : `${API_BASE_URL}/api/cars/${selectedClass}`;
+    try {
+      const endpoint =
+        selectedClass === "All Classes"
+          ? `${API_BASE_URL}/api/cars?limit=${carsPerPage}&offset=0`
+          : `${API_BASE_URL}/api/cars/${selectedClass}`;
 
-        const response = await fetch(endpoint);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const newData = await response.json();
-        setCars(Array.isArray(newData) ? newData : []);
-      } catch (error) {
-        setError("Failed to fetch cars. Please try again later.");
-        console.error(error);
-      } finally {
-        setLoading(false);
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    },
-    [selectedClass, carsPerPage]
-  );
+
+      const result = await response.json();
+
+      if (selectedClass === "All Classes") {
+        setCars(result.cars ?? []);
+        setTotalCount(result.total ?? 0);
+      } else {
+        setCars(Array.isArray(result) ? result : []);
+        setTotalCount(Array.isArray(result) ? result.length : 0);
+      }
+    } catch (error) {
+      setError("Failed to fetch cars. Please try again later.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedClass, carsPerPage]);
 
   useEffect(() => {
     loadCars();
@@ -209,9 +214,14 @@ export default function Cars() {
         </div>
 
         <p className="car-count">
-          Showing {filteredCars.length} car
-          {filteredCars.length !== 1 ? "s" : ""}
+          Showing {cars.length} of {totalCount} car{totalCount !== 1 ? "s" : ""}
         </p>
+
+        <ClassTables
+          cars={filteredCars}
+          selectedClass={selectedClass}
+          loading={loading}
+        />
 
         <div className="page-size-control">
           <span>Cars per page: </span>
@@ -225,12 +235,6 @@ export default function Cars() {
             </button>
           ))}
         </div>
-
-        <ClassTables
-          cars={filteredCars}
-          selectedClass={selectedClass}
-          loading={loading}
-        />
       </PageTab>
     </div>
   );
