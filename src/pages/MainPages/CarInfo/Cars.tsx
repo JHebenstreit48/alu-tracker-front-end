@@ -225,7 +225,7 @@ export default function Cars() {
 
         <div className="page-size-control">
           <span>Cars per page: </span>
-          {[25, 50, 100].map((size) => (
+          {[25, 50, 100, 200, 300].map((size) => (
             <button
               key={size}
               onClick={() => handlePageSizeChange(size)}
