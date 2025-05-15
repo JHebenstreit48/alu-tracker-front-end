@@ -3,7 +3,7 @@ import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInt
 import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
 import {
   getCarTrackingData,
-  setCarTrackingData
+  setCarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface ClassRankProps {
@@ -12,7 +12,11 @@ interface ClassRankProps {
   forceOwned?: boolean;
 }
 
-const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOwned }) => {
+const ClassRank: React.FC<ClassRankProps> = ({
+  car,
+  trackerMode = false,
+  forceOwned,
+}) => {
   const [selectedStarRank, setSelectedStarRank] = useState<number>(car.Stars);
   const [owned, setOwned] = useState<boolean>(false);
   const [goldMax, setGoldMax] = useState<boolean>(false);
@@ -44,14 +48,10 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
 
   // Auto-check owned when forced or stars selected
   useEffect(() => {
-    if (trackerMode) {
-      if (forceOwned && !owned) {
-        setOwned(true);
-      } else if (!car.KeyCar && selectedStarRank > 0 && !owned) {
-        setOwned(true);
-      }
+    if (trackerMode && forceOwned === true && !owned) {
+      setOwned(true);
     }
-  }, [trackerMode, forceOwned, selectedStarRank, car.KeyCar, owned]);
+  }, [trackerMode, forceOwned, owned]);
 
   // Save to localStorage
   useEffect(() => {
