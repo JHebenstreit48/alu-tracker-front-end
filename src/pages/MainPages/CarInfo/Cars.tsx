@@ -64,7 +64,7 @@ export default function Cars() {
 
     try {
       const params = new URLSearchParams({
-        limit: selectedClass === "All Classes" ? "999" : carsPerPage.toString(),
+        limit: carsPerPage.toString(),
         offset: "0",
         ...(selectedClass !== "All Classes" && { class: selectedClass }),
       });
