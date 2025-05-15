@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
 import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
+import CarTrackerToggle from "@/components/CarInformation/CarDetails/CarTrackerToggle"; // ✅
 import "@/SCSS/Cars/CarsByClass.scss";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
@@ -18,11 +19,16 @@ interface Car {
 
 export default function Cars() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [cars, setCars] = useState<Car[]>([]);
   const [carsPerPage, setCarsPerPage] = useState(25);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [trackerMode, setTrackerMode] = useState(() => {
+    return localStorage.getItem("trackerMode") === "true";
+  });
 
   const [searchTerm, setSearchTerm] = useState<string>(
     localStorage.getItem("searchTerm") || ""
@@ -148,6 +154,15 @@ export default function Cars() {
     <div className="cars">
       <PageTab title="Cars">
         <Header text="Cars" />
+        <CarTrackerToggle isEnabled={trackerMode} onToggle={setTrackerMode} />
+
+        <button
+          onClick={() => navigate("/car-tracker")}
+          className="summary-link"
+        >
+          View Tracker Summary
+        </button>
+
         <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
 
         <div className="settings-row">
@@ -179,7 +194,12 @@ export default function Cars() {
           Showing {filteredCars.length} of {totalCount} car{totalCount !== 1 ? "s" : ""}
         </p>
 
-        <ClassTables cars={filteredCars} selectedClass={selectedClass} loading={loading} />
+        <ClassTables
+          cars={filteredCars}
+          selectedClass={selectedClass}
+          loading={loading}
+          trackerMode={trackerMode} // ✅ if needed
+        />
 
         <div className="page-size-control">
           <span>Cars per page:</span>

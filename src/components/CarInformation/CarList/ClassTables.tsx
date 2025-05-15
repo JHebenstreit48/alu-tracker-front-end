@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import StarRank from '@/components/CarInformation/StarRank';
+import { Link } from "react-router-dom";
+import StarRank from "@/components/CarInformation/StarRank";
 
 interface Car {
   _id: string;
@@ -11,21 +11,49 @@ interface Car {
 interface ClassTablesProps {
   cars: Car[];
   selectedClass: string;
-  loading: boolean; // ✅ New prop
+  loading: boolean;
+  trackerMode?: boolean;
 }
 
-export default function carClassTables({ cars, selectedClass, loading }: ClassTablesProps) {
-  const headerText = selectedClass === 'All Classes' ? 'All Classes' : selectedClass;
+export default function ClassTables({
+  cars,
+  selectedClass,
+  loading,
+  trackerMode = false,
+}: ClassTablesProps) {
+  const headerText =
+    selectedClass === "All Classes" ? "All Classes" : selectedClass;
 
   return (
     <div>
+      {trackerMode && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "1rem",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#ffe600",
+              color: "#222",
+              padding: "6px 14px",
+              fontWeight: "bold",
+              borderRadius: "20px",
+              fontSize: "0.95rem",
+              boxShadow: "0 0 6px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            🛠 Tracker Mode Enabled
+          </div>
+        </div>
+      )}
+
       <table>
         <tbody>
           <tr>
-            <th
-              className="table-header"
-              colSpan={2}
-            >
+            <th className="table-header" colSpan={2}>
               {headerText}
             </th>
           </tr>
@@ -39,10 +67,10 @@ export default function carClassTables({ cars, selectedClass, loading }: ClassTa
               <td colSpan={2}>
                 <div
                   style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '6rem',
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "6rem",
                   }}
                 >
                   <div className="loadingSpinner"></div>
@@ -51,10 +79,7 @@ export default function carClassTables({ cars, selectedClass, loading }: ClassTa
             </tr>
           ) : (
             cars.map((car) => (
-              <tr
-                className="table-data"
-                key={car._id}
-              >
+              <tr className="table-data" key={car._id}>
                 <td className="car-name">
                   <Link to={`/cars/${car._id}`}>
                     {car.Brand} {car.Model}
