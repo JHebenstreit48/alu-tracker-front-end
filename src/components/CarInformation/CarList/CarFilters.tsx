@@ -2,56 +2,87 @@ import { useState } from "react";
 import "@/SCSS/Cars/CarsPage/CarFilters.scss";
 
 interface CarFiltersProps {
-    onSearch: (term: string) => void;
-    onFilter: (stars: number | null) => void;
+  onSearch: (term: string) => void;
+  onFilter: (stars: number | null) => void;
+  onClassChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onUnitChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onReset: () => void;
+  selectedClass: string;
+  unitPreference: "metric" | "imperial";
 }
 
-export default function CarFilters({ onSearch, onFilter }: CarFiltersProps) {
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [selectedStars, setSelectedStars] = useState<number | null>(null);
+export default function CarFilters({
+  onSearch,
+  onFilter,
+  onClassChange,
+  onUnitChange,
+  onReset,
+  selectedClass,
+  unitPreference,
+}: CarFiltersProps) {
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const term = e.target.value;
-        setSearchTerm(term);
-        onSearch(term);
-    };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    onSearch(term);
+  };
 
-    const handleStarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        const stars = value === "All" ? null : parseInt(value);
-        setSelectedStars(stars);
-        onFilter(stars);
-    };
+  const handleStarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    const stars = value === "All" ? null : parseInt(value);
+    onFilter(stars);
+  };
 
-    return (
+  return (
+    <div className="controls">
+      <div className="filterHeading">Car Filters</div>
 
-        <>
+      <label className="DropdownLabel">
+        Star Rank:
+        <select className="starRanks" onChange={handleStarChange}>
+          <option value="All">All Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5">5 Stars</option>
+          <option value="6">6 Stars</option>
+        </select>
+      </label>
 
-            <div className="carFilters">
+      <label className="DropdownLabel">
+        Car Class:
+        <select className="classSelect" value={selectedClass} onChange={onClassChange}>
+          <option value="All Classes">All Classes</option>
+          <option value="D">D</option>
+          <option value="C">C</option>
+          <option value="B">B</option>
+          <option value="A">A</option>
+          <option value="S">S</option>
+        </select>
+      </label>
 
-                <select
-                    className="starRanks"
-                    value={selectedStars ?? "All"}
-                    onChange={handleStarChange}
-                >
-                    <option value="All">All Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                    <option value="6">6 Stars</option>
-                </select>
+      <label className="DropdownLabel">
+        Units:
+        <select className="unitSelect" value={unitPreference} onChange={onUnitChange}>
+          <option value="metric">Metric (km/h, m/s²)</option>
+          <option value="imperial">Imperial (mph, ft/s²)</option>
+        </select>
+      </label>
 
+      <label className="DropdownLabel">
+        Search:
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search by Brand or Model"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </label>
 
-                <input
-                    type="text"
-                    className="carSearch"
-                    placeholder="Search by Brand or Model"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-
-            </div>
-
-        </>
-    );
+      <button className="resetButton" onClick={onReset}>
+        Reset Filters
+      </button>
+    </div>
+  );
 }

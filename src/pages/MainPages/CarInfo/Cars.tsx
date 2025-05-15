@@ -31,7 +31,6 @@ export default function Cars() {
     return localStorage.getItem("trackerMode") === "true";
   });
 
-  // Apply trackerMode passed from CarDetails.tsx via location.state
   useEffect(() => {
     const navTracker = location.state?.trackerMode;
     if (navTracker !== undefined) {
@@ -162,7 +161,15 @@ export default function Cars() {
         <PageTab title="Cars">
           <Header text="Cars" />
           <div className="error-message">{error}</div>
-          <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
+          <CarFilters
+            onSearch={handleSearch}
+            onFilter={handleStarFilter}
+            onClassChange={handleClassChange}
+            onUnitChange={handleUnitPreferenceChange}
+            onReset={handleResetFilters}
+            selectedClass={selectedClass}
+            unitPreference={unitPreference}
+          />
           <ClassTables
             cars={[]}
             selectedClass={selectedClass}
@@ -186,43 +193,15 @@ export default function Cars() {
           }}
         />
 
-        <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
-
-        <div className="settings-row">
-          <select
-            onChange={handleClassChange}
-            value={selectedClass}
-            className="classSelect"
-          >
-            <option value="All Classes">All Classes</option>
-            <option value="D">D</option>
-            <option value="C">C</option>
-            <option value="B">B</option>
-            <option value="A">A</option>
-            <option value="S">S</option>
-          </select>
-
-          <button className="resetFilters" onClick={handleResetFilters}>
-            Reset Filters
-          </button>
-
-          <div className="unitSelection">
-            <select
-              onChange={handleUnitPreferenceChange}
-              value={unitPreference}
-              className="unitSelect"
-            >
-              <option value="metric">Metric (km/h, m/s²)</option>
-              <option value="imperial">Imperial (mph, ft/s²)</option>
-            </select>
-            <span
-              className="infoTooltip"
-              title="This setting applies units of measurement for individual car details pages."
-            >
-              &#9432;
-            </span>
-          </div>
-        </div>
+        <CarFilters
+          onSearch={handleSearch}
+          onFilter={handleStarFilter}
+          onClassChange={handleClassChange}
+          onUnitChange={handleUnitPreferenceChange}
+          onReset={handleResetFilters}
+          selectedClass={selectedClass}
+          unitPreference={unitPreference}
+        />
 
         <p className="car-count">
           Showing {filteredCars.length} of {totalCount} car

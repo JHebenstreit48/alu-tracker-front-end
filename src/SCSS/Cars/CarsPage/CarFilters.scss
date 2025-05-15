@@ -1,75 +1,89 @@
+@use "sass:color";
+
 /* =============================
    Variables
    ============================= */
-   $filters-gap: 1rem;
-   $filters-margin: 3rem auto 3rem auto;
-   $filters-text-align: center;
+   $filter-bg: black;
+   $filter-border: 3px solid gold;
+   $filter-shadow: 0 0 8px 4px rgb(223, 190, 7);
+   $filter-width: 46rem;
+   $filter-padding: 3rem;
+   $filter-gap: 2rem;
+   $filter-font-color: white;
+   $filter-font-size: 1.2rem;
    
-   $star-rank-font-size: 1.5rem;
-   $star-rank-width: 9rem;
-   $star-rank-padding: 5px;
-   $star-rank-border-radius: 9px;
-   
-   $car-search-width: 16rem;
-   $car-search-height: 2.3rem;
-   $car-search-padding: 4px;
-   $car-search-border-radius: 9px;
-   $car-search-font-size: 1.2rem;
-   $car-search-placeholder-color: rgba(0, 0, 0, 0.5);
-   $car-search-placeholder-transparent: rgba(0, 0, 0, 0);
+   $input-height: 2.2rem;
+   $input-radius: 6px;
+   $reset-btn-bg: rgb(52, 1, 75);
+   $reset-btn-shadow: 0 0 8px rgb(223, 190, 7);
+   $reset-btn-hover: rgb(193, 71, 250);
+   $reset-btn-radius: 12px;
    
    $cellphone-portrait: 390px;
-   $cellphone-landscape: 390px;
    
    /* =============================
       Car Filters Layout
       ============================= */
    .carFilters {
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-     gap: $filters-gap;
-     margin: $filters-margin;
-     text-align: $filters-text-align;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     background-color: $filter-bg;
+     border: $filter-border;
+     box-shadow: $filter-shadow;
+     width: $filter-width;
+     margin: 4rem auto;
+     padding: $filter-padding;
+     gap: $filter-gap;
+     color: $filter-font-color;
+     font-size: $filter-font-size;
    
-     @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
-       margin: 26rem auto 1rem auto;
-     }
-   
-     /* =============================
-         Star Ranks
-         ============================= */
-     .starRanks {
+     .DropdownLabel {
        display: flex;
-       justify-content: center;
-       text-align: center;
-       font-size: $star-rank-font-size;
-       width: $star-rank-width;
-       padding: $star-rank-padding;
-       border-radius: $star-rank-border-radius;
+       flex-direction: column;
+       gap: 0.4rem;
+   
+       select,
+       input {
+         height: $input-height;
+         padding: 4px 8px;
+         border-radius: $input-radius;
+         text-align: center;
+       }
      }
    
-     /* =============================
-         Car Search
-         ============================= */
-     .carSearch {
-       width: $car-search-width;
-       text-align: center;
-       height: $car-search-height;
-       padding: $car-search-padding;
-       border-radius: $car-search-border-radius;
-       font-size: $car-search-font-size;
+     .resetButton {
+       grid-column: span 2;
+       margin-top: 1rem;
+       justify-self: center;
+       background-color: $reset-btn-bg;
+       color: white;
+       padding: 0.6rem 2rem;
+       border-radius: $reset-btn-radius;
+       box-shadow: $reset-btn-shadow;
+       cursor: pointer;
+       transition: background-color 0.2s ease;
    
-       &::placeholder {
-         color: $car-search-placeholder-color;
-         transition: color 0.2s ease-in-out;
-         font-size: $car-search-font-size;
-       }
-   
-       &:focus::placeholder {
-         color: $car-search-placeholder-transparent;
+       &:hover {
+         background-color: $reset-btn-hover;
+         color: black;
+         font-weight: bold;
        }
      }
    }
+   
+   /* =============================
+      Responsive Adjustments
+      ============================= */
+   @media only screen and (max-width: $cellphone-portrait) {
+     .carFilters {
+       grid-template-columns: 1fr;
+       width: 90%;
+       margin-top: 25rem;
+   
+       .resetButton {
+         width: 80%;
+       }
+     }
+   }
+   
    
