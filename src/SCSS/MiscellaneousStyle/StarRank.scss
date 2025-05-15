@@ -1,6 +1,13 @@
 .starIcon {
-    width: 1.6rem;
-    height: 1.6rem;
-    margin-right: 0.15rem;
-  }
-  
+  width: 24px;
+  height: 24px;
+  margin: 2px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.grayed {
+  filter: grayscale(100%) brightness(0.6);
+}

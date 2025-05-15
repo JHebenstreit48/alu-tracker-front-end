@@ -11,16 +11,21 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
   const [selectedStarRank, setSelectedStarRank] = useState<number>(car.Stars);
   const [owned, setOwned] = useState<boolean>(false);
 
-  // Load saved state if it exists
+  // Load saved tracking state
   useEffect(() => {
     const saved = localStorage.getItem(`car-${car._id}-tracking`);
     if (saved) {
-      const parsed = JSON.parse(saved);
-      setSelectedStarRank(parsed.starRank ?? car.Stars);
-      setOwned(parsed.owned ?? false);
+      try {
+        const parsed = JSON.parse(saved);
+        setSelectedStarRank(parsed.starRank ?? car.Stars);
+        setOwned(parsed.owned ?? false);
+      } catch {
+        console.warn("Corrupt tracking data for", car._id);
+      }
     }
   }, [car._id, car.Stars]);
 
+  // Persist tracking state
   useEffect(() => {
     localStorage.setItem(
       `car-${car._id}-tracking`,
@@ -41,15 +46,11 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
         <tbody>
           <tr>
             <td style={{ textAlign: "center" }}>
-              {trackerMode ? (
-                <StarRankSelector
-                  maxStars={car.Stars}
-                  selected={selectedStarRank}
-                  onSelect={setSelectedStarRank}
-                />
-              ) : (
-                <StarRankSelector maxStars={car.Stars} selected={car.Stars} readOnly />
-              )}
+              <StarRankSelector
+                maxStars={car.Stars}
+                selected={trackerMode ? selectedStarRank : car.Stars}
+                onSelect={trackerMode ? setSelectedStarRank : undefined}
+              />
             </td>
           </tr>
           <tr>
@@ -62,7 +63,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
                   <input
                     type="checkbox"
                     checked={owned}
-                    onChange={() => setOwned(!owned)}
+                    onChange={() => setOwned((prev) => !prev)}
                   />{" "}
                   I own this car
                 </label>
