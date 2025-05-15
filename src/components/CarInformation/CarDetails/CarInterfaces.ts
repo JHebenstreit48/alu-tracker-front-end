@@ -14,6 +14,7 @@ export interface Car extends BlueprintStats {
   _id?: string; // Optional for flexibility (MongoDB ID)
   Id: number;
   Image: string;
+  ImageStatus?: "available" | "coming-soon" | "unavailable";
   Brand: string;
   Model: string;
   Class: string;
