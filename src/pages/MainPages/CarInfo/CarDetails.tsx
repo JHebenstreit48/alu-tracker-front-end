@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+
+// Interfaces Start
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+// Interfaces End
+
+// Components Start
 import CarImage from "@/components/CarInformation/CarDetails/OtherComponents/CarImage";
 import ClassRank from "@/components/CarInformation/CarDetails/Tables/ClassRank";
 import MaxStats from "@/components/CarInformation/CarDetails/Tables/MaxStats";
 import BlueprintsTable from "@/components/CarInformation/CarDetails/Tables/BlueprintsTable";
+import KeyInfo from "@/components/CarInformation/CarDetails/Tables/KeyInfo";
+// Components End
+
+// Utils
+import { getCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+
+// Styles Start
 import "@/SCSS/Cars/CarDetail.scss";
+// Styles End
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -13,6 +26,7 @@ const CarDetails = () => {
   const location = useLocation();
   const [car, setCar] = useState<Car | null>(null);
   const [error, setError] = useState(false);
+  const [keyObtained, setKeyObtained] = useState(false);
 
   const trackerMode = location.state?.trackerMode || false;
 
@@ -33,7 +47,15 @@ const CarDetails = () => {
           }
           return response.json();
         })
-        .then((data) => setCar(data))
+        .then((data) => {
+          setCar(data);
+
+          // ✅ Load keyObtained from localStorage
+          const stored = getCarTrackingData(data._id);
+          if (stored?.keyObtained !== undefined) {
+            setKeyObtained(stored.keyObtained);
+          }
+        })
         .catch(() => setError(true));
     }
 
@@ -71,8 +93,19 @@ const CarDetails = () => {
 
       <CarImage car={car} />
 
+      <KeyInfo
+        car={car}
+        trackerMode={trackerMode}
+        keyObtained={keyObtained}
+        onKeyObtainedChange={(obtained) => setKeyObtained(obtained)}
+      />
+
       <div className="carDetailTables">
-        <ClassRank car={car} trackerMode={trackerMode} />
+        <ClassRank
+          car={car}
+          trackerMode={trackerMode}
+          forceOwned={car.KeyCar && keyObtained}
+        />
         <MaxStats
           car={car}
           unitPreference={unitPreference}

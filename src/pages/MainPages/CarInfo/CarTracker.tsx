@@ -5,20 +5,34 @@ import {
   getAllCarTrackingData,
   CarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 
 import CarsOwned from "@/components/CarInformation/CarTracker/CarsOwned";
 import OwnedProgress from "@/components/CarInformation/CarTracker/OwnedProgress";
 import GoldMaxed from "@/components/CarInformation/CarTracker/GoldMaxed";
 import GoldMaxedProgress from "@/components/CarInformation/CarTracker/GoldMaxedProgress";
+import TotalKeys from "@/components/CarInformation/CarTracker/TotalKeys";
+import OwnedKeyProgress from "@/components/CarInformation/CarTracker/OwnedKeyProgress";
 import "@/SCSS/Cars/CarTracker/CarTracker.scss";
 
 interface TrackedCar extends CarTrackingData {
   carId: string;
 }
 
-export default function CarTrackerPage() {
+interface KeyCarSummary {
+  total: number;
+  obtained: number;
+  owned: number;
+}
+
+export default function CarTracker() {
   const [trackedCars, setTrackedCars] = useState<TrackedCar[]>([]);
   const [totalCars, setTotalCars] = useState<number>(0);
+  const [keyCarSummary, setKeyCarSummary] = useState<KeyCarSummary>({
+    total: 0,
+    obtained: 0,
+    owned: 0,
+  });
 
   useEffect(() => {
     const allTracked = getAllCarTrackingData();
@@ -34,16 +48,28 @@ export default function CarTrackerPage() {
       `${
         import.meta.env.VITE_API_BASE_URL ??
         "https://alutracker-api.onrender.com"
-      }/api/cars?limit=1&offset=0`
+      }/api/cars?limit=1000&offset=0`
     )
       .then((res) => res.json())
       .then((data) => {
         if (typeof data.total === "number") {
           setTotalCars(data.total);
         }
+
+        const keyCars = (data.cars as Car[]).filter((car) => car.KeyCar);
+        const keyCarIds = keyCars.map((car) => car._id).filter(Boolean) as string[];
+
+        const keysObtained = keyCarIds.filter((id) => allTracked[id]?.keyObtained);
+        const ownedKeyCars = keyCarIds.filter((id) => allTracked[id]?.owned);
+
+        setKeyCarSummary({
+          total: keyCarIds.length,
+          obtained: keysObtained.length,
+          owned: ownedKeyCars.length,
+        });
       })
       .catch((err) => {
-        console.error("Failed to fetch total car count:", err);
+        console.error("Failed to fetch total car count or key car info:", err);
       });
   }, []);
 
@@ -73,6 +99,16 @@ export default function CarTrackerPage() {
           <GoldMaxed
             goldMaxedCount={goldMaxedCars.length}
             totalCars={totalCars}
+          />
+
+          <OwnedKeyProgress
+            obtained={keyCarSummary.obtained}
+            total={keyCarSummary.total}
+          />
+          <TotalKeys
+            obtained={keyCarSummary.obtained}
+            owned={keyCarSummary.owned}
+            total={keyCarSummary.total}
           />
         </div>
       </PageTab>

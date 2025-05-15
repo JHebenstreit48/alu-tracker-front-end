@@ -3,15 +3,16 @@ import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInt
 import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
 import {
   getCarTrackingData,
-  setCarTrackingData,
+  setCarTrackingData
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface ClassRankProps {
   car: Car;
   trackerMode?: boolean;
+  forceOwned?: boolean;
 }
 
-const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
+const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOwned }) => {
   const [selectedStarRank, setSelectedStarRank] = useState<number>(car.Stars);
   const [owned, setOwned] = useState<boolean>(false);
   const [goldMax, setGoldMax] = useState<boolean>(false);
@@ -21,7 +22,6 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
     if (trackerMode && car._id) {
       const data = getCarTrackingData(car._id);
 
-      // Fix: Default to 0 stars if no valid saved value
       if (typeof data.stars === "number") {
         setSelectedStarRank(data.stars);
       } else {
@@ -36,14 +36,24 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
         setGoldMax(data.goldMax);
       }
     } else if (trackerMode) {
-      // No data yet for this car, start from 0 stars
       setSelectedStarRank(0);
       setOwned(false);
       setGoldMax(false);
     }
   }, [car._id, trackerMode]);
 
-  // Save tracking state when changed
+  // Auto-check owned when forced or stars selected
+  useEffect(() => {
+    if (trackerMode) {
+      if (forceOwned && !owned) {
+        setOwned(true);
+      } else if (!car.KeyCar && selectedStarRank > 0 && !owned) {
+        setOwned(true);
+      }
+    }
+  }, [trackerMode, forceOwned, selectedStarRank, car.KeyCar, owned]);
+
+  // Save to localStorage
   useEffect(() => {
     if (trackerMode && car._id) {
       setCarTrackingData(car._id, {
@@ -81,30 +91,34 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
           </tr>
 
           {trackerMode && (
-            <>
-              <tr>
-                <td style={{ textAlign: "center" }}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={owned}
-                      onChange={(e) => setOwned(e.target.checked)}
-                    />{" "}
-                    Owned
-                  </label>
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={goldMax}
-                      onChange={(e) => setGoldMax(e.target.checked)}
-                    />{" "}
-                    Gold Maxed
-                  </label>
-                </td>
-              </tr>
-            </>
+            <tr>
+              <td style={{ textAlign: "center" }}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={owned}
+                    onChange={(e) => setOwned(e.target.checked)}
+                  />{" "}
+                  Owned
+                </label>
+              </td>
+              <td style={{ textAlign: "center" }}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={goldMax}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      setGoldMax(isChecked);
+                      if (isChecked) {
+                        setSelectedStarRank(car.Stars); // ✅ Auto set max stars
+                      }
+                    }}
+                  />{" "}
+                  Gold Maxed
+                </label>
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
