@@ -64,16 +64,13 @@ export default function Cars() {
 
     try {
       const params = new URLSearchParams({
-        limit: carsPerPage.toString(),
+        limit: selectedClass === "All Classes" ? "999" : carsPerPage.toString(),
         offset: "0",
-        class: selectedClass,
+        ...(selectedClass !== "All Classes" && { class: selectedClass }),
       });
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/cars?${params.toString()}`
-      );
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
 

@@ -20,9 +20,26 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
   useEffect(() => {
     if (trackerMode && car._id) {
       const data = getCarTrackingData(car._id);
-      if (typeof data.stars === "number") setSelectedStarRank(data.stars);
-      if (typeof data.owned === "boolean") setOwned(data.owned);
-      if (typeof data.goldMax === "boolean") setGoldMax(data.goldMax);
+
+      // Fix: Default to 0 stars if no valid saved value
+      if (typeof data.stars === "number") {
+        setSelectedStarRank(data.stars);
+      } else {
+        setSelectedStarRank(0);
+      }
+
+      if (typeof data.owned === "boolean") {
+        setOwned(data.owned);
+      }
+
+      if (typeof data.goldMax === "boolean") {
+        setGoldMax(data.goldMax);
+      }
+    } else if (trackerMode) {
+      // No data yet for this car, start from 0 stars
+      setSelectedStarRank(0);
+      setOwned(false);
+      setGoldMax(false);
     }
   }, [car._id, trackerMode]);
 
@@ -72,8 +89,8 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
                       type="checkbox"
                       checked={owned}
                       onChange={(e) => setOwned(e.target.checked)}
-                    />
-                    {" "}Owned
+                    />{" "}
+                    Owned
                   </label>
                 </td>
                 <td style={{ textAlign: "center" }}>
@@ -82,8 +99,8 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
                       type="checkbox"
                       checked={goldMax}
                       onChange={(e) => setGoldMax(e.target.checked)}
-                    />
-                    {" "}Gold Maxed
+                    />{" "}
+                    Gold Maxed
                   </label>
                 </td>
               </tr>
