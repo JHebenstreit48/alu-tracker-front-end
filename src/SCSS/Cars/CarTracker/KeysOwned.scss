@@ -3,26 +3,25 @@
 /* ==============================
    Variables
    ============================== */
-$gold-ring-width: 150px;
-$gold-ring-height: 150px;
-$gold-ring-color: #fcb900;
-$gold-text-color: #fcb900;
-$gold-glow: 0 0 6px #fcb900;
+$key-ring-width: 150px;
+$key-ring-height: 150px;
+$key-ring-color: #00ccff;
+$key-text-color: #00ccff;
+$key-glow: 0 0 6px #00ccff;
 
 /* ==============================
-   Gold Maxed Progress Ring
+   Keys Owned Progress Ring
    ============================== */
-.goldMaxedProgressWrapper {
-  width: $gold-ring-width;
-  height: $gold-ring-height;
+.keysOwnedProgressWrapper {
+  width: $key-ring-width;
+  height: $key-ring-height;
 
   .CircularProgressbar {
     font-weight: bold;
 
     .CircularProgressbar-path {
-      stroke: $gold-ring-color;
       stroke-linecap: round;
-      filter: drop-shadow($gold-glow);
+      filter: drop-shadow($key-glow);
     }
 
     .CircularProgressbar-trail {
@@ -30,18 +29,18 @@ $gold-glow: 0 0 6px #fcb900;
     }
 
     .CircularProgressbar-text {
-      fill: $gold-text-color;
+      fill: $key-text-color;
       font-size: 1.2rem;
     }
   }
 }
 
 /* ==============================
-   Gold Maxed Text
+   Keys Owned Text
    ============================== */
-.goldMaxedText {
+.keysOwnedText {
   font-size: 1.2rem;
   text-align: center;
   margin-top: 1rem;
-  color: $gold-ring-color;
+  color: $key-text-color;
 }
