@@ -19,6 +19,7 @@ export interface Car extends BlueprintStats {
   Model: string;
   Class: string;
   Stars: number;
+  KeyCar?: boolean;
   Max_Rank: number;
   Top_Speed: number | string;
   Acceleration: number | string;
