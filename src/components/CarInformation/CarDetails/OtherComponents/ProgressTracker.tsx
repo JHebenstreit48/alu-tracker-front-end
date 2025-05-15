@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Car } from "./CarInterfaces";
+import { Car } from "@components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 import {
   saveCarTrackingProgress,
   loadCarTrackingProgress,

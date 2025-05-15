@@ -3,6 +3,7 @@ import StarRank from "@/components/CarInformation/CarDetails/OtherComponents/Sta
 
 interface Props {
   car: Car;
+  trackerMode?: boolean;
 }
 
 const BlueprintsTable: React.FC<Props> = ({ car }) => {

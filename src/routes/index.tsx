@@ -19,6 +19,7 @@ import Cars from "@/pages/MainPages/CarInfo/Cars";
 import CarDetails from "@/pages/MainPages/CarInfo/CarDetails";
 import GarageLevels from "@/pages/MainPages/GarageLevels/GarageLevels";
 import LegendStorePrices from "@/pages/MainPages/LegendStore/LegendStore";
+import CarTrackerPage from "@/pages/MainPages/CarInfo/CarTracker";
 
 export const router = createBrowserRouter([
     {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
         {
           path: "/cars/:id",
           element: <CarDetails />,
+        },
+        {
+          path: "/car-tracker/",
+          element: <CarTrackerPage />,
         },
         {
           path: "/garagelevels",

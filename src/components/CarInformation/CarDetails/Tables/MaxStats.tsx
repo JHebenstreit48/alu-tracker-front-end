@@ -3,6 +3,7 @@ import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInt
 interface MaxStatsProps {
   car: Car;
   unitPreference: "metric" | "imperial";
+  trackerMode?: boolean;
 }
 
 const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {

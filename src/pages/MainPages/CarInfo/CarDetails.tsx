@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 import CarImage from "@/components/CarInformation/CarDetails/OtherComponents/CarImage";
 import ClassRank from "@/components/CarInformation/CarDetails/Tables/ClassRank";
@@ -15,10 +14,12 @@ const CarDetails = () => {
   const [car, setCar] = useState<Car | null>(null);
   const [error, setError] = useState(false);
 
+  const trackerMode = location.state?.trackerMode || false;
+
   const unitPreference =
     localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric";
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
 
   useEffect(() => {
     function fetchCarDetails(carId: string) {
@@ -40,7 +41,10 @@ const CarDetails = () => {
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
-    navigate(lastSelectedClass ? `/cars?class=${lastSelectedClass}` : "/cars");
+    const trackerState = trackerMode ? { trackerMode: true } : {};
+    navigate(lastSelectedClass ? `/cars?class=${lastSelectedClass}` : "/cars", {
+      state: trackerState,
+    });
   };
 
   if (error) return <div className="error-message">Failed to load car details.</div>;
@@ -55,19 +59,19 @@ const CarDetails = () => {
       </div>
 
       <div>
-        <h1 className="carName">
-          {car.Brand} {car.Model}
-        </h1>
+        <h1 className="carName">{car.Brand} {car.Model}</h1>
       </div>
 
       <CarImage car={car} />
 
+      {/* Class Rank and Max Stats (pass trackerMode) */}
       <div className="carDetailTables">
-        <ClassRank car={car} />
-        <MaxStats car={car} unitPreference={unitPreference} />
+        <ClassRank car={car} trackerMode={trackerMode} />
+        <MaxStats car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
       </div>
 
-      <BlueprintsTable car={car} />
+      {/* Blueprints (pass trackerMode) */}
+      <BlueprintsTable car={car} trackerMode={trackerMode} />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
 import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
-import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle"; // ✅
+import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle";
 import "@/SCSS/Cars/CarsByClass.scss";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
@@ -20,7 +20,6 @@ interface Car {
 export default function Cars() {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [cars, setCars] = useState<Car[]>([]);
   const [carsPerPage, setCarsPerPage] = useState(25);
   const [totalCount, setTotalCount] = useState(0);
@@ -155,14 +154,6 @@ export default function Cars() {
       <PageTab title="Cars">
         <Header text="Cars" />
         <CarTrackerToggle isEnabled={trackerMode} onToggle={setTrackerMode} />
-
-        <button
-          onClick={() => navigate("/car-tracker")}
-          className="summary-link"
-        >
-          View Tracker Summary
-        </button>
-
         <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
 
         <div className="settings-row">
@@ -198,7 +189,7 @@ export default function Cars() {
           cars={filteredCars}
           selectedClass={selectedClass}
           loading={loading}
-          trackerMode={trackerMode} // ✅ if needed
+          trackerMode={trackerMode}
         />
 
         <div className="page-size-control">
@@ -208,6 +199,12 @@ export default function Cars() {
               {size}
             </button>
           ))}
+        </div>
+
+        <div className="tracker-summary-link">
+          <button onClick={() => navigate("/car-tracker")}>
+            View My Car Tracker Summary
+          </button>
         </div>
       </PageTab>
     </div>

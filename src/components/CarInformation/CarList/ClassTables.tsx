@@ -81,7 +81,7 @@ export default function ClassTables({
             cars.map((car) => (
               <tr className="table-data" key={car._id}>
                 <td className="car-name">
-                  <Link to={`/cars/${car._id}`}>
+                <Link to={`/cars/${car._id}`} state={{ trackerMode }}>
                     {car.Brand} {car.Model}
                   </Link>
                 </td>
