@@ -5,7 +5,7 @@ import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
 import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
-import CarTrackerToggle from "@/components/CarInformation/CarDetails/CarTrackerToggle"; // ✅
+import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle"; // ✅
 import "@/SCSS/Cars/CarsByClass.scss";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";

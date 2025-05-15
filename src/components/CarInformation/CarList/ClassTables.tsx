@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import StarRank from "@/components/CarInformation/StarRank";
+import StarRank from "@/components/CarInformation/CarDetails/OtherComponents/StarRank";
 
 interface Car {
   _id: string;

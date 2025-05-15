@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Car } from "@/components/CarInformation/CarDetails/CarInterfaces";
-import CarImage from "@/components/CarInformation/CarDetails/CarImage";
-import ClassRank from "@/components/CarInformation/CarDetails/ClassRank";
-import MaxStats from "@/components/CarInformation/CarDetails/MaxStats";
-import BlueprintsTable from "@/components/CarInformation/CarDetails/BlueprintsTable";
+
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import CarImage from "@/components/CarInformation/CarDetails/OtherComponents/CarImage";
+import ClassRank from "@/components/CarInformation/CarDetails/Tables/ClassRank";
+import MaxStats from "@/components/CarInformation/CarDetails/Tables/MaxStats";
+import BlueprintsTable from "@/components/CarInformation/CarDetails/Tables/BlueprintsTable";
 import "@/SCSS/Cars/CarDetail.scss";
 
 const CarDetails = () => {
@@ -17,7 +18,7 @@ const CarDetails = () => {
   const unitPreference =
     localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric";
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
 
   useEffect(() => {
     function fetchCarDetails(carId: string) {
@@ -54,18 +55,18 @@ const CarDetails = () => {
       </div>
 
       <div>
-        <h1 className="carName">{car.Brand} {car.Model}</h1>
+        <h1 className="carName">
+          {car.Brand} {car.Model}
+        </h1>
       </div>
 
       <CarImage car={car} />
 
-      {/* NEW Grid Wrapper for ClassRank + MaxStats */}
       <div className="carDetailTables">
         <ClassRank car={car} />
         <MaxStats car={car} unitPreference={unitPreference} />
       </div>
 
-      {/* Blueprint Table stays full width below */}
       <BlueprintsTable car={car} />
     </div>
   );

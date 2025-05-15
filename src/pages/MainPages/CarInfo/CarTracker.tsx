@@ -1,7 +1,7 @@
 import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
 import { useEffect, useState } from "react";
-import { getTrackedCars } from "@/components/CarInformation/CarDetails/StorageUtils";
+import { getTrackedCars } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface CarTrackerEntry {
   carId: string;
