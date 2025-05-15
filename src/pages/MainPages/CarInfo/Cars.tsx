@@ -64,11 +64,14 @@ export default function Cars() {
         limit: carsPerPage.toString(),
         offset: "0",
         ...(selectedClass !== "All Classes" && { class: selectedClass }),
-        ...(searchTerm && { search: searchTerm }) // ✅ Search term included
+        ...(searchTerm && { search: searchTerm }), // ✅ Search term included
       });
 
-      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch(
+        `${API_BASE_URL}/api/cars?${params.toString()}`
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
 
@@ -165,6 +168,12 @@ export default function Cars() {
           }}
         />
 
+        <div className="trackerSummaryLink">
+          <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
+            My Car Tracker Summary
+          </button>
+        </div>
+
         <CarFilters
           onSearch={handleSearch}
           onFilter={handleStarFilter}
@@ -198,12 +207,6 @@ export default function Cars() {
               {size}
             </button>
           ))}
-        </div>
-
-        <div className="tracker-summary-link">
-          <button onClick={() => navigate("/car-tracker")}>
-            View My Car Tracker Summary
-          </button>
         </div>
       </PageTab>
     </div>

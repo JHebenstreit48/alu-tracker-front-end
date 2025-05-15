@@ -45,6 +45,13 @@
    
    $cellphone-portrait: 390px;
    $cellphone-landscape: 390px;
+
+   .trackerSummaryLink {
+      display: flex;
+      justify-content: flex-end;
+      margin: 3rem;
+      position: relative;
+   }
    
    /* =============================
          Table Layout
