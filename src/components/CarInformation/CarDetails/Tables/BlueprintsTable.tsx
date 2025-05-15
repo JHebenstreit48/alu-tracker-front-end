@@ -1,5 +1,5 @@
-import { Car } from "@/components/CarInformation/CarDetails/CarInterfaces";
-import StarRank from "@/components/CarInformation/StarRank"; // Corrected import path for StarRank
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import StarRank from "@/components/CarInformation/CarDetails/OtherComponents/StarRank"; // Corrected import path for StarRank
 
 interface Props {
   car: Car;

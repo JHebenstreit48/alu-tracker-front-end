@@ -3,7 +3,7 @@ import { Car } from "./CarInterfaces";
 import {
   saveCarTrackingProgress,
   loadCarTrackingProgress,
-} from "@/components/CarInformation/CarDetails/StorageUtils";
+} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface Props {
   car: Car;

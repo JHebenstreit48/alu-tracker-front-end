@@ -1,4 +1,4 @@
-import { Car } from "@/components/CarInformation/CarDetails/CarInterfaces";
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 
 interface MaxStatsProps {
   car: Car;
