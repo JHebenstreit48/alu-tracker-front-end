@@ -1,0 +1,36 @@
+@use "sass:color";
+
+/* ==============================
+   Variables
+   ============================== */
+$owned-ring-width: 150px;
+$owned-ring-height: 150px;
+$owned-ring-color: #ffae00;
+$owned-text-color: #ffe600;
+$owned-glow: 0 0 6px #ffae00;
+
+/* ==============================
+   Owned Progress Ring
+   ============================== */
+.ownedProgressWrapper {
+  width: $owned-ring-width;
+  height: $owned-ring-height;
+
+  .CircularProgressbar {
+    font-weight: bold;
+
+    .CircularProgressbar-path {
+      stroke-linecap: round;
+      filter: drop-shadow($owned-glow);
+    }
+
+    .CircularProgressbar-trail {
+      stroke: #2c2c2c;
+    }
+
+    .CircularProgressbar-text {
+      fill: $owned-text-color;
+      font-size: 1.2rem;
+    }
+  }
+}

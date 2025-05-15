@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Car } from "@components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 import {
-  saveCarTrackingProgress,
-  loadCarTrackingProgress,
+  getCarTrackingData,
+  setCarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface Props {
@@ -11,25 +11,24 @@ interface Props {
 
 export default function ProgressTracker({ car }: Props) {
   const [owned, setOwned] = useState(false);
-  const [currentStars, setCurrentStars] = useState(1);
+  const [stars, setStars] = useState(1);
   const [upgradeStage, setUpgradeStage] = useState(0);
   const [importParts, setImportParts] = useState(0);
 
   useEffect(() => {
-    const existing = loadCarTrackingProgress(car._id || "");
-    if (existing) {
-      setOwned(existing.owned);
-      setCurrentStars(existing.currentStars);
-      setUpgradeStage(existing.upgradeStage);
-      setImportParts(existing.importParts);
+    const data = getCarTrackingData(car._id || "");
+    if (data) {
+      setOwned(!!data.owned);
+      setStars(data.stars ?? 1);
+      setUpgradeStage(data.upgradeStage ?? 0);
+      setImportParts(data.importParts ?? 0);
     }
   }, [car._id]);
 
   const handleSave = () => {
-    saveCarTrackingProgress({
-      carId: car._id || "",
+    setCarTrackingData(car._id || "", {
       owned,
-      currentStars,
+      stars,
       upgradeStage,
       importParts,
     });
@@ -50,8 +49,8 @@ export default function ProgressTracker({ car }: Props) {
       <label>
         Star Rank:
         <select
-          value={currentStars}
-          onChange={(e) => setCurrentStars(parseInt(e.target.value))}
+          value={stars}
+          onChange={(e) => setStars(parseInt(e.target.value))}
         >
           {[1, 2, 3, 4, 5, 6].map((val) => (
             <option key={val} value={val}>

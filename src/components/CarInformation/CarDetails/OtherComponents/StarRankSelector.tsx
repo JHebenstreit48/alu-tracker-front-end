@@ -1,24 +1,59 @@
+import { useEffect, useState } from "react";
+import {
+  getCarTrackingData,
+  setCarTrackingData,
+} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+
 interface StarRankSelectorProps {
-    maxStars: number;
-    selected: number;
-    onSelect?: (value: number) => void;
-    readOnly?: boolean;
-  }
-  
-  const StarRankSelector: React.FC<StarRankSelectorProps> = ({
-    maxStars,
-    selected,
-    onSelect,
-    readOnly = false,
-  }) => {
-    const renderStars = () => {
-      const stars = [];
-      for (let i = 1; i <= maxStars; i++) {
-        const isSelected = i <= selected;
-        stars.push(
+  maxStars: number;
+  selected?: number; // Optional for uncontrolled mode
+  onSelect?: (value: number) => void;
+  readOnly?: boolean;
+  carId?: string; // Optional – triggers auto-persistence
+}
+
+const StarRankSelector: React.FC<StarRankSelectorProps> = ({
+  maxStars,
+  selected,
+  onSelect,
+  readOnly = false,
+  carId,
+}) => {
+  const [internalStars, setInternalStars] = useState<number>(0);
+
+  // Load from localStorage only if uncontrolled
+  useEffect(() => {
+    if (carId && selected === undefined) {
+      const data = getCarTrackingData(carId);
+      if (typeof data.stars === "number") {
+        setInternalStars(data.stars);
+      }
+    }
+  }, [carId, selected]);
+
+  const handleClick = (value: number) => {
+    if (readOnly) return;
+
+    if (onSelect) {
+      onSelect(value);
+    } else {
+      setInternalStars(value);
+      if (carId) {
+        setCarTrackingData(carId, { stars: value });
+      }
+    }
+  };
+
+  const displayStars = selected ?? internalStars;
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      {[...Array(maxStars)].map((_, i) => {
+        const isSelected = i < displayStars;
+        return (
           <span
             key={i}
-            onClick={() => !readOnly && onSelect?.(i)}
+            onClick={() => handleClick(i + 1)}
             style={{
               cursor: readOnly ? "default" : "pointer",
               fontSize: "2rem",
@@ -30,12 +65,9 @@ interface StarRankSelectorProps {
             ★
           </span>
         );
-      }
-      return stars;
-    };
-  
-    return <div style={{ display: "flex", justifyContent: "center" }}>{renderStars()}</div>;
-  };
-  
-  export default StarRankSelector;
-  
+      })}
+    </div>
+  );
+};
+
+export default StarRankSelector;

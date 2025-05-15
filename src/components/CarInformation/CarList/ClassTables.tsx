@@ -26,30 +26,7 @@ export default function ClassTables({
 
   return (
     <div>
-      {trackerMode && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "1rem",
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "#ffe600",
-              color: "#222",
-              padding: "6px 14px",
-              fontWeight: "bold",
-              borderRadius: "20px",
-              fontSize: "0.95rem",
-              boxShadow: "0 0 6px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            🛠 Tracker Mode Enabled
-          </div>
-        </div>
-      )}
-
+      
       <table>
         <tbody>
           <tr>

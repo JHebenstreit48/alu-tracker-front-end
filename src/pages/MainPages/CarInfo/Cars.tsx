@@ -6,9 +6,10 @@ import PageTab from "@/components/Shared/PageTab";
 import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle";
-import "@/SCSS/Cars/CarsByClass.scss";
+import "@/SCSS/Cars/CarsPage/Cars.scss";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 interface Car {
   _id: string;
@@ -25,9 +26,18 @@ export default function Cars() {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [trackerMode, setTrackerMode] = useState(() => {
+
+  const [trackerMode, setTrackerMode] = useState<boolean>(() => {
     return localStorage.getItem("trackerMode") === "true";
   });
+
+  useEffect(() => {
+    const navTracker = location.state?.trackerMode;
+    if (navTracker !== undefined) {
+      setTrackerMode(navTracker);
+      localStorage.setItem("trackerMode", String(navTracker));
+    }
+  }, [location.state]);
 
   const [searchTerm, setSearchTerm] = useState<string>(
     localStorage.getItem("searchTerm") || ""
@@ -36,10 +46,14 @@ export default function Cars() {
   const [selectedClass, setSelectedClass] = useState<string>(
     sessionStorage.getItem("selectedClass") || "All Classes"
   );
-  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(() => {
-    const savedUnit = localStorage.getItem("preferredUnit");
-    return savedUnit === "imperial" || savedUnit === "metric" ? savedUnit : "metric";
-  });
+  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
+    () => {
+      const savedUnit = localStorage.getItem("preferredUnit");
+      return savedUnit === "imperial" || savedUnit === "metric"
+        ? savedUnit
+        : "metric";
+    }
+  );
 
   const normalize = (text: string): string =>
     text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -55,8 +69,11 @@ export default function Cars() {
         class: selectedClass,
       });
 
-      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch(
+        `${API_BASE_URL}/api/cars?${params.toString()}`
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
 
@@ -97,7 +114,9 @@ export default function Cars() {
     sessionStorage.removeItem("selectedClass");
   };
 
-  const handleUnitPreferenceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleUnitPreferenceChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
@@ -142,8 +161,20 @@ export default function Cars() {
         <PageTab title="Cars">
           <Header text="Cars" />
           <div className="error-message">{error}</div>
-          <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
-          <ClassTables cars={[]} selectedClass={selectedClass} loading={loading} />
+          <CarFilters
+            onSearch={handleSearch}
+            onFilter={handleStarFilter}
+            onClassChange={handleClassChange}
+            onUnitChange={handleUnitPreferenceChange}
+            onReset={handleResetFilters}
+            selectedClass={selectedClass}
+            unitPreference={unitPreference}
+          />
+          <ClassTables
+            cars={[]}
+            selectedClass={selectedClass}
+            loading={loading}
+          />
         </PageTab>
       </div>
     );
@@ -153,36 +184,28 @@ export default function Cars() {
     <div className="cars">
       <PageTab title="Cars">
         <Header text="Cars" />
-        <CarTrackerToggle isEnabled={trackerMode} onToggle={setTrackerMode} />
-        <CarFilters onSearch={handleSearch} onFilter={handleStarFilter} />
 
-        <div className="settings-row">
-          <select onChange={handleClassChange} value={selectedClass} className="classSelect">
-            <option value="All Classes">All Classes</option>
-            <option value="D">D</option>
-            <option value="C">C</option>
-            <option value="B">B</option>
-            <option value="A">A</option>
-            <option value="S">S</option>
-          </select>
+        <CarTrackerToggle
+          isEnabled={trackerMode}
+          onToggle={(value) => {
+            setTrackerMode(value);
+            localStorage.setItem("trackerMode", String(value));
+          }}
+        />
 
-          <button className="resetFilters" onClick={handleResetFilters}>
-            Reset Filters
-          </button>
-
-          <div className="unitSelection">
-            <select onChange={handleUnitPreferenceChange} value={unitPreference} className="unitSelect">
-              <option value="metric">Metric (km/h, m/s²)</option>
-              <option value="imperial">Imperial (mph, ft/s²)</option>
-            </select>
-            <span className="infoTooltip" title="This setting applies units of measurement for individual car details pages.">
-              &#9432;
-            </span>
-          </div>
-        </div>
+        <CarFilters
+          onSearch={handleSearch}
+          onFilter={handleStarFilter}
+          onClassChange={handleClassChange}
+          onUnitChange={handleUnitPreferenceChange}
+          onReset={handleResetFilters}
+          selectedClass={selectedClass}
+          unitPreference={unitPreference}
+        />
 
         <p className="car-count">
-          Showing {filteredCars.length} of {totalCount} car{totalCount !== 1 ? "s" : ""}
+          Showing {filteredCars.length} of {totalCount} car
+          {totalCount !== 1 ? "s" : ""}
         </p>
 
         <ClassTables
@@ -195,7 +218,11 @@ export default function Cars() {
         <div className="page-size-control">
           <span>Cars per page:</span>
           {[25, 50, 100, 200, 300].map((size) => (
-            <button key={size} onClick={() => handlePageSizeChange(size)} disabled={carsPerPage === size}>
+            <button
+              key={size}
+              onClick={() => handlePageSizeChange(size)}
+              disabled={carsPerPage === size}
+            >
               {size}
             </button>
           ))}

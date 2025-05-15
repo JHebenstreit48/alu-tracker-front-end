@@ -4,9 +4,9 @@
    Variables
    ============================= */
    $class-select-font-size: 1.5rem;
-   $class-select-padding: 12px 0;
+   $class-select-padding: 10px 0;
    $class-select-width: 11rem;
-   $class-select-margin: 3rem auto 5rem auto;
+   $class-select-margin: 1rem auto 2rem auto;
    $class-select-bg-color: black;
    $class-select-text-color: rgb(21, 201, 232);
    $class-select-box-shadow: 0 0.3px 5px 2px rgb(223, 190, 7);
@@ -17,7 +17,7 @@
    $reset-filters-border-radius: 1rem;
    
    $unit-selection-gap: 10px;
-   $unit-selection-margin: 3rem auto 5rem auto;
+   $unit-selection-margin: 2rem auto 2rem auto;
    
    $unit-select-font-size: 1.5rem;
    $unit-select-padding: 12px 0;
@@ -45,65 +45,6 @@
    
    $cellphone-portrait: 390px;
    $cellphone-landscape: 390px;
-   
-   /* =============================
-         Cars By Class Layout
-         ============================= */
-   .classSelect {
-     display: flex;
-     margin: $class-select-margin;
-     font-size: $class-select-font-size;
-     padding: $class-select-padding;
-     text-align: center;
-     width: $class-select-width;
-     background-color: $class-select-bg-color;
-     color: $class-select-text-color;
-     box-shadow: $class-select-box-shadow;
-   
-     @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
-       margin: 4rem auto 3rem;
-       font-size: 1.2rem;
-     }
-   }
-   
-   .resetFilters {
-     display: flex;
-     justify-content: center;
-     margin: $class-select-margin;
-     font-size: $reset-filters-font-size;
-     width: $reset-filters-width;
-     padding: $reset-filters-padding;
-     background-color: $class-select-bg-color;
-     color: $class-select-text-color;
-     box-shadow: $class-select-box-shadow;
-     border-radius: $reset-filters-border-radius;
-   }
-   
-   .unitSelection {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     gap: $unit-selection-gap;
-     margin: $unit-selection-margin;
-   }
-   
-   .unitSelect {
-     font-size: $unit-select-font-size;
-     padding: $unit-select-padding;
-     text-align: center;
-     width: $unit-select-width;
-     box-shadow: $class-select-box-shadow;
-   }
-   
-   .infoTooltip {
-     font-size: $info-tooltip-font-size;
-     color: $info-tooltip-text-color;
-     cursor: pointer;
-     width: $info-tooltip-width;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-   }
    
    /* =============================
          Table Layout

@@ -17,9 +17,12 @@ const CarDetails = () => {
   const trackerMode = location.state?.trackerMode || false;
 
   const unitPreference =
-    localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric";
+    localStorage.getItem("preferredUnit") === "imperial"
+      ? "imperial"
+      : "metric";
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
   useEffect(() => {
     function fetchCarDetails(carId: string) {
@@ -47,8 +50,10 @@ const CarDetails = () => {
     });
   };
 
-  if (error) return <div className="error-message">Failed to load car details.</div>;
-  if (!car) return <div className="loading-message">Loading car details...</div>;
+  if (error)
+    return <div className="error-message">Failed to load car details.</div>;
+  if (!car)
+    return <div className="loading-message">Loading car details...</div>;
 
   return (
     <div className="car-detail">
@@ -59,18 +64,22 @@ const CarDetails = () => {
       </div>
 
       <div>
-        <h1 className="carName">{car.Brand} {car.Model}</h1>
+        <h1 className="carName">
+          {car.Brand} {car.Model}
+        </h1>
       </div>
 
       <CarImage car={car} />
 
-      {/* Class Rank and Max Stats (pass trackerMode) */}
       <div className="carDetailTables">
         <ClassRank car={car} trackerMode={trackerMode} />
-        <MaxStats car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
+        <MaxStats
+          car={car}
+          unitPreference={unitPreference}
+          trackerMode={trackerMode}
+        />
       </div>
 
-      {/* Blueprints (pass trackerMode) */}
       <BlueprintsTable car={car} trackerMode={trackerMode} />
     </div>
   );
