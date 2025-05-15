@@ -3,7 +3,7 @@ import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInt
 import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
 import {
   getCarTrackingData,
-  setCarTrackingData,
+  setCarTrackingData
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface ClassRankProps {
@@ -42,7 +42,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
     }
   }, [car._id, trackerMode]);
 
-  // Auto-check owned when forceOwned is triggered or stars selected (non-KeyCar)
+  // Auto-check owned when forced or stars selected
   useEffect(() => {
     if (trackerMode) {
       if (forceOwned && !owned) {
@@ -107,7 +107,13 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
                   <input
                     type="checkbox"
                     checked={goldMax}
-                    onChange={(e) => setGoldMax(e.target.checked)}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      setGoldMax(isChecked);
+                      if (isChecked) {
+                        setSelectedStarRank(car.Stars); // ✅ Auto set max stars
+                      }
+                    }}
                   />{" "}
                   Gold Maxed
                 </label>

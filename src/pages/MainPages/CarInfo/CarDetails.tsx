@@ -13,6 +13,9 @@ import BlueprintsTable from "@/components/CarInformation/CarDetails/Tables/Bluep
 import KeyInfo from "@/components/CarInformation/CarDetails/Tables/KeyInfo";
 // Components End
 
+// Utils
+import { getCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+
 // Styles Start
 import "@/SCSS/Cars/CarDetail.scss";
 // Styles End
@@ -44,7 +47,15 @@ const CarDetails = () => {
           }
           return response.json();
         })
-        .then((data) => setCar(data))
+        .then((data) => {
+          setCar(data);
+
+          // ✅ Load keyObtained from localStorage
+          const stored = getCarTrackingData(data._id);
+          if (stored?.keyObtained !== undefined) {
+            setKeyObtained(stored.keyObtained);
+          }
+        })
         .catch(() => setError(true));
     }
 

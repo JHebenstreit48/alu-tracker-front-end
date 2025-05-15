@@ -4,6 +4,7 @@ export interface CarTrackingData {
   owned?: boolean;
   stars?: number;
   goldMax?: boolean;
+  keyObtained?: boolean;
   upgradeStage?: number;
   importParts?: number;
 }

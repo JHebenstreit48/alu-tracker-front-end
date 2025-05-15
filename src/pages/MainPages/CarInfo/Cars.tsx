@@ -55,9 +55,6 @@ export default function Cars() {
     }
   );
 
-  const normalize = (text: string): string =>
-    text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
   const loadCars = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -67,6 +64,7 @@ export default function Cars() {
         limit: carsPerPage.toString(),
         offset: "0",
         ...(selectedClass !== "All Classes" && { class: selectedClass }),
+        ...(searchTerm && { search: searchTerm }) // ✅ Search term included
       });
 
       const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
@@ -82,7 +80,7 @@ export default function Cars() {
     } finally {
       setLoading(false);
     }
-  }, [selectedClass, carsPerPage]);
+  }, [selectedClass, carsPerPage, searchTerm]); // ✅ Track searchTerm too
 
   useEffect(() => {
     loadCars();
@@ -124,32 +122,9 @@ export default function Cars() {
     setCarsPerPage(size);
   };
 
+  // ✅ Backend now handles search + class filtering. Star filter stays local.
   const filteredCars = cars
-    .filter((car) => {
-      const normalizedSearch = normalize(searchTerm);
-      const brand = normalize(car.Brand);
-      const model = normalize(car.Model);
-      const combined = `${brand} ${model}`;
-
-      const matchesSearch =
-        brand.includes(normalizedSearch) ||
-        model.includes(normalizedSearch) ||
-        combined.includes(normalizedSearch);
-
-      const matchesStars = selectedStars ? car.Stars === selectedStars : true;
-
-      return matchesSearch && matchesStars;
-    })
-    .filter(
-      (car, index, self) =>
-        index ===
-        self.findIndex(
-          (c) =>
-            c.Brand === car.Brand &&
-            c.Model === car.Model &&
-            c.Stars === car.Stars
-        )
-    )
+    .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
     .sort((a, b) => (selectedClass === "All Classes" ? a.Stars - b.Stars : 0));
 
   if (error) {
