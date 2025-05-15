@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001', // Backend URL
+        target: 'https://alutracker-api.onrender.com', // Backend URL
         changeOrigin: true,
         secure: false,
       },

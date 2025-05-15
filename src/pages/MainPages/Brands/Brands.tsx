@@ -16,7 +16,7 @@ export default function Brands() {
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
   const [error, setError] = useState(false);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
   useEffect(() => {
     console.log("🚀 Fetching from:", `${API_BASE_URL}/manufacturers`);

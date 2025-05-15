@@ -1,6 +1,6 @@
 import { ImageCarouselType } from "@/components/HomePage/ImagesForCarousel";
 
-const backendImageUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const backendImageUrl = import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 type ImageCarouselPropsType = {
   project: ImageCarouselType[];

@@ -8,7 +8,7 @@ import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle";
 import "@/SCSS/Cars/CarsByClass.scss";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 interface Car {
   _id: string;
