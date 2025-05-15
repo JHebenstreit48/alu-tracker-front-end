@@ -1,25 +1,45 @@
-interface CarTrackingProgress {
-    carId: string;
-    owned: boolean;
-    currentStars: number;
-    upgradeStage: number;
-    importParts: number;
+// StorageUtils.ts
+
+export interface CarTrackingData {
+  owned?: boolean;
+  stars?: number;
+  goldMax?: boolean;
+  upgradeStage?: number;
+  importParts?: number;
+}
+
+const keyPrefix = "car-tracker-";
+
+export function getCarTrackingData(carId: string): CarTrackingData {
+  try {
+    const data = localStorage.getItem(`${keyPrefix}${carId}`);
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
   }
-  
-  const STORAGE_KEY = "car_tracking_data";
-  
-  export function saveCarTrackingProgress(entry: CarTrackingProgress) {
-    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    const updated = [...existing.filter((e: CarTrackingProgress) => e.carId !== entry.carId), entry];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+}
+
+export function setCarTrackingData(
+  carId: string,
+  update: Partial<CarTrackingData>
+) {
+  const existing = getCarTrackingData(carId);
+  const merged = { ...existing, ...update };
+  localStorage.setItem(`${keyPrefix}${carId}`, JSON.stringify(merged));
+}
+
+export function getAllCarTrackingData(): Record<string, CarTrackingData> {
+  const all: Record<string, CarTrackingData> = {};
+  for (const key in localStorage) {
+    if (key.startsWith(keyPrefix)) {
+      try {
+        const carId = key.replace(keyPrefix, "");
+        const data = JSON.parse(localStorage.getItem(key)!);
+        all[carId] = data;
+      } catch {
+        continue;
+      }
+    }
   }
-  
-  export function loadCarTrackingProgress(carId: string): CarTrackingProgress | null {
-    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    return existing.find((e: CarTrackingProgress) => e.carId === carId) || null;
-  }
-  
-  export function getTrackedCars(): CarTrackingProgress[] {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  }
-  
+  return all;
+}

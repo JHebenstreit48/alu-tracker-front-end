@@ -1,0 +1,46 @@
+@use "sass:color";
+
+/* ==============================
+   Variables
+   ============================== */
+$gold-ring-width: 150px;
+$gold-ring-height: 150px;
+$gold-ring-color: #ffd700;
+$gold-text-color: #fffacd;
+$gold-glow: 0 0 6px #e3c800;
+
+/* ==============================
+   Gold Maxed Progress Ring
+   ============================== */
+.goldMaxedProgressWrapper {
+  width: $gold-ring-width;
+  height: $gold-ring-height;
+
+  .CircularProgressbar {
+    font-weight: bold;
+
+    .CircularProgressbar-path {
+      stroke-linecap: round;
+      filter: drop-shadow($gold-glow);
+    }
+
+    .CircularProgressbar-trail {
+      stroke: #2c2c2c;
+    }
+
+    .CircularProgressbar-text {
+      fill: $gold-text-color;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* ==============================
+   Gold Maxed Text Summary
+   ============================== */
+.goldMaxedText {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 1rem;
+  color: $gold-ring-color;
+}

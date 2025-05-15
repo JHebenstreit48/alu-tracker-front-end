@@ -12,6 +12,7 @@
     "axios": "^1.7.7",
     "mongoose": "^8.8.2",
     "react": "^18.3.1",
+    "react-circular-progressbar": "^2.2.0",
     "react-dom": "^18.3.1",
     "react-map-gl": "^7.0.18",
     "react-router-dom": "^6.26.1"

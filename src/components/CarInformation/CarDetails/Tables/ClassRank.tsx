@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
+import {
+  getCarTrackingData,
+  setCarTrackingData,
+} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface ClassRankProps {
   car: Car;
@@ -10,28 +14,28 @@ interface ClassRankProps {
 const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
   const [selectedStarRank, setSelectedStarRank] = useState<number>(car.Stars);
   const [owned, setOwned] = useState<boolean>(false);
+  const [goldMax, setGoldMax] = useState<boolean>(false);
 
-  // Load saved tracking state
+  // Load tracking state from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem(`car-${car._id}-tracking`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setSelectedStarRank(parsed.starRank ?? car.Stars);
-        setOwned(parsed.owned ?? false);
-      } catch {
-        console.warn("Corrupt tracking data for", car._id);
-      }
+    if (trackerMode && car._id) {
+      const data = getCarTrackingData(car._id);
+      if (typeof data.stars === "number") setSelectedStarRank(data.stars);
+      if (typeof data.owned === "boolean") setOwned(data.owned);
+      if (typeof data.goldMax === "boolean") setGoldMax(data.goldMax);
     }
-  }, [car._id, car.Stars]);
+  }, [car._id, trackerMode]);
 
-  // Persist tracking state
+  // Save tracking state when changed
   useEffect(() => {
-    localStorage.setItem(
-      `car-${car._id}-tracking`,
-      JSON.stringify({ starRank: selectedStarRank, owned })
-    );
-  }, [selectedStarRank, owned, car._id]);
+    if (trackerMode && car._id) {
+      setCarTrackingData(car._id, {
+        stars: selectedStarRank,
+        owned,
+        goldMax,
+      });
+    }
+  }, [car._id, trackerMode, selectedStarRank, owned, goldMax]);
 
   return (
     <div className="carDetailTables">
@@ -45,7 +49,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
         </thead>
         <tbody>
           <tr>
-            <td style={{ textAlign: "center" }}>
+            <td colSpan={2} style={{ textAlign: "center" }}>
               <StarRankSelector
                 maxStars={car.Stars}
                 selected={trackerMode ? selectedStarRank : car.Stars}
@@ -54,21 +58,36 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false }) => {
             </td>
           </tr>
           <tr>
-            <td className="maxRank">Max Rank: {car.Max_Rank}</td>
+            <td className="maxRank" colSpan={2}>
+              Max Rank: {car.Max_Rank}
+            </td>
           </tr>
+
           {trackerMode && (
-            <tr>
-              <td style={{ textAlign: "center" }}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={owned}
-                    onChange={() => setOwned((prev) => !prev)}
-                  />{" "}
-                  I own this car
-                </label>
-              </td>
-            </tr>
+            <>
+              <tr>
+                <td style={{ textAlign: "center" }}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={owned}
+                      onChange={(e) => setOwned(e.target.checked)}
+                    />
+                    {" "}Owned
+                  </label>
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={goldMax}
+                      onChange={(e) => setGoldMax(e.target.checked)}
+                    />
+                    {" "}Gold Maxed
+                  </label>
+                </td>
+              </tr>
+            </>
           )}
         </tbody>
       </table>

@@ -4,9 +4,9 @@
    Variables
    ============================= */
    $class-select-font-size: 1.5rem;
-   $class-select-padding: 12px 0;
+   $class-select-padding: 10px 0;
    $class-select-width: 11rem;
-   $class-select-margin: 3rem auto 5rem auto;
+   $class-select-margin: 1rem auto 2rem auto;
    $class-select-bg-color: black;
    $class-select-text-color: rgb(21, 201, 232);
    $class-select-box-shadow: 0 0.3px 5px 2px rgb(223, 190, 7);
@@ -17,7 +17,7 @@
    $reset-filters-border-radius: 1rem;
    
    $unit-selection-gap: 10px;
-   $unit-selection-margin: 3rem auto 5rem auto;
+   $unit-selection-margin: 2rem auto 2rem auto;
    
    $unit-select-font-size: 1.5rem;
    $unit-select-padding: 12px 0;
@@ -88,6 +88,9 @@
    }
    
    .unitSelect {
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
      font-size: $unit-select-font-size;
      padding: $unit-select-padding;
      text-align: center;
@@ -101,6 +104,8 @@
      cursor: pointer;
      width: $info-tooltip-width;
      display: flex;
+     position: absolute;
+     right: 29rem;
      align-items: center;
      justify-content: center;
    }

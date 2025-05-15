@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "@/SCSS/Cars/CarFilters.scss"
+import "@/SCSS/Cars/CarsPage/CarFilters.scss";
 
 interface CarFiltersProps {
     onSearch: (term: string) => void;
