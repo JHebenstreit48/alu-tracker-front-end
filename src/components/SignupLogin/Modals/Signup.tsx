@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "@/components/SignupLogin/api/authAPI";
-// import "@/SCSS/Auth/AuthModals.scss";
+import "@/SCSS/MiscellaneousStyle/LoginSignupModal.scss";
 
 interface SignUpModalProps {
   onClose: () => void;
@@ -10,6 +10,7 @@ export default function SignUpModal({ onClose }: SignUpModalProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -43,15 +44,25 @@ export default function SignUpModal({ onClose }: SignUpModalProps) {
             placeholder="Email"
             value={email}
             required
+            style={{ textTransform: "lowercase" }}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="passwordWrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="togglePasswordButton"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "🙈" : "👁"}
+            </button>
+          </div>
           {errorMsg && <div className="authError">{errorMsg}</div>}
           {successMsg && <div className="authSuccess">{successMsg}</div>}
           <button type="submit">Sign Up</button>

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { loginUser } from "@/components/SignupLogin/api/authAPI";
-import "@/SCSS/Auth/_AuthModals.scss";
+import "@/SCSS/MiscellaneousStyle/LoginSignupModal.scss";
 
 interface LoginModalProps {
   onClose: () => void;
