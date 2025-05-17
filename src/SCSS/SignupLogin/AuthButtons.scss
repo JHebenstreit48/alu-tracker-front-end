@@ -83,18 +83,35 @@ $tablet-max: 768px;
   }
 }
 
-@media only screen and (max-width: $mobileMaxWidthPortrait) {
-  .logoutWrapper {
-    position: fixed;
-    top: 1.9rem;
-    right: 0.6rem;
-    z-index: 103; // ensure it's above other elements
+.logoutWrapper {
+  position: absolute;
+  top: 5rem;
+  right: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 103; // ensure it's above other elements
+
+  @media only screen and (max-width: $tablet-max) {
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
+    font-size: 0.5rem;
     width: auto;
     display: flex;
     justify-content: flex-end;
   }
-}
 
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    .logoutWrapper {
+      position: fixed;
+      top: 1.9rem;
+      right: 0.6rem;
+      z-index: 103; // ensure it's above other elements
+      width: auto;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
 
 .logout {
   font-family: "Cinzel Decorative", serif;

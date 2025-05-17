@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "@/components/SignupLogin/api/authAPI";
-import "@/SCSS/MiscellaneousStyle/LoginSignupModal.scss";
+import "@/SCSS/SignupLogin/LoginSignupModal.scss";
 
 interface SignUpModalProps {
   onClose: () => void;
