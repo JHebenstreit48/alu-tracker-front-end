@@ -16,7 +16,7 @@ $header-gradient: linear-gradient(
 $box-shadow-dark: 0px 2px 3px #5b1479;
 $box-shadow-alt: 0 0 12px 7px #490db2;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 $tablet-max: 768px;
 
 .Footer {
@@ -31,7 +31,7 @@ $tablet-max: 768px;
   text-decoration: none;
   cursor: pointer;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     justify-content: center;
     align-items: center;
     margin: 1rem auto;

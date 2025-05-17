@@ -49,7 +49,7 @@
    $no-results-text-color: #888;
    $no-results-margin-top: 20px;
    
-   $cellphone-portrait: 390px;
+   $mobileMaxWidthPortrait: 480px;
    
    /* =============================
       Controls Section
@@ -197,7 +197,7 @@
    /* =============================
       Responsive Layout (Mobile)
       ============================= */
-   @media only screen and (max-width: $cellphone-portrait) {
+   @media only screen and (max-width: $mobileMaxWidthPortrait) {
      .controls {
        grid-template-columns: 1fr;
        width: 14rem;

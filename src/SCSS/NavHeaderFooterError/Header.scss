@@ -5,7 +5,7 @@ $dark-shadow: #19191a;
 $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%);
 $box-shadow-dark: 0px 2px 5px #5b1479;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 $tablet-max: 768px;
 
 /* ==============================
@@ -34,7 +34,7 @@ $tablet-max: 768px;
     height: 6.3rem;
   }
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     height: 6rem;
     position: fixed;
   }
@@ -56,7 +56,7 @@ $tablet-max: 768px;
     margin-top: 2rem;
   }
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     font-size: 1.2rem;
     flex-wrap: wrap;
     width: 60%;
@@ -71,7 +71,7 @@ $tablet-max: 768px;
 /* ==============================
    Page-specific tweaks only inside media queries
 ============================== */
-@media only screen and (max-width: $cellphone-portrait) {
+@media only screen and (max-width: $mobileMaxWidthPortrait) {
   .carsHeader .PageHeader {
     font-size: 3rem;
     min-width: 65%;

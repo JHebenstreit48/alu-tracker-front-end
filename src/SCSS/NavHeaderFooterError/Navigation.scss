@@ -7,7 +7,7 @@
 $gold-accent: rgb(223, 190, 7);
 $purple-glow: #7a05be;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 $tablet-max: 768px;
 
 /* ==============================
@@ -25,7 +25,7 @@ $tablet-max: 768px;
   z-index: 101;
   border: none;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     display: block;
     position: fixed;
   }
@@ -43,7 +43,7 @@ $tablet-max: 768px;
   background-color: transparent; /* ✅ No background, blends into header gradient */
   z-index: 100;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     position: fixed;
     top: 0;
     left: 0;
@@ -79,7 +79,7 @@ $tablet-max: 768px;
     flex-wrap: wrap;
   }
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     flex-direction: column;
     background-color: transparent;
   }
@@ -126,7 +126,7 @@ $tablet-max: 768px;
     margin-bottom: 0.6rem;
   }
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     margin-top: 1rem;
     margin-bottom: 0.6rem;
   }

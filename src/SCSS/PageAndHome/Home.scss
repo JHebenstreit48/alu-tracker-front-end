@@ -9,7 +9,7 @@
    $black-bg: black;
    $white-text: white;
    
-   $cellphone-portrait: 390px;
+   $mobileMaxWidthPortrait: 480px;
    $tablet-max: 768px;
    
    /* ==============================
@@ -34,7 +34,7 @@
        height: 31rem;
      }
    
-     @media only screen and (max-width: $cellphone-portrait) {
+     @media only screen and (max-width: $mobileMaxWidthPortrait) {
        flex-direction: column;
        margin-top: 8rem;
        width: 18rem;
@@ -60,7 +60,7 @@
        width: 35rem;
      }
    
-     @media only screen and (max-width: $cellphone-portrait) {
+     @media only screen and (max-width: $mobileMaxWidthPortrait) {
       display:flex;
       justify-content: center;
       align-items: center;
@@ -91,7 +91,7 @@
        height: 19rem;
      }
    
-     @media only screen and (max-width: $cellphone-portrait) {
+     @media only screen and (max-width: $mobileMaxWidthPortrait) {
        display: flex;
        justify-content: center;
        align-items: center;
@@ -119,7 +119,7 @@
     height: 19rem;
   }
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     height: 12rem;
     width: 100%;
     border-radius: 6px;

@@ -13,7 +13,7 @@ $back-btn-bg: black;
 $back-btn-text: rgb(21, 201, 232);
 $back-btn-border: 1px solid rgb(21, 201, 232);
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 $cellphone-landscape: 390px;
 
 /* ==============================
@@ -32,7 +32,7 @@ $cellphone-landscape: 390px;
     margin-top: 2rem;
 
     // Responsive stacking on very narrow screens
-    @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
+    @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
       flex-direction: column;
       align-items: center;
     }
