@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface INavigationButtons {
   label: string;
@@ -11,8 +12,7 @@ const NavigationButtons = (
     <button
       onClick={props.onClick}
       type="button"
-      className={`btn btn-primary btn-lg ${props.isActive ? "active-link" : ""
-        }`}
+      className={`btn btn-primary btn-lg ${props.isActive ? "active-link" : ""}`}
     >
       {props.label}
     </button>
@@ -22,34 +22,22 @@ const NavigationButtons = (
 export default function Navigation() {
   const navigation = useNavigate();
   const currentPage = useLocation().pathname;
+  const [isOpen, setIsOpen] = useState(false);
 
   const NavLinks = [
     { label: "Home", path: () => navigation("/"), location: "/" },
-    {
-      label: 'Brands',
-      path: () => navigation('/brands'),
-      location: '/brands'
-    },
-    {
-      label: "Cars",
-      path: () => navigation("/cars"),
-      location: "/cars",
-    },
-    {
-      label: "Garage Levels",
-      path: () => navigation("/garagelevels"),
-      location: "/garagelevels",
-    },
-    {
-      label: "Legend Store",
-      path: () => navigation("/legendstoreprices"),
-      location: "/legendstoreprices",
-    },
+    { label: "Brands", path: () => navigation("/brands"), location: "/brands" },
+    { label: "Cars", path: () => navigation("/cars"), location: "/cars" },
+    { label: "Garage Levels", path: () => navigation("/garagelevels"), location: "/garagelevels" },
+    { label: "Legend Store", path: () => navigation("/legendstoreprices"), location: "/legendstoreprices" },
   ];
 
   return (
     <>
-      <div>
+      <button className="Hamburger" onClick={() => setIsOpen(!isOpen)}>
+        ☰
+      </button>
+      <div className={`NavigationWrapper ${isOpen ? "open" : ""}`}>
         <ul className="nav-css">
           {NavLinks.map((navLinks) => (
             <NavigationButtons

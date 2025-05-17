@@ -3,6 +3,7 @@ import Header from '@/components/Shared/Header';
 import PageTab from '@/components/Shared/PageTab';
 import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
 import '@/SCSS/Brands/BrandMap.scss';
+import Navigation from '@/components/Shared/Navigation';
 
 interface Manufacturer {
   _id: string;
@@ -52,6 +53,7 @@ export default function Brands() {
     <div className="brands">
       <PageTab title="Brands">
         <Header text="Brands" />
+        <Navigation />
         {/* ✅ Show the Jump List (grouped properly) */}
         <BrandQuickList manufacturers={manufacturers} />
 

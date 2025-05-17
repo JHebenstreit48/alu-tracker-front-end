@@ -3,10 +3,9 @@ import { Outlet, useLocation } from "react-router-dom";
 import Footer from "@/components/Shared/Footer";
 import LoadingSpinner from "@/components/Shared/LoadingSpinner";
 
-import "@/SCSS/NavHeaderFooterError/Header.scss";
 import "@/SCSS/PageAndHome/Page.scss";
+import "@/SCSS/NavHeaderFooterError/Header.scss";
 import "@/SCSS/NavHeaderFooterError/Navigation.scss";
-import "@/SCSS/NavHeaderFooterError/Error.scss";
 import "@/SCSS/NavHeaderFooterError/Footer.scss";
 
 export default function App() {
@@ -15,16 +14,16 @@ export default function App() {
 
   useEffect(() => {
     setShowFooter(false);
-    const timer = setTimeout(() => setShowFooter(true), 50); // delay to wait for transition
+    const timer = setTimeout(() => setShowFooter(true), 50);
     return () => clearTimeout(timer);
   }, [location.pathname]);
-  
+
   return (
-    <>
+    <div className="Page">
       <Suspense fallback={<LoadingSpinner />}>
-        <Outlet />
+        <Outlet /> {/* ✅ No header or navigation here */}
       </Suspense>
       {showFooter && <Footer />}
-    </>
+    </div>
   );
 }

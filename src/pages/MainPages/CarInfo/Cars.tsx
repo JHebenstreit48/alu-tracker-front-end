@@ -7,6 +7,7 @@ import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle";
 import "@/SCSS/Cars/CarsPage/Cars.scss";
+import Navigation from "@/components/Shared/Navigation";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
@@ -159,7 +160,7 @@ export default function Cars() {
     <div className="cars">
       <PageTab title="Cars">
         <Header text="Cars" />
-
+        <Navigation />
         <CarTrackerToggle
           isEnabled={trackerMode}
           onToggle={(value) => {

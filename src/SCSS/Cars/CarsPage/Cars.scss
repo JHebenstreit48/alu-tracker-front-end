@@ -51,6 +51,12 @@
     justify-content: flex-end;
     margin: 3rem;
     position: relative;
+
+          @media only screen and (max-width: 390px) {
+        display: flex;
+        justify-content: center;
+        margin: 0 auto;
+      }
   
     .trackerSummary {
       background-color: black;
@@ -67,9 +73,13 @@
         color: rgb(255, 255, 255);
       }
   
-      @media only screen and (max-width: 768px) {
-        padding: 0.8rem 1.6rem;
-        font-size: 1.1rem;
+      @media only screen and (max-width: 390px) {
+        padding: 1rem 1rem;
+        font-size: 1rem;
+        width: 11rem;
+        margin-top: 4rem;
+        display: flex;
+        justify-content: center;
       }
     }
   }

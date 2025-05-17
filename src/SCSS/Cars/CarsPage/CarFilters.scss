@@ -24,6 +24,14 @@
    /* =============================
       Car Filters Layout
       ============================= */
+
+  .controls {
+    margin: 0 auto;
+
+    @media only screen and (max-width: 390px) {
+      margin: 4rem auto !important ;
+    }
+  }
    .carFilters {
      display: grid;
      grid-template-columns: 1fr 1fr;
