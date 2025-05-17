@@ -6,6 +6,8 @@ export const syncToAccount = async (token: string) => {
 
     const carStars: Record<string, number> = {};
     const ownedCars: string[] = [];
+    const goldMaxedCars: string[] = [];
+    const keyCarsOwned: string[] = [];
 
     for (const [carId, data] of Object.entries(allTracked)) {
       if (data.stars !== undefined) {
@@ -14,13 +16,21 @@ export const syncToAccount = async (token: string) => {
       if (data.owned) {
         ownedCars.push(carId);
       }
+      if (data.goldMax) {
+        goldMaxedCars.push(carId);
+      }
+      if (data.keyObtained) {
+        keyCarsOwned.push(carId);
+      }
     }
 
-    const xp = parseInt(localStorage.getItem("garageXP") || "0", 10); // ✅ XP only
+    const xp = parseInt(localStorage.getItem("garageXP") || "0", 10);
 
     const payload = {
       carStars,
       ownedCars,
+      goldMaxedCars,
+      keyCarsOwned,
       xp
     };
 
