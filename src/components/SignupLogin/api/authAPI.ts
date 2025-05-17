@@ -1,4 +1,5 @@
-const API_BASE_URL = "https://alutracker-api.onrender.com/api";
+const API_BASE_URL = import.meta.env.VITE_AUTH_API_URL;
+
 
 export const loginUser = async (email: string, password: string) => {
   try {

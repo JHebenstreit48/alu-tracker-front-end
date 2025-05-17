@@ -60,7 +60,7 @@ export default function SignUpModal({ onClose }: SignUpModalProps) {
               className="togglePasswordButton"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? "🙈" : "👁"}
+              {showPassword ? "👁" : "🙈"}
             </button>
           </div>
           {errorMsg && <div className="authError">{errorMsg}</div>}
