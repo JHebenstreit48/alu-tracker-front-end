@@ -1,0 +1,71 @@
+@use "sass:color";
+
+/* ==============================
+            Variables
+   ============================== */
+
+$gold-accent: rgb(255, 196, 0);
+$dark-shadow: #19191a;
+$purple-glow: #7a05be;
+
+/* ==============================
+        Auth Controls Wrapper
+   ============================== */
+
+.authControls {
+  position: absolute;
+  top: 5rem;
+  right: 1rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 102;
+
+  button {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 700;
+    font-style: normal;
+    background-color: unset;
+    border: 1px solid $gold-accent;
+    color: $gold-accent;
+    padding: 0.5rem 1rem;
+    text-shadow: 2px 2px 2px $dark-shadow;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $purple-glow;
+      color: white;
+      border-color: $purple-glow;
+    }
+  }
+}
+
+/* ==============================
+        Auth Welcome State
+   ============================== */
+
+.authWelcome {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 102;
+
+  button {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 700;
+    font-style: normal;
+    background-color: unset;
+    border: 1px solid $gold-accent;
+    color: $gold-accent;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $purple-glow;
+      color: white;
+      border-color: $purple-glow;
+    }
+  }
+}

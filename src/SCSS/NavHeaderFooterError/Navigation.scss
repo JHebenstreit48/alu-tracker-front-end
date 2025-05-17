@@ -36,7 +36,7 @@ $tablet-max: 768px;
 
 .NavigationWrapper {
   position: absolute;
-  top: 11rem; /* ✅ Higher inside the header visually */
+  top: 7rem; /* ✅ Higher inside the header visually */
   left: 0;
   width: 100%;
   background-color: transparent; /* ✅ No background, blends into header gradient */
