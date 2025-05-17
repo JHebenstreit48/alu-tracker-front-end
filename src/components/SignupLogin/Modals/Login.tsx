@@ -11,11 +11,13 @@ export default function LoginModal({ onClose }: LoginModalProps) {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await loginUser(email, password);
+
     if (result.success && result.token && result.username) {
       login(result.token, result.username);
       onClose();
@@ -39,13 +41,22 @@ export default function LoginModal({ onClose }: LoginModalProps) {
             required
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="passwordWrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="togglePasswordButton"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "👁" : "🙈"}
+            </button>
+          </div>
           {errorMsg && <div className="authError">{errorMsg}</div>}
           <button type="submit">Login</button>
         </form>
