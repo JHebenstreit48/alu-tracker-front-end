@@ -159,7 +159,7 @@ export default function Cars() {
   return (
     <div className="cars">
       <PageTab title="Cars">
-        <Header text="Cars" />
+        <Header text="Cars" className="carsHeader" />
         <Navigation />
         <CarTrackerToggle
           isEnabled={trackerMode}
@@ -197,13 +197,14 @@ export default function Cars() {
           trackerMode={trackerMode}
         />
 
-        <div className="page-size-control">
-          <span>Cars per page:</span>
+        <div className="pageSizeControl">
+          <span className="paginationLabel">Cars per page:</span>
           {[25, 50, 100, 200, 300].map((size) => (
             <button
               key={size}
               onClick={() => handlePageSizeChange(size)}
               disabled={carsPerPage === size}
+              className="carsPerPage"
             >
               {size}
             </button>

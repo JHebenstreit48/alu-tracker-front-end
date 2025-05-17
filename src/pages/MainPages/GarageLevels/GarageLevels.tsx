@@ -18,20 +18,24 @@ export default function GarageLevelsPage() {
     return localStorage.getItem("garageLevelTrackerMode") === "true";
   });
 
-  useEffect(() => {
-    const fetchGarageLevels = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/garage-levels`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data: GarageLevelsInterface[] = await res.json();
-        setGarageLevels(data);
-      } catch (err) {
-        console.error("❌ Failed to fetch garage level data:", err);
-      }
-    };
+useEffect(() => {
+  const fetchGarageLevels = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/garage-levels`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data: GarageLevelsInterface[] = await res.json();
 
-    fetchGarageLevels();
-  }, []);
+      // ✅ Sort by GarageLevelKey before saving
+      const sorted = data.sort((a, b) => a.GarageLevelKey - b.GarageLevelKey);
+      setGarageLevels(sorted);
+    } catch (err) {
+      console.error("❌ Failed to fetch garage level data:", err);
+    }
+  };
+
+  fetchGarageLevels();
+}, []);
+
 
   return (
     <div>

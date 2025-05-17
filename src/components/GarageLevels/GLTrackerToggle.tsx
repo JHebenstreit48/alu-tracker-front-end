@@ -15,7 +15,7 @@ const GLTrackerToggle: React.FC<GLTrackerToggleProps> = ({ onToggle }) => {
   }, [isTrackerMode, onToggle]);
 
   return (
-    <div className="trackerToggle">
+    <div className="glTrackerToggle">
       <button onClick={() => setIsTrackerMode(!isTrackerMode)} className="toggleButton">
         Switch to {isTrackerMode ? 'Information Mode' : 'Tracker Mode'}
       </button>

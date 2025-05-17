@@ -23,13 +23,13 @@ $cellphone-portrait: 390px;
    ============================= */
 .trackerToggle {
   text-align: center;
-  margin: 2rem auto;
+  margin: 14rem auto;
 
       @media only screen and (max-width: 390px) {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 28rem auto 0 auto;
+      margin: 9rem auto 0 auto;
     }
 
   .trackerButton {
