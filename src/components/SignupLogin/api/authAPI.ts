@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_AUTH_API_URL;
+const API_BASE_URL = `${import.meta.env.VITE_AUTH_API_URL}/api`;
+
+console.log("[authAPI] VITE_AUTH_API_URL:", import.meta.env.VITE_AUTH_API_URL);
 
 
 export const loginUser = async (email: string, password: string) => {
