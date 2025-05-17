@@ -13,8 +13,13 @@ export default function AuthButtons() {
   return (
     <>
       {token ? (
-        <div className="authWelcome">
-          Welcome, {username}! <button onClick={logout}>Logout</button>
+        <div className="authWrapper">
+          <div className="authWelcome">Welcome, {username}!</div>
+          <div className="logoutWrapper">
+            <button onClick={logout} className="logout">
+              Logout
+            </button>
+          </div>
         </div>
       ) : (
         <div className="authControls">

@@ -8,9 +8,9 @@ $gold-accent: rgb(255, 196, 0);
 $dark-shadow: #19191a;
 $purple-glow: #7a05be;
 
-
 $cellphone-portrait: 390px;
 $tablet-max: 768px;
+
 /* ==============================
         Auth Controls Wrapper
    ============================== */
@@ -54,8 +54,6 @@ $tablet-max: 768px;
       color: white;
       border-color: $purple-glow;
     }
-
-    
   }
 }
 
@@ -72,20 +70,54 @@ $tablet-max: 768px;
   gap: 1rem;
   z-index: 102;
 
-  button {
-    font-family: "Cinzel Decorative", serif;
-    font-weight: 700;
-    font-style: normal;
-    background-color: unset;
-    border: 1px solid $gold-accent;
-    color: $gold-accent;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+  @media only screen and (max-width: $cellphone-portrait) {
+    position: fixed;
+    font-size: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 3.7rem auto;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+  }
+}
 
-    &:hover {
-      background-color: $purple-glow;
-      color: white;
-      border-color: $purple-glow;
-    }
+@media only screen and (max-width: $cellphone-portrait) {
+  .logoutWrapper {
+    position: fixed;
+    top: 1.9rem;
+    right: 0.6rem;
+    z-index: 103; // ensure it's above other elements
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+
+.logout {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  font-style: normal;
+  background-color: unset;
+  border: 1px solid $gold-accent;
+  color: $gold-accent;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+
+  @media only screen and (max-width: $cellphone-portrait) {
+    font-size: 0.5rem;
+    width: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.3rem;
+  }
+
+  &:hover {
+    background-color: $purple-glow;
+    color: white;
+    border-color: $purple-glow;
   }
 }
