@@ -13,6 +13,7 @@ import GoldMaxed from "@/components/CarInformation/CarTracker/GoldMaxed";
 import GoldMaxedProgress from "@/components/CarInformation/CarTracker/GoldMaxedProgress";
 import TotalKeys from "@/components/CarInformation/CarTracker/TotalKeys";
 import OwnedKeyProgress from "@/components/CarInformation/CarTracker/OwnedKeyProgress";
+import SyncButton from "@/components/CarInformation/UserDataSync/SyncButton";
 
 import "@/SCSS/Cars/CarTracker/CarTracker.scss";
 import "@/SCSS/Cars/CarTracker/CarsOwned.scss";
@@ -91,6 +92,8 @@ export default function CarTracker() {
         >
           Back to Cars
         </button>
+
+        <SyncButton />
 
         <div className="trackerSummaryBlock">
           <OwnedProgress ownedCount={ownedCars.length} totalCars={totalCars} />
