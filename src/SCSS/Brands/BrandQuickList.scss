@@ -17,7 +17,7 @@
    
    $brand-link-font-weight: 500;
    
-   $cellphone-portrait: 390px;
+   $mobileMaxWidthPortrait: 480px;
    $cellphone-landscape: 390px;
    
    /* =============================
@@ -31,7 +31,7 @@
      border-radius: $quick-list-border-radius;
      color: $quick-list-text-color;
 
-     @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
+     @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
        margin-top: 8rem;
        width: 86%
      }

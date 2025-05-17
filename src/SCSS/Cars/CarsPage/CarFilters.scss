@@ -20,7 +20,7 @@ $reset-btn-shadow: 0 0 8px rgb(223, 190, 7);
 $reset-btn-hover: rgb(193, 71, 250);
 $reset-btn-radius: 12px;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 
 /* ==============================
       Car Filters Layout
@@ -29,7 +29,7 @@ $cellphone-portrait: 390px;
 .controls {
   margin: 5rem auto;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     margin: 2rem auto !important;
   }
 }
@@ -84,7 +84,7 @@ $cellphone-portrait: 390px;
 /* ==============================
       Responsive Adjustments
    ============================== */
-@media only screen and (max-width: $cellphone-portrait) {
+@media only screen and (max-width: $mobileMaxWidthPortrait) {
   .controls {
     margin: 4rem auto;
   }

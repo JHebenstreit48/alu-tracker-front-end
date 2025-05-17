@@ -6,7 +6,7 @@
    $back-to-top-button-color: rgb(255, 196, 0);
    $back-to-top-button-padding: 0.5rem;
    
-   $cellphone-portrait: 390px;
+   $mobileMaxWidthPortrait: 480px;
    $cellphone-landscape: 390px;
    
    /* =============================
@@ -19,7 +19,7 @@
      margin-bottom: $back-to-top-margin-bottom;
      font-size: $back-to-top-font-size;
    
-     @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
+     @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
        /* Media query content to be added later */
      }
    

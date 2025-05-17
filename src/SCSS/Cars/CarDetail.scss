@@ -36,7 +36,7 @@ $max-rank-font-size: 1.6rem;
 $car-info-font-size: 1.2rem;
 $car-info-text-color: white;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 $cellphone-landscape: 390px;
 
 /* =============================
@@ -47,7 +47,7 @@ $cellphone-landscape: 390px;
   padding: $car-detail-padding;
   color: $car-detail-text-color;
 
-  @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
     /* Media query content to be added later */
   }
 

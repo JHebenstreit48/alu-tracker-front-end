@@ -16,7 +16,7 @@ $tracker-btn-hover-glow: 0 0 10px 3px rgba(21, 201, 232, 0.8);
 $circle-color-on: #00ff99;
 $circle-color-off: #bbb;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 
 /* =============================
    Tracker Toggle Button Layout
@@ -85,7 +85,7 @@ $cellphone-portrait: 390px;
     }
   }
 
-  @media only screen and (max-width: $cellphone-portrait) and (orientation: portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
     .trackerButton {
       font-size: 1.2rem;
       padding: 8px 18px;

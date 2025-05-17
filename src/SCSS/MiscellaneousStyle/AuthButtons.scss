@@ -8,7 +8,7 @@ $gold-accent: rgb(255, 196, 0);
 $dark-shadow: #19191a;
 $purple-glow: #7a05be;
 
-$cellphone-portrait: 390px;
+$mobileMaxWidthPortrait: 480px;
 $tablet-max: 768px;
 
 /* ==============================
@@ -23,7 +23,7 @@ $tablet-max: 768px;
   gap: 1rem;
   z-index: 102;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     flex-flow: column wrap;
     justify-content: flex-end;
     align-items: flex-end;
@@ -44,7 +44,7 @@ $tablet-max: 768px;
     text-shadow: 2px 2px 2px $dark-shadow;
     cursor: pointer;
 
-    @media only screen and (max-width: $cellphone-portrait) {
+    @media only screen and (max-width: $mobileMaxWidthPortrait) {
       font-size: 0.5rem;
       width: 2.3rem;
     }
@@ -70,7 +70,7 @@ $tablet-max: 768px;
   gap: 1rem;
   z-index: 102;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     position: fixed;
     font-size: 0.5rem;
     display: flex;
@@ -83,7 +83,7 @@ $tablet-max: 768px;
   }
 }
 
-@media only screen and (max-width: $cellphone-portrait) {
+@media only screen and (max-width: $mobileMaxWidthPortrait) {
   .logoutWrapper {
     position: fixed;
     top: 1.9rem;
@@ -106,7 +106,7 @@ $tablet-max: 768px;
   padding: 0.5rem 1rem;
   cursor: pointer;
 
-  @media only screen and (max-width: $cellphone-portrait) {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     font-size: 0.5rem;
     width: 3rem;
     display: flex;
