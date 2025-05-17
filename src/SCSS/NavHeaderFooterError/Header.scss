@@ -1,17 +1,8 @@
 @use "sass:color";
 
-/* ==============================
-            Variables
-   ============================== */
-
 $gold-text: rgb(255, 196, 0);
 $dark-shadow: #19191a;
-$header-gradient: linear-gradient(
-  to bottom,
-  #090113 1%,
-  #554e4e 42%,
-  #000000 94%
-);
+$header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%);
 $box-shadow-dark: 0px 2px 5px #5b1479;
 
 $cellphone-portrait: 390px;
@@ -19,8 +10,7 @@ $tablet-max: 768px;
 
 /* ==============================
                Header Wrapper
-   ============================== */
-
+============================== */
 .Header {
   position: fixed;
   top: 0;
@@ -46,13 +36,13 @@ $tablet-max: 768px;
 
   @media only screen and (max-width: $cellphone-portrait) {
     height: 6rem;
+    position: fixed;
   }
 }
 
 /* ==============================
                 Page Header
-   ============================== */
-
+============================== */
 .PageHeader {
   display: flex;
   justify-content: center;
@@ -67,9 +57,29 @@ $tablet-max: 768px;
   }
 
   @media only screen and (max-width: $cellphone-portrait) {
-    font-size: 32px;
-    margin-top: 1rem;
+    font-size: 1.2rem;
+    flex-wrap: wrap;
+    width: 60%;
+    margin: 1.7rem auto;
+    justify-content: center;
+    align-items: center;
     text-shadow: 4px 4px 4px black;
     color: $gold-text;
+  }
+}
+
+/* ==============================
+   Page-specific tweaks only inside media queries
+============================== */
+@media only screen and (max-width: $cellphone-portrait) {
+  .carsHeader .PageHeader {
+    font-size: 3rem;
+    min-width: 65%;
+    margin-top: 1.5rem
+  }
+
+  .brandsHeader .PageHeader {
+    font-size: 3rem;
+    min-width: 60%;
   }
 }

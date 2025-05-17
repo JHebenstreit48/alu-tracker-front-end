@@ -27,7 +27,11 @@ $cellphone-portrait: 390px;
    ============================== */
 
 .controls {
-  margin: 8rem auto;
+  margin: 5rem auto;
+
+  @media only screen and (max-width: $cellphone-portrait) {
+    margin: 2rem auto !important;
+  }
 }
 
 .carFilters {

@@ -8,6 +8,9 @@ $gold-accent: rgb(255, 196, 0);
 $dark-shadow: #19191a;
 $purple-glow: #7a05be;
 
+
+$cellphone-portrait: 390px;
+$tablet-max: 768px;
 /* ==============================
         Auth Controls Wrapper
    ============================== */
@@ -20,6 +23,16 @@ $purple-glow: #7a05be;
   gap: 1rem;
   z-index: 102;
 
+  @media only screen and (max-width: $cellphone-portrait) {
+    flex-flow: column wrap;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: fixed;
+    top: 0;
+    margin-top: 14px;
+    gap: 7px;
+  }
+
   button {
     font-family: "Cinzel Decorative", serif;
     font-weight: 700;
@@ -31,11 +44,18 @@ $purple-glow: #7a05be;
     text-shadow: 2px 2px 2px $dark-shadow;
     cursor: pointer;
 
+    @media only screen and (max-width: $cellphone-portrait) {
+      font-size: 0.5rem;
+      width: 2.3rem;
+    }
+
     &:hover {
       background-color: $purple-glow;
       color: white;
       border-color: $purple-glow;
     }
+
+    
   }
 }
 

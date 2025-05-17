@@ -13,19 +13,11 @@
             Garage Level Tracker
       ============================== */
    
-   .garageLevelTracker {
-     display: grid;
-     grid-template-columns: 1fr;
-     text-align: center;
-     margin: 5rem auto 4rem;
-     gap: 2rem;
-     width: 46rem;
-     border: 3px solid black;
-     box-shadow: $shadow-style;
-     background-color: $background-dark;
-     font-size: 1.5rem;
-     padding: 2rem 0;
-     color: $text-color;
+   .glTrackerToggle {
+    margin: 15rem auto 0 auto;
+    //  box-shadow: $shadow-style;
+    //  background-color: $background-dark;
+    //  color: $text-color;
    }
    
    /* ==============================

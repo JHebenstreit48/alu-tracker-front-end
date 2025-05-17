@@ -1,12 +1,13 @@
 import AuthButtons from "@/components/SignupLogin/UI/AuthButtons";
 
-interface Header {
+interface HeaderProps {
   text: string;
+  className?: string;
 }
 
-export default function Header({ text }: Header) {
+export default function Header({ text, className }: HeaderProps) {
   return (
-    <div className="Header">
+    <div className={`Header ${className || ""}`}>
       <div>
         <h1 className="PageHeader">{text}</h1>
       </div>
