@@ -6,8 +6,9 @@ import PageTab from "@/components/Shared/PageTab";
 import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle";
-import "@/SCSS/Cars/CarsPage/Cars.scss";
 import Navigation from "@/components/Shared/Navigation";
+
+import "@/SCSS/Cars/CarsPage/Cars.scss";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
@@ -58,9 +59,10 @@ export default function Cars() {
 
   const [showOwned, setShowOwned] = useState(false);
   const [showKeyCars, setShowKeyCars] = useState(false);
-  const [trackerMode, setTrackerMode] = useState(
-    () => localStorage.getItem("trackerMode") === "true"
-  );
+  const [trackerMode, setTrackerMode] = useState(() => {
+    const stored = localStorage.getItem("trackerMode");
+    return stored === "true";
+  });
 
   const [carsPerPage, setCarsPerPage] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,7 +70,6 @@ export default function Cars() {
   const loadCars = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
       const params = new URLSearchParams({
         limit: "1000",
@@ -81,7 +82,6 @@ export default function Cars() {
       );
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
-
       const result = await response.json();
       setCars(Array.isArray(result.cars) ? result.cars : []);
     } catch (err) {
@@ -169,7 +169,12 @@ export default function Cars() {
     })
     .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
     .filter((car) => !showKeyCars || car.KeyCar)
-    .filter((car) => !showOwned || tracking[car._id]?.owned);
+    .filter(
+      (car) =>
+        !showOwned ||
+        tracking[`${car.Brand}_${car.Model}`.toLowerCase().replace(/\s+/g, "_")]
+          ?.owned
+    );
 
   const totalFiltered = filteredCars.length;
   const paginatedCars = filteredCars.slice(
@@ -197,8 +202,7 @@ export default function Cars() {
         <CarTrackerToggle
           isEnabled={trackerMode}
           onToggle={(value) => {
-            setTrackerMode(value);
-            localStorage.setItem("trackerMode", String(value));
+            setTrackerMode(value); // ✅ state will now respond to button click
           }}
         />
 

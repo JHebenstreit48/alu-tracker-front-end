@@ -1,6 +1,5 @@
 import { setCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
-// Helper to normalize the keys consistently
 function normalizeKey(key: string) {
   return key.toLowerCase().replace(/\s+/g, "_");
 }
