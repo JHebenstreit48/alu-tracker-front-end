@@ -30,7 +30,10 @@ interface CarTrackingData {
 }
 
 function normalizeString(str: string): string {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 }
 
 export default function Cars() {
@@ -39,16 +42,25 @@ export default function Cars() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [searchTerm, setSearchTerm] = useState(localStorage.getItem("searchTerm") || "");
+  const [searchTerm, setSearchTerm] = useState(
+    localStorage.getItem("searchTerm") || ""
+  );
   const [selectedStars, setSelectedStars] = useState<number | null>(null);
-  const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("selectedClass") || "All Classes");
+  const [selectedClass, setSelectedClass] = useState(
+    sessionStorage.getItem("selectedClass") || "All Classes"
+  );
   const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
-    () => localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric"
+    () =>
+      localStorage.getItem("preferredUnit") === "imperial"
+        ? "imperial"
+        : "metric"
   );
 
   const [showOwned, setShowOwned] = useState(false);
   const [showKeyCars, setShowKeyCars] = useState(false);
-  const [trackerMode, setTrackerMode] = useState(() => localStorage.getItem("trackerMode") === "true");
+  const [trackerMode, setTrackerMode] = useState(
+    () => localStorage.getItem("trackerMode") === "true"
+  );
 
   const [carsPerPage, setCarsPerPage] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,8 +76,11 @@ export default function Cars() {
         ...(selectedClass !== "All Classes" && { class: selectedClass }),
       });
 
-      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch(
+        `${API_BASE_URL}/api/cars?${params.toString()}`
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
       setCars(Array.isArray(result.cars) ? result.cars : []);
@@ -110,7 +125,9 @@ export default function Cars() {
     setCurrentPage(1);
   };
 
-  const handleUnitPreferenceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleUnitPreferenceChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
@@ -146,14 +163,19 @@ export default function Cars() {
     .filter((car) => {
       const brand = normalizeString(car.Brand);
       const model = normalizeString(car.Model);
-      return brand.includes(normalizedSearch) || model.includes(normalizedSearch);
+      return (
+        brand.includes(normalizedSearch) || model.includes(normalizedSearch)
+      );
     })
     .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
     .filter((car) => !showKeyCars || car.KeyCar)
     .filter((car) => !showOwned || tracking[car._id]?.owned);
 
   const totalFiltered = filteredCars.length;
-  const paginatedCars = filteredCars.slice((currentPage - 1) * carsPerPage, currentPage * carsPerPage);
+  const paginatedCars = filteredCars.slice(
+    (currentPage - 1) * carsPerPage,
+    currentPage * carsPerPage
+  );
 
   if (error) {
     return (
@@ -174,11 +196,17 @@ export default function Cars() {
 
         <CarTrackerToggle
           isEnabled={trackerMode}
-          onToggle={setTrackerMode}
+          onToggle={(value) => {
+            setTrackerMode(value);
+            localStorage.setItem("trackerMode", String(value));
+          }}
         />
 
         <div className="trackerSummaryLink">
-          <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
+          <button
+            className="trackerSummary"
+            onClick={() => navigate("/car-tracker")}
+          >
             My Car Tracker Summary
           </button>
         </div>
@@ -204,7 +232,8 @@ export default function Cars() {
         />
 
         <p className="car-count">
-          Showing {paginatedCars.length} of {totalFiltered} car{totalFiltered !== 1 ? "s" : ""}
+          Showing {paginatedCars.length} of {totalFiltered} car
+          {totalFiltered !== 1 ? "s" : ""}
         </p>
 
         <ClassTables
