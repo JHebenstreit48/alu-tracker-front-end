@@ -62,18 +62,20 @@ export default function CarTracker() {
           setTotalCars(data.total);
         }
 
+        // ✅ Get all key cars from backend
         const keyCars = (data.cars as Car[]).filter((car) => car.KeyCar);
-
         const keyCarKeys = keyCars.map((car) =>
           generateCarKey(car.Brand, car.Model)
         );
 
-        const keysObtained = keyCarKeys.filter(
-          (key) => allTracked[key]?.keyObtained
-        );
-        const ownedKeyCars = keyCarKeys.filter(
-          (key) => allTracked[key]?.owned
-        );
+        // ✅ Use actual localStorage keys for lookup
+        const keysObtained = Object.entries(allTracked)
+          .filter(([, val]) => val.keyObtained)
+          .map(([key]) => key);
+
+        const ownedKeyCars = Object.entries(allTracked)
+          .filter(([, val]) => val.owned)
+          .map(([key]) => key);
 
         setKeyCarSummary({
           total: keyCarKeys.length,
@@ -81,10 +83,11 @@ export default function CarTracker() {
           owned: ownedKeyCars.length,
         });
 
+        // ✅ Debug info
         console.log("🧪 Key car summary:", {
           totalFromBackend: keyCarKeys.length,
           keysObtainedFromLocal: keysObtained.length,
-          keyCarsOwnedInLocal: ownedKeyCars.length,
+          carsOwnedInLocal: ownedKeyCars.length,
         });
 
         console.log("🧪 Full key car keys from backend:", keyCarKeys);

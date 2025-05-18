@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { generateCarKey } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+
 
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
@@ -180,12 +182,15 @@ export default function Cars() {
     })
     .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
     .filter((car) => !showKeyCars || car.KeyCar)
-    .filter(
-      (car) =>
-        !showOwned ||
-        tracking[`${car.Brand}_${car.Model}`.toLowerCase().replace(/\s+/g, "_")]
-          ?.owned
-    );
+    .filter((car) => {
+      if (!showOwned) return true;
+      const key = generateCarKey(car.Brand, car.Model);
+      const isOwned = tracking[key]?.owned;
+      return isOwned === true;
+    })
+    
+    
+    
 
   const totalFiltered = filteredCars.length;
   const paginatedCars = filteredCars.slice(

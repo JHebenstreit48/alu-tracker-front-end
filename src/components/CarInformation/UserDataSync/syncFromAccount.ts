@@ -1,4 +1,7 @@
-import { setCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import {
+  setCarTrackingData,
+  clearAllCarTrackingData,
+} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface CarTrackingData {
   owned?: boolean;
@@ -9,12 +12,12 @@ interface CarTrackingData {
   importParts?: number;
 }
 
-function normalizeKey(key: string) {
-  return key.toLowerCase().replace(/\s+/g, "_");
-}
-
 export const syncFromAccount = async (token: string) => {
   try {
+    // ✅ 1. Clear stale local data
+    clearAllCarTrackingData();
+
+    // ✅ 2. Fetch latest progress from backend
     const res = await fetch(
       `${import.meta.env.VITE_AUTH_API_URL}/api/users/get-progress`,
       {
@@ -40,7 +43,12 @@ export const syncFromAccount = async (token: string) => {
       return;
     }
 
-    const { carStars = {}, ownedCars = [], goldMaxedCars = [], keyCarsOwned = [] } = result.progress;
+    const {
+      carStars = {},
+      ownedCars = [],
+      goldMaxedCars = [],
+      keyCarsOwned = [],
+    } = result.progress;
 
     console.log("📥 Incoming sync data:");
     console.log("▶️ carStars:", carStars);
@@ -48,36 +56,34 @@ export const syncFromAccount = async (token: string) => {
     console.log("▶️ goldMaxedCars:", goldMaxedCars);
     console.log("▶️ keyCarsOwned:", keyCarsOwned);
 
-    for (const rawKey in carStars) {
-      const key = normalizeKey(rawKey);
-      setCarTrackingData(key, { stars: carStars[rawKey] });
+    // ✅ 3. Restore progress directly (no normalization)
+    for (const key in carStars) {
+      setCarTrackingData(key, { stars: carStars[key] });
     }
-    for (const rawKey of ownedCars) {
-      const key = normalizeKey(rawKey);
+    for (const key of ownedCars) {
       setCarTrackingData(key, { owned: true });
     }
-    for (const rawKey of goldMaxedCars) {
-      const key = normalizeKey(rawKey);
+    for (const key of goldMaxedCars) {
       setCarTrackingData(key, { goldMax: true });
     }
-    for (const rawKey of keyCarsOwned) {
-      const key = normalizeKey(rawKey);
+    for (const key of keyCarsOwned) {
       setCarTrackingData(key, { keyObtained: true });
     }
 
+    // ✅ 4. Debug snapshot after syncing
     console.log("✅ LocalStorage after sync:");
-    console.log("🧪 All local keys:", Object.keys(localStorage).filter(k => k.startsWith("car-tracker-")));
+    const allKeys = Object.keys(localStorage).filter((k) =>
+      k.startsWith("car-tracker-")
+    );
+    console.log("🧪 All local keys:", allKeys);
 
     const allTracked: Record<string, CarTrackingData> = {};
-
-    for (const key in localStorage) {
-      if (key.startsWith("car-tracker-")) {
-        try {
-          const parsed = JSON.parse(localStorage.getItem(key) || "{}");
-          allTracked[key] = parsed as CarTrackingData;
-        } catch {
-          console.warn(`⚠️ Could not parse tracking data for key: ${key}`);
-        }
+    for (const key of allKeys) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || "{}");
+        allTracked[key] = parsed as CarTrackingData;
+      } catch {
+        console.warn(`⚠️ Could not parse tracking data for key: ${key}`);
       }
     }
 
