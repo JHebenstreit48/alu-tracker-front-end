@@ -12,10 +12,18 @@ export const syncFromAccount = async (token: string) => {
       }
     );
 
-    const result = await res.json();
+    const rawText = await res.text();
+    let result;
+
+    try {
+      result = JSON.parse(rawText);
+    } catch {
+      console.error("❌ Failed to parse response JSON:", rawText);
+      return;
+    }
 
     if (!res.ok || !result.progress) {
-      console.error("❌ Failed to fetch progress from account");
+      console.error("❌ Invalid response or no progress data:", result);
       return;
     }
 
