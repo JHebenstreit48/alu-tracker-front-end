@@ -27,7 +27,9 @@ $mobileMaxWidthPortrait: 480px;
    ============================== */
 
 .controls {
-  margin: 5rem auto;
+  margin: 0 auto;
+  display: flex;
+  position: absolute;
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
     margin: 2rem auto !important;
@@ -41,7 +43,7 @@ $mobileMaxWidthPortrait: 480px;
   border: $filter-border;
   box-shadow: $filter-shadow;
   width: $filter-width;
-  margin: 4rem auto;
+  margin: 0 auto;
   padding: $filter-padding;
   gap: $filter-gap;
   color: $filter-font-color;
@@ -64,8 +66,9 @@ $mobileMaxWidthPortrait: 480px;
   .CheckboxLabel {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.6rem;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   user-select: none;
 
   input[type="checkbox"] {
