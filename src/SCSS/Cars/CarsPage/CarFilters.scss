@@ -62,18 +62,18 @@ $mobileMaxWidthPortrait: 480px;
   }
 
   .CheckboxLabel {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 1.1rem;
-    user-select: none;
-  
-    input[type="checkbox"] {
-      transform: scale(1.2);
-      cursor: pointer;
-    }
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  user-select: none;
+
+  input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
   }
-  
+}
+
 
   .resetButton {
     grid-column: span 2;
