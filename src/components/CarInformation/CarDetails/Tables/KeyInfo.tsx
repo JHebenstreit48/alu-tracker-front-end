@@ -3,8 +3,9 @@ import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInt
 import {
   getCarTrackingData,
   setCarTrackingData,
-  generateCarKey
+  generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
 interface KeyInfoProps {
   car: Car;
@@ -17,24 +18,30 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
   car,
   trackerMode = false,
   keyObtained = false,
-  onKeyObtainedChange
+  onKeyObtainedChange,
 }) => {
+  const carKey = generateCarKey(car.Brand, car.Model);
+
   useEffect(() => {
     if (trackerMode && car.KeyCar) {
-      const carKey = generateCarKey(car.Brand, car.Model);
       const prevData = getCarTrackingData(carKey);
       setCarTrackingData(carKey, {
         ...prevData,
         keyObtained,
       });
     }
-  }, [trackerMode, car.Brand, car.Model, car.KeyCar, keyObtained]);
+  }, [trackerMode, carKey, car.KeyCar, keyObtained]);
+
+  // ✅ Auto-sync when keyObtained changes
+  useAutoSyncDependency(trackerMode && car.KeyCar ? [keyObtained] : []);
 
   if (!car.KeyCar) return null;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
-    if (onKeyObtainedChange) onKeyObtainedChange(isChecked);
+    if (onKeyObtainedChange) {
+      onKeyObtainedChange(isChecked);
+    }
   };
 
   return (
@@ -47,7 +54,9 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
         </thead>
         <tbody>
           <tr>
-            <td>🔑 <strong>Key Car</strong></td>
+            <td>
+              🔑 <strong>Key Car</strong>
+            </td>
           </tr>
           {trackerMode && (
             <tr>

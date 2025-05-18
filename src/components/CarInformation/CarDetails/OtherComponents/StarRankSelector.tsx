@@ -3,13 +3,14 @@ import {
   getCarTrackingData,
   setCarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
 interface StarRankSelectorProps {
   maxStars: number;
-  selected?: number; // Optional for uncontrolled mode
+  selected?: number; // Optional for controlled mode
   onSelect?: (value: number) => void;
   readOnly?: boolean;
-  carId?: string; // Optional – triggers auto-persistence
+  carId?: string; // Optional – enables auto-persistence
 }
 
 const StarRankSelector: React.FC<StarRankSelectorProps> = ({
@@ -21,7 +22,7 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
 }) => {
   const [internalStars, setInternalStars] = useState<number>(0);
 
-  // Load from localStorage only if uncontrolled
+  // Load stars from localStorage if uncontrolled
   useEffect(() => {
     if (carId && selected === undefined) {
       const data = getCarTrackingData(carId);
@@ -31,13 +32,16 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
     }
   }, [carId, selected]);
 
+  // ✅ Auto-sync stars if uncontrolled and tracking by carId
+  useAutoSyncDependency(carId && selected === undefined ? [internalStars] : []);
+
   const handleClick = (value: number) => {
     if (readOnly) return;
 
     if (onSelect) {
-      onSelect(value);
+      onSelect(value); // Controlled mode
     } else {
-      setInternalStars(value);
+      setInternalStars(value); // Uncontrolled mode
       if (carId) {
         setCarTrackingData(carId, { stars: value });
       }
