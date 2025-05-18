@@ -8,6 +8,7 @@ interface Props {
 export default function CarTrackerToggle({ isEnabled, onToggle }: Props) {
   const handleClick = () => {
     const newValue = !isEnabled;
+    console.log("🖱️ Toggle clicked. New Tracker Mode:", newValue);
     localStorage.setItem("trackerMode", String(newValue));
     onToggle(newValue);
   };

@@ -22,16 +22,16 @@ $mobileMaxWidthPortrait: 480px;
    Tracker Toggle Button Layout
    ============================= */
 .trackerToggle {
-  text-align: center;
-  margin: 14rem auto 0 auto;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 
-      @media only screen and (max-width: 390px) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 9rem auto 0 auto;
-    }
+  @media only screen and (max-width: 390px) {
+    justify-content: center;
+    align-items: center;
+    margin: 9rem auto 0 auto;
+  }
 
   .trackerButton {
     font-size: $tracker-btn-font-size;
@@ -41,13 +41,9 @@ $mobileMaxWidthPortrait: 480px;
     cursor: pointer;
     box-shadow: $tracker-btn-shadow;
     transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    display: inline-flex;
-    position: absolute;
-    margin: 1rem 2rem;
+    display: flex;
     align-items: center;
     gap: 0.6rem;
-
-
 
     .circleIndicator {
       width: 1rem;
@@ -73,13 +69,12 @@ $mobileMaxWidthPortrait: 480px;
     &.off {
       background-color: $tracker-btn-off-bg;
       color: $tracker-btn-off-color;
-    
+
       &:hover {
         background-color: color.adjust($tracker-btn-off-bg, $lightness: -10%);
         color: white;
       }
     }
-    
 
     &.pulse {
       animation: pulse 1.5s infinite;

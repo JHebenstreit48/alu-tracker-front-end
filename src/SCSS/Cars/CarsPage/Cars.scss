@@ -1,4 +1,5 @@
 @use "sass:color";
+@use "TrackerToggle"; // ✅ import toggle visuals
 
 /* =============================
    Variables
@@ -46,6 +47,22 @@ $car-name-link-color: rgb(24, 189, 249);
 $mobileMaxWidthPortrait: 480px;
 $cellphone-landscape: 390px;
 
+/* =============================
+   Layout: Toggle + Summary Row
+   ============================= */
+.trackerControlsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14rem 4rem 1rem 4rem;
+
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem auto;
+  }
+}
+
 .trackerSummaryLink {
   display: flex;
   justify-content: flex-end;
@@ -53,7 +70,6 @@ $cellphone-landscape: 390px;
   position: relative;
 
   @media only screen and (max-width: 390px) {
-    display: flex;
     justify-content: center;
     margin: 0 auto;
   }
@@ -78,7 +94,6 @@ $cellphone-landscape: 390px;
       font-size: 1rem;
       width: 11rem;
       margin-top: 4rem;
-      display: flex;
       justify-content: center;
     }
   }
@@ -143,16 +158,16 @@ td {
 }
 
 /* ==============================
-      Page Layout & Footer Spacing
-      ============================== */
+   Page Layout & Footer Spacing
+   ============================== */
 .cars {
   min-height: 75vh;
   padding-bottom: 4rem;
 }
 
 /* ==============================
-      New Car Count & Pagination Styling
-      ============================== */
+   New Car Count & Pagination Styling
+   ============================== */
 .car-count {
   font-size: 1.5rem;
   color: rgb(21, 201, 232);
@@ -204,23 +219,20 @@ td {
     }
   }
 
-  // 🔥 MEDIA QUERY ONLY: Wrap buttons horizontally
   @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
-  align-items: center;
+    align-items: center;
 
-  .paginationLabel {
+    .paginationLabel {
+      text-align: center;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .carsPerPage {
+      display: inline-block;
+      margin: 0.4rem;
+    }
+
     text-align: center;
-    width: 100%;
-    margin-bottom: 1rem;
   }
-
-  // ✅ Wrap the buttons in rows (2–3 per line)
-  .carsPerPage {
-    display: inline-block;
-    margin: 0.4rem;
-  }
-
-  // ✅ Let buttons wrap like text in a centered layout
-  text-align: center;
-}
 }
