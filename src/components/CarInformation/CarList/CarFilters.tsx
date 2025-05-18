@@ -90,12 +90,12 @@ export default function CarFilters({
 
       <label className="CheckboxLabel">
         <input type="checkbox" checked={showOwned} onChange={onToggleOwned} />
-        Show Owned Cars Only
+        Owned
       </label>
 
       <label className="CheckboxLabel">
         <input type="checkbox" checked={showKeyCars} onChange={onToggleKeyCars} />
-        Show Key Cars Only
+        Key Car
       </label>
 
       <button className="resetButton" onClick={onReset}>

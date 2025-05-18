@@ -3,8 +3,8 @@
 /* =============================
    Variables
    ============================= */
-$tracker-btn-font-size: 1.4rem;
-$tracker-btn-padding: 10px 24px;
+$tracker-btn-font-size: 1.2rem;
+$tracker-btn-padding: 1rem;
 $tracker-btn-border-radius: 1rem;
 $tracker-btn-on-bg: rgb(50, 205, 50);
 $tracker-btn-off-bg: rgb(60, 60, 60);
@@ -23,7 +23,8 @@ $mobileMaxWidthPortrait: 480px;
    ============================= */
 .trackerToggle {
   text-align: center;
-  margin: 14rem auto;
+  margin: 14rem auto 0 auto;
+  display: flex;
 
       @media only screen and (max-width: 390px) {
       display: flex;
@@ -40,7 +41,7 @@ $mobileMaxWidthPortrait: 480px;
     cursor: pointer;
     box-shadow: $tracker-btn-shadow;
     transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    display: flex;
+    display: inline-flex;
     position: absolute;
     margin: 1rem 2rem;
     align-items: center;

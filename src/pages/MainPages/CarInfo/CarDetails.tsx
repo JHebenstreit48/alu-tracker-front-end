@@ -1,27 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
-// Interfaces Start
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
-// Interfaces End
-
-// Components Start
 import CarImage from "@/components/CarInformation/CarDetails/OtherComponents/CarImage";
 import ClassRank from "@/components/CarInformation/CarDetails/Tables/ClassRank";
 import MaxStats from "@/components/CarInformation/CarDetails/Tables/MaxStats";
 import BlueprintsTable from "@/components/CarInformation/CarDetails/Tables/BlueprintsTable";
 import KeyInfo from "@/components/CarInformation/CarDetails/Tables/KeyInfo";
-// Components End
 
-// Utils
 import {
   getCarTrackingData,
   generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
-// Styles Start
 import "@/SCSS/Cars/CarDetail.scss";
-// Styles End
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -31,7 +23,8 @@ const CarDetails = () => {
   const [error, setError] = useState(false);
   const [keyObtained, setKeyObtained] = useState(false);
 
-  const trackerMode = location.state?.trackerMode || false;
+  // ✅ Always use localStorage tracker mode
+  const trackerMode = localStorage.getItem("trackerMode") === "true";
 
   const unitPreference =
     localStorage.getItem("preferredUnit") === "imperial"
@@ -52,8 +45,6 @@ const CarDetails = () => {
         })
         .then((data: Car) => {
           setCar(data);
-
-          // ✅ Use brand_model key instead of _id
           const key = generateCarKey(data.Brand, data.Model);
           const stored = getCarTrackingData(key);
           if (stored?.keyObtained !== undefined) {
