@@ -9,11 +9,11 @@ export default function SyncButton() {
     if (!token) return alert("Not logged in.");
     const result = await syncToAccount(token);
     if (result.success) {
-      alert("✅ One-time sync successful!");
+      alert("✅ sync successful!");
     } else {
       alert("❌ Sync failed: " + result.message);
     }
   };
 
-  return <button onClick={handleSync}>Push My Tracker to Account</button>;
+  return <button onClick={handleSync}>Push to Account</button>;
 }

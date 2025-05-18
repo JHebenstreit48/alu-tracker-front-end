@@ -14,7 +14,10 @@ import KeyInfo from "@/components/CarInformation/CarDetails/Tables/KeyInfo";
 // Components End
 
 // Utils
-import { getCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import {
+  getCarTrackingData,
+  generateCarKey,
+} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 // Styles Start
 import "@/SCSS/Cars/CarDetail.scss";
@@ -47,11 +50,12 @@ const CarDetails = () => {
           }
           return response.json();
         })
-        .then((data) => {
+        .then((data: Car) => {
           setCar(data);
 
-          // ✅ Load keyObtained from localStorage
-          const stored = getCarTrackingData(data._id);
+          // ✅ Use brand_model key instead of _id
+          const key = generateCarKey(data.Brand, data.Model);
+          const stored = getCarTrackingData(key);
           if (stored?.keyObtained !== undefined) {
             setKeyObtained(stored.keyObtained);
           }

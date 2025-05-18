@@ -3,6 +3,7 @@ import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInt
 import {
   getCarTrackingData,
   setCarTrackingData,
+  generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface Props {
@@ -15,18 +16,20 @@ export default function ProgressTracker({ car }: Props) {
   const [upgradeStage, setUpgradeStage] = useState(0);
   const [importParts, setImportParts] = useState(0);
 
+  const carKey = generateCarKey(car.Brand, car.Model);
+
   useEffect(() => {
-    const data = getCarTrackingData(car._id || "");
+    const data = getCarTrackingData(carKey);
     if (data) {
       setOwned(!!data.owned);
       setStars(data.stars ?? 1);
       setUpgradeStage(data.upgradeStage ?? 0);
       setImportParts(data.importParts ?? 0);
     }
-  }, [car._id]);
+  }, [carKey]);
 
   const handleSave = () => {
-    setCarTrackingData(car._id || "", {
+    setCarTrackingData(carKey, {
       owned,
       stars,
       upgradeStage,
