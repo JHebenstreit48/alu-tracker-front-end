@@ -4,6 +4,7 @@ import StarRankSelector from "@/components/CarInformation/CarDetails/OtherCompon
 import {
   getCarTrackingData,
   setCarTrackingData,
+  generateCarKey
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface ClassRankProps {
@@ -21,10 +22,12 @@ const ClassRank: React.FC<ClassRankProps> = ({
   const [owned, setOwned] = useState<boolean>(false);
   const [goldMax, setGoldMax] = useState<boolean>(false);
 
+  const carKey = generateCarKey(car.Brand, car.Model);
+
   // Load tracking state from localStorage
   useEffect(() => {
-    if (trackerMode && car._id) {
-      const data = getCarTrackingData(car._id);
+    if (trackerMode) {
+      const data = getCarTrackingData(carKey);
 
       if (typeof data.stars === "number") {
         setSelectedStarRank(data.stars);
@@ -39,12 +42,12 @@ const ClassRank: React.FC<ClassRankProps> = ({
       if (typeof data.goldMax === "boolean") {
         setGoldMax(data.goldMax);
       }
-    } else if (trackerMode) {
+    } else {
       setSelectedStarRank(0);
       setOwned(false);
       setGoldMax(false);
     }
-  }, [car._id, trackerMode]);
+  }, [carKey, trackerMode]);
 
   // Auto-check owned when forced or stars selected
   useEffect(() => {
@@ -55,14 +58,14 @@ const ClassRank: React.FC<ClassRankProps> = ({
 
   // Save to localStorage
   useEffect(() => {
-    if (trackerMode && car._id) {
-      setCarTrackingData(car._id, {
+    if (trackerMode) {
+      setCarTrackingData(carKey, {
         stars: selectedStarRank,
         owned,
         goldMax,
       });
     }
-  }, [car._id, trackerMode, selectedStarRank, owned, goldMax]);
+  }, [carKey, trackerMode, selectedStarRank, owned, goldMax]);
 
   return (
     <div className="carDetailTables">
@@ -111,7 +114,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
                       const isChecked = e.target.checked;
                       setGoldMax(isChecked);
                       if (isChecked) {
-                        setSelectedStarRank(car.Stars); // ✅ Auto set max stars
+                        setSelectedStarRank(car.Stars);
                       }
                     }}
                   />{" "}

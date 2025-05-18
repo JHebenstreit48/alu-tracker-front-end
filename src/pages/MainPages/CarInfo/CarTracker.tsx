@@ -4,6 +4,7 @@ import Header from "@/components/Shared/Header";
 import {
   getAllCarTrackingData,
   CarTrackingData,
+  generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 
@@ -62,28 +63,31 @@ export default function CarTracker() {
         }
 
         const keyCars = (data.cars as Car[]).filter((car) => car.KeyCar);
-        const keyCarIds = keyCars
-          .map((car) => car._id)
-          .filter(Boolean) as string[];
 
-        const keysObtained = keyCarIds.filter(
-          (id) => allTracked[id]?.keyObtained
+        const keyCarKeys = keyCars.map((car) =>
+          generateCarKey(car.Brand, car.Model)
         );
-        const ownedKeyCars = keyCarIds.filter((id) => allTracked[id]?.owned);
+
+        const keysObtained = keyCarKeys.filter(
+          (key) => allTracked[key]?.keyObtained
+        );
+        const ownedKeyCars = keyCarKeys.filter(
+          (key) => allTracked[key]?.owned
+        );
 
         setKeyCarSummary({
-          total: keyCarIds.length,
+          total: keyCarKeys.length,
           obtained: keysObtained.length,
           owned: ownedKeyCars.length,
         });
 
         console.log("🧪 Key car summary:", {
-          totalFromBackend: keyCarIds.length,
+          totalFromBackend: keyCarKeys.length,
           keysObtainedFromLocal: keysObtained.length,
           keyCarsOwnedInLocal: ownedKeyCars.length,
         });
 
-        console.log("🧪 Full key car IDs from backend:", keyCarIds);
+        console.log("🧪 Full key car keys from backend:", keyCarKeys);
         console.log("🧪 Keys obtained (from localStorage):", keysObtained);
         console.log(
           "🧪 Key cars marked owned (from localStorage):",

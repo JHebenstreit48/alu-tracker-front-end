@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 import {
   getCarTrackingData,
-  setCarTrackingData
+  setCarTrackingData,
+  generateCarKey
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 interface KeyInfoProps {
@@ -18,18 +19,17 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
   keyObtained = false,
   onKeyObtainedChange
 }) => {
-  // ✅ Hook must be top-level, so we wrap the logic inside instead
   useEffect(() => {
-    if (trackerMode && car._id && car.KeyCar) {
-      const prevData = getCarTrackingData(car._id);
-      setCarTrackingData(car._id, {
+    if (trackerMode && car.KeyCar) {
+      const carKey = generateCarKey(car.Brand, car.Model);
+      const prevData = getCarTrackingData(carKey);
+      setCarTrackingData(carKey, {
         ...prevData,
-        keyObtained, // ✅ Will only exist in storage if trackerMode is on and this is a KeyCar
+        keyObtained,
       });
     }
-  }, [trackerMode, car._id, car.KeyCar, keyObtained]);
+  }, [trackerMode, car.Brand, car.Model, car.KeyCar, keyObtained]);
 
-  // ✅ Early return (but only AFTER the hook above!)
   if (!car.KeyCar) return null;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {

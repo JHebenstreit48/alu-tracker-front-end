@@ -1,7 +1,10 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useContext } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "@/components/Shared/Footer";
 import LoadingSpinner from "@/components/Shared/LoadingSpinner";
+
+import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { syncFromAccount } from "@/components/CarInformation/UserDataSync/syncFromAccount";
 
 import "@/SCSS/PageAndHome/Page.scss";
 import "@/SCSS/NavHeaderFooterError/Header.scss";
@@ -10,18 +13,32 @@ import "@/SCSS/NavHeaderFooterError/Footer.scss";
 
 export default function App() {
   const location = useLocation();
+  const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
+  // Controls footer fade-in on page change
   useEffect(() => {
     setShowFooter(false);
     const timer = setTimeout(() => setShowFooter(true), 50);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  // Auto-restore from account if local tracker is empty
+  useEffect(() => {
+    const hasLocalData = Object.keys(localStorage).some((key) =>
+      key.startsWith("car-tracker-")
+    );
+
+    if (token && !hasLocalData) {
+      console.log("[AutoSync] No local tracker found. Syncing from account...");
+      syncFromAccount(token);
+    }
+  }, [token]);
+
   return (
     <div className="Page">
       <Suspense fallback={<LoadingSpinner />}>
-        <Outlet /> {/* ✅ No header or navigation here */}
+        <Outlet />
       </Suspense>
       {showFooter && <Footer />}
     </div>
