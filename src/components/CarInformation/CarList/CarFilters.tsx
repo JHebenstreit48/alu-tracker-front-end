@@ -33,7 +33,7 @@ export default function CarFilters({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
-    onSearch(term);
+    onSearch(term); // ✅ Send raw input — normalize later in Cars.tsx
   };
 
   const handleStarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

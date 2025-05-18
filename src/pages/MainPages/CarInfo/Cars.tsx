@@ -29,6 +29,14 @@ interface CarTrackingData {
   importParts?: number;
 }
 
+// ✅ Diacritic-safe normalization function
+function normalizeString(str: string): string {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
 export default function Cars() {
   const navigate = useNavigate();
   const [cars, setCars] = useState<Car[]>([]);
@@ -55,10 +63,9 @@ export default function Cars() {
 
     try {
       const params = new URLSearchParams({
-        limit: "1000", // fetch all for local filtering
+        limit: "1000",
         offset: "0",
         ...(selectedClass !== "All Classes" && { class: selectedClass }),
-        ...(searchTerm && { search: searchTerm }),
       });
 
       const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
@@ -72,7 +79,7 @@ export default function Cars() {
     } finally {
       setLoading(false);
     }
-  }, [selectedClass, searchTerm]);
+  }, [selectedClass]);
 
   useEffect(() => {
     loadCars();
@@ -138,7 +145,14 @@ export default function Cars() {
 
   const tracking = getLocalTracking();
 
+  const normalizedSearch = normalizeString(searchTerm);
+
   const filteredCars = cars
+    .filter((car) => {
+      const brand = normalizeString(car.Brand);
+      const model = normalizeString(car.Model);
+      return brand.includes(normalizedSearch) || model.includes(normalizedSearch);
+    })
     .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
     .filter((car) => !showKeyCars || car.KeyCar)
     .filter((car) => !showOwned || tracking[car._id]?.owned);
