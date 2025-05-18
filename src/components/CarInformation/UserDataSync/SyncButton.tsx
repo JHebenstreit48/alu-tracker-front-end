@@ -1,19 +1,32 @@
 import { useContext } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { syncToAccount } from "@/components/CarInformation/UserDataSync/syncToAccount";
+import { syncFromAccount } from "@/components/CarInformation/UserDataSync/syncFromAccount";
 
 export default function SyncButton() {
   const { token } = useContext(AuthContext);
 
-  const handleSync = async () => {
+  const handlePush = async () => {
     if (!token) return alert("Not logged in.");
     const result = await syncToAccount(token);
     if (result.success) {
-      alert("✅ sync successful!");
+      alert("✅ Progress pushed to account!");
     } else {
-      alert("❌ Sync failed: " + result.message);
+      alert("❌ Push failed: " + result.message);
     }
   };
 
-  return <button onClick={handleSync}>Push to Account</button>;
+  const handlePull = async () => {
+    if (!token) return alert("Not logged in.");
+    console.log("🔄 Syncing progress from account...");
+    await syncFromAccount(token);
+    alert("✅ Progress pulled from account!");
+  };
+
+  return (
+    <div className="syncButtonGroup">
+      <button onClick={handlePush}>Push to Account</button>
+      <button onClick={handlePull}>Pull from Account</button>
+    </div>
+  );
 }
