@@ -6,11 +6,17 @@ interface Props {
 }
 
 export default function CarTrackerToggle({ isEnabled, onToggle }: Props) {
+  const handleClick = () => {
+    const newValue = !isEnabled;
+    onToggle(newValue); // Notify parent
+    localStorage.setItem("trackerMode", String(newValue)); // Persist toggle
+  };
+
   return (
     <div className="trackerToggle">
       <button
         className={`trackerButton ${isEnabled ? "on pulse" : "off"}`}
-        onClick={() => onToggle(!isEnabled)}
+        onClick={handleClick}
       >
         <span className="circleIndicator" />
         {isEnabled ? " Tracker Mode On" : " Tracker Mode Off"}
