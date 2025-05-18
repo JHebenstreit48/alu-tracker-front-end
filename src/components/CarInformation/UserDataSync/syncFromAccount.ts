@@ -1,5 +1,10 @@
 import { setCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
+// Helper to normalize the keys consistently
+function normalizeKey(key: string) {
+  return key.toLowerCase().replace(/\s+/g, "_");
+}
+
 export const syncFromAccount = async (token: string) => {
   try {
     const res = await fetch(
@@ -29,16 +34,20 @@ export const syncFromAccount = async (token: string) => {
 
     const { carStars, ownedCars, goldMaxedCars, keyCarsOwned } = result.progress;
 
-    for (const key in carStars) {
-      setCarTrackingData(key, { stars: carStars[key] });
+    for (const rawKey in carStars) {
+      const key = normalizeKey(rawKey);
+      setCarTrackingData(key, { stars: carStars[rawKey] });
     }
-    for (const key of ownedCars) {
+    for (const rawKey of ownedCars) {
+      const key = normalizeKey(rawKey);
       setCarTrackingData(key, { owned: true });
     }
-    for (const key of goldMaxedCars) {
+    for (const rawKey of goldMaxedCars) {
+      const key = normalizeKey(rawKey);
       setCarTrackingData(key, { goldMax: true });
     }
-    for (const key of keyCarsOwned) {
+    for (const rawKey of keyCarsOwned) {
+      const key = normalizeKey(rawKey);
       setCarTrackingData(key, { keyObtained: true });
     }
 
