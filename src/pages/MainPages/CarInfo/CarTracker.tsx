@@ -62,9 +62,13 @@ export default function CarTracker() {
         }
 
         const keyCars = (data.cars as Car[]).filter((car) => car.KeyCar);
-        const keyCarIds = keyCars.map((car) => car._id).filter(Boolean) as string[];
+        const keyCarIds = keyCars
+          .map((car) => car._id)
+          .filter(Boolean) as string[];
 
-        const keysObtained = keyCarIds.filter((id) => allTracked[id]?.keyObtained);
+        const keysObtained = keyCarIds.filter(
+          (id) => allTracked[id]?.keyObtained
+        );
         const ownedKeyCars = keyCarIds.filter((id) => allTracked[id]?.owned);
 
         setKeyCarSummary({
@@ -72,6 +76,28 @@ export default function CarTracker() {
           obtained: keysObtained.length,
           owned: ownedKeyCars.length,
         });
+
+        console.log("🧪 Key car summary:", {
+          totalFromBackend: keyCarIds.length,
+          keysObtainedFromLocal: keysObtained.length,
+          keyCarsOwnedInLocal: ownedKeyCars.length,
+        });
+
+        console.log("🧪 Full key car IDs from backend:", keyCarIds);
+        console.log("🧪 Keys obtained (from localStorage):", keysObtained);
+        console.log(
+          "🧪 Key cars marked owned (from localStorage):",
+          ownedKeyCars
+        );
+
+        const allTrackedIdsMarkedKey = Object.entries(allTracked)
+          .filter(([, val]) => val.keyObtained || val.owned)
+          .map(([id]) => id);
+
+        console.log(
+          "🧪 All cars marked keyObtained or owned in localStorage:",
+          allTrackedIdsMarkedKey
+        );
       })
       .catch((err) => {
         console.error("Failed to fetch total car count or key car info:", err);
