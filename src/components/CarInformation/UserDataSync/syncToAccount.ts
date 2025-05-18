@@ -1,3 +1,5 @@
+// syncToAccount.ts
+
 import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 export const syncToAccount = async (token: string) => {
@@ -9,18 +11,18 @@ export const syncToAccount = async (token: string) => {
     const goldMaxedCars: string[] = [];
     const keyCarsOwned: string[] = [];
 
-    for (const [carId, data] of Object.entries(allTracked)) {
+    for (const [compositeId, data] of Object.entries(allTracked)) {
       if (data.stars !== undefined) {
-        carStars[carId] = data.stars;
+        carStars[compositeId] = data.stars;
       }
       if (data.owned) {
-        ownedCars.push(carId);
+        ownedCars.push(compositeId);
       }
       if (data.goldMax) {
-        goldMaxedCars.push(carId);
+        goldMaxedCars.push(compositeId);
       }
       if (data.keyObtained) {
-        keyCarsOwned.push(carId);
+        keyCarsOwned.push(compositeId);
       }
     }
 
