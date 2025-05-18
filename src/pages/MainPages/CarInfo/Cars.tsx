@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
@@ -17,44 +17,37 @@ interface Car {
   Brand: string;
   Model: string;
   Stars: number;
+  KeyCar?: boolean;
+}
+
+interface CarTrackingData {
+  owned?: boolean;
+  stars?: number;
+  goldMax?: boolean;
+  keyObtained?: boolean;
+  upgradeStage?: number;
+  importParts?: number;
 }
 
 export default function Cars() {
-  const location = useLocation();
   const navigate = useNavigate();
   const [cars, setCars] = useState<Car[]>([]);
-  const [carsPerPage, setCarsPerPage] = useState(25);
-  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [trackerMode, setTrackerMode] = useState<boolean>(() => {
-    return localStorage.getItem("trackerMode") === "true";
-  });
-
-  useEffect(() => {
-    const navTracker = location.state?.trackerMode;
-    if (navTracker !== undefined) {
-      setTrackerMode(navTracker);
-      localStorage.setItem("trackerMode", String(navTracker));
-    }
-  }, [location.state]);
-
-  const [searchTerm, setSearchTerm] = useState<string>(
-    localStorage.getItem("searchTerm") || ""
-  );
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem("searchTerm") || "");
   const [selectedStars, setSelectedStars] = useState<number | null>(null);
-  const [selectedClass, setSelectedClass] = useState<string>(
-    sessionStorage.getItem("selectedClass") || "All Classes"
-  );
+  const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("selectedClass") || "All Classes");
   const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
-    () => {
-      const savedUnit = localStorage.getItem("preferredUnit");
-      return savedUnit === "imperial" || savedUnit === "metric"
-        ? savedUnit
-        : "metric";
-    }
+    () => localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric"
   );
+
+  const [showOwned, setShowOwned] = useState(false);
+  const [showKeyCars, setShowKeyCars] = useState(false);
+  const [trackerMode, setTrackerMode] = useState(() => localStorage.getItem("trackerMode") === "true");
+
+  const [carsPerPage, setCarsPerPage] = useState(25);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadCars = useCallback(async () => {
     setLoading(true);
@@ -62,74 +55,96 @@ export default function Cars() {
 
     try {
       const params = new URLSearchParams({
-        limit: carsPerPage.toString(),
+        limit: "1000", // fetch all for local filtering
         offset: "0",
         ...(selectedClass !== "All Classes" && { class: selectedClass }),
-        ...(searchTerm && { search: searchTerm }), // ✅ Search term included
+        ...(searchTerm && { search: searchTerm }),
       });
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/cars?${params.toString()}`
-      );
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
-
       setCars(Array.isArray(result.cars) ? result.cars : []);
-      setTotalCount(typeof result.total === "number" ? result.total : 0);
     } catch (err) {
       console.error(err);
       setError("Failed to fetch cars. Please try again later.");
     } finally {
       setLoading(false);
     }
-  }, [selectedClass, carsPerPage, searchTerm]); // ✅ Track searchTerm too
+  }, [selectedClass, searchTerm]);
 
   useEffect(() => {
     loadCars();
-  }, [selectedClass, location.state, loadCars, carsPerPage]);
+  }, [loadCars]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     localStorage.setItem("searchTerm", term);
+    setCurrentPage(1);
   };
 
   const handleStarFilter = (stars: number | null) => {
     setSelectedStars(stars);
+    setCurrentPage(1);
   };
 
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
     setSelectedClass(newClass);
     sessionStorage.setItem("selectedClass", newClass);
+    setCurrentPage(1);
   };
 
   const handleResetFilters = () => {
     setSearchTerm("");
     setSelectedStars(null);
     setSelectedClass("All Classes");
+    setShowOwned(false);
+    setShowKeyCars(false);
     localStorage.removeItem("searchTerm");
     sessionStorage.removeItem("selectedClass");
+    setCurrentPage(1);
   };
 
-  const handleUnitPreferenceChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleUnitPreferenceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
   };
 
   const handlePageSizeChange = (size: number) => {
-    setCars([]);
     setCarsPerPage(size);
+    setCurrentPage(1);
   };
 
-  // ✅ Backend now handles search + class filtering. Star filter stays local.
+  const getLocalTracking = (): Record<string, CarTrackingData> => {
+    const tracked: Record<string, CarTrackingData> = {};
+    for (const key in localStorage) {
+      if (key.startsWith("car-tracker-")) {
+        try {
+          const carId = key.replace("car-tracker-", "");
+          const item = localStorage.getItem(key);
+          if (item) {
+            tracked[carId] = JSON.parse(item) as CarTrackingData;
+          }
+        } catch (err) {
+          console.warn(`Error parsing ${key}:`, err);
+        }
+      }
+    }
+    return tracked;
+  };
+
+  const tracking = getLocalTracking();
+
   const filteredCars = cars
     .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
-    .sort((a, b) => (selectedClass === "All Classes" ? a.Stars - b.Stars : 0));
+    .filter((car) => !showKeyCars || car.KeyCar)
+    .filter((car) => !showOwned || tracking[car._id]?.owned);
+
+  const totalFiltered = filteredCars.length;
+  const paginatedCars = filteredCars.slice((currentPage - 1) * carsPerPage, currentPage * carsPerPage);
 
   if (error) {
     return (
@@ -137,20 +152,6 @@ export default function Cars() {
         <PageTab title="Cars">
           <Header text="Cars" />
           <div className="error-message">{error}</div>
-          <CarFilters
-            onSearch={handleSearch}
-            onFilter={handleStarFilter}
-            onClassChange={handleClassChange}
-            onUnitChange={handleUnitPreferenceChange}
-            onReset={handleResetFilters}
-            selectedClass={selectedClass}
-            unitPreference={unitPreference}
-          />
-          <ClassTables
-            cars={[]}
-            selectedClass={selectedClass}
-            loading={loading}
-          />
         </PageTab>
       </div>
     );
@@ -161,6 +162,7 @@ export default function Cars() {
       <PageTab title="Cars">
         <Header text="Cars" className="carsHeader" />
         <Navigation />
+
         <CarTrackerToggle
           isEnabled={trackerMode}
           onToggle={(value) => {
@@ -183,15 +185,24 @@ export default function Cars() {
           onReset={handleResetFilters}
           selectedClass={selectedClass}
           unitPreference={unitPreference}
+          showOwned={showOwned}
+          showKeyCars={showKeyCars}
+          onToggleOwned={() => {
+            setShowOwned(!showOwned);
+            setCurrentPage(1);
+          }}
+          onToggleKeyCars={() => {
+            setShowKeyCars(!showKeyCars);
+            setCurrentPage(1);
+          }}
         />
 
         <p className="car-count">
-          Showing {filteredCars.length} of {totalCount} car
-          {totalCount !== 1 ? "s" : ""}
+          Showing {paginatedCars.length} of {totalFiltered} car{totalFiltered !== 1 ? "s" : ""}
         </p>
 
         <ClassTables
-          cars={filteredCars}
+          cars={paginatedCars}
           selectedClass={selectedClass}
           loading={loading}
           trackerMode={trackerMode}
