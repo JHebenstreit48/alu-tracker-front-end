@@ -1,5 +1,9 @@
 import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
+function revertCarKey(key: string): string {
+  return key.replace(/_/g, " ");
+}
+
 export const syncToAccount = async (token: string) => {
   try {
     const allTracked = getAllCarTrackingData();
@@ -10,17 +14,19 @@ export const syncToAccount = async (token: string) => {
     const keyCarsOwned: string[] = [];
 
     for (const [carKey, data] of Object.entries(allTracked)) {
+      const revertedKey = revertCarKey(carKey);
+
       if (data.stars !== undefined) {
-        carStars[carKey] = data.stars;
+        carStars[revertedKey] = data.stars;
       }
       if (data.owned) {
-        ownedCars.push(carKey);
+        ownedCars.push(revertedKey);
       }
-      if (data.goldMax) {
-        goldMaxedCars.push(carKey);
+      if (data.goldMaxed) {
+        goldMaxedCars.push(revertedKey);
       }
       if (data.keyObtained) {
-        keyCarsOwned.push(carKey);
+        keyCarsOwned.push(revertedKey);
       }
     }
 

@@ -112,7 +112,7 @@ export default function CarTracker() {
   }, []);
 
   const ownedCars = trackedCars.filter((car) => car.owned);
-  const goldMaxedCars = trackedCars.filter((car) => car.goldMax);
+  const goldMaxedCars = trackedCars.filter((car) => car.goldMaxed);
 
   return (
     <div className="carTrackerPage">

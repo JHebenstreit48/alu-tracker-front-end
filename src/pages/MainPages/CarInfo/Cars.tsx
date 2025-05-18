@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { generateCarKey } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
-
+import {
+  generateCarKey,
+  getAllCarTrackingData,
+  normalizeString,
+  CarTrackingData,
+} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
@@ -21,22 +25,6 @@ interface Car {
   Model: string;
   Stars: number;
   KeyCar?: boolean;
-}
-
-interface CarTrackingData {
-  owned?: boolean;
-  stars?: number;
-  goldMax?: boolean;
-  keyObtained?: boolean;
-  upgradeStage?: number;
-  importParts?: number;
-}
-
-function normalizeString(str: string): string {
-  return str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
 }
 
 export default function Cars() {
@@ -59,10 +47,15 @@ export default function Cars() {
         : "metric"
   );
 
-  const [showOwned, setShowOwned] = useState(false);
-  const [showKeyCars, setShowKeyCars] = useState(false);
-
-  const [trackerMode, setTrackerMode] = useState<boolean>(false);
+  const [showOwned, setShowOwned] = useState(
+    () => localStorage.getItem("showOwned") === "true"
+  );
+  const [showKeyCars, setShowKeyCars] = useState(
+    () => localStorage.getItem("showKeyCars") === "true"
+  );
+  const [trackerMode, setTrackerMode] = useState(false);
+  const [carsPerPage, setCarsPerPage] = useState(25);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const saved = localStorage.getItem("trackerMode");
@@ -76,9 +69,6 @@ export default function Cars() {
     localStorage.setItem("trackerMode", String(value));
     console.log("💾 TrackerMode updated:", value);
   };
-
-  const [carsPerPage, setCarsPerPage] = useState(25);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const loadCars = useCallback(async () => {
     setLoading(true);
@@ -135,6 +125,8 @@ export default function Cars() {
     setShowKeyCars(false);
     localStorage.removeItem("searchTerm");
     sessionStorage.removeItem("selectedClass");
+    localStorage.removeItem("showOwned");
+    localStorage.removeItem("showKeyCars");
     setCurrentPage(1);
   };
 
@@ -151,25 +143,19 @@ export default function Cars() {
     setCurrentPage(1);
   };
 
-  const getLocalTracking = (): Record<string, CarTrackingData> => {
-    const tracked: Record<string, CarTrackingData> = {};
-    for (const key in localStorage) {
-      if (key.startsWith("car-tracker-")) {
-        try {
-          const carId = key.replace("car-tracker-", "");
-          const item = localStorage.getItem(key);
-          if (item) {
-            tracked[carId] = JSON.parse(item) as CarTrackingData;
-          }
-        } catch (err) {
-          console.warn(`Error parsing ${key}:`, err);
-        }
-      }
-    }
-    return tracked;
+  const toggleShowOwned = () => {
+    const newVal = !showOwned;
+    setShowOwned(newVal);
+    localStorage.setItem("showOwned", String(newVal));
   };
 
-  const tracking = getLocalTracking();
+  const toggleShowKeyCars = () => {
+    const newVal = !showKeyCars;
+    setShowKeyCars(newVal);
+    localStorage.setItem("showKeyCars", String(newVal));
+  };
+
+  const tracking: Record<string, CarTrackingData> = getAllCarTrackingData();
   const normalizedSearch = normalizeString(searchTerm);
 
   const filteredCars = cars
@@ -181,16 +167,25 @@ export default function Cars() {
       );
     })
     .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
-    .filter((car) => !showKeyCars || car.KeyCar)
     .filter((car) => {
-      if (!showOwned) return true;
       const key = generateCarKey(car.Brand, car.Model);
-      const isOwned = tracking[key]?.owned;
-      return isOwned === true;
-    })
-    
-    
-    
+      const trackingData = tracking[key];
+      const isOwned = trackingData?.owned === true;
+      const isKeyCar = car.KeyCar === true;
+
+      console.log("🔍 Owned Filter Check →", {
+        carName: `${car.Brand} ${car.Model}`,
+        generatedKey: key,
+        trackingData,
+        isOwned,
+        allTrackingKeys: Object.keys(tracking),
+      });
+
+      if (showOwned && showKeyCars) return isOwned && isKeyCar;
+      if (showOwned) return isOwned;
+      if (showKeyCars) return isKeyCar;
+      return true;
+    });
 
   const totalFiltered = filteredCars.length;
   const paginatedCars = filteredCars.slice(
@@ -220,7 +215,6 @@ export default function Cars() {
             isEnabled={trackerMode}
             onToggle={toggleTrackerMode}
           />
-
           <div className="trackerSummaryLink">
             <button
               className="trackerSummary"
@@ -241,14 +235,9 @@ export default function Cars() {
           unitPreference={unitPreference}
           showOwned={showOwned}
           showKeyCars={showKeyCars}
-          onToggleOwned={() => {
-            setShowOwned(!showOwned);
-            setCurrentPage(1);
-          }}
-          onToggleKeyCars={() => {
-            setShowKeyCars(!showKeyCars);
-            setCurrentPage(1);
-          }}
+          onToggleOwned={toggleShowOwned}
+          onToggleKeyCars={toggleShowKeyCars}
+          searchTerm={searchTerm} // ✅ ADD THIS LINE
         />
 
         <p className="car-count">

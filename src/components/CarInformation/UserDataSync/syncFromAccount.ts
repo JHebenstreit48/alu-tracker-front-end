@@ -1,23 +1,14 @@
 import {
   setCarTrackingData,
   clearAllCarTrackingData,
+  generateCarKey,
+  CarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
-
-interface CarTrackingData {
-  owned?: boolean;
-  stars?: number;
-  goldMax?: boolean;
-  keyObtained?: boolean;
-  upgradeStage?: number;
-  importParts?: number;
-}
 
 export const syncFromAccount = async (token: string) => {
   try {
-    // ✅ 1. Clear stale local data
     clearAllCarTrackingData();
 
-    // ✅ 2. Fetch latest progress from backend
     const res = await fetch(
       `${import.meta.env.VITE_AUTH_API_URL}/api/users/get-progress`,
       {
@@ -29,6 +20,7 @@ export const syncFromAccount = async (token: string) => {
     );
 
     const rawText = await res.text();
+    console.log("🔍 Raw response text from backend:", rawText);
     let result;
 
     try {
@@ -38,8 +30,10 @@ export const syncFromAccount = async (token: string) => {
       return;
     }
 
+    console.log("📦 Parsed response object:", result);
+
     if (!res.ok || !result.progress) {
-      console.error("❌ Invalid response or no progress data:", result);
+      console.error("❌ Invalid response or missing 'progress' field:", result);
       return;
     }
 
@@ -50,32 +44,47 @@ export const syncFromAccount = async (token: string) => {
       keyCarsOwned = [],
     } = result.progress;
 
-    console.log("📥 Incoming sync data:");
-    console.log("▶️ carStars:", carStars);
-    console.log("▶️ ownedCars:", ownedCars);
-    console.log("▶️ goldMaxedCars:", goldMaxedCars);
-    console.log("▶️ keyCarsOwned:", keyCarsOwned);
+    const allEmpty =
+      Object.keys(carStars).length === 0 &&
+      ownedCars.length === 0 &&
+      goldMaxedCars.length === 0 &&
+      keyCarsOwned.length === 0;
 
-    // ✅ 3. Restore progress directly (no normalization)
-    for (const key in carStars) {
-      setCarTrackingData(key, { stars: carStars[key] });
-    }
-    for (const key of ownedCars) {
-      setCarTrackingData(key, { owned: true });
-    }
-    for (const key of goldMaxedCars) {
-      setCarTrackingData(key, { goldMax: true });
-    }
-    for (const key of keyCarsOwned) {
-      setCarTrackingData(key, { keyObtained: true });
+    if (allEmpty) {
+      console.warn("⚠️ Sync succeeded but no progress data was found for this account.");
     }
 
-    // ✅ 4. Debug snapshot after syncing
-    console.log("✅ LocalStorage after sync:");
+    for (const rawKey in carStars) {
+      const [brand, ...modelParts] = rawKey.split(" ");
+      const key = generateCarKey(brand, modelParts.join(" "));
+      const update: CarTrackingData = { stars: carStars[rawKey] };
+      setCarTrackingData(key, update);
+    }
+
+    for (const rawKey of ownedCars) {
+      const [brand, ...modelParts] = rawKey.split(" ");
+      const key = generateCarKey(brand, modelParts.join(" "));
+      const update: CarTrackingData = { owned: true };
+      setCarTrackingData(key, update);
+    }
+
+    for (const rawKey of goldMaxedCars) {
+      const [brand, ...modelParts] = rawKey.split(" ");
+      const key = generateCarKey(brand, modelParts.join(" "));
+      const update: CarTrackingData = { goldMaxed: true };
+      setCarTrackingData(key, update);
+    }
+
+    for (const rawKey of keyCarsOwned) {
+      const [brand, ...modelParts] = rawKey.split(" ");
+      const key = generateCarKey(brand, modelParts.join(" "));
+      const update: CarTrackingData = { keyObtained: true };
+      setCarTrackingData(key, update);
+    }
+
     const allKeys = Object.keys(localStorage).filter((k) =>
       k.startsWith("car-tracker-")
     );
-    console.log("🧪 All local keys:", allKeys);
 
     const allTracked: Record<string, CarTrackingData> = {};
     for (const key of allKeys) {
@@ -87,7 +96,7 @@ export const syncFromAccount = async (token: string) => {
       }
     }
 
-    console.log("🧪 Full tracking snapshot:", allTracked);
+    console.log("✅ Sync complete — local tracking:", allTracked);
   } catch (err) {
     console.error("❌ Failed to sync from account:", err);
   }

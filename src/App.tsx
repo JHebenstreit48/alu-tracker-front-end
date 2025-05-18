@@ -16,14 +16,17 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
-  // Controls footer fade-in on page change
+  // ✅ Expose syncFromAccount to window without any or global.d.ts
+  useEffect(() => {
+    (window as unknown as { syncFromAccount: typeof syncFromAccount }).syncFromAccount = syncFromAccount;
+  }, []);
+
   useEffect(() => {
     setShowFooter(false);
     const timer = setTimeout(() => setShowFooter(true), 50);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  // Auto-restore from account if local tracker is empty
   useEffect(() => {
     const hasLocalData = Object.keys(localStorage).some((key) =>
       key.startsWith("car-tracker-")

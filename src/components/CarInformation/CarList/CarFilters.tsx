@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "@/SCSS/Cars/CarsPage/CarFilters.scss";
 
 interface CarFiltersProps {
@@ -13,6 +12,7 @@ interface CarFiltersProps {
   showKeyCars: boolean;
   onToggleOwned: () => void;
   onToggleKeyCars: () => void;
+  searchTerm: string; // ✅ ADD THIS
 }
 
 export default function CarFilters({
@@ -27,13 +27,11 @@ export default function CarFilters({
   showKeyCars,
   onToggleOwned,
   onToggleKeyCars,
+  searchTerm, // ✅ ADD THIS
 }: CarFiltersProps) {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
-    setSearchTerm(term);
-    onSearch(term); // ✅ Send raw input — normalize later in Cars.tsx
+    onSearch(term); // ✅ Still triggers handler in parent
   };
 
   const handleStarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -72,8 +70,8 @@ export default function CarFilters({
       <label className="DropdownLabel">
         Units:
         <select className="unitSelect" value={unitPreference} onChange={onUnitChange}>
-          <option value="metric">Metric (km/h, m/s²)</option>
-          <option value="imperial">Imperial (mph, ft/s²)</option>
+          <option value="metric">Metric</option>
+          <option value="imperial">Imperial</option>
         </select>
       </label>
 
@@ -83,7 +81,7 @@ export default function CarFilters({
           id="searchInput"
           type="text"
           placeholder="Search by Brand or Model"
-          value={searchTerm}
+          value={searchTerm} // ✅ Controlled value
           onChange={handleSearchChange}
         />
       </label>
