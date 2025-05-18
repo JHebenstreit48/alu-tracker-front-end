@@ -29,12 +29,8 @@ interface CarTrackingData {
   importParts?: number;
 }
 
-// ✅ Diacritic-safe normalization function
 function normalizeString(str: string): string {
-  return str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
 export default function Cars() {
@@ -144,7 +140,6 @@ export default function Cars() {
   };
 
   const tracking = getLocalTracking();
-
   const normalizedSearch = normalizeString(searchTerm);
 
   const filteredCars = cars
@@ -179,10 +174,7 @@ export default function Cars() {
 
         <CarTrackerToggle
           isEnabled={trackerMode}
-          onToggle={(value) => {
-            setTrackerMode(value);
-            localStorage.setItem("trackerMode", String(value));
-          }}
+          onToggle={setTrackerMode}
         />
 
         <div className="trackerSummaryLink">
