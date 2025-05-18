@@ -5,6 +5,7 @@ import {
   setCarTrackingData,
   generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
 interface Props {
   car: Car;
@@ -17,6 +18,9 @@ export default function ProgressTracker({ car }: Props) {
   const [importParts, setImportParts] = useState(0);
 
   const carKey = generateCarKey(car.Brand, car.Model);
+
+  // ✅ Sync to account when any local change happens
+  useAutoSyncDependency([owned, stars, upgradeStage, importParts]);
 
   useEffect(() => {
     const data = getCarTrackingData(carKey);
@@ -35,7 +39,6 @@ export default function ProgressTracker({ car }: Props) {
       upgradeStage,
       importParts,
     });
-    alert("Progress saved!");
   };
 
   return (

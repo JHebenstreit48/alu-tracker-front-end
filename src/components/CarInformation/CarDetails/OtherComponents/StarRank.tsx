@@ -4,6 +4,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
 interface StarRatingProps {
   count: number; // Max stars this car can have
@@ -19,6 +20,9 @@ const StarRank: React.FC<StarRatingProps> = ({
   carId,
 }) => {
   const [selectedStars, setSelectedStars] = useState<number>(0);
+
+  // ✅ Sync stars to account automatically when changed
+  useAutoSyncDependency([selectedStars]);
 
   useEffect(() => {
     if (trackerMode && carId) {
