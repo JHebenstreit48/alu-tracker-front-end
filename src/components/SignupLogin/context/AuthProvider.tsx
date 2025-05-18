@@ -1,5 +1,6 @@
 import { useState, useEffect, ReactNode } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { syncFromAccount } from "@/components/CarInformation/UserDataSync/syncFromAccount";
 
 interface Props {
   children: ReactNode;
@@ -24,6 +25,10 @@ export const AuthProvider = ({ children }: Props) => {
     localStorage.setItem("username", newUsername);
     setToken(newToken);
     setUsername(newUsername);
+
+    // ✅ Sync from account immediately after login
+    console.log("🔄 Syncing progress from account after login...");
+    syncFromAccount(newToken);
   };
 
   const logout = () => {
