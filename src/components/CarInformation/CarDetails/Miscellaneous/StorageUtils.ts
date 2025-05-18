@@ -11,9 +11,14 @@ export interface CarTrackingData {
 
 const keyPrefix = "car-tracker-";
 
-export function getCarTrackingData(carId: string): CarTrackingData {
+export function generateTrackingKey(brand: string, model: string): string {
+  return `${keyPrefix}${brand.toLowerCase().replace(/\s+/g, "_")}_${model.toLowerCase().replace(/\s+/g, "_")}`;
+}
+
+export function getCarTrackingData(brand: string, model: string): CarTrackingData {
+  const key = generateTrackingKey(brand, model);
   try {
-    const data = localStorage.getItem(`${keyPrefix}${carId}`);
+    const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : {};
   } catch {
     return {};
@@ -21,12 +26,14 @@ export function getCarTrackingData(carId: string): CarTrackingData {
 }
 
 export function setCarTrackingData(
-  carId: string,
+  brand: string,
+  model: string,
   update: Partial<CarTrackingData>
 ) {
-  const existing = getCarTrackingData(carId);
+  const key = generateTrackingKey(brand, model);
+  const existing = getCarTrackingData(brand, model);
   const merged = { ...existing, ...update };
-  localStorage.setItem(`${keyPrefix}${carId}`, JSON.stringify(merged));
+  localStorage.setItem(key, JSON.stringify(merged));
 }
 
 export function getAllCarTrackingData(): Record<string, CarTrackingData> {
@@ -34,9 +41,9 @@ export function getAllCarTrackingData(): Record<string, CarTrackingData> {
   for (const key in localStorage) {
     if (key.startsWith(keyPrefix)) {
       try {
-        const carId = key.replace(keyPrefix, "");
+        const id = key.replace(keyPrefix, "");
         const data = JSON.parse(localStorage.getItem(key)!);
-        all[carId] = data;
+        all[id] = data;
       } catch {
         continue;
       }
