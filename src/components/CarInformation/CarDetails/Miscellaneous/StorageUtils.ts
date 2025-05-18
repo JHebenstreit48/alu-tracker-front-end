@@ -1,9 +1,7 @@
-// StorageUtils.ts
-
 export interface CarTrackingData {
   owned?: boolean;
   stars?: number;
-  goldMax?: boolean;
+  goldMaxed?: boolean;
   keyObtained?: boolean;
   upgradeStage?: number;
   importParts?: number;
@@ -11,8 +9,16 @@ export interface CarTrackingData {
 
 const keyPrefix = "car-tracker-";
 
-function generateCarKey(brand: string, model: string): string {
-  return `${brand}_${model}`.toLowerCase().replace(/\s+/g, "_");
+export function normalizeString(str: string): string {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, "_");
+}
+
+export function generateCarKey(brand: string, model: string): string {
+  return normalizeString(`${brand}_${model}`);
 }
 
 export function getCarTrackingData(carKey: string): CarTrackingData {
@@ -24,10 +30,7 @@ export function getCarTrackingData(carKey: string): CarTrackingData {
   }
 }
 
-export function setCarTrackingData(
-  carKey: string,
-  update: Partial<CarTrackingData>
-) {
+export function setCarTrackingData(carKey: string, update: Partial<CarTrackingData>) {
   const existing = getCarTrackingData(carKey);
   const merged = { ...existing, ...update };
   localStorage.setItem(`${keyPrefix}${carKey}`, JSON.stringify(merged));
@@ -56,5 +59,3 @@ export function clearAllCarTrackingData() {
     }
   }
 }
-
-export { generateCarKey };

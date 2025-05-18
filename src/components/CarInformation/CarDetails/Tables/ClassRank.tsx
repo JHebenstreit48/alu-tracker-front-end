@@ -20,7 +20,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
 }) => {
   const [selectedStarRank, setSelectedStarRank] = useState<number>(car.Stars);
   const [owned, setOwned] = useState<boolean>(false);
-  const [goldMax, setGoldMax] = useState<boolean>(false);
+  const [goldMaxed, setGoldMaxed] = useState<boolean>(false); // ✅ Renamed correctly
 
   const carKey = generateCarKey(car.Brand, car.Model);
 
@@ -29,23 +29,13 @@ const ClassRank: React.FC<ClassRankProps> = ({
     if (trackerMode) {
       const data = getCarTrackingData(carKey);
 
-      if (typeof data.stars === "number") {
-        setSelectedStarRank(data.stars);
-      } else {
-        setSelectedStarRank(0);
-      }
-
-      if (typeof data.owned === "boolean") {
-        setOwned(data.owned);
-      }
-
-      if (typeof data.goldMax === "boolean") {
-        setGoldMax(data.goldMax);
-      }
+      setSelectedStarRank(typeof data.stars === "number" ? data.stars : 0);
+      setOwned(!!data.owned);
+      setGoldMaxed(!!data.goldMaxed);
     } else {
       setSelectedStarRank(0);
       setOwned(false);
-      setGoldMax(false);
+      setGoldMaxed(false);
     }
   }, [carKey, trackerMode]);
 
@@ -62,10 +52,10 @@ const ClassRank: React.FC<ClassRankProps> = ({
       setCarTrackingData(carKey, {
         stars: selectedStarRank,
         owned,
-        goldMax,
+        goldMaxed, // ✅ ERROR FIXED: now correctly refers to `goldMaxed`
       });
     }
-  }, [carKey, trackerMode, selectedStarRank, owned, goldMax]);
+  }, [carKey, trackerMode, selectedStarRank, owned, goldMaxed]);
 
   return (
     <div className="carDetailTables">
@@ -109,10 +99,10 @@ const ClassRank: React.FC<ClassRankProps> = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={goldMax}
+                    checked={goldMaxed}
                     onChange={(e) => {
                       const isChecked = e.target.checked;
-                      setGoldMax(isChecked);
+                      setGoldMaxed(isChecked); // ✅ correct setter
                       if (isChecked) {
                         setSelectedStarRank(car.Stars);
                       }

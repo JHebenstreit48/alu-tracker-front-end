@@ -22,9 +22,7 @@ const CarDetails = () => {
   const [car, setCar] = useState<Car | null>(null);
   const [error, setError] = useState(false);
   const [keyObtained, setKeyObtained] = useState(false);
-
-  // ✅ Always use localStorage tracker mode
-  const trackerMode = localStorage.getItem("trackerMode") === "true";
+  const [trackerMode, setTrackerMode] = useState(false); // ✅ Tracker mode state
 
   const unitPreference =
     localStorage.getItem("preferredUnit") === "imperial"
@@ -33,6 +31,12 @@ const CarDetails = () => {
 
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
+
+  // ✅ Read trackerMode from localStorage on mount and when location changes
+  useEffect(() => {
+    const stored = localStorage.getItem("trackerMode") === "true";
+    setTrackerMode(stored);
+  }, [location]);
 
   useEffect(() => {
     function fetchCarDetails(carId: string) {
