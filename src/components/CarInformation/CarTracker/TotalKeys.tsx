@@ -4,11 +4,10 @@ interface TotalKeysProps {
     total: number;
   }
   
-  export default function TotalKeys({ obtained, owned, total }: TotalKeysProps) {
+  export default function TotalKeys({ obtained, total }: TotalKeysProps) {
     return (
       <p className="keysOwnedText">
-        You’ve obtained <strong>{obtained}</strong> keys and own{" "}
-        <strong>{owned}</strong> of <strong>{total}</strong> total Key Cars.
+        You currently own <strong>{obtained}</strong> keys cars of a total of  <strong>{total}</strong>.
       </p>
     );
   }
