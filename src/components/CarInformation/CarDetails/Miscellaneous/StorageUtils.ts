@@ -14,8 +14,11 @@ export function normalizeString(str: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
-    .replace(/\s+/g, "_");
+    .replace(/\./g, "")          // <-- Strip periods
+    .replace(/\s+/g, "_")        // Replace spaces with underscores
+    .replace(/[^a-z0-9_]/g, ""); // Optional: remove any other weird symbols
 }
+
 
 export function generateCarKey(brand: string, model: string): string {
   return normalizeString(`${brand}_${model}`);
