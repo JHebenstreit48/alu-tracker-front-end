@@ -1,40 +1,51 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
-import CarImage from "@/components/CarInformation/CarDetails/OtherComponents/CarImage";
-import ClassRank from "@/components/CarInformation/CarDetails/Tables/ClassRank";
-import MaxStats from "@/components/CarInformation/CarDetails/Tables/MaxStats";
-import BlueprintsTable from "@/components/CarInformation/CarDetails/Tables/BlueprintsTable";
-import KeyInfo from "@/components/CarInformation/CarDetails/Tables/KeyInfo";
+import {
+  Car,
+  GoldMaxStats,
+  Blueprints,
+  StockStats,
+  OneStarStockStats,
+  TwoStarStockStats,
+} from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
+
+import CarImage from '@/components/CarInformation/CarDetails/OtherComponents/CarImage';
+import ClassRank from '@/components/CarInformation/CarDetails/Tables/ClassRank';
+import StockStatsTable from '@/components/CarInformation/CarDetails/Tables/StockStats';
+import OneStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/OneStarStockStats';
+import TwoStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/TwoStarStockStats';
+import MaxStats from '@/components/CarInformation/CarDetails/Tables/MaxStats';
+import BlueprintsTable from '@/components/CarInformation/CarDetails/Tables/BlueprintsTable';
+import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';
 
 import {
   getCarTrackingData,
   generateCarKey,
-} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+} from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
-import "@/SCSS/Cars/CarDetail.scss";
+import '@/SCSS/Cars/CarDetail.scss';
+
+type FullCar = Car & GoldMaxStats & Blueprints & StockStats & OneStarStockStats & TwoStarStockStats;
 
 const CarDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [car, setCar] = useState<Car | null>(null);
+
+  const [car, setCar] = useState<FullCar | null>(null);
   const [error, setError] = useState(false);
   const [keyObtained, setKeyObtained] = useState(false);
   const [trackerMode, setTrackerMode] = useState(false); // ✅ Tracker mode state
 
   const unitPreference =
-    localStorage.getItem("preferredUnit") === "imperial"
-      ? "imperial"
-      : "metric";
+    localStorage.getItem('preferredUnit') === 'imperial' ? 'imperial' : 'metric';
 
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
   // ✅ Read trackerMode from localStorage on mount and when location changes
   useEffect(() => {
-    const stored = localStorage.getItem("trackerMode") === "true";
+    const stored = localStorage.getItem('trackerMode') === 'true';
     setTrackerMode(stored);
   }, [location]);
 
@@ -47,7 +58,7 @@ const CarDetails = () => {
           }
           return response.json();
         })
-        .then((data: Car) => {
+        .then((data: FullCar) => {
           setCar(data);
           const key = generateCarKey(data.Brand, data.Model);
           const stored = getCarTrackingData(key);
@@ -66,20 +77,21 @@ const CarDetails = () => {
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
     const trackerState = trackerMode ? { trackerMode: true } : {};
-    navigate(lastSelectedClass ? `/cars?class=${lastSelectedClass}` : "/cars", {
+    navigate(lastSelectedClass ? `/cars?class=${lastSelectedClass}` : '/cars', {
       state: trackerState,
     });
   };
 
-  if (error)
-    return <div className="error-message">Failed to load car details.</div>;
-  if (!car)
-    return <div className="loading-message">Loading car details...</div>;
+  if (error) return <div className="error-message">Failed to load car details.</div>;
+  if (!car) return <div className="loading-message">Loading car details...</div>;
 
   return (
-    <div className="car-detail">
+    <div className="carDetail">
       <div>
-        <button className="backBtn" onClick={handleGoBack}>
+        <button
+          className="backBtn"
+          onClick={handleGoBack}
+        >
           Back
         </button>
       </div>
@@ -100,19 +112,59 @@ const CarDetails = () => {
       />
 
       <div className="carDetailTables">
-        <ClassRank
-          car={car}
-          trackerMode={trackerMode}
-          forceOwned={car.KeyCar && keyObtained}
-        />
-        <MaxStats
-          car={car}
-          unitPreference={unitPreference}
-          trackerMode={trackerMode}
-        />
-      </div>
 
-      <BlueprintsTable car={car} trackerMode={trackerMode} />
+        <div className="tableCard">
+          <ClassRank
+            car={car}
+            trackerMode={trackerMode}
+            forceOwned={car.KeyCar && keyObtained}
+          />
+        </div>
+
+        <div className="tableCard">
+          <MaxStats
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
+        </div>
+
+        <div className="tableCard">
+          <BlueprintsTable
+            car={car}
+            trackerMode={trackerMode}
+          />
+        </div>
+
+        <div className="tableCard">
+          <StockStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
+        </div>
+
+        <div className="tableCard">
+          <OneStarStockStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
+        </div>
+
+        <div className="tableCard">
+          <TwoStarStockStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
+        </div>
+
+        <div>
+
+        </div>
+
+      </div>
     </div>
   );
 };
