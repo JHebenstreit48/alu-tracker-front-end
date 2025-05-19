@@ -1,4 +1,5 @@
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
+
 
 // Define backend URL for image fetching (same as in ImageCarousel.tsx)
 const backendImageUrl = import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";

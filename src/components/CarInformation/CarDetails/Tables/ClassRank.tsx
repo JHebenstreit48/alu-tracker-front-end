@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car  } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
 import {
   getCarTrackingData,
@@ -99,11 +99,6 @@ const ClassRank: React.FC<ClassRankProps> = ({
                 onSelect={trackerMode ? handleStarSelect : undefined}
                 carId={trackerMode ? carKey : undefined}
               />
-            </td>
-          </tr>
-          <tr>
-            <td className="maxRank" colSpan={2}>
-              Max Rank: {car.Max_Rank}
             </td>
           </tr>
 

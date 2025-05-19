@@ -1,8 +1,8 @@
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car, Blueprints } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 import StarRank from "@/components/CarInformation/CarDetails/OtherComponents/StarRank"; // Corrected import path for StarRank
 
 interface Props {
-  car: Car;
+  car: Car & Blueprints; // Combine Car and Blueprints interfaces
   trackerMode?: boolean;
 }
 

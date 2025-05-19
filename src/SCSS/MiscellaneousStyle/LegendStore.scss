@@ -1,3 +1,5 @@
+@use "sass:color";
+
 /* =============================
    Variables
    ============================= */
@@ -54,12 +56,12 @@
    /* =============================
       Controls Section
       ============================= */
-   .controls {
+   .legendStoreControls {
      display: grid;
      grid-template-columns: 1fr 1fr;
      align-items: center;
      justify-content: center;
-     margin: 5rem auto 4rem auto;
+     margin: 16rem auto 0 auto;
      gap: $control-grid-gap;
      width: $control-width;
      border: 3px solid $control-border-color;
@@ -156,6 +158,7 @@
      box-shadow: 0 0 10px 6px $table-box-shadow-color;
      width: $table-width !important;
      background-color: $table-bg-color;
+     margin: 6rem auto 5rem auto;
    
      th,
      td {
