@@ -21,10 +21,10 @@ export interface Car extends BlueprintStats {
   Stars: number;
   KeyCar?: boolean;
   Max_Rank: number;
-  Top_Speed: number | string;
-  Acceleration: number | string;
-  Handling: number | string;
-  Nitro: number | string;
+  Top_Speed: number;
+  Acceleration: number;
+  Handling: number;
+  Nitro: number;
   Max_Stats_No_Epics?: number;
 }
 
