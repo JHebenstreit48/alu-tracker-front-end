@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
 import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
 import {
@@ -19,19 +19,20 @@ const ClassRank: React.FC<ClassRankProps> = ({
   trackerMode = false,
   forceOwned,
 }) => {
-  const [selectedStarRank, setSelectedStarRank] = useState<number>(car.Stars);
+  const carKey = generateCarKey(car.Brand, car.Model);
+  const hasUserInteracted = useRef(false);
+
+  const [selectedStarRank, setSelectedStarRank] = useState<number>(0);
   const [owned, setOwned] = useState<boolean>(false);
   const [goldMaxed, setGoldMaxed] = useState<boolean>(false);
 
-  const carKey = generateCarKey(car.Brand, car.Model);
-
-  // Load tracking state from localStorage
+  // ✅ Load localStorage values (if present)
   useEffect(() => {
     if (trackerMode) {
       const data = getCarTrackingData(carKey);
       setSelectedStarRank(typeof data.stars === "number" ? data.stars : 0);
-      setOwned(!!data.owned);
-      setGoldMaxed(!!data.goldMaxed);
+      setOwned(data.owned === true);
+      setGoldMaxed(data.goldMaxed === true);
     } else {
       setSelectedStarRank(0);
       setOwned(false);
@@ -39,14 +40,33 @@ const ClassRank: React.FC<ClassRankProps> = ({
     }
   }, [carKey, trackerMode]);
 
-  // Auto-check owned if forced (e.g. key car obtained)
+  // ✅ Only mark as owned if user manually selects star (for non-key cars)
+  useEffect(() => {
+    if (
+      trackerMode &&
+      !car.KeyCar &&
+      selectedStarRank > 0 &&
+      hasUserInteracted.current &&
+      !owned
+    ) {
+      setOwned(true);
+    }
+  }, [trackerMode, car.KeyCar, selectedStarRank, owned]);
+
+  // ✅ Manual star selection updates
+  const handleStarSelect = (value: number) => {
+    hasUserInteracted.current = true;
+    setSelectedStarRank(value);
+  };
+
+  // ✅ Force owned logic (e.g. key car and key obtained)
   useEffect(() => {
     if (trackerMode && forceOwned && !owned) {
       setOwned(true);
     }
   }, [trackerMode, forceOwned, owned]);
 
-  // Save to localStorage
+  // ✅ Save to localStorage
   useEffect(() => {
     if (trackerMode) {
       setCarTrackingData(carKey, {
@@ -57,7 +77,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
     }
   }, [carKey, trackerMode, selectedStarRank, owned, goldMaxed]);
 
-  // ✅ Auto-sync tracking updates
+  // ✅ Sync if logged in
   useAutoSyncDependency(trackerMode ? [selectedStarRank, owned, goldMaxed] : []);
 
   return (
@@ -76,7 +96,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
               <StarRankSelector
                 maxStars={car.Stars}
                 selected={trackerMode ? selectedStarRank : car.Stars}
-                onSelect={trackerMode ? setSelectedStarRank : undefined}
+                onSelect={trackerMode ? handleStarSelect : undefined}
                 carId={trackerMode ? carKey : undefined}
               />
             </td>
