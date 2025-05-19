@@ -81,7 +81,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
   useAutoSyncDependency(trackerMode ? [selectedStarRank, owned, goldMaxed] : []);
 
   return (
-    <div className="carDetailTables">
+
       <table className="carInfoTable">
         <thead>
           <tr>
@@ -100,6 +100,20 @@ const ClassRank: React.FC<ClassRankProps> = ({
                 carId={trackerMode ? carKey : undefined}
               />
             </td>
+          </tr>
+
+          <tr>
+            <td colSpan={2}>{car.Country}</td>
+          </tr>
+
+          <tr>
+            <td>Rarity</td>
+            <td>{car.Rarity}</td>
+          </tr>
+
+          <tr>
+            <td>Obtainable Via</td>
+            <td>{car.ObtainableVia}</td>
           </tr>
 
           {trackerMode && (
@@ -134,7 +148,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
           )}
         </tbody>
       </table>
-    </div>
+
   );
 };
 

@@ -42,7 +42,7 @@ $cellphone-landscape: 390px;
 /* =============================
    Car Detail Page Layout
    ============================= */
-.car-detail {
+.carDetail {
   grid-template-columns: $table-grid-columns;
   padding: $car-detail-padding;
   color: $car-detail-text-color;
@@ -139,17 +139,40 @@ $cellphone-landscape: 390px;
       Car Detail Tables
       ============================= */
   .carDetailTables {
-    display: grid;
-    grid-template-columns: $table-grid-columns;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    gap: 6rem;
+  }
+
+  .tableCard {
+    width: $info-table-width;
+    min-height: 36rem; // 👈 consistent height; bump this if you add rows
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; // lets content breathe
+    align-items: stretch;
   }
 
   .carInfoTable {
-    width: $info-table-width;
+    width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
-    margin: 2rem auto;
+    table-layout: fixed;
+    flex-grow: 1;
   }
-
+  
+  .carInfoTable td,
+  .carInfoTable th {
+    padding: 10px 16px;
+    text-align: center;
+    vertical-align: middle;
+    height: auto; // ✅ restore natural height
+  }
+  
   .tableHeader2 {
     color: $table-header-text-color;
     background-color: $table-header-bg-color;
@@ -172,13 +195,39 @@ $cellphone-landscape: 390px;
   /* =============================
       Blueprint Table
       ============================= */
-  .blueprintTotalLabel {
-    text-align: center;
-    font-weight: bold;
-    padding: 15px;
-    font-size: 1.4rem;
-    color: white;
-  }
+      .blueprintTotalLabel {
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 1.4rem;
+        color: white;
+      }
+      
+      .blueprintsTable td {
+        text-align: center;
+        vertical-align: middle;
+      }
+      
+      .blueprintStarCell {
+        width: 40%;
+      }
+      
+      .blueprintValueCell {
+        width: 10%;
+      }
+      
+      .starIconWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .noBlueprintData {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #ccc;
+        padding: 1rem 0;
+      }
 
   /* =============================
       Max Rank and Car Info Text
