@@ -21,11 +21,10 @@ export interface Car extends BlueprintStats {
   Stars: number;
   KeyCar?: boolean;
   Max_Rank: number;
-  Top_Speed: number;
-  Acceleration: number;
-  Handling: number;
-  Nitro: number;
-  Max_Stats_No_Epics?: number;
+  Gold_Top_Speed: number;
+  Gold_Acceleration: number;
+  Gold_Handling: number;
+  Gold_Nitro: number;
 }
 
 // Preserve all your modular stage/stat interfaces:

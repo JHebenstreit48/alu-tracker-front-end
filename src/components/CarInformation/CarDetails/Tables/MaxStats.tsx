@@ -38,19 +38,19 @@ const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
         <tbody>
           <tr>
             <td>Top Speed</td>
-            <td>{convertTopSpeed(car.Top_Speed)}</td>
+            <td>{convertTopSpeed(car.Gold_Top_Speed)}</td>
           </tr>
           <tr>
             <td>Acceleration</td>
-            <td>{formatStat(car.Acceleration)}</td>
+            <td>{formatStat(car.Gold_Acceleration)}</td>
           </tr>
           <tr>
             <td>Handling</td>
-            <td>{formatStat(car.Handling)}</td>
+            <td>{formatStat(car.Gold_Handling)}</td>
           </tr>
           <tr>
             <td>Nitro</td>
-            <td>{formatStat(car.Nitro)}</td>
+            <td>{formatStat(car.Gold_Nitro)}</td>
           </tr>
         </tbody>
       </table>
