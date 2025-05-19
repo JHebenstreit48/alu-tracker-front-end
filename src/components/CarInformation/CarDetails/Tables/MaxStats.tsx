@@ -7,23 +7,15 @@ interface MaxStatsProps {
 }
 
 const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
-  const parseMetricValue = (value: string | number | undefined): number => {
-    if (value === undefined || value === null) return 0;
-    if (typeof value === "number") return value;
-    return parseFloat(value.replace(",", "."));
-  };
-
-  const convertTopSpeed = (speed: string | number | undefined): string => {
-    const parsedSpeed = parseMetricValue(speed);
+  const convertTopSpeed = (speed: number): string => {
     const conversionFactor = 0.6214;
     return unitPreference === "imperial"
-      ? `${(parsedSpeed * conversionFactor).toFixed(1)} mph`
-      : `${parsedSpeed.toFixed(1)} km/h`;
+      ? `${(speed * conversionFactor).toFixed(1)} mph`
+      : `${speed.toFixed(1)} km/h`;
   };
 
-  const displayStatAsIs = (value: string | number): string => {
-    const parsedValue = parseMetricValue(value);
-    return `${parsedValue.toFixed(2)}`;
+  const formatStat = (value: number): string => {
+    return value.toFixed(2);
   };
 
   return (
@@ -43,15 +35,15 @@ const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
           </tr>
           <tr>
             <td>Acceleration</td>
-            <td>{displayStatAsIs(car.Acceleration)}</td>
+            <td>{formatStat(car.Acceleration)}</td>
           </tr>
           <tr>
             <td>Handling</td>
-            <td>{displayStatAsIs(car.Handling)}</td>
+            <td>{formatStat(car.Handling)}</td>
           </tr>
           <tr>
             <td>Nitro</td>
-            <td>{displayStatAsIs(car.Nitro)}</td>
+            <td>{formatStat(car.Nitro)}</td>
           </tr>
         </tbody>
       </table>
