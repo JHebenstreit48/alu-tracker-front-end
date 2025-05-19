@@ -7,15 +7,22 @@ interface MaxStatsProps {
 }
 
 const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
-  const convertTopSpeed = (speed: number): string => {
+  const safeParse = (value: unknown): number => {
+    if (typeof value === "number") return value;
+    if (typeof value === "string") return parseFloat(value.replace(",", "."));
+    return 0;
+  };
+
+  const convertTopSpeed = (value: unknown): string => {
+    const speed = safeParse(value);
     const conversionFactor = 0.6214;
     return unitPreference === "imperial"
       ? `${(speed * conversionFactor).toFixed(1)} mph`
       : `${speed.toFixed(1)} km/h`;
   };
 
-  const formatStat = (value: number): string => {
-    return value.toFixed(2);
+  const formatStat = (value: unknown): string => {
+    return safeParse(value).toFixed(2);
   };
 
   return (
