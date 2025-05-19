@@ -39,7 +39,10 @@ export const syncToAccount = async (token: string) => {
       keyCarsOwned,
       xp,
     };
-
+    
+    // 🔍 Debug payload before sending
+    console.log("📤 Syncing payload:", JSON.stringify(payload, null, 2));
+    
     const res = await fetch(
       `${import.meta.env.VITE_AUTH_API_URL}/api/users/save-progress`,
       {
@@ -51,6 +54,7 @@ export const syncToAccount = async (token: string) => {
         body: JSON.stringify(payload),
       }
     );
+    
 
     const result = await res.json();
 
