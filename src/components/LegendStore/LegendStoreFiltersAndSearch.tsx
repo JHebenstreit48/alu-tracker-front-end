@@ -93,7 +93,7 @@ const LegendStoreFilters: React.FC<{
   }, [selectedStarRank]);
 
   return (
-    <div className="controls">
+    <div className="legendStoreControls">
       <h2 className="filterHeading">Car Search Filters</h2>
 
       <label className="DropdownLabel">

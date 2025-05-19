@@ -1,7 +1,7 @@
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car, GoldMaxStats } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 
 interface MaxStatsProps {
-  car: Car;
+  car: Car & GoldMaxStats;
   unitPreference: "metric" | "imperial";
   trackerMode?: boolean;
 }
@@ -31,11 +31,15 @@ const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
         <thead>
           <tr>
             <th className="tableHeader2" colSpan={2}>
-              Gold Max Stats
+              Gold Max
             </th>
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>Rank</td>
+            <td>{car.Max_Rank}</td>
+          </tr>
           <tr>
             <td>Top Speed</td>
             <td>{convertTopSpeed(car.Gold_Top_Speed)}</td>

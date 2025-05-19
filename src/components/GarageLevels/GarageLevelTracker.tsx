@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GarageLevelsInterface } from '@/components/GarageLevels/interface';
+import '@/SCSS/GarageLevels/GarageLevelTracker.scss'
 
 interface GarageLevelTrackerProps {
   levels: GarageLevelsInterface[]; // Accept levels as a prop
@@ -69,10 +70,10 @@ const GarageLevelTracker: React.FC<GarageLevelTrackerProps> = ({ levels }) => {
       </div>
 
       <div className="xpRemaining">
-        <p>
-          XP Remaining to Next Level:{' '}
+        <label>
+          XP to Next Level:{' '}
           <strong>{xpRemaining > 0 ? xpRemaining.toLocaleString('en-US') : '0'}</strong>
-        </p>
+        </label>
       </div>
     </div>
   );
