@@ -20,7 +20,6 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 interface Car {
-  _id: string;
   Brand: string;
   Model: string;
   Class: string;

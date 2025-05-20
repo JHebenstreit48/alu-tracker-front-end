@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import StarRank from "@/components/CarInformation/CarDetails/OtherComponents/StarRank";
+import { Link } from 'react-router-dom';
+import StarRank from '@/components/CarInformation/CarDetails/OtherComponents/StarRank';
+import { generateCarKey } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
 interface Car {
-  _id: string;
   Brand: string;
   Model: string;
   Stars: number;
@@ -21,12 +21,10 @@ export default function ClassTables({
   loading,
   trackerMode = false,
 }: ClassTablesProps) {
-  const headerText =
-    selectedClass === "All Classes" ? "All Classes" : selectedClass;
+  const headerText = selectedClass === 'All Classes' ? 'All Classes' : selectedClass;
 
   return (
     <div>
-      
       <table>
         <tbody>
           <tr>
@@ -44,10 +42,10 @@ export default function ClassTables({
               <td colSpan={2}>
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "6rem",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '6rem',
                   }}
                 >
                   <div className="loadingSpinner"></div>
@@ -55,18 +53,21 @@ export default function ClassTables({
               </td>
             </tr>
           ) : (
-            cars.map((car) => (
-              <tr className="table-data" key={car._id}>
-                <td className="car-name">
-                <Link to={`/cars/${car._id}`} state={{ trackerMode }}>
-                    {car.Brand} {car.Model}
-                  </Link>
-                </td>
-                <td>
-                  <StarRank count={car.Stars} />
-                </td>
-              </tr>
-            ))
+            cars.map((car) => {
+              const carKey = generateCarKey(car.Brand, car.Model);
+              return (
+                <tr className="table-data" key={carKey}>
+                  <td className="car-name">
+                    <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
+                      {car.Brand} {car.Model}
+                    </Link>
+                  </td>
+                  <td>
+                    <StarRank count={car.Stars} />
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>
