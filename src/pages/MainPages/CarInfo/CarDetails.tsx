@@ -160,9 +160,9 @@ const CarDetails = () => {
           />
         </div>
 
-        <div>
+        {/* <div>
 
-        </div>
+        </div> */}
 
       </div>
     </div>
