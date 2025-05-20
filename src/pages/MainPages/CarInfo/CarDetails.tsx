@@ -13,8 +13,8 @@ import {
 import CarImage from '@/components/CarInformation/CarDetails/OtherComponents/CarImage';
 import ClassRank from '@/components/CarInformation/CarDetails/Tables/ClassRank';
 import StockStatsTable from '@/components/CarInformation/CarDetails/Tables/StockStats';
-import OneStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/OneStarStockStats';
-import TwoStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/TwoStarStockStats';
+import OneStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/OneStarMaxStats';
+import TwoStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/TwoStarMaxStats';
 import MaxStats from '@/components/CarInformation/CarDetails/Tables/MaxStats';
 import BlueprintsTable from '@/components/CarInformation/CarDetails/Tables/BlueprintsTable';
 import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';

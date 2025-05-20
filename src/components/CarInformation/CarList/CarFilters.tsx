@@ -1,4 +1,4 @@
-import "@/SCSS/Cars/CarsPage/CarFilters.scss";
+import '@/SCSS/Cars/CarsPage/CarFilters.scss';
 
 interface CarFiltersProps {
   onSearch: (term: string) => void;
@@ -7,7 +7,9 @@ interface CarFiltersProps {
   onUnitChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onReset: () => void;
   selectedClass: string;
-  unitPreference: "metric" | "imperial";
+  unitPreference: 'metric' | 'imperial';
+  selectedRarity: string | null;
+  onRarityChange: (rarity: string | null) => void;
   showOwned: boolean;
   showKeyCars: boolean;
   onToggleOwned: () => void;
@@ -23,6 +25,8 @@ export default function CarFilters({
   onReset,
   selectedClass,
   unitPreference,
+  selectedRarity,
+  onRarityChange,
   showOwned,
   showKeyCars,
   onToggleOwned,
@@ -36,7 +40,7 @@ export default function CarFilters({
 
   const handleStarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    const stars = value === "All" ? null : parseInt(value);
+    const stars = value === 'All' ? null : parseInt(value);
     onFilter(stars);
   };
 
@@ -46,7 +50,10 @@ export default function CarFilters({
 
       <label className="DropdownLabel">
         Star Rank:
-        <select className="starRanks" onChange={handleStarChange}>
+        <select
+          className="starRanks"
+          onChange={handleStarChange}
+        >
           <option value="All">All Stars</option>
           <option value="3">3 Stars</option>
           <option value="4">4 Stars</option>
@@ -57,7 +64,11 @@ export default function CarFilters({
 
       <label className="DropdownLabel">
         Car Class:
-        <select className="classSelect" value={selectedClass} onChange={onClassChange}>
+        <select
+          className="classSelect"
+          value={selectedClass}
+          onChange={onClassChange}
+        >
           <option value="All Classes">All Classes</option>
           <option value="D">D</option>
           <option value="C">C</option>
@@ -69,9 +80,45 @@ export default function CarFilters({
 
       <label className="DropdownLabel">
         Units:
-        <select className="unitSelect" value={unitPreference} onChange={onUnitChange}>
+        <select
+          className="unitSelect"
+          value={unitPreference}
+          onChange={onUnitChange}
+        >
           <option value="metric">Metric</option>
           <option value="imperial">Imperial</option>
+        </select>
+      </label>
+
+      <label className="DropdownLabel">
+        Rarity:
+        <select
+          className="raritySelect"
+          value={selectedRarity || ''}
+          onChange={(e) => {
+            const value = e.target.value;
+            onRarityChange(value === '' ? null : value);
+          }}
+        >
+          <option value="">All Rarities</option>
+          <option
+            value="Uncommon"
+            className="optionCommon"
+          >
+            Uncommon
+          </option>
+          <option
+            value="Rare"
+            className="optionRare"
+          >
+            Rare
+          </option>
+          <option
+            value="Epic"
+            className="optionEpic"
+          >
+            Epic
+          </option>
         </select>
       </label>
 
@@ -87,16 +134,27 @@ export default function CarFilters({
       </label>
 
       <label className="CheckboxLabel">
-        <input type="checkbox" checked={showOwned} onChange={onToggleOwned} />
+        <input
+          type="checkbox"
+          checked={showOwned}
+          onChange={onToggleOwned}
+        />
         Owned
       </label>
 
       <label className="CheckboxLabel">
-        <input type="checkbox" checked={showKeyCars} onChange={onToggleKeyCars} />
+        <input
+          type="checkbox"
+          checked={showKeyCars}
+          onChange={onToggleKeyCars}
+        />
         Key Car
       </label>
 
-      <button className="resetButton" onClick={onReset}>
+      <button
+        className="resetButton"
+        onClick={onReset}
+      >
         Reset Filters
       </button>
     </div>
