@@ -21,8 +21,8 @@ export const syncFromAccount = async (token: string) => {
 
     const rawText = await res.text();
     console.log("🔍 Raw response text from backend:", rawText);
-    let result;
 
+    let result;
     try {
       result = JSON.parse(rawText);
     } catch {
@@ -54,6 +54,7 @@ export const syncFromAccount = async (token: string) => {
       console.warn("⚠️ Sync succeeded but no progress data was found for this account.");
     }
 
+    // ✅ Apply carStars
     for (const rawKey in carStars) {
       const [brand, ...modelParts] = rawKey.split(" ");
       const key = generateCarKey(brand, modelParts.join(" "));
@@ -61,6 +62,7 @@ export const syncFromAccount = async (token: string) => {
       setCarTrackingData(key, update);
     }
 
+    // ✅ Apply ownedCars
     for (const rawKey of ownedCars) {
       const [brand, ...modelParts] = rawKey.split(" ");
       const key = generateCarKey(brand, modelParts.join(" "));
@@ -68,6 +70,7 @@ export const syncFromAccount = async (token: string) => {
       setCarTrackingData(key, update);
     }
 
+    // ✅ Apply goldMaxedCars
     for (const rawKey of goldMaxedCars) {
       const [brand, ...modelParts] = rawKey.split(" ");
       const key = generateCarKey(brand, modelParts.join(" "));
@@ -75,6 +78,7 @@ export const syncFromAccount = async (token: string) => {
       setCarTrackingData(key, update);
     }
 
+    // ✅ Apply keyCarsOwned
     for (const rawKey of keyCarsOwned) {
       const [brand, ...modelParts] = rawKey.split(" ");
       const key = generateCarKey(brand, modelParts.join(" "));
@@ -82,6 +86,7 @@ export const syncFromAccount = async (token: string) => {
       setCarTrackingData(key, update);
     }
 
+    // ✅ Final debug printout
     const allKeys = Object.keys(localStorage).filter((k) =>
       k.startsWith("car-tracker-")
     );
