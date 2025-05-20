@@ -15,6 +15,7 @@ $filter-font-size: 1.2rem;
 
 $input-height: 2.2rem;
 $input-radius: 6px;
+
 $reset-btn-bg: rgb(52, 1, 75);
 $reset-btn-shadow: 0 0 8px rgb(223, 190, 7);
 $reset-btn-hover: rgb(193, 71, 250);
@@ -23,7 +24,7 @@ $reset-btn-radius: 12px;
 $mobileMaxWidthPortrait: 480px;
 
 /* ==============================
-      Car Filters Layout
+         Controls Wrapper
    ============================== */
 
 .controls {
@@ -36,9 +37,20 @@ $mobileMaxWidthPortrait: 480px;
   }
 }
 
+/* ==============================
+         Car Filters Panel
+   ============================== */
+
 .carFilters {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "heading heading"
+    "star class"
+    "units rarity"
+    "search search"
+    "owned keycar"
+    "reset reset";
   background-color: $filter-bg;
   border: $filter-border;
   box-shadow: $filter-shadow;
@@ -49,6 +61,20 @@ $mobileMaxWidthPortrait: 480px;
   color: $filter-font-color;
   font-size: $filter-font-size;
 
+  /* ==============================
+          Filter Heading
+     ============================== */
+  .filterHeading {
+    grid-area: heading;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  /* ==============================
+          Dropdowns & Search
+     ============================== */
   .DropdownLabel {
     display: flex;
     flex-direction: column;
@@ -61,25 +87,44 @@ $mobileMaxWidthPortrait: 480px;
       border-radius: $input-radius;
       text-align: center;
     }
+
+    &:nth-of-type(1) { grid-area: star; }
+    &:nth-of-type(2) { grid-area: class; }
+    &:nth-of-type(3) { grid-area: units; }
+    &:nth-of-type(4) { grid-area: rarity; }
+    &:nth-of-type(5) { grid-area: search; }
   }
 
+  #searchInput {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  /* ==============================
+           Checkbox Group
+     ============================== */
   .CheckboxLabel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 1.3rem;
-  user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 1.3rem;
+    user-select: none;
 
-  input[type="checkbox"] {
-    transform: scale(1.2);
-    cursor: pointer;
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
+    &:nth-of-type(1) { grid-area: owned; }
+    &:nth-of-type(2) { grid-area: keycar; }
   }
-}
 
-
+  /* ==============================
+           Reset Button
+     ============================== */
   .resetButton {
-    grid-column: span 2;
+    grid-area: reset;
     margin-top: 1rem;
     justify-self: center;
     background-color: $reset-btn-bg;
@@ -96,18 +141,22 @@ $mobileMaxWidthPortrait: 480px;
       font-weight: bold;
     }
   }
-}
 
-/* ==============================
-      Responsive Adjustments
-   ============================== */
-@media only screen and (max-width: $mobileMaxWidthPortrait) {
-  .controls {
-    margin: 4rem auto;
-  }
-
-  .carFilters {
+  /* ==============================
+       Responsive (Mobile Layout)
+     ============================== */
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "heading"
+      "star"
+      "class"
+      "units"
+      "rarity"
+      "search"
+      "owned"
+      "keycar"
+      "reset";
     width: 90%;
     margin-top: 25rem;
 

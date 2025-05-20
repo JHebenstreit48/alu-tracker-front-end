@@ -30,30 +30,30 @@ const OneStarStockStatsTable: React.FC<OneStarStockStatsProps> = ({ car, unitPre
         <thead>
           <tr>
             <th className="tableHeader2" colSpan={2}>
-              One Star Stock
+              One Star Max
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Rank</td>
-            <td>{car.One_Star_Stock_Rank}</td>
+            <td>{car.One_Star_Max_Rank}</td>
           </tr>
           <tr>
             <td>Top Speed</td>
-            <td>{convertTopSpeed(car.One_Star_Stock_Top_Speed)}</td>
+            <td>{convertTopSpeed(car.One_Star_Max_Top_Speed)}</td>
           </tr>
           <tr>
             <td>Acceleration</td>
-            <td>{formatStat(car.One_Star_Stock_Acceleration)}</td>
+            <td>{formatStat(car.One_Star_Max_Acceleration)}</td>
           </tr>
           <tr>
             <td>Handling</td>
-            <td>{formatStat(car.One_Star_Stock_Handling)}</td>
+            <td>{formatStat(car.One_Star_Max_Handling)}</td>
           </tr>
           <tr>
             <td>Nitro</td>
-            <td>{formatStat(car.One_Star_Stock_Nitro)}</td>
+            <td>{formatStat(car.One_Star_Max_Nitro)}</td>
           </tr>
         </tbody>
       </table>

@@ -23,8 +23,10 @@ interface Car {
   _id: string;
   Brand: string;
   Model: string;
+  Class: string;
   Stars: number;
   KeyCar?: boolean;
+  Rarity: string; // ✅ Ensures rarity is available for filtering
 }
 
 export default function Cars() {
@@ -40,6 +42,9 @@ export default function Cars() {
   const [selectedClass, setSelectedClass] = useState(
     sessionStorage.getItem("selectedClass") || "All Classes"
   );
+  const [selectedRarity, setSelectedRarity] = useState<string | null>(
+    () => localStorage.getItem("selectedRarity") || null
+  );
   const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
     () =>
       localStorage.getItem("preferredUnit") === "imperial"
@@ -54,20 +59,26 @@ export default function Cars() {
     () => localStorage.getItem("showKeyCars") === "true"
   );
   const [trackerMode, setTrackerMode] = useState(false);
-  const [carsPerPage, setCarsPerPage] = useState(25);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [carsPerPage, setCarsPerPage] = useState(() => {
+    const saved = localStorage.getItem("carsPerPage");
+    return saved ? parseInt(saved, 10) : 25;
+  });
+
+  const [currentPage, setCurrentPage] = useState(() => {
+    const saved = localStorage.getItem("currentPage");
+    return saved ? parseInt(saved, 10) : 1;
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem("trackerMode");
     const initial = saved === "true";
-    console.log("📦 Loaded trackerMode from localStorage:", initial);
     setTrackerMode(initial);
   }, []);
 
   const toggleTrackerMode = (value: boolean) => {
     setTrackerMode(value);
     localStorage.setItem("trackerMode", String(value));
-    console.log("💾 TrackerMode updated:", value);
   };
 
   const loadCars = useCallback(async () => {
@@ -103,11 +114,13 @@ export default function Cars() {
     setSearchTerm(term);
     localStorage.setItem("searchTerm", term);
     setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
   };
 
   const handleStarFilter = (stars: number | null) => {
     setSelectedStars(stars);
     setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
   };
 
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -115,19 +128,37 @@ export default function Cars() {
     setSelectedClass(newClass);
     sessionStorage.setItem("selectedClass", newClass);
     setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
+  };
+
+  const handleRarityChange = (rarity: string | null) => {
+    setSelectedRarity(rarity);
+    if (rarity) {
+      localStorage.setItem("selectedRarity", rarity);
+    } else {
+      localStorage.removeItem("selectedRarity");
+    }
+    setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
   };
 
   const handleResetFilters = () => {
     setSearchTerm("");
     setSelectedStars(null);
     setSelectedClass("All Classes");
+    setSelectedRarity(null);
     setShowOwned(false);
     setShowKeyCars(false);
+    setCarsPerPage(25);
+    setCurrentPage(1);
+
     localStorage.removeItem("searchTerm");
     sessionStorage.removeItem("selectedClass");
+    localStorage.removeItem("selectedRarity");
     localStorage.removeItem("showOwned");
     localStorage.removeItem("showKeyCars");
-    setCurrentPage(1);
+    localStorage.setItem("carsPerPage", "25");
+    localStorage.setItem("currentPage", "1");
   };
 
   const handleUnitPreferenceChange = (
@@ -140,7 +171,9 @@ export default function Cars() {
 
   const handlePageSizeChange = (size: number) => {
     setCarsPerPage(size);
+    localStorage.setItem("carsPerPage", String(size));
     setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
   };
 
   const toggleShowOwned = () => {
@@ -173,18 +206,14 @@ export default function Cars() {
       const isOwned = trackingData?.owned === true;
       const isKeyCar = car.KeyCar === true;
 
-      console.log("🔍 Owned Filter Check →", {
-        carName: `${car.Brand} ${car.Model}`,
-        generatedKey: key,
-        trackingData,
-        isOwned,
-        allTrackingKeys: Object.keys(tracking),
-      });
-
       if (showOwned && showKeyCars) return isOwned && isKeyCar;
       if (showOwned) return isOwned;
       if (showKeyCars) return isKeyCar;
       return true;
+    })
+    .filter((car) => {
+      if (!selectedRarity) return true;
+      return car.Rarity === selectedRarity;
     });
 
   const totalFiltered = filteredCars.length;
@@ -237,7 +266,9 @@ export default function Cars() {
           showKeyCars={showKeyCars}
           onToggleOwned={toggleShowOwned}
           onToggleKeyCars={toggleShowKeyCars}
-          searchTerm={searchTerm} // ✅ ADD THIS LINE
+          searchTerm={searchTerm}
+          selectedRarity={selectedRarity}
+          onRarityChange={handleRarityChange}
         />
 
         <p className="car-count">
