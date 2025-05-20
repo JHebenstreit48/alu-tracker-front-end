@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 /* =============================
    Variables
@@ -22,7 +22,7 @@ $car-image-border-color: rgb(0, 0, 0);
 $car-image-shadow-color: rgb(223, 190, 7);
 
 $table-grid-columns: 1fr 1fr;
-$info-table-width: 50rem;
+$info-table-width: 45rem;
 
 $table-header-bg-color: black;
 $table-header-text-color: rgb(21, 201, 232);
@@ -95,17 +95,17 @@ $cellphone-landscape: 390px;
   /* =============================
     Key Info Table
    ============================= */
-   .keyInfoTableContainer {
+  .keyInfoTableContainer {
     margin: 2rem auto;
     width: $car-image-width;
-  
+
     .keyInfoTable {
       width: 100%;
       border-spacing: 0;
       border-collapse: collapse;
       background-color: #20002c;
       box-shadow: 0 0 7px 4px rgb(223, 190, 7);
-  
+
       th {
         background-color: black;
         color: rgb(21, 201, 232);
@@ -114,7 +114,7 @@ $cellphone-landscape: 390px;
         text-align: center;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
-  
+
       td {
         color: gold;
         padding: 10px 15px;
@@ -122,19 +122,19 @@ $cellphone-landscape: 390px;
         text-align: center;
         border-top: 1px solid purple;
       }
-  
-      input[type="checkbox"] {
+
+      input[type='checkbox'] {
         transform: scale(1.2);
         margin-right: 0.5rem;
       }
-  
+
       label {
         color: white;
         font-size: 1.2rem;
       }
     }
   }
-  
+
   /* =============================
       Car Detail Tables
       ============================= */
@@ -142,20 +142,25 @@ $cellphone-landscape: 390px;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    gap: 6rem;
+    align-items: flex-start;
+    gap: 1rem 5rem; // Increase vertical space slightly if 0.1rem is too tight
+    margin-top: 0;
+    padding: 0;
   }
 
   .tableCard {
     width: $info-table-width;
-    min-height: 36rem; // 👈 consistent height; bump this if you add rows
-    margin: 2rem;
+    min-height: 36rem;
+    margin: 0; // ⬅️ Fully collapse any extra spacing
+    padding: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; // lets content breathe
-    align-items: stretch;
+    justify-content: space-between;
   }
+
+  .tableCard:not(:nth-child(2n)) {
+  margin-right: 5rem;
+}
 
   .carInfoTable {
     width: 100%;
@@ -164,7 +169,7 @@ $cellphone-landscape: 390px;
     table-layout: fixed;
     flex-grow: 1;
   }
-  
+
   .carInfoTable td,
   .carInfoTable th {
     padding: 10px 16px;
@@ -172,7 +177,7 @@ $cellphone-landscape: 390px;
     vertical-align: middle;
     height: auto; // ✅ restore natural height
   }
-  
+
   .tableHeader2 {
     color: $table-header-text-color;
     background-color: $table-header-bg-color;
@@ -180,7 +185,7 @@ $cellphone-landscape: 390px;
     height: 50px;
     padding: 15px 80px 20px 80px !important;
     font-size: $table-header-font-size !important;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   /* =============================
@@ -195,39 +200,39 @@ $cellphone-landscape: 390px;
   /* =============================
       Blueprint Table
       ============================= */
-      .blueprintTotalLabel {
-        text-align: center;
-        font-weight: bold;
-        padding: 10px;
-        font-size: 1.4rem;
-        color: white;
-      }
-      
-      .blueprintsTable td {
-        text-align: center;
-        vertical-align: middle;
-      }
-      
-      .blueprintStarCell {
-        width: 40%;
-      }
-      
-      .blueprintValueCell {
-        width: 10%;
-      }
-      
-      .starIconWrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      
-      .noBlueprintData {
-        text-align: center;
-        font-size: 1.2rem;
-        color: #ccc;
-        padding: 1rem 0;
-      }
+  .blueprintTotalLabel {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 1.4rem;
+    color: white;
+  }
+
+  .blueprintsTable td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .blueprintStarCell {
+    width: 40%;
+  }
+
+  .blueprintValueCell {
+    width: 10%;
+  }
+
+  .starIconWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .noBlueprintData {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #ccc;
+    padding: 1rem 0;
+  }
 
   /* =============================
       Max Rank and Car Info Text
