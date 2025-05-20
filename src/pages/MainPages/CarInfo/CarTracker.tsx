@@ -6,7 +6,7 @@ import {
   CarTrackingData,
   generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 
 import CarsOwned from "@/components/CarInformation/CarTracker/CarsOwned";
 import OwnedProgress from "@/components/CarInformation/CarTracker/OwnedProgress";

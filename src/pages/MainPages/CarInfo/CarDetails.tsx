@@ -29,7 +29,7 @@ import '@/SCSS/Cars/CarDetail.scss';
 type FullCar = Car & GoldMaxStats & Blueprints & StockStats & OneStarStockStats & TwoStarStockStats;
 
 const CarDetails = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,29 +50,46 @@ const CarDetails = () => {
   }, [location]);
 
   useEffect(() => {
-    function fetchCarDetails(carId: string) {
-      fetch(`${API_BASE_URL}/api/cars/detail/${carId}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    async function fetchCarDetails(slug: string) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/cars`);
+        const data = await res.json();
+        const allCars: FullCar[] = data.cars || [];
+  
+        const normalizedSlug = slug.toLowerCase();
+  
+        let found = false;
+  
+        for (const car of allCars) {
+          const key = generateCarKey(car.Brand, car.Model);
+          if (key === normalizedSlug) {
+            setCar(car);
+            const stored = getCarTrackingData(key);
+            if (stored?.keyObtained !== undefined) {
+              setKeyObtained(stored.keyObtained);
+            }
+            found = true;
+            break;
           }
-          return response.json();
-        })
-        .then((data: FullCar) => {
-          setCar(data);
-          const key = generateCarKey(data.Brand, data.Model);
-          const stored = getCarTrackingData(key);
-          if (stored?.keyObtained !== undefined) {
-            setKeyObtained(stored.keyObtained);
-          }
-        })
-        .catch(() => setError(true));
+        }
+  
+        if (!found) {
+          console.error("🧪 No match for slug:", normalizedSlug);
+          console.warn("🧪 Valid keys:", allCars.map(c => generateCarKey(c.Brand, c.Model)));
+          throw new Error("Car not found");
+        }
+      } catch (err) {
+        console.error("❌ Failed to fetch car by slug:", err);
+        setError(true);
+      }
     }
-
-    if (id) {
-      fetchCarDetails(id);
+  
+    if (slug) {
+      fetchCarDetails(slug);
     }
-  }, [id, API_BASE_URL]);
+  }, [slug, API_BASE_URL]);
+  
+  
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
