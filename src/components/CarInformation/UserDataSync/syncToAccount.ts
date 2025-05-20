@@ -1,5 +1,6 @@
 import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
+// 🔁 Use the same revert logic that matches backend expectations
 function revertCarKey(key: string): string {
   return key.replace(/_/g, " ");
 }
@@ -13,8 +14,8 @@ export const syncToAccount = async (token: string) => {
     const goldMaxedCars: string[] = [];
     const keyCarsOwned: string[] = [];
 
-    for (const [carKey, data] of Object.entries(allTracked)) {
-      const revertedKey = revertCarKey(carKey);
+    for (const [normalizedKey, data] of Object.entries(allTracked)) {
+      const revertedKey = revertCarKey(normalizedKey).trim(); // ✨ trim for safety
 
       if (data.stars !== undefined) {
         carStars[revertedKey] = data.stars;
@@ -39,10 +40,9 @@ export const syncToAccount = async (token: string) => {
       keyCarsOwned,
       xp,
     };
-    
-    // 🔍 Debug payload before sending
+
     console.log("📤 Syncing payload:", JSON.stringify(payload, null, 2));
-    
+
     const res = await fetch(
       `${import.meta.env.VITE_AUTH_API_URL}/api/users/save-progress`,
       {
@@ -54,7 +54,6 @@ export const syncToAccount = async (token: string) => {
         body: JSON.stringify(payload),
       }
     );
-    
 
     const result = await res.json();
 
