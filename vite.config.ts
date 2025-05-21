@@ -18,10 +18,17 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "src"),
-      "@pages": resolve(__dirname, "src/pages"),
-      "@components": resolve(__dirname, "src/components"),
-      "@css": resolve(__dirname, "src/css"),
+      '@': resolve(__dirname, 'src'),
+      '@pages': resolve(__dirname, 'src/pages'),
+      '@components': resolve(__dirname, 'src/components'),
+      '@scss': resolve(__dirname, 'src/scss'),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@scss/Globals/Variables" as *;`, // ✅ Automatically injects SCSS variables/mixins
+      },
     },
   },
 });

@@ -11,10 +11,10 @@ import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
 import ClassTables from "@/components/CarInformation/CarList/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters";
-import CarTrackerToggle from "@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle";
+import CarTrackerToggle from "@/components/CarInformation/CarList/CarTrackerToggle";
 import Navigation from "@/components/Shared/Navigation";
 
-import "@/SCSS/Cars/CarsPage/Cars.scss";
+import "@/SCSS/Cars/CarsPage/index.scss";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";

@@ -1,0 +1,82 @@
+@use 'sass:color';
+@use '@scss/Globals/Variables' as *;
+
+/* ==============================
+   Page Layout & Footer Spacing
+   ============================== */
+.cars {
+  min-height: 75vh;
+  padding-bottom: 4rem;
+}
+
+/* ==============================
+     New Car Count & Pagination Styling
+     ============================== */
+.car-count {
+  font-size: 1.5rem;
+  color: rgb(21, 201, 232);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pageSizeControl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+    flex-flow: row wrap;
+  }
+
+  .paginationLabel {
+    font-size: 1.3rem;
+    color: rgb(21, 201, 232);
+
+    @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+      flex-direction: row;
+    }
+  }
+
+  .carsPerPage {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 5rem;
+    text-align: center;
+    margin: 0.4rem;
+
+    &:disabled {
+      background-color: rgb(50, 50, 50);
+      color: gray;
+      cursor: default;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: rgb(21, 201, 232);
+      color: black;
+    }
+  }
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+    align-items: center;
+
+    .paginationLabel {
+      text-align: center;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .carsPerPage {
+      display: inline-block;
+      margin: 0.4rem;
+    }
+
+    text-align: center;
+  }
+}
