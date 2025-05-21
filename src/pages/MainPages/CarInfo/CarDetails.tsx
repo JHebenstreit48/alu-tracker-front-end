@@ -28,6 +28,9 @@ import '@/SCSS/Cars/CarDetail.scss';
 
 type FullCar = Car & GoldMaxStats & Blueprints & StockStats & OneStarStockStats & TwoStarStockStats;
 
+// ✅ Lift API constant outside the component to stabilize it
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
+
 const CarDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -41,51 +44,35 @@ const CarDetails = () => {
   const unitPreference =
     localStorage.getItem('preferredUnit') === 'imperial' ? 'imperial' : 'metric';
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
-
   useEffect(() => {
     const stored = localStorage.getItem('trackerMode') === 'true';
     setTrackerMode(stored);
   }, [location]);
 
   useEffect(() => {
-    async function fetchCarDetails(slug: string) {
+    const fetchCarDetails = async (slug: string) => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/cars/detail/${slug}`);
-        const data = await res.json();
-        const allCars: FullCar[] = Array.isArray(data) ? data : data.cars || [];
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
 
-        const normalizedSlug = slug.toLowerCase();
+        const data: FullCar = await res.json();
+        setCar(data);
 
-        let found = false;
-        for (const car of allCars) {
-          const key = generateCarKey(car.Brand, car.Model);
-          if (key === normalizedSlug) {
-            setCar(car);
-            const stored = getCarTrackingData(key);
-            if (stored?.keyObtained !== undefined) {
-              setKeyObtained(stored.keyObtained);
-            }
-            found = true;
-            break;
-          }
+        const key = generateCarKey(data.Brand, data.Model);
+        const stored = getCarTrackingData(key);
+        if (stored?.keyObtained !== undefined) {
+          setKeyObtained(stored.keyObtained);
         }
 
-        if (!found) {
-          console.error("🧪 No match for slug:", normalizedSlug);
-          console.warn("🧪 Valid keys:", allCars.map(c => generateCarKey(c.Brand, c.Model)));
-          throw new Error("Car not found");
-        }
+        setError(false); // ✅ Reset error if successful
       } catch (err) {
         console.error("❌ Failed to fetch car by slug:", err);
         setError(true);
       }
-    }
+    };
 
-    if (slug) {
-      fetchCarDetails(slug);
-    }
-  }, [slug, API_BASE_URL]);
+    if (slug) fetchCarDetails(slug);
+  }, [slug]);
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
@@ -95,7 +82,35 @@ const CarDetails = () => {
     });
   };
 
-  if (error) return <div className="error-message">Failed to load car details.</div>;
+  if (error) {
+    return (
+      <div className="carDetail">
+        <h2 className="error-message">⚠️ Could not load this car's details.</h2>
+        <p>The car may not exist or an error occurred while fetching.</p>
+        <button onClick={handleGoBack} className="backBtn">Back to Car List</button>
+        {slug && (
+          <button
+            onClick={() => fetch(`${API_BASE_URL}/api/cars/detail/${slug}`).then(res => res.json()).then(data => {
+              setCar(data);
+              const key = generateCarKey(data.Brand, data.Model);
+              const stored = getCarTrackingData(key);
+              if (stored?.keyObtained !== undefined) {
+                setKeyObtained(stored.keyObtained);
+              }
+              setError(false);
+            }).catch(err => {
+              console.error("❌ Retry failed:", err);
+              setError(true);
+            })}
+            style={{ marginTop: '1rem' }}
+          >
+            Retry
+          </button>
+        )}
+      </div>
+    );
+  }
+
   if (!car) return <div className="loading-message">Loading car details...</div>;
 
   return (
