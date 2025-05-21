@@ -23,6 +23,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
+  normalizeString,
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
 import '@/scss/Cars/CarDetail.scss';
@@ -50,35 +51,44 @@ const CarDetails = () => {
   }, [location]);
 
   useEffect(() => {
-    const fetchCarDetails = async (slug: string) => {
+    if (!slug) return;
+  
+    const normalizedSlug = normalizeString(slug); // ✅ Use imported normalization logic
+  
+    if (slug !== normalizedSlug) {
+      navigate(`/cars/${normalizedSlug}`, { replace: true });
+      return;
+    }
+  
+    const fetchCarDetails = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/cars/detail/${slug}`);
+        const res = await fetch(`${API_BASE_URL}/api/cars/detail/${normalizedSlug}`);
         if (!res.ok) throw new Error(`API error: ${res.status}`);
-
+  
         const data: FullCar = await res.json();
         setCar(data);
-
+  
         const key = generateCarKey(data.Brand, data.Model);
         const stored = getCarTrackingData(key);
-
-        // ✅ Set fallback stars = 1 for key cars in tracker mode (only if not set)
+  
         if (trackerMode && data.KeyCar && stored.stars === undefined) {
           setCarTrackingData(key, { ...stored, stars: 1 });
         }
-
+  
         if (stored?.keyObtained !== undefined) {
           setKeyObtained(stored.keyObtained);
         }
-
-        setError(false); // Reset error on success
+  
+        setError(false);
       } catch (err) {
         console.error('❌ Failed to fetch car by slug:', err);
         setError(true);
       }
     };
-
-    if (slug) fetchCarDetails(slug);
-  }, [slug, trackerMode]);
+  
+    fetchCarDetails();
+  }, [slug, trackerMode, navigate]);
+  
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
