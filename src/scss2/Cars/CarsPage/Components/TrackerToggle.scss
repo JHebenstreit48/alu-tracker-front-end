@@ -1,0 +1,88 @@
+@use 'sass:color';
+@use '@SCSS/Globals/Variables' as *;
+
+/* =============================
+   Tracker Toggle Button Layout
+   ============================= */
+.trackerToggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+
+  @media only screen and (max-width: 390px) {
+    justify-content: center;
+    align-items: center;
+    margin: 9rem auto 0 auto;
+  }
+
+  .trackerButton {
+    font-size: $tracker-btn-font-size;
+    padding: $tracker-btn-padding;
+    border-radius: $tracker-btn-border-radius;
+    border: none;
+    cursor: pointer;
+    box-shadow: $tracker-btn-shadow;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    .circleIndicator {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      background-color: $circle-color-off;
+      transition: background-color 0.3s ease;
+    }
+
+    &.on {
+      background-color: $tracker-btn-on-bg;
+      color: $tracker-btn-on-color;
+
+      .circleIndicator {
+        background-color: $circle-color-on;
+      }
+
+      &:hover {
+        box-shadow: $tracker-btn-hover-glow;
+      }
+    }
+
+    &.off {
+      background-color: $tracker-btn-off-bg;
+      color: $tracker-btn-off-color;
+
+      &:hover {
+        background-color: color.adjust($tracker-btn-off-bg, $lightness: -10%);
+        color: white;
+      }
+    }
+
+    &.pulse {
+      animation: pulse 1.5s infinite;
+    }
+  }
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+    .trackerButton {
+      font-size: 1.2rem;
+      padding: 8px 18px;
+    }
+  }
+}
+
+/* =============================
+   Pulse Animation
+   ============================= */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0px rgba(0, 255, 153, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 10px 4px rgba(0, 255, 153, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(0, 255, 153, 0.7);
+  }
+}

@@ -1,0 +1,13 @@
+.starIcon {
+  width: 24px;
+  height: 24px;
+  margin: 2px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.grayed {
+  filter: grayscale(100%) brightness(0.6);
+}

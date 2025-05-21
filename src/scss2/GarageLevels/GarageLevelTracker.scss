@@ -1,0 +1,122 @@
+@use "sass:color";
+
+/* ==============================
+            Variables
+   ============================== */
+
+$gold-accent: rgb(223, 190, 7);
+$background-dark: black;
+$text-color: white;
+$shadow-style: 1px 0 5px 5px $gold-accent;
+
+$control-grid-gap: 1rem;
+$control-width: 18rem;
+$control-border-color: black;
+$control-box-shadow-color: rgb(223, 190, 7);
+$control-bg-color: black;
+$control-padding: 4rem;
+$control-font-size: 1.2rem;
+
+$filter-heading-color: white;
+$filter-heading-font-size: 1.9rem;
+
+/* ==============================
+            Garage Level Tracker
+      ============================== */
+
+.glTrackerToggle {
+  margin: 15rem auto 0 3rem;
+
+  .toggleButton {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: $background-dark;
+    color: $text-color;
+    border-radius: 0.5rem;
+    box-shadow: $shadow-style;
+    padding: 0.8rem 1rem;
+
+    &:hover {
+      background-color: color.scale($background-dark, $lightness: 20%);
+      color: color.scale($text-color, $lightness: -10%);
+      box-shadow: $shadow-style;
+    }
+  }
+}
+
+/* ==============================
+             Level Selector
+      ============================== */
+
+.garageLevelTracker {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0rem auto 4.5rem auto;
+  gap: $control-grid-gap;
+  width: $control-width;
+  border: 3px solid $control-border-color;
+  box-shadow: 0 0 8px 3px $control-box-shadow-color;
+  border-radius: 1rem;
+  background-color: $control-bg-color;
+  padding: $control-padding;
+  font-size: $control-font-size;
+  color: $text-color;
+
+  .levelTracker {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    .levelTrackerText {
+      color: $text-color;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.levelSelector {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+
+  select {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-self: center;
+    margin-top: 1rem;
+  }
+}
+
+/* ==============================
+           XP Input Section
+      ============================== */
+
+.xpInputSection {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  input {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-self: center;
+    width: 12rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
