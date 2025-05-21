@@ -21,6 +21,7 @@ import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';
 
 import {
   getCarTrackingData,
+  setCarTrackingData,
   generateCarKey,
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
@@ -28,7 +29,6 @@ import '@/SCSS/Cars/CarDetail.scss';
 
 type FullCar = Car & GoldMaxStats & Blueprints & StockStats & OneStarStockStats & TwoStarStockStats;
 
-// ✅ Lift API constant outside the component to stabilize it
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
 const CarDetails = () => {
@@ -60,19 +60,25 @@ const CarDetails = () => {
 
         const key = generateCarKey(data.Brand, data.Model);
         const stored = getCarTrackingData(key);
+
+        // ✅ Set fallback stars = 1 for key cars in tracker mode (only if not set)
+        if (trackerMode && data.KeyCar && stored.stars === undefined) {
+          setCarTrackingData(key, { ...stored, stars: 1 });
+        }
+
         if (stored?.keyObtained !== undefined) {
           setKeyObtained(stored.keyObtained);
         }
 
-        setError(false); // ✅ Reset error if successful
+        setError(false); // Reset error on success
       } catch (err) {
-        console.error("❌ Failed to fetch car by slug:", err);
+        console.error('❌ Failed to fetch car by slug:', err);
         setError(true);
       }
     };
 
     if (slug) fetchCarDetails(slug);
-  }, [slug]);
+  }, [slug, trackerMode]);
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
@@ -90,18 +96,26 @@ const CarDetails = () => {
         <button onClick={handleGoBack} className="backBtn">Back to Car List</button>
         {slug && (
           <button
-            onClick={() => fetch(`${API_BASE_URL}/api/cars/detail/${slug}`).then(res => res.json()).then(data => {
-              setCar(data);
-              const key = generateCarKey(data.Brand, data.Model);
-              const stored = getCarTrackingData(key);
-              if (stored?.keyObtained !== undefined) {
-                setKeyObtained(stored.keyObtained);
-              }
-              setError(false);
-            }).catch(err => {
-              console.error("❌ Retry failed:", err);
-              setError(true);
-            })}
+            onClick={() =>
+              fetch(`${API_BASE_URL}/api/cars/detail/${slug}`)
+                .then(res => res.json())
+                .then(data => {
+                  setCar(data);
+                  const key = generateCarKey(data.Brand, data.Model);
+                  const stored = getCarTrackingData(key);
+                  if (trackerMode && data.KeyCar && stored.stars === undefined) {
+                    setCarTrackingData(key, { ...stored, stars: 1 });
+                  }
+                  if (stored?.keyObtained !== undefined) {
+                    setKeyObtained(stored.keyObtained);
+                  }
+                  setError(false);
+                })
+                .catch(err => {
+                  console.error("❌ Retry failed:", err);
+                  setError(true);
+                })
+            }
             style={{ marginTop: '1rem' }}
           >
             Retry
