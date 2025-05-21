@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getCarTrackingData,
   setCarTrackingData,
+  generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
@@ -10,7 +11,8 @@ interface StarRankSelectorProps {
   selected?: number; // Optional for controlled mode
   onSelect?: (value: number) => void;
   readOnly?: boolean;
-  carId?: string; // Optional – enables auto-persistence
+  brand?: string;
+  model?: string;
 }
 
 const StarRankSelector: React.FC<StarRankSelectorProps> = ({
@@ -18,22 +20,28 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
   selected,
   onSelect,
   readOnly = false,
-  carId,
+  brand,
+  model,
 }) => {
   const [internalStars, setInternalStars] = useState<number>(0);
 
+  const carKey =
+    brand && model ? generateCarKey(brand, model) : null;
+
   // Load stars from localStorage if uncontrolled
   useEffect(() => {
-    if (carId && selected === undefined) {
-      const data = getCarTrackingData(carId);
+    if (carKey && selected === undefined) {
+      const data = getCarTrackingData(carKey);
       if (typeof data.stars === "number") {
         setInternalStars(data.stars);
       }
     }
-  }, [carId, selected]);
+  }, [carKey, selected]);
 
-  // ✅ Auto-sync stars if uncontrolled and tracking by carId
-  useAutoSyncDependency(carId && selected === undefined ? [internalStars] : []);
+  // ✅ Auto-sync stars if uncontrolled and tracking by carKey
+  useAutoSyncDependency(
+    carKey && selected === undefined ? [internalStars] : []
+  );
 
   const handleClick = (value: number) => {
     if (readOnly) return;
@@ -42,8 +50,8 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
       onSelect(value); // Controlled mode
     } else {
       setInternalStars(value); // Uncontrolled mode
-      if (carId) {
-        setCarTrackingData(carId, { stars: value });
+      if (carKey) {
+        setCarTrackingData(carKey, { stars: value });
       }
     }
   };
