@@ -1,0 +1,48 @@
+.starRankCircleWrapper {
+    width: 150px;
+    height: 150px;
+    margin: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .starIconsContainer {
+    display: flex;
+    flex-wrap: wrap;               // ✅ Allow multi-line stars
+    justify-content: center;
+    align-items: center;
+    max-width: 80px;               // ✅ Limit total row width
+    min-height: 40px;              // ✅ Help vertically align rows
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  
+  .starIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .circleLabel {
+    font-size: 0.9rem;
+    margin-top: 4px;
+    color: white;
+    text-align: center;
+  }
+  
+  .starRankGridWrapper {
+    display: flex;
+    justify-content: flex-start;    // ✅ Align to left side
+    width: 100%;
+    margin: 2rem 0;
+  }
+  
+  .starRankGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 2rem;
+  }
+  
