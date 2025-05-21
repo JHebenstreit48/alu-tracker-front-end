@@ -1,0 +1,58 @@
+@use "sass:color";
+
+/* ==============================
+   Variables
+   ============================== */
+$summary-gap: 2rem;
+$summary-padding: 3rem;
+
+$back-btn-font-size: 1.1rem;
+$back-btn-padding: 10px 18px;
+$back-btn-radius: 12px;
+$back-btn-bg: black;
+$back-btn-text: rgb(21, 201, 232);
+$back-btn-border: 1px solid rgb(21, 201, 232);
+
+$mobileMaxWidthPortrait: 480px;
+$cellphone-landscape: 390px;
+
+/* ==============================
+   Car Tracker Page Layout
+   ============================== */
+.carTrackerPage {
+  margin: 12rem auto 0 auto;
+  padding-bottom: $summary-padding;
+  min-height: 70vh;
+
+  .trackerSummaryBlock {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: $summary-gap;
+    margin-top: 2rem;
+
+    // Responsive stacking on very narrow screens
+    @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .carTrackerBackBtn {
+    margin: 2rem auto 0 1rem;
+    background-color: $back-btn-bg;
+    color: $back-btn-text;
+    padding: $back-btn-padding;
+    font-size: $back-btn-font-size;
+    border: $back-btn-border;
+    border-radius: $back-btn-radius;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgb(21, 201, 232);
+      color: black;
+    }
+  }
+}
