@@ -1,6 +1,6 @@
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import "@/SCSS/Cars/CarTracker/CarsOwned.scss"; // ✅ Only if you're NOT importing this from the parent
+import "@/scss/Cars/CarTracker/CarsOwned.scss"; // ✅ Only if you're NOT importing this from the parent
 
 interface OwnedProgressProps {
   ownedCount: number;

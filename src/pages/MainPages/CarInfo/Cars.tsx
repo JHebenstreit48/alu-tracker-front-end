@@ -14,7 +14,7 @@ import CarFilters from "@/components/CarInformation/CarList/CarFilters";
 import CarTrackerToggle from "@/components/CarInformation/CarList/CarTrackerToggle";
 import Navigation from "@/components/Shared/Navigation";
 
-import "@/SCSS/Cars/CarsPage/index.scss";
+import "@/scss/Cars/CarsPage/index.scss";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";

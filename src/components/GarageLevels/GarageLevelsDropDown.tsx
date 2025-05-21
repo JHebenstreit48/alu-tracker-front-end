@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GLContent } from "@/components/GarageLevels/GarageLevelContent";
 import { GarageLevelsInterface } from "@/components/GarageLevels/interface";
-import "@/SCSS/GarageLevels/GarageLevels.scss";
+import "@/scss/GarageLevels/GarageLevels.scss";
 
 interface GarageLevelsDropDownProps {
   levels: GarageLevelsInterface[];

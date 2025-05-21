@@ -5,8 +5,8 @@ import GarageLevelsDropDown from "@/components/GarageLevels/GarageLevelsDropDown
 import GLTrackerToggle from "@/components/GarageLevels/GLTrackerToggle";
 import GarageLevelTracker from "@/components/GarageLevels/GarageLevelTracker";
 import { GarageLevelsInterface } from "@/components/GarageLevels/interface";
-import "@/SCSS/GarageLevels/GarageLevelTracker.scss";
-import "@/SCSS/GarageLevels/GarageLevels.scss";
+import "@/scss/GarageLevels/GarageLevelTracker.scss";
+import "@/scss/GarageLevels/GarageLevels.scss";
 import Navigation from "@/components/Shared/Navigation";
 
 // ✅ Pull from environment just like on Cars page

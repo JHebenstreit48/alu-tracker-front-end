@@ -16,10 +16,10 @@ import TotalKeys from "@/components/CarInformation/CarTracker/TotalKeys";
 import OwnedKeyProgress from "@/components/CarInformation/CarTracker/OwnedKeyProgress";
 import SyncButton from "@/components/CarInformation/UserDataSync/SyncButton";
 
-import "@/SCSS/Cars/CarTracker/CarTracker.scss";
-import "@/SCSS/Cars/CarTracker/CarsOwned.scss";
-import "@/SCSS/Cars/CarTracker/KeysOwned.scss";
-import "@/SCSS/Cars/CarTracker/GoldMaxed.scss";
+import "@/scss/Cars/CarTracker/CarTracker.scss";
+import "@/scss/Cars/CarTracker/CarsOwned.scss";
+import "@/scss/Cars/CarTracker/KeysOwned.scss";
+import "@/scss/Cars/CarTracker/GoldMaxed.scss";
 
 interface TrackedCar extends CarTrackingData {
   carId: string;

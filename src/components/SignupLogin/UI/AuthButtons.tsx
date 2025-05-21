@@ -3,7 +3,7 @@ import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import LoginModal from "@/components/SignupLogin/Modals/Login";
 import SignUpModal from "@/components/SignupLogin/Modals/Signup";
 
-import "@/SCSS/SignupLogin/AuthButtons.scss";
+import "@/scss/SignupLogin/AuthButtons.scss";
 
 export default function AuthButtons() {
   const { token, username, logout } = useContext(AuthContext);

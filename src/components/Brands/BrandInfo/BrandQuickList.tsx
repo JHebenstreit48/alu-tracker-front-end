@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "@/SCSS/Brands/BrandQuickList.scss";
+import "@/scss/Brands/BrandQuickList.scss";
 import BackToTop from "@/components/Shared/BackToTopButton";
 
 interface BrandQuickListProps {
