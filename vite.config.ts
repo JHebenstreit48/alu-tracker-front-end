@@ -27,7 +27,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@scss/Globals/Variables" as *;`, // ✅ Automatically injects SCSS variables/mixins
+        additionalData: `@use "@SCSS/Globals/Variables" as *;`, // ✅ Automatically injects SCSS variables/mixins
       },
     },
   },
