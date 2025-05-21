@@ -41,8 +41,6 @@ export const syncToAccount = async (token: string) => {
       xp,
     };
 
-    console.log("📤 Syncing payload:", JSON.stringify(payload, null, 2));
-
     const res = await fetch(
       `${import.meta.env.VITE_AUTH_API_URL}/api/users/save-progress`,
       {
