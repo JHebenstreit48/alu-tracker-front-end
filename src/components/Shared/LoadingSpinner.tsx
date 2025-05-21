@@ -1,4 +1,4 @@
-import "@/SCSS/MiscellaneousStyle/LoadingSpinner.scss";
+import "@/scss/MiscellaneousStyle/LoadingSpinner.scss";
 
 const LoadingSpinner: React.FC = () => {
   return (

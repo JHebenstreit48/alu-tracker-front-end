@@ -3,7 +3,7 @@ import type { Map as MapboxMap } from "mapbox-gl";
 import mapboxgl from "mapbox-gl";
 import { useRef, useEffect, useState } from "react";
 import MapPin from "@/ManufacturersMap/Map/MapPin";
-import "@/SCSS/Brands/BrandMap.scss";
+import "@/scss/Brands/BrandMap.scss";
 
 interface Manufacturer {
   _id: string;

@@ -1,4 +1,4 @@
-import "@/SCSS/Cars/CarsPage/index.scss";
+import "@/scss/Cars/CarsPage/index.scss";
 
 interface Props {
   isEnabled: boolean;

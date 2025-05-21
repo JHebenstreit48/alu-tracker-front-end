@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "@/SCSS/Brands/BrandInfo.scss";
+import "@/scss/Brands/BrandInfo.scss";
 
 interface Manufacturer {
   _id: string;

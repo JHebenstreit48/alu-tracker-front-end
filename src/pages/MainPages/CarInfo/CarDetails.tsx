@@ -25,7 +25,7 @@ import {
   generateCarKey,
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
-import '@/SCSS/Cars/CarDetail.scss';
+import '@/scss/Cars/CarDetail.scss';
 
 type FullCar = Car & GoldMaxStats & Blueprints & StockStats & OneStarStockStats & TwoStarStockStats;
 

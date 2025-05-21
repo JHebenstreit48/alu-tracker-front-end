@@ -6,10 +6,10 @@ import LoadingSpinner from "@/components/Shared/LoadingSpinner";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { syncFromAccount } from "@/components/CarInformation/UserDataSync/syncFromAccount";
 
-import "@/SCSS/PageAndHome/Page.scss";
-import "@/SCSS/NavHeaderFooterError/Header.scss";
-import "@/SCSS/NavHeaderFooterError/Navigation.scss";
-import "@/SCSS/NavHeaderFooterError/Footer.scss";
+import "@/scss/PageAndHome/Page.scss";
+import "@/scss/NavHeaderFooterError/Header.scss";
+import "@/scss/NavHeaderFooterError/Navigation.scss";
+import "@/scss/NavHeaderFooterError/Footer.scss";
 
 export default function App() {
   const location = useLocation();

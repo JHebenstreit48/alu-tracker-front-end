@@ -3,7 +3,7 @@ import PageTab from "@/components/Shared/PageTab";
 import ImageCarousel from "@/components/HomePage/ImageCarousel";
 import Carousel from "@components/HomePage/ImagesForCarousel";
 import GameInfo from "@components/HomePage/GameInfo";
-import '@/SCSS/PageAndHome/Home.scss';
+import '@/scss/PageAndHome/Home.scss';
 import Navigation from "@/components/Shared/Navigation";
 
 export default function Home() {

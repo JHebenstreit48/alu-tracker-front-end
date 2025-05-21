@@ -1,4 +1,4 @@
-import "@/SCSS/MiscellaneousStyle/StarRank.scss";
+import "@/scss/MiscellaneousStyle/StarRank.scss";
 import { useEffect, useState } from "react";
 import {
   getCarTrackingData,

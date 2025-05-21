@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Shared/Header';
 import PageTab from '@/components/Shared/PageTab';
 import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
-import '@/SCSS/Brands/BrandMap.scss';
+import '@/scss/Brands/BrandMap.scss';
 import Navigation from '@/components/Shared/Navigation';
 
 interface Manufacturer {
