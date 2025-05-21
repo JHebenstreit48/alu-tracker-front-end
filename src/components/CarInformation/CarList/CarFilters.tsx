@@ -1,4 +1,4 @@
-import '@/SCSS/Cars/CarsPage/CarFilters.scss';
+import '@/SCSS/Cars/CarsPage/index.scss';
 
 interface CarFiltersProps {
   onSearch: (term: string) => void;
