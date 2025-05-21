@@ -36,14 +36,13 @@ const CarDetails = () => {
   const [car, setCar] = useState<FullCar | null>(null);
   const [error, setError] = useState(false);
   const [keyObtained, setKeyObtained] = useState(false);
-  const [trackerMode, setTrackerMode] = useState(false); // ✅ Tracker mode state
+  const [trackerMode, setTrackerMode] = useState(false);
 
   const unitPreference =
     localStorage.getItem('preferredUnit') === 'imperial' ? 'imperial' : 'metric';
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
-  // ✅ Read trackerMode from localStorage on mount and when location changes
   useEffect(() => {
     const stored = localStorage.getItem('trackerMode') === 'true';
     setTrackerMode(stored);
@@ -52,14 +51,13 @@ const CarDetails = () => {
   useEffect(() => {
     async function fetchCarDetails(slug: string) {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/cars`);
+        const res = await fetch(`${API_BASE_URL}/api/cars/detail/${slug}`);
         const data = await res.json();
-        const allCars: FullCar[] = data.cars || [];
-  
+        const allCars: FullCar[] = Array.isArray(data) ? data : data.cars || [];
+
         const normalizedSlug = slug.toLowerCase();
-  
+
         let found = false;
-  
         for (const car of allCars) {
           const key = generateCarKey(car.Brand, car.Model);
           if (key === normalizedSlug) {
@@ -72,7 +70,7 @@ const CarDetails = () => {
             break;
           }
         }
-  
+
         if (!found) {
           console.error("🧪 No match for slug:", normalizedSlug);
           console.warn("🧪 Valid keys:", allCars.map(c => generateCarKey(c.Brand, c.Model)));
@@ -83,13 +81,11 @@ const CarDetails = () => {
         setError(true);
       }
     }
-  
+
     if (slug) {
       fetchCarDetails(slug);
     }
   }, [slug, API_BASE_URL]);
-  
-  
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
@@ -105,18 +101,11 @@ const CarDetails = () => {
   return (
     <div className="carDetail">
       <div>
-        <button
-          className="backBtn"
-          onClick={handleGoBack}
-        >
-          Back
-        </button>
+        <button className="backBtn" onClick={handleGoBack}>Back</button>
       </div>
 
       <div>
-        <h1 className="carName">
-          {car.Brand} {car.Model}
-        </h1>
+        <h1 className="carName">{car.Brand} {car.Model}</h1>
       </div>
 
       <CarImage car={car} />
@@ -129,58 +118,24 @@ const CarDetails = () => {
       />
 
       <div className="carDetailTables">
-
         <div className="tableCard">
-          <ClassRank
-            car={car}
-            trackerMode={trackerMode}
-            forceOwned={car.KeyCar && keyObtained}
-          />
+          <ClassRank car={car} trackerMode={trackerMode} forceOwned={car.KeyCar && keyObtained} />
         </div>
-
         <div className="tableCard">
-          <MaxStats
-            car={car}
-            unitPreference={unitPreference}
-            trackerMode={trackerMode}
-          />
+          <MaxStats car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
         </div>
-
         <div className="tableCard">
-          <BlueprintsTable
-            car={car}
-            trackerMode={trackerMode}
-          />
+          <BlueprintsTable car={car} trackerMode={trackerMode} />
         </div>
-
         <div className="tableCard">
-          <StockStatsTable
-            car={car}
-            unitPreference={unitPreference}
-            trackerMode={trackerMode}
-          />
+          <StockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
         </div>
-
         <div className="tableCard">
-          <OneStarStockStatsTable
-            car={car}
-            unitPreference={unitPreference}
-            trackerMode={trackerMode}
-          />
+          <OneStarStockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
         </div>
-
         <div className="tableCard">
-          <TwoStarStockStatsTable
-            car={car}
-            unitPreference={unitPreference}
-            trackerMode={trackerMode}
-          />
+          <TwoStarStockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
         </div>
-
-        {/* <div>
-
-        </div> */}
-
       </div>
     </div>
   );

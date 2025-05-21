@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/CarInterfaces";
+import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 import {
   getCarTrackingData,
   setCarTrackingData,
