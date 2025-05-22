@@ -5,6 +5,7 @@ export interface CarTrackingData {
   keyObtained?: boolean;
   upgradeStage?: number;
   importParts?: number;
+  KeyCar?: boolean;
 }
 
 const keyPrefix = "car-tracker-";

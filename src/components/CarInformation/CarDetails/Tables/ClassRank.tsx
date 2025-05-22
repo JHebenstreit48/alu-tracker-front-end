@@ -1,12 +1,12 @@
-import { useEffect, useState, useRef } from "react";
-import { Car  } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
-import StarRankSelector from "@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector";
+import { useEffect, useState, useRef } from 'react';
+import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
+import StarRankSelector from '@/components/CarInformation/CarDetails/OtherComponents/StarRankSelector';
 import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
-} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
-import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
+} from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
+import { useAutoSyncDependency } from '@/components/CarInformation/UserDataSync/hooks/useAutoSync';
 
 interface ClassRankProps {
   car: Car;
@@ -14,11 +14,7 @@ interface ClassRankProps {
   forceOwned?: boolean;
 }
 
-const ClassRank: React.FC<ClassRankProps> = ({
-  car,
-  trackerMode = false,
-  forceOwned,
-}) => {
+const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOwned }) => {
   const carKey = generateCarKey(car.Brand, car.Model);
   const hasUserInteracted = useRef(false);
 
@@ -30,7 +26,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
   useEffect(() => {
     if (trackerMode) {
       const data = getCarTrackingData(carKey);
-      setSelectedStarRank(typeof data.stars === "number" ? data.stars : 0);
+      setSelectedStarRank(typeof data.stars === 'number' ? data.stars : 0);
       setOwned(data.owned === true);
       setGoldMaxed(data.goldMaxed === true);
     } else {
@@ -42,13 +38,7 @@ const ClassRank: React.FC<ClassRankProps> = ({
 
   // ✅ Only mark as owned if user manually selects star (for non-key cars)
   useEffect(() => {
-    if (
-      trackerMode &&
-      !car.KeyCar &&
-      selectedStarRank > 0 &&
-      hasUserInteracted.current &&
-      !owned
-    ) {
+    if (trackerMode && !car.KeyCar && selectedStarRank > 0 && hasUserInteracted.current && !owned) {
       setOwned(true);
     }
   }, [trackerMode, car.KeyCar, selectedStarRank, owned]);
@@ -81,74 +71,81 @@ const ClassRank: React.FC<ClassRankProps> = ({
   useAutoSyncDependency(trackerMode ? [selectedStarRank, owned, goldMaxed] : []);
 
   return (
+    <table className="carInfoTable">
+      <thead>
+        <tr>
+          <th
+            className="tableHeader2"
+            colSpan={2}
+          >
+            Class {car.Class}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            colSpan={2}
+            style={{ textAlign: 'center' }}
+          >
+            <StarRankSelector
+              maxStars={car.Stars}
+              selected={trackerMode ? selectedStarRank : car.Stars}
+              onSelect={trackerMode ? handleStarSelect : undefined}
+              brand={car.Brand}
+              model={car.Model}
+              trackerMode={trackerMode}
+              isKeyCar={car.KeyCar}
+            />
+          </td>
+        </tr>
 
-      <table className="carInfoTable">
-        <thead>
+        <tr>
+          <td colSpan={2}>{car.Country}</td>
+        </tr>
+
+        <tr>
+          <td>Rarity</td>
+          <td>{car.Rarity}</td>
+        </tr>
+
+        <tr>
+          <td>Obtainable Via</td>
+          <td>{car.ObtainableVia}</td>
+        </tr>
+
+        {trackerMode && (
           <tr>
-            <th className="tableHeader2" colSpan={2}>
-              Class {car.Class}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colSpan={2} style={{ textAlign: "center" }}>
-              <StarRankSelector
-                maxStars={car.Stars}
-                selected={trackerMode ? selectedStarRank : car.Stars}
-                onSelect={trackerMode ? handleStarSelect : undefined}
-                carId={trackerMode ? carKey : undefined}
-              />
+            <td style={{ textAlign: 'center' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={owned}
+                  onChange={(e) => setOwned(e.target.checked)}
+                />{' '}
+                Owned
+              </label>
+            </td>
+            <td style={{ textAlign: 'center' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={goldMaxed}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setGoldMaxed(isChecked);
+                    if (isChecked) {
+                      setSelectedStarRank(car.Stars);
+                    }
+                  }}
+                />{' '}
+                Gold Maxed
+              </label>
             </td>
           </tr>
-
-          <tr>
-            <td colSpan={2}>{car.Country}</td>
-          </tr>
-
-          <tr>
-            <td>Rarity</td>
-            <td>{car.Rarity}</td>
-          </tr>
-
-          <tr>
-            <td>Obtainable Via</td>
-            <td>{car.ObtainableVia}</td>
-          </tr>
-
-          {trackerMode && (
-            <tr>
-              <td style={{ textAlign: "center" }}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={owned}
-                    onChange={(e) => setOwned(e.target.checked)}
-                  />{" "}
-                  Owned
-                </label>
-              </td>
-              <td style={{ textAlign: "center" }}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={goldMaxed}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      setGoldMaxed(isChecked);
-                      if (isChecked) {
-                        setSelectedStarRank(car.Stars);
-                      }
-                    }}
-                  />{" "}
-                  Gold Maxed
-                </label>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
+        )}
+      </tbody>
+    </table>
   );
 };
 

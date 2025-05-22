@@ -1,48 +1,156 @@
-.starRankCircleWrapper {
-    width: 150px;
-    height: 150px;
-    margin: 1rem;
-    position: relative;
-    display: flex;
+@use 'sass:color';
+
+/* ==============================
+   Layout Structure — Row 2: Stars + Max Tables
+   ============================== */
+
+.circleAndTableRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8rem;
+  width: 100%;
+
+  // Responsive stacking for very small screens
+  @media only screen and (max-width: 480px) and (orientation: portrait) {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
   }
-  
-  .starIconsContainer {
-    display: flex;
-    flex-wrap: wrap;               // ✅ Allow multi-line stars
-    justify-content: center;
-    align-items: center;
-    max-width: 80px;               // ✅ Limit total row width
-    min-height: 40px;              // ✅ Help vertically align rows
-    gap: 4px;
-    margin-bottom: 4px;
-  }
-  
-  .starIcon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .circleLabel {
-    font-size: 0.9rem;
-    margin-top: 4px;
-    color: white;
-    text-align: center;
-  }
-  
-  .starRankGridWrapper {
-    display: flex;
-    justify-content: flex-start;    // ✅ Align to left side
-    width: 100%;
-    margin: 2rem 0;
-  }
-  
-  .starRankGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, auto);
-    gap: 2rem;
-  }
-  
+}
+
+/* ==============================
+   Left Side — Star Circles Grid (2x3)
+   ============================== */
+
+.starRankGridWrapper {
+  display: flex;
+}
+
+.starRankGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 columns
+  grid-template-rows: repeat(3, auto); // 3 rows
+  margin: 2rem 4rem 0 9rem;
+}
+
+/* === Individual Star Circle Container === */
+.starRankCircleWrapper {
+  width: 150px;
+  height: 150px;
+  margin: 0.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Stars inside circle (fixed wrap) === */
+.starIconsContainer {
+  display: flex;
+  flex-wrap: wrap; // Allow multiline stars
+  justify-content: center;
+  align-items: center;
+  max-width: 80px;
+  min-height: 40px;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.starIcon {
+  width: 20px;
+  height: 20px;
+}
+
+/* === Label below each star circle === */
+.circleLabel {
+  font-size: 0.9rem;
+  margin-top: 4px;
+  color: white;
+  text-align: center;
+}
+
+/* ==============================
+   Right Side — Max Star Tables Grid (2x2)
+   ============================== */
+
+/* ==============================
+   Right Side — Max Star Tables Grid (2x2)
+   ============================== */
+
+/* === Table Row Wrapper === */
+.maxStarGridWrapper {
+  display: flex;
+  justify-content: flex-start; // aligns with left star group
+  width: 100%;
+  padding-left: 6rem; // match left margin of .starRankGrid
+}
+
+/* === Table Grid === */
+.maxStarGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 15rem); // Lock table size and enforce 2 columns
+  row-gap: 2.6rem; // ✅ Tight vertical spacing
+  column-gap: 2rem; // Balanced horizontal spacing
+  justify-content: start;
+}
+
+/* === Table Container === */
+.maxStarGridWrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding-left: 1rem;       // 🔽 reduced from 6rem to move left
+  margin-top: 4rem;         // 🔽 added or adjusted to move it downward
+}
+
+
+/* === Table Style === */
+.maxStarTable {
+  width: 100%;
+  margin: 0; // ✅ Eliminate vertical spacing
+  border-collapse: collapse;
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  overflow: hidden;
+}
+
+.maxStarTable th,
+.maxStarTable td {
+  padding: 6px 10px; // ✅ Slightly reduced padding for tighter rows
+  text-align: left;
+  line-height: 1.2; // ✅ Tighten vertical height per row
+}
+
+.maxStarTable th {
+  background-color: #2a2a2a;
+  font-weight: bold;
+  text-align: center; // ✅ Already centers text
+  padding: 9px 11px; // ✅ Remove side padding for perfect centering
+}
+// ✅ Remove side padding for perfect centering
+.starRow {
+  display: flex;
+  justify-content: center; // ✅ Center horizontally
+  align-items: center;
+  width: 100%; // ✅ Ensure row spans full width
+  padding: 2px 0;
+}
+
+/* ==============================
+   Inline Stars (Used Inside Tables)
+   ============================== */
+
+.starRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inlineStar {
+  width: 20px;
+  height: 20px;
+  margin: 0 2px;
+}
