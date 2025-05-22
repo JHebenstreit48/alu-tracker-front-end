@@ -13,6 +13,8 @@ interface StarRankSelectorProps {
   readOnly?: boolean;
   brand?: string;
   model?: string;
+  trackerMode?: boolean;
+  isKeyCar?: boolean;
 }
 
 const StarRankSelector: React.FC<StarRankSelectorProps> = ({
@@ -22,6 +24,8 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
   readOnly = false,
   brand,
   model,
+  trackerMode,
+  isKeyCar,
 }) => {
   const [internalStars, setInternalStars] = useState<number>(0);
 
@@ -32,11 +36,24 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
   useEffect(() => {
     if (carKey && selected === undefined) {
       const data = getCarTrackingData(carKey);
-      if (typeof data.stars === "number") {
-        setInternalStars(data.stars);
+  
+      if (Number.isInteger(data.stars) && data.stars! > 0) {
+        setInternalStars(data.stars!);
+      } else if (
+        trackerMode &&
+        isKeyCar &&
+        !data.owned &&
+        !data.keyObtained
+      ) {
+        setInternalStars(1); // ✅ Default 1 star for key cars
+      } else {
+        setInternalStars(0);
       }
     }
-  }, [carKey, selected]);
+  }, [carKey, selected, trackerMode, isKeyCar]);
+  
+  
+  
 
   // ✅ Auto-sync stars if uncontrolled and tracking by carKey
   useAutoSyncDependency(

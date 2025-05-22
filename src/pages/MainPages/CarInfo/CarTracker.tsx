@@ -189,8 +189,8 @@ export default function CarTracker() {
           />
 
           <MaxStarRank
-            trackedCars={enrichedTrackedCars}
-            ownedCars={enrichedTrackedCars.filter((car) => car.owned)}
+            allCars={allCars}
+            trackedCars={enrichedTrackedCars}  // from enriched tracking
             totalCars={totalCars}
           />
           </div>
