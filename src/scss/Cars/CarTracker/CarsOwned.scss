@@ -18,6 +18,7 @@ $owned-glow: 0 0 6px #00ff22;
 
   .CircularProgressbar {
     font-weight: bold;
+    margin-left: 7rem;
 
     .CircularProgressbar-path {
       stroke: $owned-ring-color !important;
@@ -31,7 +32,7 @@ $owned-glow: 0 0 6px #00ff22;
 
     .CircularProgressbar-text {
       fill: $owned-text-color !important;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
   }
 }
@@ -42,6 +43,6 @@ $owned-glow: 0 0 6px #00ff22;
    .carsOwnedText {
     font-size: 1.2rem;
     text-align: center;
-    margin-top: 1rem;
+    margin: 3.5rem 0 0 7rem;
     color: $owned-ring-color;
   }

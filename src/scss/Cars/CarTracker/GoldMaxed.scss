@@ -18,6 +18,7 @@ $gold-glow: 0 0 6px #fcb900;
 
   .CircularProgressbar {
     font-weight: bold;
+    margin-left: 8rem;
 
     .CircularProgressbar-path {
       stroke: $gold-ring-color;
@@ -41,7 +42,6 @@ $gold-glow: 0 0 6px #fcb900;
    ============================== */
 .goldMaxedText {
   font-size: 1.2rem;
-  text-align: center;
-  margin-top: 1rem;
+  margin: 3.5rem 0 0 8rem;
   color: $gold-ring-color;
 }

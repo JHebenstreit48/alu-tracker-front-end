@@ -8,14 +8,15 @@ import {
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
 
-import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/Labels/CarsOwned';
-import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/UI/OwnedProgress';
-import GoldMaxed from '@/components/CarInformation/CarTracker/ProgressCircles/Labels/GoldMaxed';
-import GoldMaxedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/UI/GoldMaxedProgress';
-import TotalKeys from '@/components/CarInformation/CarTracker/ProgressCircles/Labels/TotalKeys';
-import OwnedKeyProgress from '@/components/CarInformation/CarTracker/ProgressCircles/UI/OwnedKeyProgress';
-import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
-import StarRankCircles from '@/components/CarInformation/CarTracker/StarProgress/Layout/StarRankCircles';
+import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
+import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
+import GoldMaxed from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/GoldMaxed';
+import GoldMaxedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/GoldMaxedProgress';
+import TotalKeys from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/TotalKeys';
+import OwnedKeyProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedKeyProgress';
+import StarRankCircles from '@/components/CarInformation/CarTracker/ProgressCircles/CarTotalStars/Layout/StarRankCircles';
+import MaxStarRank from '@/components/CarInformation/CarTracker/MaxStarRank/Layout/MaxStarRank';
+// import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
 
 import '@/scss/Cars/CarTracker/CarTracker.scss';
 import '@/scss/Cars/CarTracker/CarsOwned.scss';
@@ -36,6 +37,7 @@ interface KeyCarSummary {
 export default function CarTracker() {
   const [trackedCars, setTrackedCars] = useState<TrackedCar[]>([]);
   const [totalCars, setTotalCars] = useState<number>(0);
+  const [allCars, setAllCars] = useState<Car[]>([]);
   const [keyCarSummary, setKeyCarSummary] = useState<KeyCarSummary>({
     total: 0,
     obtained: 0,
@@ -61,11 +63,12 @@ export default function CarTracker() {
           setTotalCars(data.total);
         }
 
-        // ✅ Get all key cars from backend
-        const keyCars = (data.cars as Car[]).filter((car) => car.KeyCar);
+        const cars = data.cars as Car[];
+        setAllCars(cars);
+
+        const keyCars = cars.filter((car) => car.KeyCar);
         const keyCarKeys = keyCars.map((car) => generateCarKey(car.Brand, car.Model));
 
-        // ✅ Use actual localStorage keys for lookup
         const keysObtained = Object.entries(allTracked)
           .filter(([, val]) => val.keyObtained)
           .map(([key]) => key);
@@ -80,7 +83,6 @@ export default function CarTracker() {
           owned: ownedKeyCars.length,
         });
 
-        // ✅ Debug info
         console.log('🧪 Key car summary:', {
           totalFromBackend: keyCarKeys.length,
           keysObtainedFromLocal: keysObtained.length,
@@ -126,6 +128,14 @@ export default function CarTracker() {
     }
   });
 
+  const enrichedTrackedCars: (Car & CarTrackingData)[] = allCars
+    .map((car) => {
+      const key = generateCarKey(car.Brand, car.Model);
+      const trackingData = getAllCarTrackingData()[key];
+      return trackingData ? { ...car, ...trackingData } : null;
+    })
+    .filter((c): c is Car & CarTrackingData => c !== null);
+
   return (
     <div className="carTrackerPage">
       <PageTab title="Car Tracker">
@@ -138,9 +148,11 @@ export default function CarTracker() {
           Back to Cars
         </button>
 
-        <SyncButton />
+        {/* <SyncButton /> */}
 
         <div className="trackerSummaryBlock">
+
+          <div className="summaryProgressRow">
           <OwnedProgress
             ownedCount={ownedCars.length}
             totalCars={totalCars}
@@ -168,12 +180,23 @@ export default function CarTracker() {
             owned={keyCarSummary.owned}
             total={keyCarSummary.total}
           />
-
+          </div>
+          
+          <div className="circleAndTableRow">
           <StarRankCircles
             starCounts={starCounts}
             totalOwned={ownedCars.length}
           />
+
+          <MaxStarRank
+            trackedCars={enrichedTrackedCars}
+            ownedCars={enrichedTrackedCars.filter((car) => car.owned)}
+            totalCars={totalCars}
+          />
+          </div>
+
         </div>
+        
       </PageTab>
     </div>
   );
