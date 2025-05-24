@@ -1,5 +1,5 @@
 @use 'sass:color';
-@use '@scss/Globals' as *;
+@use '@scss/Globals/index' as *;
 
 /* ==============================
          Controls Wrapper
@@ -30,14 +30,14 @@
     'search search'
     'owned keycar'
     'reset reset';
-  background-color: $filter-bg;
+  background-color: $color-black;
   border: $filter-border;
-  box-shadow: $filter-shadow;
+  box-shadow: $shadow-gold-lg;
   width: $filter-width;
   margin: 0 auto;
   padding: $filter-padding;
   gap: $filter-gap;
-  color: $filter-font-color;
+  color: $color-white;
   font-size: $filter-font-size;
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
@@ -140,14 +140,14 @@
     color: white;
     padding: 0.6rem 2rem;
     border-radius: $reset-btn-radius;
-    box-shadow: $reset-btn-shadow;
+    box-shadow: $shadow-gold-basic;
     cursor: pointer;
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: $reset-btn-hover;
-      color: black;
-      font-weight: bold;
+      background-color: $table-border-color;
+      color: $color-white;
+      font-size: 1.1rem;
     }
   }
 }

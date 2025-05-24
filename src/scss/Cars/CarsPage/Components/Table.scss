@@ -10,7 +10,7 @@ table {
   border-spacing: 0;
   border-collapse: collapse;
   width: $table-width;
-  box-shadow: $table-box-shadow;
+  box-shadow: $shadow-gold-xl;
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
     width: 88%;
@@ -51,8 +51,8 @@ table {
    Table Section Headers
    ============================= */
 .tableHeader {
-  color: $table-header-text-color;
-  background-color: $table-header-bg-color;
+  color: $color-accent-blue;
+  background-color: $color-black;
   text-align: center;
   padding: $table-header-padding;
   font-size: $table-header-font-size;
@@ -104,7 +104,7 @@ table {
 .tableData {
   font-size: 1.4rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: $td-text-color;
+  color: $color-white;
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
     display: block;
@@ -115,7 +115,7 @@ table {
 
 td {
   text-align: center;
-  color: $td-text-color;
+  color: $color-white;
   border: 1px solid $td-border-color;
   padding: $td-padding;
   width: 1%;
@@ -134,7 +134,7 @@ td {
    ============================= */
 .carName {
   a {
-    color: $car-name-link-color;
+    color: $color-link-blue;
     text-decoration: none;
     max-width: calc(100% - 45px);
   }

@@ -38,11 +38,11 @@
    $reset-button-border-radius: 1rem;
    
    $table-border-color: rgb(11, 7, 134);
-   $table-box-shadow-color: rgb(223, 190, 7);
+   $shadow-gold-xl-color: rgb(223, 190, 7);
    $table-width: 55rem;
    $table-bg-color: black;
-   $table-header-bg-color: black;
-   $table-header-text-color: white;
+   $color-black: black;
+   $color-accent-blue: white;
    $class-header-text-color: rgb(21, 201, 232);
    $class-header-border-color: rgb(204, 19, 255);
    $class-header-font-size: 2rem;
@@ -155,7 +155,7 @@
    .responsiveTable {
      text-align: center;
      border: 3px solid $table-border-color !important;
-     box-shadow: 0 0 10px 6px $table-box-shadow-color;
+     box-shadow: 0 0 10px 6px $shadow-gold-xl-color;
      width: $table-width !important;
      background-color: $table-bg-color;
      margin: 6rem auto 5rem auto;
@@ -178,8 +178,8 @@
    }
    
    .tableHeaderRow {
-     background-color: $table-header-bg-color;
-     color: $table-header-text-color;
+     background-color: $color-black;
+     color: $color-accent-blue;
    
      th {
        justify-content: space-between;

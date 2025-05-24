@@ -130,6 +130,11 @@
   text-align: center; // ✅ Already centers text
   padding: 9px 11px; // ✅ Remove side padding for perfect centering
 }
+
+.maxStarTable td {
+  height: 2rem; // ✅ Set a fixed height for all rows
+}
+
 // ✅ Remove side padding for perfect centering
 .starRow {
   display: flex;
