@@ -2,8 +2,8 @@
 @use '@scss/Globals/Variables' as *;
 
 /* =============================
-         Table Layout
-         ============================= */
+   Table Layout Styles
+   ============================= */
 table {
   border: 4px solid $table-border-color;
   margin: $table-margin;
@@ -12,36 +12,105 @@ table {
   width: $table-width;
   box-shadow: $table-box-shadow;
 
-  @media only screen and (max-width: 768px) {
-    margin-top: 15rem;
-    max-width: 80%;
-  }
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    width: 88%;
+    border: 3px solid $table-border-color;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
-    margin-top: 4rem;
-    max-width: 100%;
-    width: 84%;
+    tr {
+      border-bottom: 2px solid $td-border-color;
+      margin-bottom: 1.2rem;
+    }
+
+    td,
+    th {
+      border-left: none;
+      border-right: none;
+      padding: 0;
+    }
+
+    tr:first-of-type {
+      margin-bottom: 0 !important;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .tableHeaderRow {
+      display: table-row !important; // restores layout so colspan works
+    }
+
+    .tableHeaderRow th {
+      display: table-cell !important;
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+    }
   }
 }
 
-.table-header {
+/* =============================
+   Table Section Headers
+   ============================= */
+.tableHeader {
   color: $table-header-text-color;
   background-color: $table-header-bg-color;
   text-align: center;
   padding: $table-header-padding;
   font-size: $table-header-font-size;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-top: 1px solid rgba(204, 19, 255, 0.308);
+  border-left: 1px solid $td-border-color;
 
-  div {
-    display: flex;
-    justify-content: space-between;
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    width: 90%; // Match the table width on mobile
+    margin: 0 auto;   // ✅ Prevents extra space between header and rows
+    padding: 1rem;
+    font-size: 1.7rem;
+    text-align: center;
+    border-left: none;
   }
 }
 
-.car-class {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.tableHeaderRow {
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    margin-bottom: 0 !important;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+
+.tableHeaders {
+  color: rgb(0, 102, 255);
+  background-color: rgb(15, 10, 32);
+  text-align: center;
+  padding: $table-header-padding;
+  font-size: $table-header-font-size;
+  border-top: 1px solid rgba(204, 19, 255, 0.308);
+  border-left: 1px solid $td-border-color;
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0.6rem 0;
+    margin: 0;
+    border: 1px solid $td-border-color;
+    width: 100%;
+  }
+}
+
+/* =============================
+   Table Rows & Data Cells
+   ============================= */
+.tableData {
+  font-size: 1.4rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $td-text-color;
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    display: block;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid $td-border-color;
+  }
 }
 
 td {
@@ -49,12 +118,99 @@ td {
   color: $td-text-color;
   border: 1px solid $td-border-color;
   padding: $td-padding;
+  width: 1%;
+  vertical-align: middle;
+  height: 10rem;
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
 }
 
-.car-name {
+/* =============================
+   Manufacturer & Model Column
+   ============================= */
+.carName {
   a {
     color: $car-name-link-color;
     text-decoration: none;
     max-width: calc(100% - 45px);
+  }
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    text-align: center;
+    display: block;
+    font-size: 1.1rem;
+    line-height: 1.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid $td-border-color;
+  }
+}
+
+/* =============================
+   Image Column
+   ============================= */
+.carImage {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  position: relative;
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    margin-top: 0;
+    border-top: 1px solid $td-border-color;
+  }
+
+  .carPic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    padding: 0;
+    margin: 0 auto;
+
+    @media only screen and (max-width: $mobileMaxWidthPortrait) {
+      height: auto;
+      max-height: 11rem;
+      max-width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .starOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.28rem 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 2;
+    text-align: center;
+    font-size: 0.3rem;
+
+    @media only screen and (max-width: $mobileMaxWidthPortrait) {
+      padding: 0.05rem;
+      margin: 0;
+      height: 1.5rem;
+    }
+  }
+}
+
+/* =============================
+   Placeholder & Fallback Text
+   ============================= */
+.noImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10rem;
+  font-weight: bold;
+  font-size: 1rem;
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    height: 10rem;
+    font-size: 1rem;
   }
 }

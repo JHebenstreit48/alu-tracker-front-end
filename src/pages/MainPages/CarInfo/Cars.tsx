@@ -24,6 +24,8 @@ interface Car {
   Model: string;
   Class: string;
   Stars: number;
+  Image?: string;
+  ImageStatus?: "Coming Soon" | "Available" | "Removed";
   KeyCar?: boolean;
   Rarity: string; // ✅ Ensures rarity is available for filtering
 }
@@ -270,7 +272,7 @@ export default function Cars() {
           onRarityChange={handleRarityChange}
         />
 
-        <p className="car-count">
+        <p className="carCount">
           Showing {paginatedCars.length} of {totalFiltered} car
           {totalFiltered !== 1 ? "s" : ""}
         </p>
