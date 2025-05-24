@@ -1,5 +1,5 @@
 @use 'sass:color';
-@use '@scss/Globals/Variables' as *;
+@use '@scss/Globals' as *;
 
 /* =============================
    Tracker Toggle Button Layout
@@ -38,7 +38,7 @@
 
     &.on {
       background-color: $tracker-btn-on-bg;
-      color: $tracker-btn-on-color;
+      color: $color-white;
 
       .circleIndicator {
         background-color: $circle-color-on;

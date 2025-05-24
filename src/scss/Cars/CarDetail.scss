@@ -7,7 +7,7 @@ $car-detail-padding: 20px;
 $car-detail-text-color: #333;
 
 $back-btn-bg-color: #333;
-$back-btn-text-color: white;
+$color-accent-blue-color: white;
 $back-btn-hover-bg-color: #555;
 $back-btn-padding: 10px 20px;
 $back-btn-margin-bottom: 20px;
@@ -24,8 +24,8 @@ $car-image-shadow-color: rgb(223, 190, 7);
 $table-grid-columns: 1fr 1fr;
 $info-table-width: 45rem;
 
-$table-header-bg-color: black;
-$table-header-text-color: rgb(21, 201, 232);
+$color-black: black;
+$color-accent-blue: rgb(21, 201, 232);
 $table-header-font-size: 1.8rem;
 
 $blueprints-width: 50rem;
@@ -56,7 +56,7 @@ $cellphone-landscape: 390px;
       ============================= */
   .backBtn {
     background-color: $back-btn-bg-color;
-    color: $back-btn-text-color;
+    color: $color-accent-blue-color;
     padding: $back-btn-padding;
     margin-bottom: $back-btn-margin-bottom;
     border: none;
@@ -179,8 +179,8 @@ $cellphone-landscape: 390px;
   }
 
   .tableHeader2 {
-    color: $table-header-text-color;
-    background-color: $table-header-bg-color;
+    color: $color-accent-blue;
+    background-color: $color-black;
     text-align: center;
     height: 50px;
     padding: 15px 80px 20px 80px !important;

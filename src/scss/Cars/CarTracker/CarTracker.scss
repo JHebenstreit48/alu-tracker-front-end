@@ -9,7 +9,7 @@ $back-btn-font-size: 1.1rem;
 $back-btn-padding: 10px 18px;
 $back-btn-radius: 12px;
 $back-btn-bg: black;
-$back-btn-text: rgb(21, 201, 232);
+$color-accent-blue: rgb(21, 201, 232);
 $back-btn-border: 1px solid rgb(21, 201, 232);
 
 $mobileMaxWidthPortrait: 480px;
@@ -25,7 +25,7 @@ $cellphone-landscape: 390px;
   .carTrackerBackBtn {
     margin: 2.5rem auto 0 3rem;
     background-color: $back-btn-bg;
-    color: $back-btn-text;
+    color: $color-accent-blue;
     padding: $back-btn-padding;
     font-size: $back-btn-font-size;
     border: $back-btn-border;
