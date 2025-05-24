@@ -6,6 +6,8 @@ interface Car {
   Brand: string;
   Model: string;
   Stars: number;
+  Image?: string;
+  ImageStatus?: 'Coming Soon' | 'Available' | 'Removed';
 }
 
 interface ClassTablesProps {
@@ -27,14 +29,17 @@ export default function ClassTables({
     <div>
       <table>
         <tbody>
-          <tr>
-            <th className="table-header" colSpan={2}>
+          <tr className="tableHeaderRow">
+            <th
+              className="tableHeader"
+              colSpan={2}
+            >
               {headerText}
             </th>
           </tr>
-          <tr className="table-data">
-            <td>Manufacturer & Model</td>
-            <td>Star Rank</td>
+          <tr className="headings">
+            <th className="tableHeaders">Manufacturer & Model</th>
+            <th className="tableHeaders">Image/StarRank</th>
           </tr>
 
           {loading || cars.length === 0 ? (
@@ -55,15 +60,52 @@ export default function ClassTables({
           ) : (
             cars.map((car) => {
               const carKey = generateCarKey(car.Brand, car.Model);
+              const imageSrc = car.Image
+                ? `${import.meta.env.VITE_API_BASE_URL}${car.Image}`
+                : null;
+              const altText = `${car.Brand} ${car.Model}`;
+
+              console.log(car.Model, car.Image, car.ImageStatus);
               return (
-                <tr className="table-data" key={carKey}>
-                  <td className="car-name">
-                    <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
+                <tr
+                  className="tableData"
+                  key={carKey}
+                >
+                  <td className="carName">
+                    <Link
+                      to={`/cars/${carKey}`}
+                      state={{ trackerMode }}
+                    >
                       {car.Brand} {car.Model}
                     </Link>
                   </td>
-                  <td>
-                    <StarRank count={car.Stars} />
+
+                  <td className="carImage">
+                    <div className="imageWrapper">
+                      {car.ImageStatus === 'Removed' ? (
+                        <span className="noImage">🚫 Removed from Game</span>
+                      ) : car.ImageStatus === 'Coming Soon' ? (
+                        <span className="noImage">🚧 Image Coming Soon</span>
+                      ) : car.Image ? (
+                        <>
+                          <img
+                            className="carPic"
+                            src={imageSrc!}
+                            alt={altText}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              e.currentTarget.parentElement!.innerHTML =
+                                '<span class="noImage">❌ File Not Found</span>';
+                            }}
+                          />
+                          <div className="starOverlay">
+                            <StarRank count={car.Stars} />
+                          </div>
+                        </>
+                      ) : (
+                        <span className="noImage">❓ Unknown</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               );
