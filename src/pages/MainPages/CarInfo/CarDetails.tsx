@@ -1,21 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
-import {
-  Car,
-  GoldMaxStats,
-  Blueprints,
-  StockStats,
-  OneStarStockStats,
-  TwoStarStockStats,
-} from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
+import { Car, Blueprints } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
+import { StockStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/StockStats';
+import { GoldMaxStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/GoldMaxStats';
+import { MaxStarStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/MaxStarStats';
 
 import CarImage from '@/components/CarInformation/CarDetails/OtherComponents/CarImage';
 import ClassRank from '@/components/CarInformation/CarDetails/Tables/ClassRank';
 import StockStatsTable from '@/components/CarInformation/CarDetails/Tables/StockStats';
-import OneStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/OneStarMaxStats';
-import TwoStarStockStatsTable from '@/components/CarInformation/CarDetails/Tables/TwoStarMaxStats';
-import MaxStats from '@/components/CarInformation/CarDetails/Tables/MaxStats';
+import MaxStarStatsTable from '@/components/CarInformation/CarDetails/Tables/MaxStarStats';
+import GoldMaxStatsTable from '@/components/CarInformation/CarDetails/Tables/GoldMaxStats';
 import BlueprintsTable from '@/components/CarInformation/CarDetails/Tables/BlueprintsTable';
 import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';
 
@@ -28,7 +23,7 @@ import {
 
 import '@/scss/Cars/CarDetail.scss';
 
-type FullCar = Car & GoldMaxStats & Blueprints & StockStats & OneStarStockStats & TwoStarStockStats;
+type FullCar = Car & GoldMaxStats & Blueprints & StockStats & MaxStarStats;
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
@@ -52,43 +47,42 @@ const CarDetails = () => {
 
   useEffect(() => {
     if (!slug) return;
-  
+
     const normalizedSlug = normalizeString(slug); // ✅ Use imported normalization logic
-  
+
     if (slug !== normalizedSlug) {
       navigate(`/cars/${normalizedSlug}`, { replace: true });
       return;
     }
-  
+
     const fetchCarDetails = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/cars/detail/${normalizedSlug}`);
         if (!res.ok) throw new Error(`API error: ${res.status}`);
-  
+
         const data: FullCar = await res.json();
         setCar(data);
-  
+
         const key = generateCarKey(data.Brand, data.Model);
         const stored = getCarTrackingData(key);
-  
+
         if (trackerMode && data.KeyCar && stored.stars === undefined) {
           setCarTrackingData(key, { ...stored, stars: 1 });
         }
-  
+
         if (stored?.keyObtained !== undefined) {
           setKeyObtained(stored.keyObtained);
         }
-  
+
         setError(false);
       } catch (err) {
         console.error('❌ Failed to fetch car by slug:', err);
         setError(true);
       }
     };
-  
+
     fetchCarDetails();
   }, [slug, trackerMode, navigate]);
-  
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
@@ -103,13 +97,18 @@ const CarDetails = () => {
       <div className="carDetail">
         <h2 className="error-message">⚠️ Could not load this car's details.</h2>
         <p>The car may not exist or an error occurred while fetching.</p>
-        <button onClick={handleGoBack} className="backBtn">Back to Car List</button>
+        <button
+          onClick={handleGoBack}
+          className="backBtn"
+        >
+          Back to Car List
+        </button>
         {slug && (
           <button
             onClick={() =>
               fetch(`${API_BASE_URL}/api/cars/detail/${slug}`)
-                .then(res => res.json())
-                .then(data => {
+                .then((res) => res.json())
+                .then((data) => {
                   setCar(data);
                   const key = generateCarKey(data.Brand, data.Model);
                   const stored = getCarTrackingData(key);
@@ -121,8 +120,8 @@ const CarDetails = () => {
                   }
                   setError(false);
                 })
-                .catch(err => {
-                  console.error("❌ Retry failed:", err);
+                .catch((err) => {
+                  console.error('❌ Retry failed:', err);
                   setError(true);
                 })
             }
@@ -140,11 +139,18 @@ const CarDetails = () => {
   return (
     <div className="carDetail">
       <div>
-        <button className="backBtn" onClick={handleGoBack}>Back</button>
+        <button
+          className="backBtn"
+          onClick={handleGoBack}
+        >
+          Back
+        </button>
       </div>
 
       <div>
-        <h1 className="carName">{car.Brand} {car.Model}</h1>
+        <h1 className="carName">
+          {car.Brand} {car.Model}
+        </h1>
       </div>
 
       <CarImage car={car} />
@@ -158,22 +164,40 @@ const CarDetails = () => {
 
       <div className="carDetailTables">
         <div className="tableCard">
-          <ClassRank car={car} trackerMode={trackerMode} forceOwned={car.KeyCar && keyObtained} />
+          <ClassRank
+            car={car}
+            trackerMode={trackerMode}
+            forceOwned={car.KeyCar && keyObtained}
+          />
         </div>
+
         <div className="tableCard">
-          <MaxStats car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
+          <BlueprintsTable
+            car={car}
+            trackerMode={trackerMode}
+          />
         </div>
+        
         <div className="tableCard">
-          <BlueprintsTable car={car} trackerMode={trackerMode} />
+          <StockStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
         </div>
+
+          <MaxStarStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
+
         <div className="tableCard">
-          <StockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        </div>
-        <div className="tableCard">
-          <OneStarStockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        </div>
-        <div className="tableCard">
-          <TwoStarStockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
+          <GoldMaxStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
         </div>
       </div>
     </div>
