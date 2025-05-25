@@ -52,15 +52,15 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
             <th className="tableHeader2">Special Tags</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>
+        <tbody className="testClass">
+          <tr >
+            <td className="testClass">
               🔑 <strong>Key Car</strong>
             </td>
           </tr>
           {trackerMode && (
             <tr>
-              <td>
+              <td className="testClass">
                 <label>
                   <input
                     type="checkbox"
