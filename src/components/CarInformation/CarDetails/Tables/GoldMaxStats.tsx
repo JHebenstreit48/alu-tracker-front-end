@@ -1,13 +1,13 @@
 import { GoldMaxStats } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 
 // Accept a broader car shape, not just GoldMaxStats
-interface MaxStatsProps {
+interface GoldMaxStatsProps {
   car: Partial<GoldMaxStats>; // or FullCar if you want full access
   unitPreference: "metric" | "imperial";
   trackerMode?: boolean;
 }
 
-const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
+const GoldMaxStatsTable: React.FC<GoldMaxStatsProps> = ({ car, unitPreference }) => {
   const safeParse = (value: unknown): number => {
     if (typeof value === "number") return value;
     return 0;
@@ -36,7 +36,7 @@ const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
         <tbody>
           <tr>
             <td>Rank</td>
-            <td>{car.Max_Rank ?? "—"}</td>
+            <td>{car.Gold_Max_Rank ?? "—"}</td>
           </tr>
           <tr>
             <td>Top Speed</td>
@@ -59,4 +59,4 @@ const MaxStats: React.FC<MaxStatsProps> = ({ car, unitPreference }) => {
   );
 };
 
-export default MaxStats;
+export default GoldMaxStatsTable;

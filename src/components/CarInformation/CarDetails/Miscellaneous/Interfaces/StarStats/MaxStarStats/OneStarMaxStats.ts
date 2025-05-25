@@ -1,4 +1,4 @@
-export interface OneStarStockStats {
+export interface OneStarMaxStats {
     One_Star_Max_Rank?: number;
     One_Star_Max_Top_Speed?: number;
     One_Star_Max_Acceleration?: number;

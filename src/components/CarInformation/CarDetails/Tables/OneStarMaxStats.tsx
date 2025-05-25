@@ -1,12 +1,12 @@
-import { OneStarStockStats as OneStarStockStatsData } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
+import { OneStarMaxStats as OneStarMaxStatsData } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 
-interface OneStarStockStatsProps {
-  car: OneStarStockStatsData;
+interface OneStarMaxStatsProps {
+  car: OneStarMaxStatsData;
   unitPreference: "metric" | "imperial";
   trackerMode?: boolean;
 }
 
-const OneStarStockStatsTable: React.FC<OneStarStockStatsProps> = ({ car, unitPreference }) => {
+const OneStarStockStatsTable: React.FC<OneStarMaxStatsProps> = ({ car, unitPreference }) => {
   const safeParse = (value: unknown): number => {
     if (typeof value === "number") return value;
     return 0;
