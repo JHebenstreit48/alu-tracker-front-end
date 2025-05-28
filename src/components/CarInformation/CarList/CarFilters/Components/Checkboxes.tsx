@@ -12,13 +12,13 @@ interface CheckboxesProps {
     onToggleKeyCars,
   }: CheckboxesProps) {
     return (
-      <div className="filterRow">
-        <label className="CheckboxLabel">
+      <>
+        <label className="CheckboxLabel ownedFilter">
           <input type="checkbox" checked={showOwned} onChange={onToggleOwned} />
           Owned
         </label>
   
-        <label className="CheckboxLabel">
+        <label className="CheckboxLabel keyCarFilter">
           <input
             type="checkbox"
             checked={showKeyCars}
@@ -26,7 +26,7 @@ interface CheckboxesProps {
           />
           Key Car
         </label>
-      </div>
+      </>
     );
   }
   

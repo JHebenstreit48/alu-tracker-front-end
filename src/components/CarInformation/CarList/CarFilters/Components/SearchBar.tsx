@@ -5,7 +5,7 @@ interface SearchBarProps {
   
   export default function SearchBar({ searchTerm, onSearch }: SearchBarProps) {
     return (
-      <label className="DropdownLabel searchCentered">
+      <label className="DropdownLabel searchFilter">
         Search:
         <input
           id="searchInput"

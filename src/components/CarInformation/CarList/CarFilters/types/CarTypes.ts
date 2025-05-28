@@ -10,8 +10,16 @@ export interface Car {
     Rarity: string;
   }  
   
-  export interface CarTrackingData {
-    owned: boolean;
-  }
+  // In CarTypes.ts:
+export interface CarTrackingData {
+  owned?: boolean;
+  stars?: number;
+  goldMaxed?: boolean;
+  keyObtained?: boolean;
+  upgradeStage?: number;
+  importParts?: number;
+  KeyCar?: boolean;
+}
+
   
   

@@ -17,8 +17,8 @@
 }
 
 /* ==============================
-           Car Filters Panel
-     ============================== */
+         Car Filters Panel
+   ============================== */
 
 .carFilters {
   display: grid;
@@ -27,6 +27,7 @@
     'heading heading'
     'star class'
     'units rarity'
+    'brand country'
     'search search'
     'owned keycar'
     'reset reset';
@@ -49,8 +50,8 @@
   }
 
   /* ==============================
-            Filter Heading
-       ============================== */
+          Filter Heading
+     ============================== */
   .filterHeading {
     grid-area: heading;
     text-align: center;
@@ -60,37 +61,46 @@
   }
 
   /* ==============================
-            Dropdowns & Search
-       ============================== */
-  .DropdownLabel {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-
-    select,
-    input {
-      height: $input-height;
-      padding: 4px 8px;
-      border-radius: $input-radius;
-      text-align: center;
+          Dropdowns & Search
+     ============================== */
+     .DropdownLabel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      position: relative; // Ensures dropdown is anchored inside grid item
+    
+      select,
+      input {
+        height: $input-height;
+        padding: 4px 8px;
+        border-radius: $input-radius;
+        text-align: center;
+        overflow-y: auto;
+        max-height: 200px; // Just in case an OS/browser tries to extend it out of view
+        z-index: 1;        // Helps with stacking issues if needed
+      }
+    
+      select {
+        appearance: none;
+        background-color: white;
+        color: black;
+        z-index: 10;
+        position: relative;
+        overflow-y: auto;
+        max-height: 200px;
+      }
+      
     }
 
-    &:nth-of-type(1) {
-      grid-area: star;
-    }
-    &:nth-of-type(2) {
-      grid-area: class;
-    }
-    &:nth-of-type(3) {
-      grid-area: units;
-    }
-    &:nth-of-type(4) {
-      grid-area: rarity;
-    }
-    &:nth-of-type(5) {
-      grid-area: search;
-    }
-  }
+  .starFilter    { grid-area: star; }
+  .classFilter   { grid-area: class; }
+  .unitFilter    { grid-area: units; }
+  .rarityFilter  { grid-area: rarity; }
+  .brandFilter   { grid-area: brand; }
+  .countryFilter { grid-area: country; }
+  .searchFilter  { grid-area: search; }
+  .ownedFilter   { grid-area: owned; }
+  .keyCarFilter  { grid-area: keycar; }
 
   #searchInput {
     width: 50%;
@@ -106,8 +116,8 @@
   }
 
   /* ==============================
-             Checkbox Group
-       ============================== */
+           Checkbox Group
+     ============================== */
   .CheckboxLabel {
     display: flex;
     align-items: center;
@@ -119,13 +129,6 @@
     input[type='checkbox'] {
       transform: scale(1.2);
       cursor: pointer;
-    }
-
-    &:nth-of-type(1) {
-      grid-area: owned;
-    }
-    &:nth-of-type(2) {
-      grid-area: keycar;
     }
   }
 

@@ -16,14 +16,12 @@ export default function Dropdowns({
   selectedBrand,
   selectedCountry,
   availableStars,
-  availableRarities,
   availableBrands,
   availableCountries,
 }: DropdownsProps) {
   return (
     <>
-      <div className="filterRow">
-        <label className="DropdownLabel">
+        <label className="DropdownLabel starFilter">
           Star Rank:
           <select className="starRanks" value={selectedStars ?? "All"} onChange={onStarsChange}>
             <option value="All">All Stars</option>
@@ -35,7 +33,7 @@ export default function Dropdowns({
           </select>
         </label>
 
-        <label className="DropdownLabel">
+        <label className="DropdownLabel classFilter">
           Car Class:
           <select className="classSelect" value={selectedClass} onChange={onClassChange}>
             <option value="All Classes">All Classes</option>
@@ -46,10 +44,8 @@ export default function Dropdowns({
             ))}
           </select>
         </label>
-      </div>
 
-      <div className="filterRow">
-        <label className="DropdownLabel">
+        <label className="DropdownLabel unitFilter">
           Units:
           <select value={unitPreference} onChange={onUnitChange}>
             <option value="metric">Metric</option>
@@ -57,21 +53,31 @@ export default function Dropdowns({
           </select>
         </label>
 
-        <label className="DropdownLabel">
+        <label className="DropdownLabel rarityFilter">
           Rarity:
           <select value={selectedRarity || ""} onChange={e => onRarityChange(e.target.value || null)}>
             <option value="">All Rarities</option>
-            {availableRarities.map(rarity => (
-              <option key={rarity} value={rarity}>
+            {["Uncommon", "Rare", "Epic"].map(rarity => (
+              <option
+                key={rarity}
+                value={rarity}
+                className={
+                  rarity === "Uncommon"
+                    ? "optionUncommon"
+                    : rarity === "Rare"
+                    ? "optionRare"
+                    : rarity === "Epic"
+                    ? "optionEpic"
+                    : ""
+                }
+              >
                 {rarity}
               </option>
             ))}
           </select>
         </label>
-      </div>
 
-      <div className="filterRow">
-        <label className="DropdownLabel">
+        <label className="DropdownLabel brandFilter">
           Brand:
           <select value={selectedBrand || ""} onChange={onBrandChange}>
             <option value="">All Brands</option>
@@ -83,7 +89,7 @@ export default function Dropdowns({
           </select>
         </label>
 
-        <label className="DropdownLabel">
+        <label className="DropdownLabel countryFilter">
           Country:
           <select value={selectedCountry || ""} onChange={onCountryChange}>
             <option value="">All Countries</option>
@@ -94,7 +100,7 @@ export default function Dropdowns({
             ))}
           </select>
         </label>
-      </div>
+
     </>
   );
 }

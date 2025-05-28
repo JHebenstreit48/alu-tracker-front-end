@@ -1,64 +1,41 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  generateCarKey,
-  getAllCarTrackingData,
-  normalizeString,
-  CarTrackingData,
-} from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
-import ClassTables from "@/components/CarInformation/CarList/ClassTables/ClassTables";
-import CarFilters from "@/components/CarInformation/CarList/CarFilters/CarFilters";
-import CarTrackerToggle from "@/components/CarInformation/CarList/TrackerButtons/CarTrackerToggle";
 import Navigation from "@/components/Shared/Navigation";
+import CarFilters from "@/components/CarInformation/CarList/CarFilters/CarFilters";
+import ClassTables from "@/components/CarInformation/CarList/ClassTables/ClassTables";
+import CarTrackerToggle from "@/components/CarInformation/CarList/TrackerButtons/CarTrackerToggle";
+
+import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { useFilteredCars } from "@/components/CarInformation/CarList/CarFilters/Utilities/useFilteredCars";
+import { Car, CarTrackingData } from "@/components/CarInformation/CarList/CarFilters/types/CarTypes";
 
 import "@/scss/Cars/CarsPage/index.scss";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
-
-interface Car {
-  Brand: string;
-  Model: string;
-  Class: string;
-  Stars: number;
-  Image?: string;
-  ImageStatus?: "Coming Soon" | "Available" | "Removed";
-  KeyCar?: boolean;
-  Rarity: string; // ✅ Ensures rarity is available for filtering
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 export default function Cars() {
   const navigate = useNavigate();
+
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [searchTerm, setSearchTerm] = useState(
-    localStorage.getItem("searchTerm") || ""
-  );
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem("searchTerm") || "");
   const [selectedStars, setSelectedStars] = useState<number | null>(null);
-  const [selectedClass, setSelectedClass] = useState(
-    sessionStorage.getItem("selectedClass") || "All Classes"
-  );
+  const [selectedBrand, setSelectedBrand] = useState(localStorage.getItem("selectedBrand") || "");
+  const [selectedCountry, setSelectedCountry] = useState(localStorage.getItem("selectedCountry") || "");
+  const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("selectedClass") || "All Classes");
   const [selectedRarity, setSelectedRarity] = useState<string | null>(
     () => localStorage.getItem("selectedRarity") || null
   );
   const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
-    () =>
-      localStorage.getItem("preferredUnit") === "imperial"
-        ? "imperial"
-        : "metric"
+    () => (localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric")
   );
-
-  const [showOwned, setShowOwned] = useState(
-    () => localStorage.getItem("showOwned") === "true"
-  );
-  const [showKeyCars, setShowKeyCars] = useState(
-    () => localStorage.getItem("showKeyCars") === "true"
-  );
+  const [showOwned, setShowOwned] = useState(() => localStorage.getItem("showOwned") === "true");
+  const [showKeyCars, setShowKeyCars] = useState(() => localStorage.getItem("showKeyCars") === "true");
   const [trackerMode, setTrackerMode] = useState(false);
 
   const [carsPerPage, setCarsPerPage] = useState(() => {
@@ -73,43 +50,13 @@ export default function Cars() {
 
   useEffect(() => {
     const saved = localStorage.getItem("trackerMode");
-    const initial = saved === "true";
-    setTrackerMode(initial);
+    setTrackerMode(saved === "true");
   }, []);
 
   const toggleTrackerMode = (value: boolean) => {
     setTrackerMode(value);
     localStorage.setItem("trackerMode", String(value));
   };
-
-  const loadCars = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({
-        limit: "1000",
-        offset: "0",
-        ...(selectedClass !== "All Classes" && { class: selectedClass }),
-      });
-
-      const response = await fetch(
-        `${API_BASE_URL}/api/cars?${params.toString()}`
-      );
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-      const result = await response.json();
-      setCars(Array.isArray(result.cars) ? result.cars : []);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch cars. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedClass]);
-
-  useEffect(() => {
-    loadCars();
-  }, [loadCars]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -118,12 +65,13 @@ export default function Cars() {
     localStorage.setItem("currentPage", "1");
   };
 
-  const handleStarFilter = (stars: number | null) => {
-    setSelectedStars(stars);
+  const handleStarFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedStars(value ? parseInt(value, 10) : null);
     setCurrentPage(1);
     localStorage.setItem("currentPage", "1");
   };
-
+  
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
     setSelectedClass(newClass);
@@ -143,38 +91,26 @@ export default function Cars() {
     localStorage.setItem("currentPage", "1");
   };
 
-  const handleResetFilters = () => {
-    setSearchTerm("");
-    setSelectedStars(null);
-    setSelectedClass("All Classes");
-    setSelectedRarity(null);
-    setShowOwned(false);
-    setShowKeyCars(false);
-    setCarsPerPage(25);
+  const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    setSelectedBrand(val);
+    localStorage.setItem("selectedBrand", val);
     setCurrentPage(1);
-
-    localStorage.removeItem("searchTerm");
-    sessionStorage.removeItem("selectedClass");
-    localStorage.removeItem("selectedRarity");
-    localStorage.removeItem("showOwned");
-    localStorage.removeItem("showKeyCars");
-    localStorage.setItem("carsPerPage", "25");
     localStorage.setItem("currentPage", "1");
   };
 
-  const handleUnitPreferenceChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    setSelectedCountry(val);
+    localStorage.setItem("selectedCountry", val);
+    setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
+  };
+
+  const handleUnitPreferenceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newUnit = e.target.value as "metric" | "imperial";
     setUnitPreference(newUnit);
     localStorage.setItem("preferredUnit", newUnit);
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setCarsPerPage(size);
-    localStorage.setItem("carsPerPage", String(size));
-    setCurrentPage(1);
-    localStorage.setItem("currentPage", "1");
   };
 
   const toggleShowOwned = () => {
@@ -189,33 +125,76 @@ export default function Cars() {
     localStorage.setItem("showKeyCars", String(newVal));
   };
 
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setSelectedStars(null);
+    setSelectedBrand("");
+    setSelectedCountry("");
+    setSelectedClass("All Classes");
+    setSelectedRarity(null);
+    setShowOwned(false);
+    setShowKeyCars(false);
+    setCarsPerPage(25);
+    setCurrentPage(1);
+
+    localStorage.removeItem("searchTerm");
+    localStorage.removeItem("selectedBrand");
+    localStorage.removeItem("selectedCountry");
+    localStorage.removeItem("selectedRarity");
+    localStorage.removeItem("showOwned");
+    localStorage.removeItem("showKeyCars");
+    sessionStorage.removeItem("selectedClass");
+    localStorage.setItem("carsPerPage", "25");
+    localStorage.setItem("currentPage", "1");
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    setCarsPerPage(size);
+    localStorage.setItem("carsPerPage", String(size));
+    setCurrentPage(1);
+    localStorage.setItem("currentPage", "1");
+  };
+
+  const loadCars = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({
+        limit: "1000",
+        offset: "0",
+        ...(selectedClass !== "All Classes" && { class: selectedClass }),
+      });
+
+      const response = await fetch(`${API_BASE_URL}/api/cars?${params.toString()}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const result = await response.json();
+      setCars(Array.isArray(result.cars) ? result.cars : []);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch cars. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedClass]);
+
+  useEffect(() => {
+    loadCars();
+  }, [loadCars]);
+
   const tracking: Record<string, CarTrackingData> = getAllCarTrackingData();
-  const normalizedSearch = normalizeString(searchTerm);
 
-  const filteredCars = cars
-    .filter((car) => {
-      const brand = normalizeString(car.Brand);
-      const model = normalizeString(car.Model);
-      return (
-        brand.includes(normalizedSearch) || model.includes(normalizedSearch)
-      );
-    })
-    .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
-    .filter((car) => {
-      const key = generateCarKey(car.Brand, car.Model);
-      const trackingData = tracking[key];
-      const isOwned = trackingData?.owned === true;
-      const isKeyCar = car.KeyCar === true;
-
-      if (showOwned && showKeyCars) return isOwned && isKeyCar;
-      if (showOwned) return isOwned;
-      if (showKeyCars) return isKeyCar;
-      return true;
-    })
-    .filter((car) => {
-      if (!selectedRarity) return true;
-      return car.Rarity === selectedRarity;
-    });
+  const filteredCars = useFilteredCars({
+    cars,
+    tracking,
+    searchTerm,
+    selectedStars,
+    selectedBrand,
+    selectedCountry,
+    selectedClass,
+    selectedRarity,
+    showOwned,
+    showKeyCars,
+  });
 
   const totalFiltered = filteredCars.length;
   const paginatedCars = filteredCars.slice(
@@ -241,15 +220,9 @@ export default function Cars() {
         <Navigation />
 
         <div className="trackerControlsRow">
-          <CarTrackerToggle
-            isEnabled={trackerMode}
-            onToggle={toggleTrackerMode}
-          />
+          <CarTrackerToggle isEnabled={trackerMode} onToggle={toggleTrackerMode} />
           <div className="trackerSummaryLink">
-            <button
-              className="trackerSummary"
-              onClick={() => navigate("/car-tracker")}
-            >
+            <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
               My Car Tracker Summary
             </button>
           </div>
@@ -257,7 +230,7 @@ export default function Cars() {
 
         <CarFilters
           onSearch={handleSearch}
-          onFilter={handleStarFilter}
+          onStarsChange={handleStarFilter}
           onClassChange={handleClassChange}
           onUnitChange={handleUnitPreferenceChange}
           onReset={handleResetFilters}
@@ -270,11 +243,24 @@ export default function Cars() {
           searchTerm={searchTerm}
           selectedRarity={selectedRarity}
           onRarityChange={handleRarityChange}
+          selectedStars={selectedStars}
+          selectedBrand={selectedBrand}
+          selectedCountry={selectedCountry}
+          onBrandChange={handleBrandChange}
+          onCountryChange={handleCountryChange}
+          availableStars={[3, 4, 5, 6]}
+          availableBrands={[...new Set(cars.map((car) => car.Brand))]}
+          availableCountries={[
+            ...new Set(
+              cars
+                .map((car) => (car.Country ?? "").trim())  // fallback to "" if undefined
+                .filter((val) => val !== "")
+            )
+          ]}
         />
 
         <p className="carCount">
-          Showing {paginatedCars.length} of {totalFiltered} car
-          {totalFiltered !== 1 ? "s" : ""}
+          Showing {paginatedCars.length} of {totalFiltered} car{totalFiltered !== 1 ? "s" : ""}
         </p>
 
         <ClassTables

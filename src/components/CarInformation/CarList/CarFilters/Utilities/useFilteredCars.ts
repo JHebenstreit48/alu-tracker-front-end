@@ -1,18 +1,33 @@
 import { Car, CarTrackingData } from "@/components/CarInformation/CarList/CarFilters/types/CarTypes";
 import { normalizeString, generateCarKey } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
-export function useFilteredCars(
-  cars: Car[],
-  tracking: Record<string, CarTrackingData>,
-  searchTerm: string,
-  selectedStars: number | null,
-  selectedBrand: string | null,
-  selectedCountry: string | null,
-  selectedClass: string,
-  selectedRarity: string | null,
-  showOwned: boolean,
-  showKeyCars: boolean
-): Car[] {
+interface FilterConfig {
+  cars: Car[];
+  tracking: Record<string, CarTrackingData>;
+  searchTerm: string;
+  selectedStars: number | null;
+  selectedBrand: string;
+  selectedCountry: string;
+  selectedClass: string;
+  selectedRarity: string | null;
+  showOwned: boolean;
+  showKeyCars: boolean;
+}
+
+export function useFilteredCars(config: FilterConfig): Car[] {
+  const {
+    cars,
+    tracking,
+    searchTerm,
+    selectedStars,
+    selectedBrand,
+    selectedCountry,
+    selectedClass,
+    selectedRarity,
+    showOwned,
+    showKeyCars,
+  } = config;
+
   const normalizedSearch = normalizeString(searchTerm);
 
   return cars

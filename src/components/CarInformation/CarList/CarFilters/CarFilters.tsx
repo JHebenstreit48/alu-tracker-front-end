@@ -1,162 +1,74 @@
-import '@/scss/Cars/CarsPage/index.scss';
+import { CarFiltersProps } from "@/components/CarInformation/CarList/CarFilters/interfaces";
+import Dropdowns from "@/components/CarInformation/CarList/CarFilters/Components/Dropdowns";
+import Checkboxes from "@/components/CarInformation/CarList/CarFilters/Components/Checkboxes";
+import SearchBar from "@/components/CarInformation/CarList/CarFilters/Components/SearchBar";
 
-interface CarFiltersProps {
-  onSearch: (term: string) => void;
-  onFilter: (stars: number | null) => void;
-  onClassChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onUnitChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onReset: () => void;
-  selectedClass: string;
-  unitPreference: 'metric' | 'imperial';
-  selectedRarity: string | null;
-  onRarityChange: (rarity: string | null) => void;
-  showOwned: boolean;
-  showKeyCars: boolean;
-  onToggleOwned: () => void;
-  onToggleKeyCars: () => void;
-  searchTerm: string; // ✅ ADD THIS
-}
+import "@/scss/Cars/CarsPage/index.scss";
 
 export default function CarFilters({
   onSearch,
-  onFilter,
+  onStarsChange,
   onClassChange,
   onUnitChange,
+  onRarityChange,
+  onBrandChange,
+  onCountryChange,
   onReset,
+  selectedStars,
   selectedClass,
   unitPreference,
   selectedRarity,
-  onRarityChange,
+  selectedBrand,
+  selectedCountry,
+  availableStars,
+  availableBrands,
+  availableCountries,
   showOwned,
   showKeyCars,
   onToggleOwned,
   onToggleKeyCars,
-  searchTerm, // ✅ ADD THIS
+  searchTerm,
 }: CarFiltersProps) {
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    onSearch(term); // ✅ Still triggers handler in parent
-  };
-
-  const handleStarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    const stars = value === 'All' ? null : parseInt(value);
-    onFilter(stars);
-  };
-
   return (
     <div className="carFilters">
+
       <div className="filterHeading">Car Filters</div>
 
-      <label className="DropdownLabel">
-        Star Rank:
-        <select
-          className="starRanks"
-          onChange={handleStarChange}
-        >
-          <option value="All">All Stars</option>
-          <option value="3">3 Stars</option>
-          <option value="4">4 Stars</option>
-          <option value="5">5 Stars</option>
-          <option value="6">6 Stars</option>
-        </select>
-      </label>
+      {/* Dropdowns appear in rows */}
+      <Dropdowns
+        onStarsChange={onStarsChange}
+        onClassChange={onClassChange}
+        onUnitChange={onUnitChange}
+        onRarityChange={onRarityChange}
+        onBrandChange={onBrandChange}
+        onCountryChange={onCountryChange}
+        selectedStars={selectedStars}
+        selectedClass={selectedClass}
+        unitPreference={unitPreference}
+        selectedRarity={selectedRarity}
+        selectedBrand={selectedBrand}
+        selectedCountry={selectedCountry}
+        availableStars={availableStars}
+        availableBrands={availableBrands}
+        availableCountries={availableCountries}
+      />
 
-      <label className="DropdownLabel">
-        Car Class:
-        <select
-          className="classSelect"
-          value={selectedClass}
-          onChange={onClassChange}
-        >
-          <option value="All Classes">All Classes</option>
-          <option value="D">D</option>
-          <option value="C">C</option>
-          <option value="B">B</option>
-          <option value="A">A</option>
-          <option value="S">S</option>
-        </select>
-      </label>
+      {/* Search centered on its own row */}
+        <SearchBar searchTerm={searchTerm} onSearch={onSearch} />
 
-      <label className="DropdownLabel">
-        Units:
-        <select
-          className="unitSelect"
-          value={unitPreference}
-          onChange={onUnitChange}
-        >
-          <option value="metric">Metric</option>
-          <option value="imperial">Imperial</option>
-        </select>
-      </label>
+      {/* Owned & Key Car checkboxes */}
+      <Checkboxes
+        showOwned={showOwned}
+        showKeyCars={showKeyCars}
+        onToggleOwned={onToggleOwned}
+        onToggleKeyCars={onToggleKeyCars}
+      />
 
-      <label className="DropdownLabel">
-        Rarity:
-        <select
-          className="raritySelect"
-          value={selectedRarity || ''}
-          onChange={(e) => {
-            const value = e.target.value;
-            onRarityChange(value === '' ? null : value);
-          }}
-        >
-          <option value="">All Rarities</option>
-          <option
-            value="Uncommon"
-            className="optionCommon"
-          >
-            Uncommon
-          </option>
-          <option
-            value="Rare"
-            className="optionRare"
-          >
-            Rare
-          </option>
-          <option
-            value="Epic"
-            className="optionEpic"
-          >
-            Epic
-          </option>
-        </select>
-      </label>
-
-      <label className="DropdownLabel">
-        Search:
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Search by Brand or Model"
-          value={searchTerm} // ✅ Controlled value
-          onChange={handleSearchChange}
-        />
-      </label>
-
-      <label className="CheckboxLabel">
-        <input
-          type="checkbox"
-          checked={showOwned}
-          onChange={onToggleOwned}
-        />
-        Owned
-      </label>
-
-      <label className="CheckboxLabel">
-        <input
-          type="checkbox"
-          checked={showKeyCars}
-          onChange={onToggleKeyCars}
-        />
-        Key Car
-      </label>
-
-      <button
-        className="resetButton"
-        onClick={onReset}
-      >
-        Reset Filters
-      </button>
+      {/* Reset button row */}
+        <button className="resetButton" onClick={onReset}>
+          Reset Filters
+        </button>
+        
     </div>
   );
 }
