@@ -9,9 +9,9 @@ import {
 
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
-import ClassTables from "@/components/CarInformation/CarList/ClassTables";
-import CarFilters from "@/components/CarInformation/CarList/CarFilters";
-import CarTrackerToggle from "@/components/CarInformation/CarList/CarTrackerToggle";
+import ClassTables from "@/components/CarInformation/CarList/ClassTables/ClassTables";
+import CarFilters from "@/components/CarInformation/CarList/CarFilters/CarFilters";
+import CarTrackerToggle from "@/components/CarInformation/CarList/TrackerButtons/CarTrackerToggle";
 import Navigation from "@/components/Shared/Navigation";
 
 import "@/scss/Cars/CarsPage/index.scss";

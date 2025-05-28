@@ -1,0 +1,40 @@
+import { Car, CarTrackingData } from "@/components/CarInformation/CarList/CarFilters/types/CarTypes";
+import { normalizeString, generateCarKey } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+
+export function useFilteredCars(
+  cars: Car[],
+  tracking: Record<string, CarTrackingData>,
+  searchTerm: string,
+  selectedStars: number | null,
+  selectedBrand: string | null,
+  selectedCountry: string | null,
+  selectedClass: string,
+  selectedRarity: string | null,
+  showOwned: boolean,
+  showKeyCars: boolean
+): Car[] {
+  const normalizedSearch = normalizeString(searchTerm);
+
+  return cars
+    .filter((car) => {
+      const brand = normalizeString(car.Brand);
+      const model = normalizeString(car.Model);
+      return brand.includes(normalizedSearch) || model.includes(normalizedSearch);
+    })
+    .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
+    .filter((car) => (selectedBrand ? car.Brand === selectedBrand : true))
+    .filter((car) => (selectedCountry ? car.Country === selectedCountry : true))
+    .filter((car) => (selectedClass !== "All Classes" ? car.Class === selectedClass : true))
+    .filter((car) => (selectedRarity ? car.Rarity === selectedRarity : true))
+    .filter((car) => {
+      const key = generateCarKey(car.Brand, car.Model);
+      const trackingData = tracking[key];
+      const isOwned = trackingData?.owned === true;
+      const isKeyCar = car.KeyCar === true;
+
+      if (showOwned && showKeyCars) return isOwned && isKeyCar;
+      if (showOwned) return isOwned;
+      if (showKeyCars) return isKeyCar;
+      return true;
+    });
+}
