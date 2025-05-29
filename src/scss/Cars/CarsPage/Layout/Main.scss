@@ -40,16 +40,19 @@
   }
 
   .carsPerPage {
+    display: flex;
     background-color: black;
     color: white;
     border: 1px solid white;
-    padding: 0.6rem 1.2rem;
+    padding: 0.7rem;
+    justify-content: center;
+    align-items: center;
     font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 5rem;
+    width: 1rem;
     text-align: center;
-    margin: 0.4rem;
+    margin: 0.2rem;
 
     &:disabled {
       background-color: rgb(50, 50, 50);

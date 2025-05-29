@@ -164,7 +164,7 @@ const LegendStoreFilters: React.FC<{
           onChange={(e) => setSelectedCarRarity(e.target.value || null)}
         >
           <option value="">All Rarities</option>
-          <option value="Uncommon" className="optionCommon">Uncommon</option>
+          <option value="Uncommon" className="optionUncommon">Uncommon</option>
           <option value="Rare" className="optionRare">Rare</option>
           <option value="Epic" className="optionEpic">Epic</option>
         </select>

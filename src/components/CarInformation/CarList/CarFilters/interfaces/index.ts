@@ -1,0 +1,1 @@
+export * from '@/components/CarInformation/CarList/CarFilters/interfaces/CarFiltersProps';

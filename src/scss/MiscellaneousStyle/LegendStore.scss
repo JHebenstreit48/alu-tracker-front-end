@@ -21,7 +21,7 @@
    $dropdown-label-color: white;
    $dropdown-label-gap: 10px;
    
-   $option-common-bg: rgb(1, 188, 250);
+   $option-uncommon-bg: rgb(1, 188, 250);
    $option-rare-bg: rgb(111, 8, 170);
    $option-epic-bg: rgb(255, 174, 0);
    $option-text-color: black;
@@ -91,8 +91,8 @@
      gap: $dropdown-label-gap;
    }
    
-   .optionCommon {
-     background-color: $option-common-bg;
+   .optionUncommon {
+     background-color: $option-uncommon-bg;
      color: $option-text-color;
      text-align: center;
    }
