@@ -2,21 +2,6 @@
 @use '@scss/Globals/index' as *;
 
 /* ==============================
-         Controls Wrapper
-   ============================== */
-
-.controls {
-  margin: 0 auto;
-  display: flex;
-  position: absolute;
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    flex-flow: column wrap;
-    width: 30%;
-  }
-}
-
-/* ==============================
          Car Filters Panel
    ============================== */
 
@@ -63,44 +48,69 @@
   /* ==============================
           Dropdowns & Search
      ============================== */
-     .DropdownLabel {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      position: relative; // Ensures dropdown is anchored inside grid item
-    
-      select,
-      input {
-        height: $input-height;
-        padding: 4px 8px;
-        border-radius: $input-radius;
-        text-align: center;
-        overflow-y: auto;
-        max-height: 200px; // Just in case an OS/browser tries to extend it out of view
-        z-index: 1;        // Helps with stacking issues if needed
-      }
-    
-      select {
-        appearance: none;
-        background-color: white;
-        color: black;
-        z-index: 10;
-        position: relative;
-        overflow-y: auto;
-        max-height: 200px;
-      }
-      
+  .DropdownLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    position: relative; // Ensures dropdown is anchored inside grid item
+
+    select,
+    input {
+      height: $input-height;
+      padding: 4px 8px;
+      border-radius: $input-radius;
+      text-align: center;
+      overflow-y: auto;
+      max-height: 200px; // Just in case an OS/browser tries to extend it out of view
+      z-index: 1; // Helps with stacking issues if needed
     }
 
-  .starFilter    { grid-area: star; }
-  .classFilter   { grid-area: class; }
-  .unitFilter    { grid-area: units; }
-  .rarityFilter  { grid-area: rarity; }
-  .brandFilter   { grid-area: brand; }
-  .countryFilter { grid-area: country; }
-  .searchFilter  { grid-area: search; }
-  .ownedFilter   { grid-area: owned; }
-  .keyCarFilter  { grid-area: keycar; }
+    select {
+      appearance: none;
+      background-color: white;
+      color: black;
+      z-index: 10;
+      position: relative;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+  }
+
+  .scrollableDropdown {
+    max-height: 10rem;
+    overflow-y: auto;
+    background-color: white;
+    color: black;
+    z-index: 10;
+  }
+
+  .starFilter {
+    grid-area: star;
+  }
+  .classFilter {
+    grid-area: class;
+  }
+  .unitFilter {
+    grid-area: units;
+  }
+  .rarityFilter {
+    grid-area: rarity;
+  }
+  .brandFilter {
+    grid-area: brand;
+  }
+  .countryFilter {
+    grid-area: country;
+  }
+  .searchFilter {
+    grid-area: search;
+  }
+  .ownedFilter {
+    grid-area: owned;
+  }
+  .keyCarFilter {
+    grid-area: keycar;
+  }
 
   #searchInput {
     width: 50%;
