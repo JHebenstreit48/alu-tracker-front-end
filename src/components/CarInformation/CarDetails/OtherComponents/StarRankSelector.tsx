@@ -51,9 +51,6 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
       }
     }
   }, [carKey, selected, trackerMode, isKeyCar]);
-  
-  
-  
 
   // ✅ Auto-sync stars if uncontrolled and tracking by carKey
   useAutoSyncDependency(

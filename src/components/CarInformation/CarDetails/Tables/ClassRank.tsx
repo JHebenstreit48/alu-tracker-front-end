@@ -90,7 +90,9 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
           >
             <StarRankSelector
               maxStars={car.Stars}
-              selected={trackerMode ? selectedStarRank : car.Stars}
+              selected={
+                trackerMode ? (selectedStarRank > 0 ? selectedStarRank : undefined) : car.Stars // <-- Always show max stars if not in tracker mode
+              }
               onSelect={trackerMode ? handleStarSelect : undefined}
               brand={car.Brand}
               model={car.Model}

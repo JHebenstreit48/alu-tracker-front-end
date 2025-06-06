@@ -9,7 +9,8 @@ import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/
 interface StarRatingProps {
   count: number; // Max stars this car can have
   trackerMode?: boolean;
-  carId?: string;
+  trackingKey?: string;
+  isKeyCar?: boolean; // Optional for key cars
 }
 
 const backendBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -17,7 +18,8 @@ const backendBaseUrl = import.meta.env.VITE_API_BASE_URL;
 const StarRank: React.FC<StarRatingProps> = ({
   count,
   trackerMode = false,
-  carId,
+  trackingKey,
+  isKeyCar
 }) => {
   const [selectedStars, setSelectedStars] = useState<number>(0);
 
@@ -25,20 +27,26 @@ const StarRank: React.FC<StarRatingProps> = ({
   useAutoSyncDependency([selectedStars]);
 
   useEffect(() => {
-    if (trackerMode && carId) {
-      const data = getCarTrackingData(carId);
-      if (typeof data.stars === "number") {
-        setSelectedStars(data.stars);
+    if (trackerMode && trackingKey) {
+      const data = getCarTrackingData(trackingKey);
+  
+      if (typeof data.stars === "number" && data.stars > 0) {
+        setSelectedStars(data.stars); // ✅ Use user's saved stars
+      } else if (isKeyCar) {
+        setSelectedStars(1); // ✅ Default to 1 star for key cars if no saved data
+      } else {
+        setSelectedStars(0); // Non-key cars default to 0
       }
     }
-  }, [carId, trackerMode]);
+  }, [trackingKey, trackerMode, isKeyCar]);
+  
 
   const handleStarClick = (index: number) => {
-    if (!trackerMode || !carId) return;
+    if (!trackerMode || !trackingKey) return;
 
     const newStars = index + 1;
     setSelectedStars(newStars);
-    setCarTrackingData(carId, { stars: newStars });
+    setCarTrackingData(trackingKey, { stars: newStars });
   };
 
   const safeCount = Number.isInteger(count) && count > 0 ? count : 0;
