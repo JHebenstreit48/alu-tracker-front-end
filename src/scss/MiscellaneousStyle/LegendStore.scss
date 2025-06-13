@@ -39,7 +39,7 @@
    
    $table-border-color: rgb(11, 7, 134);
    $shadow-gold-xl-color: rgb(223, 190, 7);
-   $table-width: 55rem;
+   $table-width: 95rem;
    $table-bg-color: black;
    $color-black: black;
    $color-accent-blue: white;
@@ -162,7 +162,7 @@
    
      th,
      td {
-       padding: 8px;
+       padding: 0.5rem;
        text-align: center;
      }
    }
@@ -186,6 +186,11 @@
        padding: 15px;
        border-right: 1px solid $class-header-border-color;
      }
+   }
+
+   td {
+    height: 2rem;
+    font-size: 1rem;
    }
    
    /* =============================
