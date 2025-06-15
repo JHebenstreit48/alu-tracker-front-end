@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "@/components/Shared/Header";
@@ -71,7 +71,7 @@ export default function Cars() {
     setCurrentPage(1);
     localStorage.setItem("currentPage", "1");
   };
-  
+
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newClass = e.target.value;
     setSelectedClass(newClass);
@@ -103,6 +103,11 @@ export default function Cars() {
     const val = e.target.value;
     setSelectedCountry(val);
     localStorage.setItem("selectedCountry", val);
+
+    // Reset brand when switching countries
+    setSelectedBrand("");
+    localStorage.setItem("selectedBrand", "");
+
     setCurrentPage(1);
     localStorage.setItem("currentPage", "1");
   };
@@ -196,6 +201,30 @@ export default function Cars() {
     showKeyCars,
   });
 
+  const brandsByCountryMap = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+
+    cars.forEach((car) => {
+      const country = car.Country?.trim();
+      const brand = car.Brand;
+
+      if (!country || !brand) return;
+
+      if (!map[country]) {
+        map[country] = new Set();
+      }
+
+      map[country].add(brand);
+    });
+
+    return map;
+  }, [cars]);
+
+  const filteredBrands =
+    selectedCountry && brandsByCountryMap[selectedCountry]
+      ? Array.from(brandsByCountryMap[selectedCountry])
+      : [...new Set(cars.map((car) => car.Brand))];
+
   const totalFiltered = filteredCars.length;
   const paginatedCars = filteredCars.slice(
     (currentPage - 1) * carsPerPage,
@@ -223,7 +252,7 @@ export default function Cars() {
           <CarTrackerToggle isEnabled={trackerMode} onToggle={toggleTrackerMode} />
           <div className="trackerSummaryLink">
             <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
-              My Car Tracker Summary
+              Account Progress
             </button>
           </div>
         </div>
@@ -249,11 +278,11 @@ export default function Cars() {
           onBrandChange={handleBrandChange}
           onCountryChange={handleCountryChange}
           availableStars={[3, 4, 5, 6]}
-          availableBrands={[...new Set(cars.map((car) => car.Brand))]}
+          availableBrands={filteredBrands}
           availableCountries={[
             ...new Set(
               cars
-                .map((car) => (car.Country ?? "").trim())  // fallback to "" if undefined
+                .map((car) => (car.Country ?? "").trim())
                 .filter((val) => val !== "")
             )
           ]}
