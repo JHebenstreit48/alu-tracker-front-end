@@ -18,11 +18,11 @@ import StarRankCircles from '@/components/CarInformation/CarTracker/ProgressCirc
 import MaxStarRank from '@/components/CarInformation/CarTracker/MaxStarRank/Layout/MaxStarRank';
 // import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
 
-import '@/scss/Cars/CarTracker/CarTracker.scss';
-import '@/scss/Cars/CarTracker/CarsOwned.scss';
-import '@/scss/Cars/CarTracker/KeysOwned.scss';
-import '@/scss/Cars/CarTracker/GoldMaxed.scss';
-import '@/scss/Cars/CarTracker/StarRank.scss';
+import '@/scss/Cars/CarTracker/Layout/CarTracker.scss';
+import '@/scss/Cars/CarTracker/Components/CarsOwned.scss';
+import '@/scss/Cars/CarTracker/Components/KeysOwned.scss';
+import '@/scss/Cars/CarTracker/Components/GoldMaxed.scss';
+import '@/scss/Cars/CarTracker/Components/StarRank.scss';
 
 interface TrackedCar extends CarTrackingData {
   carId: string;
