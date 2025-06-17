@@ -1,4 +1,4 @@
-import StarRankMeter from "../UI/StarRankMeter";
+import StarRankMeter from "@/components/CarInformation/CarTracker/ProgressCircles/CarTotalStars/UI/StarRankMeter";
 
 interface StarRankCirclesProps {
   starCounts: Record<number, number>;  // {1: X, 2: Y, ..., 6: Z}
