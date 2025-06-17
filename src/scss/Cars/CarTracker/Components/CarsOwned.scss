@@ -1,37 +1,29 @@
-@use "sass:color";
-
-/* ==============================
-   Variables
-   ============================== */
-$owned-ring-width: 150px;
-$owned-ring-height: 150px;
-$owned-ring-color: #00ff22;
-$owned-text-color: #00ff22;
-$owned-glow: 0 0 6px #00ff22;
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
 
 /* ==============================
    Owned Progress Ring
    ============================== */
 .ownedProgressWrapper {
-  width: $owned-ring-width;
-  height: $owned-ring-height;
+  width: $progress-ring-size;
+  height: $progress-ring-size;
 
   .CircularProgressbar {
     font-weight: bold;
     margin-left: 7rem;
 
     .CircularProgressbar-path {
-      stroke: $owned-ring-color !important;
+      stroke: $ring-color-green !important;
       stroke-linecap: round;
-      filter: drop-shadow($owned-glow);
+      filter: drop-shadow($owned-ring-glow);
     }
 
     .CircularProgressbar-trail {
-      stroke: #2c2c2c !important;
+      stroke: $progress-ring-trail !important;
     }
 
     .CircularProgressbar-text {
-      fill: $owned-text-color !important;
+      fill: $ring-color-green !important;
       font-size: 1.5rem;
     }
   }
@@ -40,9 +32,9 @@ $owned-glow: 0 0 6px #00ff22;
 /* ==============================
    Gold Maxed Text
    ============================== */
-   .carsOwnedText {
-    font-size: 1.2rem;
-    text-align: center;
-    margin: 3.5rem 0 0 7rem;
-    color: $owned-ring-color;
-  }
+.carsOwnedText {
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 3.5rem 0 0 7rem;
+  color: $ring-color-green;
+}

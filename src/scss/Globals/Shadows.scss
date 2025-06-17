@@ -7,10 +7,10 @@ $shadow-gold-xl: 0 0 10px 6px $color-gold-glow;
 $shadow-gold-lg: 0 0 8px 4px $color-gold-glow;
 $shadow-gold-basic: 0 0 8px $color-gold-glow;
 
-// Car Tracker page shadows
-$shadow-ring-green: 0 0 6px $ring-color-green;
-$shadow-ring-gold: 0 0 6px $ring-color-gold;
-$shadow-ring-blue: 0 0 6px $ring-color-blue;
+// Car Tracker page shadows — updated for better feathering
+$shadow-ring-green: 0 0 6px 1px $ring-color-green;
+$shadow-ring-gold: 0 0 6px 1px $ring-color-gold;
+$shadow-ring-blue: 0 0 6px 1px $ring-color-blue;
 
 // 🔹 Semantic assignments (optional)
 
