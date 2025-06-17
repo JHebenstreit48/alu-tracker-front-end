@@ -1,19 +1,16 @@
+// Cars Page
 $table-margin: 60px auto 80px auto;
 $table-width: 59%;
 $table-header-padding: 15px 80px 20px 80px;
 $td-padding: 1rem;
-
 $filter-width: 46rem;
 $filter-padding: 3rem;
 $filter-gap: 2rem;
 $input-height: 2.2rem;
-
 $tracker-btn-padding: 1rem;
-
 $class-select-padding: 10px 0;
 $class-select-width: 11rem;
 $class-select-margin: 1rem auto 2rem auto;
-
 $unit-selection-gap: 10px;
 $unit-selection-margin: 2rem auto 2rem auto;
 $unit-select-padding: 12px 0;
@@ -22,7 +19,9 @@ $info-tooltip-width: 3rem;
 $summary-gap: 2rem;
 $summary-padding: 3rem;
 $back-btn-padding: 10px 18px;
-
 $reset-filters-width: 8.5rem;
 $reset-filters-padding: 15px 0;
 
+// CarTracker page
+$progress-ring-size: 150px;
+$progress-ring-margin-top: 3.5rem;

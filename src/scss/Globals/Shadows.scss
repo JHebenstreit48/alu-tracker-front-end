@@ -1,14 +1,28 @@
 @use 'Colors' as *;
 
 // 🔹 Base reusable glow shadows
+
+// Cars page shadows
 $shadow-gold-xl: 0 0 10px 6px $color-gold-glow;
 $shadow-gold-lg: 0 0 8px 4px $color-gold-glow;
 $shadow-gold-basic: 0 0 8px $color-gold-glow;
 
+// Car Tracker page shadows
+$shadow-ring-green: 0 0 6px $ring-color-green;
+$shadow-ring-gold: 0 0 6px $ring-color-gold;
+$shadow-ring-blue: 0 0 6px $ring-color-blue;
+
 // 🔹 Semantic assignments (optional)
+
+// Cars page shadows
 $table-box-shadow: $shadow-gold-xl;
 $filter-shadow: $shadow-gold-lg;
 $reset-btn-shadow: $shadow-gold-basic;
+
+// Car Tracker page shadows
+$owned-ring-glow: $shadow-ring-green;
+$gold-maxed-ring-glow: $shadow-ring-gold;
+$key-ring-glow: $shadow-ring-blue;
 
 // 🔹 Unique shadows (not reused elsewhere — keep as-is)
 $tracker-btn-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.2);
