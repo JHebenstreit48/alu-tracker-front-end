@@ -90,9 +90,12 @@
    }
    
    .mainHeading {
+    display: flex;
      color: $neon-blue;
      font-size: 40px;
-     margin: 50px 0 10px 17rem;
+     margin: 5rem auto 2rem auto;
+     justify-content: center;
+     align-items: center;
    
      @media only screen and (max-width: $mobileMaxWidthPortrait) {
        text-align: center;
@@ -105,8 +108,10 @@
    }
    
    .subHeading {
-     justify-content: left;
-     margin: 20px 0 35px 21rem;
+    display: flex;
+     justify-content: center;
+     align-items: center;
+     margin: 1rem auto 2rem auto;
      color: $gold-accent;
    
      @media only screen and (max-width: $mobileMaxWidthPortrait) {
