@@ -1,5 +1,3 @@
-// src/GarageLevels/interface.ts
-
 export interface Car {
   brand: string;
   model: string;
