@@ -3,9 +3,20 @@ import "@/scss/MiscellaneousStyle/LoadingSpinner.scss";
 const LoadingSpinner: React.FC = () => {
   return (
     <div className="spinnerContainer">
-      <div className="loadingSpinner"></div>
-      <div className="smokeTrail"></div>
-      <p className="loadingText">Revving up the engines...</p>
+      <div className="spinnerWrapper">
+        <img
+          src="/assets/tireSpinner.png"
+          alt="Spinning tire"
+          className="tireImage"
+        />
+        <div className="smokeTrail" />
+        <p className="loadingText">
+          Reving up the engines
+          <span className="dot one">.</span>
+          <span className="dot two">.</span>
+          <span className="dot three">.</span>
+        </p>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import StarRank from '@/components/CarInformation/CarDetails/OtherComponents/StarRank';
 import { generateCarKey } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
+import LoadingSpinner from '@/components/Shared/LoadingSpinner';
 
 interface Car {
   Brand: string;
@@ -45,16 +46,7 @@ export default function ClassTables({
           {loading || cars.length === 0 ? (
             <tr>
               <td colSpan={2}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '6rem',
-                  }}
-                >
-                  <div className="loadingSpinner"></div>
-                </div>
+                <LoadingSpinner />
               </td>
             </tr>
           ) : (
