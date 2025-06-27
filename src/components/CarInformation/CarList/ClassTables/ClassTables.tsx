@@ -46,7 +46,7 @@ export default function ClassTables({
           {loading || cars.length === 0 ? (
             <tr>
               <td colSpan={2}>
-                <LoadingSpinner />
+                <LoadingSpinner message="Cataloging all speed machines..." />
               </td>
             </tr>
           ) : (
