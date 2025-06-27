@@ -1,6 +1,10 @@
-import "@/scss/MiscellaneousStyle/LoadingSpinner.scss";
+import '@/scss/MiscellaneousStyle/LoadingSpinner.scss';
 
-const LoadingSpinner: React.FC = () => {
+type LoadingSpinnerProps = {
+  message?: string;
+};
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message }) => {
   return (
     <div className="spinnerContainer">
       <div className="spinnerWrapper">
@@ -11,7 +15,7 @@ const LoadingSpinner: React.FC = () => {
         />
         <div className="smokeTrail" />
         <p className="loadingText">
-          Reving up the engines
+          {message && <span className="spinnerMessage">{message}</span>}
           <span className="dot one">.</span>
           <span className="dot two">.</span>
           <span className="dot three">.</span>
