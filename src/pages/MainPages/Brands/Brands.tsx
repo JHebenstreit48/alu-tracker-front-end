@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
+
 import Header from '@/components/Shared/Header';
 import PageTab from '@/components/Shared/PageTab';
-import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
-import '@/scss/Brands/BrandMap.scss';
 import Navigation from '@/components/Shared/Navigation';
+import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+
+import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
+
+import '@/scss/Brands/BrandMap.scss';
 
 interface Manufacturer {
   _id: string;
@@ -16,6 +20,7 @@ interface Manufacturer {
 export default function Brands() {
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
@@ -31,12 +36,25 @@ export default function Brands() {
       .then((data) => {
         console.log("✅ Manufacturers loaded in Brands.tsx:", data);
         setManufacturers(data);
+        setLoading(false);
       })
       .catch((err) => {
         console.error('❌ Error loading manufacturers:', err);
         setError(true);
+        setLoading(false);
       });
   }, [API_BASE_URL]);
+
+  if (loading) {
+    return (
+      <div className="brands-loading-wrapper">
+        <div className="loading-container">
+          <LoadingSpinner />
+          <p>Warming up the brands…</p>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -54,10 +72,7 @@ export default function Brands() {
       <PageTab title="Brands">
         <Header text="Brands" />
         <Navigation />
-        {/* ✅ Show the Jump List (grouped properly) */}
         <BrandQuickList manufacturers={manufacturers} />
-
-        {/* ❌ Commented out for now (no map) */}
         {/* <MapDisplay manufacturers={manufacturers} /> */}
       </PageTab>
     </div>
