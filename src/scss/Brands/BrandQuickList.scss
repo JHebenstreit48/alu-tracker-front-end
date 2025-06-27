@@ -30,10 +30,10 @@
      background-color: $quick-list-background-color;
      border-radius: $quick-list-border-radius;
      color: $quick-list-text-color;
-
+   
      @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
        margin-top: 8rem;
-       width: 86%
+       width: 86%;
      }
    
      /* =============================
@@ -76,6 +76,43 @@
            }
          }
        }
+     }
+   }
+   
+   /* =============================
+      Loading State Layout (UNNESTED)
+      ============================= */
+   .brandsLoadingWrapper {
+     max-width: $quick-list-max-width;
+     margin: 15rem auto 2rem auto;
+     padding: $quick-list-padding;
+     background-color: $quick-list-background-color;
+     border-radius: $quick-list-border-radius;
+     color: $quick-list-text-color;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+   
+     @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+       margin-top: 8rem;
+       width: 86%;
+     }
+   }
+   
+   .loadingContainer {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     min-height: 6rem;
+     margin-top: 11rem;
+   
+     .loading-text {
+       margin-top: 1rem;
+       color: #ffc300;
+       font-weight: bold;
+       font-size: 1.1rem;
      }
    }
    
