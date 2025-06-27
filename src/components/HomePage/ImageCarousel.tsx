@@ -29,18 +29,26 @@ export default function ImageCarousel({ project }: ImageCarouselPropsType) {
             className={`carousel-item ${index === 0 ? "active" : ""}`}
             key={index}
           >
-            <div className="carousel-image-box">
-              {!hasLoadedAll ? (
-                <LoadingSpinner />
-              ) : (
-                <img
-                  src={`${backendImageUrl}${image.path}`}
-                  alt={`Car Image ${index + 1}`}
-                  className="d-block w-100"
-                  loading="lazy"
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                />
+            <div className="carousel-image-box" style={{ position: "relative" }}>
+              <img
+                src={`${backendImageUrl}${image.path}`}
+                alt={`Car Image ${index + 1}`}
+                className="d-block w-100"
+                loading="lazy"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+                style={{ opacity: hasLoadedAll ? 1 : 0.2, transition: "opacity 0.3s ease-in-out" }}
+              />
+              {!hasLoadedAll && (
+                <div style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 2
+                }}>
+                  <LoadingSpinner />
+                </div>
               )}
             </div>
           </div>
@@ -49,3 +57,4 @@ export default function ImageCarousel({ project }: ImageCarouselPropsType) {
     </div>
   );
 }
+

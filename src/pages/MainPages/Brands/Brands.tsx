@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
+
 import Header from '@/components/Shared/Header';
 import PageTab from '@/components/Shared/PageTab';
-import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
-import '@/scss/Brands/BrandMap.scss';
 import Navigation from '@/components/Shared/Navigation';
+import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+
+import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
+
+import '@/scss/Brands/BrandQuickList.scss'
+// import '@/scss/Brands/BrandMap.scss';
 
 interface Manufacturer {
   _id: string;
@@ -16,11 +21,12 @@ interface Manufacturer {
 export default function Brands() {
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
   useEffect(() => {
-    console.log("🚀 Fetching from:", `${API_BASE_URL}/manufacturers`);
+    console.log('🚀 Fetching from:', `${API_BASE_URL}/manufacturers`);
     fetch(`${API_BASE_URL}/api/manufacturers`)
       .then((response) => {
         if (!response.ok) {
@@ -29,35 +35,36 @@ export default function Brands() {
         return response.json();
       })
       .then((data) => {
-        console.log("✅ Manufacturers loaded in Brands.tsx:", data);
+        console.log('✅ Manufacturers loaded in Brands.tsx:', data);
         setManufacturers(data);
+        setLoading(false);
       })
       .catch((err) => {
         console.error('❌ Error loading manufacturers:', err);
         setError(true);
+        setLoading(false);
       });
   }, [API_BASE_URL]);
-
-  if (error) {
-    return (
-      <div className="brands">
-        <PageTab title="Brands">
-          <Header text="Brands" />
-          <div className="error-message">Failed to load manufacturers.</div>
-        </PageTab>
-      </div>
-    );
-  }
 
   return (
     <div className="brands">
       <PageTab title="Brands">
         <Header text="Brands" />
         <Navigation />
-        {/* ✅ Show the Jump List (grouped properly) */}
-        <BrandQuickList manufacturers={manufacturers} />
 
-        {/* ❌ Commented out for now (no map) */}
+        {error ? (
+          <div className="error-message">Failed to load manufacturers.</div>
+        ) : loading ? (
+          <div className="brandsLoadingWrapper">
+            <div className="loadingContainer">
+              <LoadingSpinner />
+              <p>Warming up the brands…</p>
+            </div>
+          </div>
+        ) : (
+          <BrandQuickList manufacturers={manufacturers} />
+        )}
+
         {/* <MapDisplay manufacturers={manufacturers} /> */}
       </PageTab>
     </div>
