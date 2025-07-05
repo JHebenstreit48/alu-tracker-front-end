@@ -7,6 +7,7 @@ import {
   generateCarKey,
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
+import { syncAllTrackedCarsToMongo } from '@/components/CarInformation/CarDetails/Miscellaneous/UserSync';
 
 import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
 import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
@@ -150,53 +151,66 @@ export default function CarTracker() {
 
         {/* <SyncButton /> */}
 
+        <button
+          onClick={syncAllTrackedCarsToMongo}
+          style={{
+            marginBottom: '1.5rem',
+            padding: '0.5rem 1rem',
+            fontSize: '1rem',
+            backgroundColor: '#2b7cff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+          }}
+        >
+          🔁 Sync Data to Account
+        </button>
+
         <div className="trackerSummaryBlock">
-
           <div className="summaryProgressRow">
-          <OwnedProgress
-            ownedCount={ownedCars.length}
-            totalCars={totalCars}
-          />
-          <CarsOwned
-            ownedCount={ownedCars.length}
-            totalCars={totalCars}
-          />
+            <OwnedProgress
+              ownedCount={ownedCars.length}
+              totalCars={totalCars}
+            />
+            <CarsOwned
+              ownedCount={ownedCars.length}
+              totalCars={totalCars}
+            />
 
-          <GoldMaxedProgress
-            goldMaxedCount={goldMaxedCars.length}
-            totalCars={totalCars}
-          />
-          <GoldMaxed
-            goldMaxedCount={goldMaxedCars.length}
-            totalCars={totalCars}
-          />
+            <GoldMaxedProgress
+              goldMaxedCount={goldMaxedCars.length}
+              totalCars={totalCars}
+            />
+            <GoldMaxed
+              goldMaxedCount={goldMaxedCars.length}
+              totalCars={totalCars}
+            />
 
-          <OwnedKeyProgress
-            obtained={keyCarSummary.obtained}
-            total={keyCarSummary.total}
-          />
-          <TotalKeys
-            obtained={keyCarSummary.obtained}
-            owned={keyCarSummary.owned}
-            total={keyCarSummary.total}
-          />
+            <OwnedKeyProgress
+              obtained={keyCarSummary.obtained}
+              total={keyCarSummary.total}
+            />
+            <TotalKeys
+              obtained={keyCarSummary.obtained}
+              owned={keyCarSummary.owned}
+              total={keyCarSummary.total}
+            />
           </div>
-          
+
           <div className="circleAndTableRow">
-          <StarRankCircles
-            starCounts={starCounts}
-            totalOwned={ownedCars.length}
-          />
+            <StarRankCircles
+              starCounts={starCounts}
+              totalOwned={ownedCars.length}
+            />
 
-          <MaxStarRank
-            allCars={allCars}
-            trackedCars={enrichedTrackedCars}  // from enriched tracking
-            totalCars={totalCars}
-          />
+            <MaxStarRank
+              allCars={allCars}
+              trackedCars={enrichedTrackedCars} // from enriched tracking
+              totalCars={totalCars}
+            />
           </div>
-
         </div>
-        
       </PageTab>
     </div>
   );
