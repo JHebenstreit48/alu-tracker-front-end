@@ -12,20 +12,26 @@ export const syncAllTrackedCarsToMongo = async () => {
     return;
   }
 
-  const trackingData = getAllCarTrackingData();
+  const allTrackingData = getAllCarTrackingData();
 
-  // Extract values from localStorage data
-  const ownedCars: string[] = [];
-  const goldMaxedCars: string[] = [];
-  const keyCarsOwned: string[] = [];
+  const ownedCars = Object.entries(allTrackingData)
+    .filter(([, data]) => data.owned)
+    .map(([key]) => key);
+
+  const goldMaxedCars = Object.entries(allTrackingData)
+    .filter(([, data]) => data.goldMaxed)
+    .map(([key]) => key);
+
+  const keyCarsOwned = Object.entries(allTrackingData)
+    .filter(([, data]) => data.keyObtained)
+    .map(([key]) => key);
+
   const carStars: Record<string, number> = {};
-
-  Object.entries(trackingData).forEach(([carId, data]) => {
-    if (data.owned) ownedCars.push(carId);
-    if (data.goldMaxed) goldMaxedCars.push(carId);
-    if (data.keyObtained) keyCarsOwned.push(carId);
-    if (typeof data.stars === 'number') carStars[carId] = data.stars;
-  });
+  for (const [key, data] of Object.entries(allTrackingData)) {
+    if (typeof data.stars === 'number') {
+      carStars[key] = data.stars;
+    }
+  }
 
   try {
     const res = await fetch(`${AUTH_API_URL}/api/users/save-progress`, {
@@ -36,11 +42,10 @@ export const syncAllTrackedCarsToMongo = async () => {
       },
       body: JSON.stringify({
         userId,
+        carStars,
         ownedCars,
         goldMaxedCars,
         keyCarsOwned,
-        carStars,
-        xp: 0, // Optional: update if needed
       }),
     });
 
