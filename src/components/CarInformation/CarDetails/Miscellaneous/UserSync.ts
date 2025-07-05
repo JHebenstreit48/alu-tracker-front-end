@@ -1,6 +1,7 @@
 import { getAllCarTrackingData } from './StorageUtils';
 
-const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL ?? 'https://alu-tracker-user-data.onrender.com';
+const AUTH_API_URL =
+  import.meta.env.VITE_AUTH_API_URL ?? 'https://alu-tracker-user-data.onrender.com';
 
 export const syncAllTrackedCarsToMongo = async () => {
   const userId = localStorage.getItem('userId');
@@ -26,7 +27,11 @@ export const syncAllTrackedCarsToMongo = async () => {
       }),
     });
 
-    if (!res.ok) throw new Error(`Sync failed: ${res.status}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Sync failed: ${res.status} - ${errorText}`);
+    }
+
     console.log('✅ Tracker data synced successfully');
   } catch (err) {
     console.error('❌ Failed to sync tracking data to MongoDB:', err);
