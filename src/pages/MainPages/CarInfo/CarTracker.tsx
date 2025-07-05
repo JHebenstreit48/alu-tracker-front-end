@@ -17,7 +17,6 @@ import TotalKeys from '@/components/CarInformation/CarTracker/ProgressCircles/Ow
 import OwnedKeyProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedKeyProgress';
 import StarRankCircles from '@/components/CarInformation/CarTracker/ProgressCircles/CarTotalStars/Layout/StarRankCircles';
 import MaxStarRank from '@/components/CarInformation/CarTracker/MaxStarRank/Layout/MaxStarRank';
-// import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
 
 import '@/scss/Cars/CarTracker/Layout/CarTracker.scss';
 import '@/scss/Cars/CarTracker/Components/CarsOwned.scss';
@@ -44,6 +43,8 @@ export default function CarTracker() {
     obtained: 0,
     owned: 0,
   });
+
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     const allTracked = getAllCarTrackingData();
@@ -93,15 +94,6 @@ export default function CarTracker() {
         console.log('🧪 Full key car keys from backend:', keyCarKeys);
         console.log('🧪 Keys obtained (from localStorage):', keysObtained);
         console.log('🧪 Key cars marked owned (from localStorage):', ownedKeyCars);
-
-        const allTrackedIdsMarkedKey = Object.entries(allTracked)
-          .filter(([, val]) => val.keyObtained || val.owned)
-          .map(([id]) => id);
-
-        console.log(
-          '🧪 All cars marked keyObtained or owned in localStorage:',
-          allTrackedIdsMarkedKey
-        );
       })
       .catch((err) => {
         console.error('Failed to fetch total car count or key car info:', err);
@@ -149,12 +141,21 @@ export default function CarTracker() {
           Back to Cars
         </button>
 
-        {/* <SyncButton /> */}
-
         <button
-          onClick={syncAllTrackedCarsToMongo}
+          onClick={async () => {
+            setSyncStatus('loading');
+            try {
+              await syncAllTrackedCarsToMongo();
+              setSyncStatus('success');
+            } catch (err) {
+              console.error('Manual sync failed:', err);
+              setSyncStatus('error');
+            } finally {
+              setTimeout(() => setSyncStatus('idle'), 3000);
+            }
+          }}
           style={{
-            marginBottom: '1.5rem',
+            marginBottom: '1rem',
             padding: '0.5rem 1rem',
             fontSize: '1rem',
             backgroundColor: '#2b7cff',
@@ -167,30 +168,19 @@ export default function CarTracker() {
           🔁 Sync Data to Account
         </button>
 
+        {syncStatus === 'loading' && <p>⏳ Syncing data...</p>}
+        {syncStatus === 'success' && <p style={{ color: 'green' }}>✅ Sync successful!</p>}
+        {syncStatus === 'error' && <p style={{ color: 'red' }}>❌ Sync failed.</p>}
+
         <div className="trackerSummaryBlock">
           <div className="summaryProgressRow">
-            <OwnedProgress
-              ownedCount={ownedCars.length}
-              totalCars={totalCars}
-            />
-            <CarsOwned
-              ownedCount={ownedCars.length}
-              totalCars={totalCars}
-            />
+            <OwnedProgress ownedCount={ownedCars.length} totalCars={totalCars} />
+            <CarsOwned ownedCount={ownedCars.length} totalCars={totalCars} />
 
-            <GoldMaxedProgress
-              goldMaxedCount={goldMaxedCars.length}
-              totalCars={totalCars}
-            />
-            <GoldMaxed
-              goldMaxedCount={goldMaxedCars.length}
-              totalCars={totalCars}
-            />
+            <GoldMaxedProgress goldMaxedCount={goldMaxedCars.length} totalCars={totalCars} />
+            <GoldMaxed goldMaxedCount={goldMaxedCars.length} totalCars={totalCars} />
 
-            <OwnedKeyProgress
-              obtained={keyCarSummary.obtained}
-              total={keyCarSummary.total}
-            />
+            <OwnedKeyProgress obtained={keyCarSummary.obtained} total={keyCarSummary.total} />
             <TotalKeys
               obtained={keyCarSummary.obtained}
               owned={keyCarSummary.owned}
@@ -199,14 +189,11 @@ export default function CarTracker() {
           </div>
 
           <div className="circleAndTableRow">
-            <StarRankCircles
-              starCounts={starCounts}
-              totalOwned={ownedCars.length}
-            />
+            <StarRankCircles starCounts={starCounts} totalOwned={ownedCars.length} />
 
             <MaxStarRank
               allCars={allCars}
-              trackedCars={enrichedTrackedCars} // from enriched tracking
+              trackedCars={enrichedTrackedCars}
               totalCars={totalCars}
             />
           </div>
