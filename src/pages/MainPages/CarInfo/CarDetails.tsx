@@ -5,7 +5,7 @@ import { Car, Blueprints } from '@/components/CarInformation/CarDetails/Miscella
 import { StockStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/StockStats';
 import { GoldMaxStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/GoldMaxStats';
 import { MaxStarStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/MaxStarStats';
-import { syncAllTrackedCarsToMongo } from '@/components/CarInformation/CarDetails/Miscellaneous/UserSync';
+import { useAutoSyncDependency } from '@/components/CarInformation/UserDataSync/hooks/useAutoSync';
 
 import CarImage from '@/components/CarInformation/CarDetails/OtherComponents/CarImage';
 import ClassRank from '@/components/CarInformation/CarDetails/Tables/ClassRank';
@@ -70,7 +70,6 @@ const CarDetails = () => {
         if (trackerMode && data.KeyCar && stored.stars === undefined) {
           const updated = { ...stored, stars: 1 };
           setCarTrackingData(key, updated);
-          syncAllTrackedCarsToMongo(); // ✅ trigger one-time sync
         }
 
         if (stored?.keyObtained !== undefined) {
@@ -87,6 +86,8 @@ const CarDetails = () => {
     fetchCarDetails();
   }, [slug, trackerMode, navigate]);
 
+  useAutoSyncDependency([car, keyObtained, trackerMode]);
+
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
     const trackerState = trackerMode ? { trackerMode: true } : {};
@@ -101,35 +102,6 @@ const CarDetails = () => {
         <h2 className="error-message">⚠️ Could not load this car's details.</h2>
         <p>The car may not exist or an error occurred while fetching.</p>
         <button onClick={handleGoBack} className="backBtn">Back to Car List</button>
-        {slug && (
-          <button
-            onClick={() =>
-              fetch(`${API_BASE_URL}/api/cars/detail/${slug}`)
-                .then((res) => res.json())
-                .then((data) => {
-                  setCar(data);
-                  const key = generateCarKey(data.Brand, data.Model);
-                  const stored = getCarTrackingData(key);
-                  if (trackerMode && data.KeyCar && stored.stars === undefined) {
-                    const updated = { ...stored, stars: 1 };
-                    setCarTrackingData(key, updated);
-                    syncAllTrackedCarsToMongo();
-                  }
-                  if (stored?.keyObtained !== undefined) {
-                    setKeyObtained(stored.keyObtained);
-                  }
-                  setError(false);
-                })
-                .catch((err) => {
-                  console.error('❌ Retry failed:', err);
-                  setError(true);
-                })
-            }
-            style={{ marginTop: '1rem' }}
-          >
-            Retry
-          </button>
-        )}
       </div>
     );
   }
@@ -138,15 +110,8 @@ const CarDetails = () => {
 
   return (
     <div className="carDetail">
-      <div>
-        <button className="backBtn" onClick={handleGoBack}>
-          Back
-        </button>
-      </div>
-
-      <div>
-        <h1 className="carName">{car.Brand} {car.Model}</h1>
-      </div>
+      <button className="backBtn" onClick={handleGoBack}>Back</button>
+      <h1 className="carName">{car.Brand} {car.Model}</h1>
 
       <CarImage car={car} />
 

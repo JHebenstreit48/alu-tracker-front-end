@@ -7,7 +7,8 @@ import {
   generateCarKey,
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
-import { syncAllTrackedCarsToMongo } from '@/components/CarInformation/CarDetails/Miscellaneous/UserSync';
+
+import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
 
 import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
 import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
@@ -44,15 +45,14 @@ export default function CarTracker() {
     owned: 0,
   });
 
-  const [syncStatus, setSyncStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
   useEffect(() => {
     const allTracked = getAllCarTrackingData();
-    const entries: TrackedCar[] = Object.entries(allTracked).map(([carId, data]) => ({
-      carId,
-      ...data,
-    }));
-    setTrackedCars(entries);
+    setTrackedCars(
+      Object.entries(allTracked).map(([carId, data]) => ({
+        carId,
+        ...data,
+      }))
+    );
 
     fetch(
       `${
@@ -90,10 +90,6 @@ export default function CarTracker() {
           keysObtainedFromLocal: keysObtained.length,
           carsOwnedInLocal: ownedKeyCars.length,
         });
-
-        console.log('🧪 Full key car keys from backend:', keyCarKeys);
-        console.log('🧪 Keys obtained (from localStorage):', keysObtained);
-        console.log('🧪 Key cars marked owned (from localStorage):', ownedKeyCars);
       })
       .catch((err) => {
         console.error('Failed to fetch total car count or key car info:', err);
@@ -141,36 +137,7 @@ export default function CarTracker() {
           Back to Cars
         </button>
 
-        <button
-          onClick={async () => {
-            setSyncStatus('loading');
-            try {
-              await syncAllTrackedCarsToMongo();
-              setSyncStatus('success');
-            } catch (err) {
-              console.error('Manual sync failed:', err);
-              setSyncStatus('error');
-            } finally {
-              setTimeout(() => setSyncStatus('idle'), 3000);
-            }
-          }}
-          style={{
-            marginBottom: '1rem',
-            padding: '0.5rem 1rem',
-            fontSize: '1rem',
-            backgroundColor: '#2b7cff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-          }}
-        >
-          🔁 Sync Data to Account
-        </button>
-
-        {syncStatus === 'loading' && <p>⏳ Syncing data...</p>}
-        {syncStatus === 'success' && <p style={{ color: 'green' }}>✅ Sync successful!</p>}
-        {syncStatus === 'error' && <p style={{ color: 'red' }}>❌ Sync failed.</p>}
+        <SyncButton />
 
         <div className="trackerSummaryBlock">
           <div className="summaryProgressRow">
@@ -201,4 +168,4 @@ export default function CarTracker() {
       </PageTab>
     </div>
   );
-};
+}
