@@ -12,26 +12,40 @@ export const syncAllTrackedCarsToMongo = async () => {
     return;
   }
 
-  const allTrackingData = getAllCarTrackingData();
+  const trackingData = getAllCarTrackingData();
 
-  const ownedCars = Object.entries(allTrackingData)
-    .filter(([, data]) => data.owned)
-    .map(([key]) => key);
-
-  const goldMaxedCars = Object.entries(allTrackingData)
-    .filter(([, data]) => data.goldMaxed)
-    .map(([key]) => key);
-
-  const keyCarsOwned = Object.entries(allTrackingData)
-    .filter(([, data]) => data.keyObtained)
-    .map(([key]) => key);
-
+  // Organize tracking data for each category
   const carStars: Record<string, number> = {};
-  for (const [key, data] of Object.entries(allTrackingData)) {
+  const ownedCars: string[] = [];
+  const goldMaxedCars: string[] = [];
+  const keyCarsOwned: string[] = [];
+
+  for (const [carId, data] of Object.entries(trackingData)) {
     if (typeof data.stars === 'number') {
-      carStars[key] = data.stars;
+      carStars[carId] = data.stars;
+    }
+    if (data.owned) {
+      ownedCars.push(carId);
+    }
+    if (data.goldMaxed) {
+      goldMaxedCars.push(carId);
+    }
+    if (data.keyObtained) {
+      keyCarsOwned.push(carId);
     }
   }
+
+  const payload = {
+    userId,
+    carStars,
+    ownedCars,
+    goldMaxedCars,
+    keyCarsOwned,
+    // xp: 0, // omit unless needed
+  };
+
+  console.log('🚀 Sending sync request to:', `${AUTH_API_URL}/api/users/save-progress`);
+  console.log('📦 Payload:', payload);
 
   try {
     const res = await fetch(`${AUTH_API_URL}/api/users/save-progress`, {
@@ -40,13 +54,7 @@ export const syncAllTrackedCarsToMongo = async () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        userId,
-        carStars,
-        ownedCars,
-        goldMaxedCars,
-        keyCarsOwned,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
