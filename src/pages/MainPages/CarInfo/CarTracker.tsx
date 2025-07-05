@@ -201,4 +201,4 @@ export default function CarTracker() {
       </PageTab>
     </div>
   );
-}
+};
