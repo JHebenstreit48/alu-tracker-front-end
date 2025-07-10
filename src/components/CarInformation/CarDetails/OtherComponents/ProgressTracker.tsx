@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 import {
   getCarTrackingData,
-  setCarTrackingData,
   generateCarKey,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { setCarTrackingDataWithSync } from "@/components/CarInformation/CarDetails/Miscellaneous/SyncStorageUtils";
 import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
 interface Props {
@@ -19,7 +19,6 @@ export default function ProgressTracker({ car }: Props) {
 
   const carKey = generateCarKey(car.Brand, car.Model);
 
-  // ✅ Sync to account when any local change happens
   useAutoSyncDependency([owned, stars, upgradeStage, importParts]);
 
   useEffect(() => {
@@ -32,8 +31,8 @@ export default function ProgressTracker({ car }: Props) {
     }
   }, [carKey]);
 
-  const handleSave = () => {
-    setCarTrackingData(carKey, {
+  const handleSave = async () => {
+    await setCarTrackingDataWithSync(carKey, {
       owned,
       stars,
       upgradeStage,
