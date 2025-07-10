@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }: Props) => {
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
+    const storedToken = localStorage.getItem("token"); // ✅ consistent key
     const storedUsername = localStorage.getItem("username");
 
     if (storedToken && storedUsername) {
@@ -21,18 +21,17 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   const login = (newToken: string, newUsername: string) => {
-    localStorage.setItem("authToken", newToken);
+    localStorage.setItem("token", newToken); // ✅ corrected key
     localStorage.setItem("username", newUsername);
     setToken(newToken);
     setUsername(newUsername);
 
-    // ✅ Sync from account immediately after login
     console.log("🔄 Syncing progress from account after login...");
     syncFromAccount(newToken);
   };
 
   const logout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token"); // ✅ corrected key
     localStorage.removeItem("username");
     setToken(null);
     setUsername(null);
