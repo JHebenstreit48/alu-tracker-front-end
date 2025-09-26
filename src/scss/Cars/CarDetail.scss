@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use '@scss/Globals/index' as *; // ← loads the status card styles for this page
 
 /* =============================
    Variables
@@ -7,13 +8,12 @@ $car-detail-padding: 20px;
 $car-detail-text-color: #333;
 
 $back-btn-bg-color: #333;
-$color-accent-blue-color: white;
+// $color-accent-blue-color: white;
 $back-btn-hover-bg-color: #555;
-$back-btn-padding: 10px 15px;
-$back-btn-margin: 13rem 0 0 2rem;
+$back-btn-padding: 10px 1.5rem;
 
 $car-name-font-size: 2.8rem;
-$car-name-text-color: white;
+// $car-name-text-color: white;
 $car-name-margin-bottom: 15px;
 
 $car-image-width: 60rem;
@@ -34,7 +34,7 @@ $blueprints-font-size: 1.4rem;
 $max-rank-font-size: 1.6rem;
 
 $car-info-font-size: 1.2rem;
-$car-info-text-color: white;
+// $car-info-text-color: white;
 
 $mobileMaxWidthPortrait: 480px;
 $cellphone-landscape: 390px;
@@ -48,40 +48,71 @@ $cellphone-landscape: 390px;
   color: $car-detail-text-color;
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
-    /* Media query content to be added later */
+    /* media content later */
   }
 
   /* =============================
-      Back Button
-      ============================= */
-  .backBtn {
-    background-color: $back-btn-bg-color;
-    color: $color-accent-blue-color;
-    padding: $back-btn-padding;
-    margin: $back-btn-margin;
-    border: none;
-    cursor: pointer;
+      Top row: Back + timestamp
+     ============================= */
+  .cdetail-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 12.5rem 2rem 0.75rem 2rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid color.change($car-image-shadow-color, $alpha: 0.45);
 
-    &:hover {
-      background-color: $back-btn-hover-bg-color;
+    // In this top bar only, remove the big page margin on the back button
+    .backBtn {
+      margin: 0;
+      border-radius: 8px;
+      background-color: $back-btn-bg-color;
+      color: $color-gold-glow;
+      padding: $back-btn-padding;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $back-btn-hover-bg-color;
+      }
+    }
+
+    .cdetail-status {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
     }
   }
 
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    .cdetail-top {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+
+      .cdetail-status {
+        justify-content: flex-start; // timestamp drops below Back on mobile
+      }
+    }
+  }
+  
   /* =============================
       Car Name
-      ============================= */
+     ============================= */
   .carName {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: $car-name-font-size;
-    color: $car-name-text-color;
+    color: $color-white;
     margin-bottom: $car-name-margin-bottom;
   }
 
   /* =============================
       Car Image
-      ============================= */
+     ============================= */
   .carImage {
     display: flex;
     justify-content: center;
@@ -93,8 +124,8 @@ $cellphone-landscape: 390px;
   }
 
   /* =============================
-    Key Info Table
-   ============================= */
+      Key Info Table
+     ============================= */
   .keyInfoTableContainer {
     margin: 0.8rem auto 2rem auto;
     width: $car-image-width;
@@ -115,7 +146,7 @@ $cellphone-landscape: 390px;
         padding: 5px;
         text-align: center;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0 auto
+        margin: 0 auto;
       }
 
       .testClass {
@@ -147,13 +178,13 @@ $cellphone-landscape: 390px;
 
   /* =============================
       Car Detail Tables
-      ============================= */
+     ============================= */
   .carDetailTables {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: flex-start;
-    gap: 1rem 5rem; // Increase vertical space slightly if 0.1rem is too tight
+    gap: 1rem 5rem;
     margin-top: 0;
     padding: 0;
   }
@@ -161,7 +192,7 @@ $cellphone-landscape: 390px;
   .tableCard {
     width: $info-table-width;
     min-height: 36rem;
-    margin: 0; // ⬅️ Fully collapse any extra spacing
+    margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -169,8 +200,8 @@ $cellphone-landscape: 390px;
   }
 
   .tableCard:not(:nth-child(2n)) {
-  margin-right: 5rem;
-}
+    margin-right: 5rem;
+  }
 
   .carInfoTable {
     width: 100%;
@@ -185,11 +216,11 @@ $cellphone-landscape: 390px;
     padding: 10px 16px;
     text-align: center;
     vertical-align: middle;
-    height: auto; // ✅ restore natural height
+    height: auto;
   }
 
   .tableHeader2 {
-    color: $color-accent-blue;
+    color: $color-white;
     background-color: $color-black;
     text-align: center;
     height: 50px;
@@ -200,7 +231,7 @@ $cellphone-landscape: 390px;
 
   /* =============================
       Stars in Tables
-      ============================= */
+     ============================= */
   .starIcon {
     width: 22px;
     height: 22px;
@@ -209,7 +240,7 @@ $cellphone-landscape: 390px;
 
   /* =============================
       Blueprint Table
-      ============================= */
+     ============================= */
   .blueprintTotalLabel {
     text-align: center;
     font-weight: bold;
@@ -246,7 +277,7 @@ $cellphone-landscape: 390px;
 
   /* =============================
       Max Rank and Car Info Text
-      ============================= */
+     ============================= */
   .maxRank {
     font-size: $max-rank-font-size;
   }
@@ -254,6 +285,6 @@ $cellphone-landscape: 390px;
   .carInfo {
     font-size: $car-info-font-size;
     margin: 10px 0;
-    color: $car-info-text-color;
+    color: $color-white;
   }
 }

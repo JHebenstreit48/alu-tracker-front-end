@@ -1,16 +1,14 @@
 @use 'sass:color';
-@use '@scss/Globals/index' as *;
+@use '@scss/Globals/index' as *; // gives us $color-gold-glow, $color-white, etc.
 
 /* ==============================
             Variables
    ============================== */
 
-// Local, safe-to-override accents
-$gold-accent: $color-gold-glow;   // uses your existing gold glow
+// Sizes
 $status-font-size: 1rem;
 $status-gap: 0.5rem;
 $status-pad: 0.5rem 0;
-$status-radius: 0.5rem;
 
 // Chip colors
 $status-complete: #2ecc71;  // green
@@ -25,26 +23,22 @@ $status-unknown:  #7f8c8d;  // gray
 .car-status-card {
   width: 100%;
   font-size: $status-font-size;
-  margin: 0.25rem 0 0.75rem 0;
 
-  // Timestamp bar at top-right
   .updated {
     display: flex;
-    justify-content: flex-end;   // push to the right
+    justify-content: flex-end;  // right align
     align-items: baseline;
     gap: 0.4rem;
     padding: $status-pad;
-    border-bottom: 1px solid color.mix($color-black, $gold-accent, 40%);
   }
 
-  .updatedLabel {
-    color: $color-gold-glow;     // your gold
-    font-weight: 600;
+  .label {
+    color: $color-gold-glow;        // gold label
+    font-weight: 700;
   }
 
-  .updatedValue {
+  time {
     color: $color-white;
-    opacity: 0.95;
   }
 
   .status-row {
@@ -61,9 +55,9 @@ $status-unknown:  #7f8c8d;  // gray
     font-weight: 700;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
-    color: $color-black;
+    color: #000; // solid contrast; avoids relying on a missing $color-black
     background: $status-unknown;
-    box-shadow: $shadow-gold-basic; // you already use this in other files
+    box-shadow: 0 0 6px 2px #{color.change($color-gold-glow, $alpha: 0.35)};
   }
 
   .chip--complete    { background: $status-complete; }
