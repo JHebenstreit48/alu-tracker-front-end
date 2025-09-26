@@ -9,8 +9,8 @@ $car-detail-text-color: #333;
 $back-btn-bg-color: #333;
 $color-accent-blue-color: white;
 $back-btn-hover-bg-color: #555;
-$back-btn-padding: 10px 20px;
-$back-btn-margin-bottom: 20px;
+$back-btn-padding: 10px 15px;
+$back-btn-margin: 13rem 0 0 2rem;
 
 $car-name-font-size: 2.8rem;
 $car-name-text-color: white;
@@ -58,7 +58,7 @@ $cellphone-landscape: 390px;
     background-color: $back-btn-bg-color;
     color: $color-accent-blue-color;
     padding: $back-btn-padding;
-    margin-bottom: $back-btn-margin-bottom;
+    margin: $back-btn-margin;
     border: none;
     cursor: pointer;
 

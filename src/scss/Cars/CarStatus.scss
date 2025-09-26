@@ -1,0 +1,78 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* ==============================
+            Variables
+   ============================== */
+
+// Local, safe-to-override accents
+$gold-accent: $color-gold-glow;   // uses your existing gold glow
+$status-font-size: 1rem;
+$status-gap: 0.5rem;
+$status-pad: 0.5rem 0;
+$status-radius: 0.5rem;
+
+// Chip colors
+$status-complete: #2ecc71;  // green
+$status-progress: #f1c40f;  // gold-ish
+$status-missing:  #e74c3c;  // red
+$status-unknown:  #7f8c8d;  // gray
+
+/* ==============================
+          Car Status Card
+   ============================== */
+
+.car-status-card {
+  width: 100%;
+  font-size: $status-font-size;
+  margin: 0.25rem 0 0.75rem 0;
+
+  // Timestamp bar at top-right
+  .updated {
+    display: flex;
+    justify-content: flex-end;   // push to the right
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: $status-pad;
+    border-bottom: 1px solid color.mix($color-black, $gold-accent, 40%);
+  }
+
+  .updatedLabel {
+    color: $color-gold-glow;     // your gold
+    font-weight: 600;
+  }
+
+  .updatedValue {
+    color: $color-white;
+    opacity: 0.95;
+  }
+
+  .status-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $status-gap;
+    margin-top: 0.5rem;
+  }
+
+  .chip {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    color: $color-black;
+    background: $status-unknown;
+    box-shadow: $shadow-gold-basic; // you already use this in other files
+  }
+
+  .chip--complete    { background: $status-complete; }
+  .chip--in-progress { background: $status-progress; }
+  .chip--missing     { background: $status-missing; }
+  .chip--unknown     { background: $status-unknown; }
+
+  .msg {
+    color: $color-white;
+    opacity: 0.9;
+  }
+}
