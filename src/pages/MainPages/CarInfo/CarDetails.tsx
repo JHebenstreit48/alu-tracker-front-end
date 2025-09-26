@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
+import PageTab from '@/components/Shared/PageTab';
+import Header from '@/components/Shared/Header';
+import Navigation from '@/components/Shared/Navigation';
+
 import { Car, Blueprints } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
 import { StockStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/StockStats';
 import { GoldMaxStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/GoldMaxStats';
 import { MaxStarStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/MaxStarStats';
 import { useAutoSyncDependency } from '@/components/CarInformation/UserDataSync/hooks/useAutoSync';
 
+import CarDataStatusCard from '@/components/CarInformation/CarDetails/OtherComponents/DataStatusCard';
 import CarImage from '@/components/CarInformation/CarDetails/OtherComponents/CarImage';
 import ClassRank from '@/components/CarInformation/CarDetails/Tables/ClassRank';
 import StockStatsTable from '@/components/CarInformation/CarDetails/Tables/StockStats';
@@ -23,8 +28,22 @@ import {
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
 import '@/scss/Cars/CarDetail.scss';
+import '@/scss/Cars/CarStatus.scss';
 
-type FullCar = Car & GoldMaxStats & Blueprints & StockStats & MaxStarStats;
+type CarStatus = {
+  status: 'complete' | 'in progress' | 'missing' | 'unknown';
+  message?: string;
+  lastChecked?: string | null;
+};
+
+type FullCar = Car &
+  GoldMaxStats &
+  Blueprints &
+  StockStats &
+  MaxStarStats & {
+    updatedAt?: string;
+    _status?: CarStatus | null;
+  };
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
@@ -101,7 +120,12 @@ const CarDetails = () => {
       <div className="carDetail">
         <h2 className="error-message">⚠️ Could not load this car's details.</h2>
         <p>The car may not exist or an error occurred while fetching.</p>
-        <button onClick={handleGoBack} className="backBtn">Back to Car List</button>
+        <button
+          onClick={handleGoBack}
+          className="backBtn"
+        >
+          Back to Car List
+        </button>
       </div>
     );
   }
@@ -110,33 +134,70 @@ const CarDetails = () => {
 
   return (
     <div className="carDetail">
-      <button className="backBtn" onClick={handleGoBack}>Back</button>
-      <h1 className="carName">{car.Brand} {car.Model}</h1>
+      <PageTab title={`${car.Brand} ${car.Model}`}>
+        <Header text={`${car.Brand} ${car.Model}`} />
+        <Navigation />
 
-      <CarImage car={car} />
+        <div className="cdetail-top">
+          <button
+            className="backBtn"
+            onClick={handleGoBack}
+          >
+            Back
+          </button>
 
-      <KeyInfo
-        car={car}
-        trackerMode={trackerMode}
-        keyObtained={keyObtained}
-        onKeyObtainedChange={(obtained) => setKeyObtained(obtained)}
-      />
+          <div className="cdetail-status">
+            <CarDataStatusCard
+              updatedAt={car.updatedAt}
+              status={car._status ?? null}
+            />
+          </div>
+        </div>
 
-      <div className="carDetailTables">
-        <div className="tableCard">
-          <ClassRank car={car} trackerMode={trackerMode} forceOwned={car.KeyCar && keyObtained} />
+        <CarImage car={car} />
+
+        <KeyInfo
+          car={car}
+          trackerMode={trackerMode}
+          keyObtained={keyObtained}
+          onKeyObtainedChange={(obtained) => setKeyObtained(obtained)}
+        />
+
+        <div className="carDetailTables">
+          <div className="tableCard">
+            <ClassRank
+              car={car}
+              trackerMode={trackerMode}
+              forceOwned={car.KeyCar && keyObtained}
+            />
+          </div>
+          <div className="tableCard">
+            <BlueprintsTable
+              car={car}
+              trackerMode={trackerMode}
+            />
+          </div>
+          <div className="tableCard">
+            <StockStatsTable
+              car={car}
+              unitPreference={unitPreference}
+              trackerMode={trackerMode}
+            />
+          </div>
+          <MaxStarStatsTable
+            car={car}
+            unitPreference={unitPreference}
+            trackerMode={trackerMode}
+          />
+          <div className="tableCard">
+            <GoldMaxStatsTable
+              car={car}
+              unitPreference={unitPreference}
+              trackerMode={trackerMode}
+            />
+          </div>
         </div>
-        <div className="tableCard">
-          <BlueprintsTable car={car} trackerMode={trackerMode} />
-        </div>
-        <div className="tableCard">
-          <StockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        </div>
-        <MaxStarStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        <div className="tableCard">
-          <GoldMaxStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        </div>
-      </div>
+      </PageTab>
     </div>
   );
 };
