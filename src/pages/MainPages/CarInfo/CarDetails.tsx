@@ -53,6 +53,7 @@ const CarDetails = () => {
   const location = useLocation();
 
   const [car, setCar] = useState<FullCar | null>(null);
+  const [status, setStatus] = useState<CarStatus | null>(null);
   const [error, setError] = useState(false);
   const [keyObtained, setKeyObtained] = useState(false);
   const [trackerMode, setTrackerMode] = useState(false);
@@ -82,6 +83,23 @@ const CarDetails = () => {
 
         const data: FullCar = await res.json();
         setCar(data);
+
+        // 2) Fetch status (separate collection)
+        try {
+          const sRes = await fetch(`${API_BASE_URL}/api/status/by-slug/${normalizedSlug}`);
+          if (sRes.ok) {
+            const s = await sRes.json();
+            setStatus({
+              status: s.status,
+              message: s.message,
+              lastChecked: s.updatedAt ?? s.createdAt ?? null,
+            });
+          } else {
+            setStatus(null);
+          }
+        } catch {
+          setStatus(null);
+        }
 
         const key = generateCarKey(data.Brand, data.Model);
         const stored = getCarTrackingData(key);
@@ -149,7 +167,8 @@ const CarDetails = () => {
           <div className="cdetail-status">
             <CarDataStatusCard
               updatedAt={car.updatedAt}
-              status={car._status ?? null}
+              status={status}
+              inline
             />
           </div>
         </div>
