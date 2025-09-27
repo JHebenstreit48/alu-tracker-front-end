@@ -3,40 +3,45 @@
 
 /* ==============================
    Variables
-   ============================== */
+============================== */
 $dark-shadow: #19191a;
 $gold-text: rgb(255, 196, 0);
 $light-shadow: #0ecfff;
 $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%);
-$box-shadow-dark: 0px 2px 3px #5b1479;
-$box-shadow-alt: 0 0 12px 7px #490db2;
 
-$mobileMaxWidthPortrait: 480px;
-$tablet-max: 768px;
-
-/* Height token so we can also pad the page */
-$footer-height: 6rem;
-
-/* Add global bottom padding so the fixed footer doesn't overlap content */
-body {
-  /* add a tiny cushion beyond the exact height */
-  padding-bottom: calc(#{$footer-height} + 10px);
+/* ==============================
+   App-level layout (sticky footer without overlap)
+   Putting it here prevents another global file.
+============================== */
+.AppRoot {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.AppMain {
+  flex: 1;
+  /* add a tiny breathing room below content so the footer divider feels natural */
+  padding-bottom: 0.5rem;
 }
 
+/* ==============================
+   Footer
+============================== */
 .Footer {
-  position: fixed; /* ← pin it */
-  left: 0; right: 0; bottom: 0;
-  height: $footer-height;
+  position: relative; /* ← no more fixed; let flex layout place it */
+  left: 0; right: 0;
   z-index: 1000;
 
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.75rem;
-  background-image: $header-gradient;
-  text-shadow: 2px 3px 4px $light-shadow;
 
-  /* optional: subtle top divider when fixed */
+  padding: 0.9rem 1rem;
+  background-image: $header-gradient;
+  text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+
+  /* subtle top divider to separate from content */
   box-shadow: 0 -1px 0 rgba(255,255,255,0.06) inset;
 
   &__dot {
@@ -49,26 +54,22 @@ body {
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-color 120ms ease, opacity 120ms ease;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       border-color: color.change($gold-text, $alpha: 0.6);
-      opacity: 0.9;
+      opacity: 0.95;
+      outline: none;
     }
 
     &--active {
-      color: #fff;               /* make active pop */
-      border-color: $gold-text;  /* underline */
+      color: #fff;
+      border-color: $gold-text;
     }
 
     &--external {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
-  }
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    gap: 0.5rem;
-    .Footer__link { font-size: 1rem; }
-    .Footer__link--external { font-size: 0.95rem; }
   }
 }

@@ -1,10 +1,7 @@
-// File: src/components/CarInformation/CarList/Components/CarData/CarData.tsx
-
 import ClassTables from "@/components/CarInformation/CarList/ClassTables/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters/CarFilters";
 import CarTrackerToggle from "@/components/CarInformation/CarList/TrackerButtons/CarTrackerToggle";
 import Header from "@/components/Shared/Header";
-import Navigation from "@/components/Shared/Navigation";
 import PageTab from "@/components/Shared/PageTab";
 import { useNavigate } from "react-router-dom";
 
@@ -69,7 +66,6 @@ export default function CarData({
     <div className="cars">
       <PageTab title="Cars">
         <Header text="Cars" className="carsHeader" />
-        <Navigation />
 
         <div className="trackerControlsRow">
           <CarTrackerToggle isEnabled={trackerMode} onToggle={toggleTrackerMode} />

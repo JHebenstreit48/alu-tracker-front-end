@@ -1,3 +1,4 @@
+// path: src/App.tsx
 import { Suspense, useEffect, useState, useContext } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "@/components/Shared/Footer";
@@ -16,22 +17,21 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
-  // ✅ Expose syncFromAccount to window without any or global.d.ts
+  // expose syncFromAccount for debugging
   useEffect(() => {
     (window as unknown as { syncFromAccount: typeof syncFromAccount }).syncFromAccount = syncFromAccount;
   }, []);
 
+  // re-mount footer after route change (keeps its gradient re-render smooth)
   useEffect(() => {
     setShowFooter(false);
     const timer = setTimeout(() => setShowFooter(true), 50);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  // first-run sync if user is logged in and local store empty
   useEffect(() => {
-    const hasLocalData = Object.keys(localStorage).some((key) =>
-      key.startsWith("car-tracker-")
-    );
-
+    const hasLocalData = Object.keys(localStorage).some((key) => key.startsWith("car-tracker-"));
     if (token && !hasLocalData) {
       console.log("[AutoSync] No local tracker found. Syncing from account...");
       syncFromAccount(token);
@@ -39,10 +39,12 @@ export default function App() {
   }, [token]);
 
   return (
-    <div className="Page">
-      <Suspense fallback={<LoadingSpinner />}>
-        <Outlet />
-      </Suspense>
+    <div className="AppRoot">
+      <main id="content" className="AppMain">
+        <Suspense fallback={<LoadingSpinner />}>
+          <Outlet />
+        </Suspense>
+      </main>
       {showFooter && <Footer />}
     </div>
   );

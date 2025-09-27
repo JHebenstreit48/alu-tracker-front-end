@@ -4,7 +4,6 @@ import LegendStoreFilters from "@/components/LegendStore/LegendStoreFiltersAndSe
 import LegendStoreTables from "@/components/LegendStore/LegendStoreTables";
 import '@/scss/MiscellaneousStyle/LegendStore.scss';
 import { useState } from "react";
-import Navigation from "@/components/Shared/Navigation";
 
 export default function LegendStorePrices() {
   const [filters, setFilters] = useState<{
@@ -28,7 +27,6 @@ export default function LegendStorePrices() {
       <div>
         <PageTab title="Legend Store Prices">
           <Header text="Legend Store" />
-          <Navigation />
           <LegendStoreFilters onFiltersChange={setFilters} />
           <LegendStoreTables
             selectedClass={filters.selectedClass}

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import Header from '@/components/Shared/Header';
 import PageTab from '@/components/Shared/PageTab';
-import Navigation from '@/components/Shared/Navigation';
 import LoadingSpinner from '@/components/Shared/LoadingSpinner';
 
 import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
@@ -50,7 +49,6 @@ export default function Brands() {
     <div className="brands">
       <PageTab title="Brands">
         <Header text="Brands" />
-        <Navigation />
 
         {error ? (
           <div className="error-message">Failed to load manufacturers.</div>

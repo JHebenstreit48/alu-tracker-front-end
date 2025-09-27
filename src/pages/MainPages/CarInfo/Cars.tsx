@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
-import Navigation from "@/components/Shared/Navigation";
 import CarData from "@/components/CarInformation/CarList/PageBody";
 
 import {
@@ -85,7 +84,6 @@ export default function Cars() {
       <div className="cars">
         <PageTab title="Cars">
           <Header text="Cars" />
-          <Navigation />
           <div className="error-message">{error}</div>
         </PageTab>
       </div>

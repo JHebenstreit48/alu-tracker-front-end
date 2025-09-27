@@ -1,9 +1,9 @@
 @use "sass:color";
+@use '@scss/Globals/index' as *;
 
 /* ==============================
             Variables
-   ============================== */
-
+============================== */
 $gold-accent: rgb(255, 196, 0);
 $dark-shadow: #19191a;
 $purple-glow: #7a05be;
@@ -11,130 +11,69 @@ $purple-glow: #7a05be;
 $mobileMaxWidthPortrait: 480px;
 $tablet-max: 768px;
 
-/* ==============================
-        Auth Controls Wrapper
-   ============================== */
-
-.authControls {
-  position: absolute;
-  top: 5rem;
-  right: 1rem;
+/* Keep these positioned inside the header area, but align with new grid */
+.authControls,
+.authWelcome {
   display: flex;
-  gap: 1rem;
-  z-index: 102;
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    flex-flow: column wrap;
-    justify-content: flex-end;
-    align-items: flex-end;
-    position: fixed;
-    top: 0;
-    margin-top: 14px;
-    gap: 7px;
-  }
-
-  button {
-    font-family: "Cinzel Decorative", serif;
-    font-weight: 700;
-    font-style: normal;
-    background-color: unset;
-    border: 1px solid $gold-accent;
-    color: $gold-accent;
-    padding: 0.5rem 1rem;
-    text-shadow: 2px 2px 2px $dark-shadow;
-    cursor: pointer;
-
-    @media only screen and (max-width: $mobileMaxWidthPortrait) {
-      font-size: 0.5rem;
-      width: 2.3rem;
-    }
-
-    &:hover {
-      background-color: $purple-glow;
-      color: white;
-      border-color: $purple-glow;
-    }
-  }
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-/* ==============================
-        Auth Welcome State
-   ============================== */
+.authControls {
+  /* sit in the header’s right column */
+  grid-column: 2;
+}
 
 .authWelcome {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 102;
+  grid-column: 2;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    position: fixed;
-    font-size: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: 3.7rem auto;
-    justify-content: center;
-    align-items: center;
-    gap: 0.4rem;
+  .authWelcome__text {
+    text-shadow: 0 2px 2px rgba(0,0,0,0.5);
   }
 }
 
 .logoutWrapper {
-  position: absolute;
-  top: 5rem;
-  right: 1rem;
   display: flex;
-  justify-content: flex-end;
-  z-index: 103; // ensure it's above other elements
-
-  @media only screen and (max-width: $tablet-max) {
-    margin-top: 0.5rem;
-    margin-right: 0.5rem;
-    font-size: 0.5rem;
-    width: auto;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    .logoutWrapper {
-      position: fixed;
-      top: 1.9rem;
-      right: 0.6rem;
-      z-index: 103; // ensure it's above other elements
-      width: auto;
-      display: flex;
-      justify-content: flex-end;
-    }
-  }
 }
 
+.authControls button,
 .logout {
   font-family: "Cinzel Decorative", serif;
   font-weight: 700;
-  font-style: normal;
-  background-color: unset;
+  background: none;
   border: 1px solid $gold-accent;
   color: $gold-accent;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
+  min-height: 40px; /* a11y tap target */
   cursor: pointer;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    font-size: 0.5rem;
-    width: 3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0.3rem;
-  }
-
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: $purple-glow;
     color: white;
     border-color: $purple-glow;
+    outline: none;
+  }
+}
+
+/* Responsive tweaks */
+@media only screen and (max-width: $tablet-max) {
+  .authControls button,
+  .logout {
+    padding: 0.35rem 0.7rem;
+  }
+}
+
+@media only screen and (max-width: $mobileMaxWidthPortrait) {
+  .authControls,
+  .authWelcome {
+    gap: 0.4rem;
+  }
+
+  .authControls button,
+  .logout {
+    font-size: 0.85rem;
+    min-height: 38px;
   }
 }

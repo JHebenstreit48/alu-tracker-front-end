@@ -1,2 +1,5 @@
 $mobileMaxWidthPortrait: 480px;
 $cellphone-landscape: 390px;
+
+/* New: tablet breakpoint (matches what your SCSS already expects) */
+$tablet-max: 768px; // iPad portrait / common “tablet” cutoff

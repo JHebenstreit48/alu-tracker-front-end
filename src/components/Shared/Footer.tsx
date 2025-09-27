@@ -1,4 +1,4 @@
-// src/components/Shared/Footer.tsx
+// path: src/components/Shared/Footer.tsx
 import { NavLink } from "react-router-dom";
 
 export default function Footer() {
@@ -12,7 +12,7 @@ export default function Footer() {
       >
         Asphalt Legends Unite Website
       </a>
-      <span className="Footer__dot">•</span>
+      <span className="Footer__dot" aria-hidden="true">•</span>
       <NavLink
         to="/feedback"
         className={({ isActive }) =>

@@ -3,52 +3,66 @@ import { useState } from "react";
 
 interface INavigationButtons {
   label: string;
+  onClick: () => void;
+  isActive: boolean;
 }
 
-const NavigationButtons = (
-  props: INavigationButtons & { isActive: boolean; onClick: () => void }
-) => {
+const NavigationButtons = ({ label, onClick, isActive }: INavigationButtons) => {
   return (
     <button
-      onClick={props.onClick}
+      onClick={onClick}
       type="button"
-      className={`btn btn-primary btn-lg ${props.isActive ? "active-link" : ""}`}
+      className={`btn btn-primary btn-lg ${isActive ? "is-active" : ""}`}
+      aria-current={isActive ? "page" : undefined}
     >
-      {props.label}
+      {label}
     </button>
   );
 };
 
 export default function Navigation() {
-  const navigation = useNavigate();
-  const currentPage = useLocation().pathname;
+  const navigate = useNavigate();
+  const currentPath = useLocation().pathname;
   const [isOpen, setIsOpen] = useState(false);
 
-  const NavLinks = [
-    { label: "Home", path: () => navigation("/"), location: "/" },
-    { label: "Brands", path: () => navigation("/brands"), location: "/brands" },
-    { label: "Cars", path: () => navigation("/cars"), location: "/cars" },
-    { label: "Garage Levels", path: () => navigation("/garagelevels"), location: "/garagelevels" },
-    { label: "Legend Store", path: () => navigation("/legendstoreprices"), location: "/legendstoreprices" },
+  const links = [
+    { label: "Home", location: "/", go: () => navigate("/") },
+    { label: "Brands", location: "/brands", go: () => navigate("/brands") },
+    { label: "Cars", location: "/cars", go: () => navigate("/cars") },
+    { label: "Garage Levels", location: "/garagelevels", go: () => navigate("/garagelevels") },
+    { label: "Legend Store", location: "/legendstoreprices", go: () => navigate("/legendstoreprices") },
   ];
+
+  // Active on exact root or any sub-route (e.g., /cars/slug keeps Cars active)
+  const isActive = (loc: string) =>
+    loc === "/" ? currentPath === "/" : (currentPath === loc || currentPath.startsWith(loc + "/"));
 
   return (
     <>
-      <button className="Hamburger" onClick={() => setIsOpen(!isOpen)}>
+      <button
+        className="Hamburger"
+        aria-label="Toggle navigation"
+        aria-expanded={isOpen}
+        aria-controls="main-nav"
+        onClick={() => setIsOpen(o => !o)}
+        type="button"
+      >
         ☰
       </button>
-      <div className={`NavigationWrapper ${isOpen ? "open" : ""}`}>
-        <ul className="nav-css">
-          {NavLinks.map((navLinks) => (
-            <NavigationButtons
-              key={navLinks.label}
-              onClick={navLinks.path}
-              label={navLinks.label}
-              isActive={currentPage === navLinks.location}
-            />
+
+      <nav className={`NavigationWrapper ${isOpen ? "open" : ""}`} aria-label="Primary">
+        <ul id="main-nav" className="nav-css" role="menubar">
+          {links.map(link => (
+            <li key={link.label} role="none">
+              <NavigationButtons
+                label={link.label}
+                onClick={link.go}
+                isActive={isActive(link.location)}
+              />
+            </li>
           ))}
         </ul>
-      </div>
+      </nav>
     </>
   );
 }

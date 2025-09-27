@@ -7,7 +7,6 @@ import GarageLevelTracker from "@/components/GarageLevels/GarageLevelTracker";
 import { GarageLevelsInterface } from "@/components/GarageLevels/interface";
 import "@/scss/GarageLevels/GarageLevelTracker.scss";
 import "@/scss/GarageLevels/GarageLevels.scss";
-import Navigation from "@/components/Shared/Navigation";
 
 // ✅ Pull from environment just like on Cars page
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
@@ -41,7 +40,6 @@ useEffect(() => {
     <div>
       <PageTab title="Garage Levels">
         <Header text="Garage Levels" />
-        <Navigation />
         <GLTrackerToggle onToggle={setIsTrackerMode} />
         {isTrackerMode && <GarageLevelTracker levels={garageLevels} />}
         <GarageLevelsDropDown levels={garageLevels} />
