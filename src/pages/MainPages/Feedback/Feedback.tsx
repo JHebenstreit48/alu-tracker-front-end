@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
 import Navigation from "@/components/Shared/Navigation";
+import FeedbackAdminPanel from "@/components/Shared/FeedbackAdminPanel";
 import "@/scss/MiscellaneousStyle/Feedback.scss";
 
 type Category = "bug" | "feature" | "content" | "other";
@@ -44,6 +45,12 @@ export default function Feedback() {
   const remaining = maxLen - message.length;
   const canSubmit = message.trim().length >= 5 && message.length <= maxLen;
 
+  const showAdmin = useMemo(() => {
+    // Only render admin panel if URL has ?admin=1 (keeps it hidden for normal users)
+    if (typeof window === "undefined") return false;
+    return new URLSearchParams(window.location.search).get("admin") === "1";
+  }, []);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
@@ -56,12 +63,12 @@ export default function Feedback() {
         message: message.trim(),
         email: email || undefined,
         pageUrl: includeUrl ? window.location.href : undefined,
-        hp,
+        hp
       };
       const r = await fetch(`${API_BASE}/api/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
       const j: unknown = await r.json();
       if (!r.ok || !isApiResponse(j) || j.ok !== true) {
@@ -90,12 +97,9 @@ export default function Feedback() {
       <Header text="FEEDBACK" />
       <Navigation />
 
-      {/* offset matches your other pages so the box sits below the header */}
       <div className="feedback-wrap">
         <div className="feedback-page">
-          <p className="subtitle">
-            Spotted a bug? Have a suggestion? Tell us below.
-          </p>
+          <p className="subtitle">Spotted a bug? Have a suggestion? Tell us below.</p>
 
           <form className="feedback-form" onSubmit={onSubmit} noValidate>
             <div className="row">
@@ -172,6 +176,9 @@ export default function Feedback() {
               {submitting ? "Sending…" : "Send feedback"}
             </button>
           </form>
+
+          {/* Hidden unless ?admin=1 */}
+          {showAdmin && <FeedbackAdminPanel />}
         </div>
       </div>
     </PageTab>

@@ -19,7 +19,7 @@ import MaxStarStatsTable from '@/components/CarInformation/CarDetails/Tables/Max
 import GoldMaxStatsTable from '@/components/CarInformation/CarDetails/Tables/GoldMaxStats';
 import BlueprintsTable from '@/components/CarInformation/CarDetails/Tables/BlueprintsTable';
 import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';
-import CommentsPanel from '@/components/CarInformation/CarDetails/OtherComponents/CommentsPanel';
+import CommentsPanel from '@/components/CarInformation/CarDetails/OtherComponents/Comments/CommentsPanel';
 
 import {
   getCarTrackingData,
@@ -218,12 +218,14 @@ const CarDetails = () => {
           </div>
         </div>
 
+        {/* clean divider before comments */}
+        <hr className="content-divider" />
+
         <CommentsPanel
-          normalizedKey={slug!}  // slug is normalized by redirect above
+          normalizedKey={slug!} // slug is normalized by redirect above
           brand={car.Brand}
           model={car.Model}
         />
-
       </PageTab>
     </div>
   );

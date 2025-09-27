@@ -1,105 +1,146 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
 
+/* ===========================
+   Submission card (the form)
+   =========================== */
 .comments-panel {
-    margin: 2rem auto;
-    width: min(100%, 70rem); /* wider than before */
-    background: #20002c;
-    border: 1px solid rgba(223, 190, 7, 0.35);
-    box-shadow: 0 0 7px 3px rgba(223, 190, 7, 0.25);
-    border-radius: 12px;
-    padding: 3rem;
-  
-    .comments-title {
-      margin: 0 0 0.75rem 0;
-      color: $color-gold-glow;
-      font-size: 1.6rem;
-      text-align: left;
-    }
-  
-    .comments-filters {
-      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;
-      .chip {
-        border: 1px solid rgba(223, 190, 7, 0.35);
-        color: $color-white; background: transparent;
-        padding: 0.35rem 0.8rem; font-size: 0.95rem; border-radius: 999px;
-        cursor: pointer; transition: transform 120ms ease, box-shadow 120ms ease;
-        &:hover { transform: translateY(-1px); box-shadow: 0 0 10px rgba(223,190,7,0.25); }
-        &.active { background: rgba(223, 190, 7, 0.15); color: $color-gold-glow; }
-      }
-    }
-  
-    .comments-list {
-      display: grid; gap: 0.9rem; margin-bottom: 1.2rem;
-  
-      .info { color: $color-white; opacity: 0.85; padding: 0.75rem 0; }
-  
-      .comment {
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(128, 0, 128, 0.45);
-        border-radius: 10px; padding: 0.85rem 1rem;
-  
-        .meta {
-          display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem;
-          color: $color-white; opacity: 0.9; font-size: 0.95rem;
-  
-          .tag {
-            padding: 0.1rem 0.5rem; border-radius: 6px;
-            border: 1px solid rgba(223,190,7,0.35);
-            &.missing-data { background: rgba(223,190,7,0.12); color: $color-gold-glow; }
-            &.correction   { background: rgba(21,201,232,0.12); color: rgb(21,201,232); }
-            &.general      { background: rgba(128,0,128,0.18); color: $color-white; }
-          }
-          .dot { opacity: 0.6; }
-          .author { font-weight: 600; }
-        }
-  
-        .body { margin: 0.55rem 0 0; color: $color-white; line-height: 1.55; white-space: pre-wrap; }
-      }
-    }
-  
-    .comments-form {
-      display: grid; gap: 0.9rem;
-  
-      .row { display: grid; gap: 0.35rem; }
-      label { color: $color-white; }
-  
-      /* Type selector: not full width on desktop */
-      .row select {
-        max-width: 26rem;
-      }
-  
-      select, textarea, input[type="text"], input[type="email"] {
-        width: 100%; background: rgba(0,0,0,0.35); color: $color-white;
-        border: 1px solid rgba(223,190,7,0.35); border-radius: 8px; padding: 0.6rem 0.7rem; outline: none;
-        box-sizing: border-box;
-      }
-      textarea { resize: vertical; min-height: 8rem; }
-  
-      .char-count { text-align: right; font-size: 0.85rem; color: $color-white; opacity: 0.85; }
-  
-      .grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem;
-        @media (max-width: 760px) { grid-template-columns: 1fr; }
-      }
-  
-      .hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
-  
-      .error {
-        color: #ff7b7b; background: rgba(255,123,123,0.12);
-        border: 1px solid rgba(255,123,123,0.4); border-radius: 8px; padding: 0.5rem 0.7rem;
-      }
-      .success {
-        color: $color-gold-glow; background: rgba(223,190,7,0.12);
-        border: 1px solid rgba(223,190,7,0.35); border-radius: 8px; padding: 0.5rem 0.7rem;
-      }
-  
-      .submit {
-        margin-left: auto; background: $color-black; color: $color-gold-glow;
-        border: 1px solid rgba(223,190,7,0.35); border-radius: 10px; padding: 0.6rem 1rem; cursor: pointer;
-        transition: transform 120ms ease, box-shadow 120ms ease;
-        &:disabled { opacity: 0.5; cursor: not-allowed; }
-        &:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 0 10px rgba(223,190,7,0.25); }
-      }
+  margin: 2rem auto;
+  width: min(100%, 70rem);
+  background: #20002c;
+  border: 1px solid rgba(223,190,7,0.35);
+  box-shadow: 0 0 7px 3px rgba(223,190,7,0.25);
+  border-radius: 12px;
+  padding: 3rem;
+
+  .comments-title {
+    margin: 0 0 0.75rem 0;
+    color: $color-gold-glow;
+    font-size: 1.6rem;
+    text-align: left;
+  }
+}
+
+/* Form styling inside the card */
+.comments-form {
+  display: grid;
+  gap: 0.9rem;
+
+  .row { display: grid; gap: 0.35rem; }
+  label { color: $color-white; }
+
+  /* type selector width on desktop */
+  .row select { max-width: 26rem; }
+
+  /* High-specificity to beat global resets */
+  .comments-panel & select,
+  .comments-panel & textarea,
+  .comments-panel & input[type="text"],
+  .comments-panel & input[type="email"] {
+    width: 100%;
+    background: rgba(0,0,0,0.35);
+    color: $color-white;
+    border: 1px solid rgba(223,190,7,0.35);
+    border-radius: 8px;
+    padding: 0.6rem 0.7rem;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  textarea { resize: vertical; min-height: 8rem; }
+
+  .char-count { text-align: right; font-size: 0.85rem; color: $color-white; opacity: 0.85; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    @media (max-width: 760px) { grid-template-columns: 1fr; }
+  }
+
+  .hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
+
+  .error {
+    color: #ff7b7b;
+    background: rgba(255,123,123,0.12);
+    border: 1px solid rgba(255,123,123,0.4);
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+  }
+  .success {
+    color: $color-gold-glow;
+    background: rgba(223,190,7,0.12);
+    border: 1px solid rgba(223,190,7,0.35);
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .submit {
+    margin-left: auto;
+    background: $color-black;
+    color: $color-gold-glow;
+    border: 1px solid rgba(223,190,7,0.35);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+    &:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 0 10px rgba(223,190,7,0.25); }
+  }
+}
+
+/* =========================================
+   Comments list that lives BELOW the card
+   ========================================= */
+.comments-section {
+  width: min(100%, 70rem);
+  margin: 1.25rem auto 3rem;
+
+  .comments-title {
+    margin: 0 0 0.75rem 0;
+    color: $color-gold-glow;
+    font-size: 1.6rem;
+    text-align: left;
+  }
+
+  .comments-filters {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;
+    .chip {
+      border: 1px solid rgba(223,190,7,0.35);
+      color: $color-white; background: transparent;
+      padding: 0.35rem 0.8rem; font-size: 0.95rem; border-radius: 999px;
+      cursor: pointer; transition: transform 120ms ease, box-shadow 120ms ease;
+      &:hover { transform: translateY(-1px); box-shadow: 0 0 10px rgba(223,190,7,0.25); }
+      &.active { background: rgba(223,190,7,0.15); color: $color-gold-glow; }
     }
   }
+
+  .comments-list {
+    display: grid; gap: 0.9rem;
+
+    .info { color: $color-white; opacity: 0.85; padding: 0.75rem 0; }
+
+    .comment {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(128,0,128,0.45);
+      border-radius: 10px; padding: 0.85rem 1rem;
+
+      .meta {
+        display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem;
+        color: $color-white; opacity: 0.9; font-size: 0.95rem;
+
+        .tag {
+          padding: 0.1rem 0.5rem; border-radius: 6px;
+          border: 1px solid rgba(223,190,7,0.35);
+          &.missing-data { background: rgba(223,190,7,0.12); color: $color-gold-glow; }
+          &.correction   { background: rgba(21,201,232,0.12); color: rgb(21,201,232); }
+          &.general      { background: rgba(128,0,128,0.18); color: $color-white; }
+        }
+        .dot { opacity: 0.6; }
+        .author { font-weight: 600; }
+      }
+
+      .body { margin: 0.55rem 0 0; color: $color-white; line-height: 1.55; white-space: pre-wrap; }
+    }
+  }
+}
