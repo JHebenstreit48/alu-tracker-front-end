@@ -218,12 +218,14 @@ const CarDetails = () => {
           </div>
         </div>
 
+        {/* clean divider before comments */}
+        <hr className="content-divider" />
+
         <CommentsPanel
-          normalizedKey={slug!}  // slug is normalized by redirect above
+          normalizedKey={slug!} // slug is normalized by redirect above
           brand={car.Brand}
           model={car.Model}
         />
-
       </PageTab>
     </div>
   );

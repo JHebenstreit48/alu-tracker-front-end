@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/SignupLogin/hooks/useAuth";
-import { generateCarKey } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
-import CommentKey from "@/components/CarInformation/CarDetails/OtherComponents/Comments/CommentKey";
-import CommentCard, { CommentCardItem } from "@/components/CarInformation/CarDetails/OtherComponents/Comments/CommentCard";
+import CommentCard, { type CommentCardItem } from "./CommentCard";
 import "@/scss/Cars/CarComments.scss";
 
 type CommentType = "missing-data" | "correction" | "general";
@@ -12,11 +10,15 @@ type CommentItem = CommentCardItem & {
   normalizedKey: string;
   brand?: string;
   model?: string;
+  status: "visible" | "pending" | "hidden";
+  updatedAt: string;
 };
 
-type CommentsPublicData = { comments: CommentItem[] };
-type OkPublic = { ok: true; data: CommentsPublicData };
-type OkAdminList = { ok: true; data: { items: CommentItem[] } };
+type ErrorPayload = { code: string; message: string; details?: unknown };
+type CommentsListData = { comments: CommentItem[] };
+type ApiOk<T> = { ok: true; data: T };
+type ApiErr = { ok: false; error: ErrorPayload };
+type ApiResponse<T> = ApiOk<T> | ApiErr;
 
 interface Props {
   normalizedKey: string;
@@ -28,25 +30,20 @@ const COMMENTS_BASE =
   import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
   "http://127.0.0.1:3004";
 
-/* helpers */
+/* ---------- tiny helpers (no-any) ---------- */
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
-function isOkPublic(v: unknown): v is OkPublic {
-  return (
-    isObject(v) &&
-    v.ok === true &&
-    isObject(v.data) &&
-    Array.isArray((v.data as Record<string, unknown>).comments)
-  );
-}
-function isOkAdminList(v: unknown): v is OkAdminList {
-  return (
-    isObject(v) &&
-    v.ok === true &&
-    isObject(v.data) &&
-    Array.isArray((v.data as Record<string, unknown>).items)
-  );
+function isApiResponseComments(v: unknown): v is ApiResponse<CommentsListData> {
+  if (!isObject(v) || typeof v.ok !== "boolean") return false;
+  if (v.ok === true) {
+    if (!("data" in v) || !isObject(v.data)) return false;
+    const data = v.data as Record<string, unknown>;
+    return Array.isArray(data.comments);
+  }
+  if (!("error" in v) || !isObject(v.error)) return false;
+  const err = v.error as Record<string, unknown>;
+  return typeof err.message === "string";
 }
 function getErrorMessage(e: unknown): string {
   if (e instanceof Error) return e.message;
@@ -59,12 +56,6 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
   const token = auth?.token ?? null;
   const username = auth?.username ?? null;
 
-  const keyForApi = useMemo(() => {
-    if (brand && model) return generateCarKey(brand, model);
-    return normalizedKey;
-  }, [brand, model, normalizedKey]);
-
-  const [adminKey, setAdminKey] = useState<string>(() => sessionStorage.getItem("commentsAdminKey") || "");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [comments, setComments] = useState<CommentItem[]>([]);
@@ -80,30 +71,27 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const maxLen = 2000;
 
+  // Admin actions only if a key exists in sessionStorage.
+  const adminKey = sessionStorage.getItem("commentsAdminKey") || "";
+  const canModerate = adminKey.length > 0;
+
   const fetchList = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      if (adminKey) {
-        const qs = new URLSearchParams({ slug: keyForApi, limit: "200" });
-        const r = await fetch(`${COMMENTS_BASE}/api/comments/admin/list?${qs.toString()}`, {
-          headers: { "x-admin-key": adminKey }
-        });
-        const j: unknown = await r.json().catch(() => ({}));
-        if (!r.ok || !isOkAdminList(j)) throw new Error(`Failed to load comments (${r.status})`);
-        setComments(j.data.items);
-      } else {
-        const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(keyForApi)}`);
-        const j: unknown = await r.json().catch(() => ({}));
-        if (!r.ok || !isOkPublic(j)) throw new Error(`Failed to load comments (${r.status})`);
+      const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(normalizedKey)}`);
+      const j: unknown = await r.json();
+      if (isApiResponseComments(j) && j.ok) {
         setComments(j.data.comments);
+      } else {
+        setError("Failed to load comments.");
       }
     } catch (e: unknown) {
       setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
-  }, [adminKey, keyForApi]);
+  }, [normalizedKey]);
 
   useEffect(() => { void fetchList(); }, [fetchList]);
 
@@ -118,11 +106,6 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
   const remaining = maxLen - body.length;
   const canSubmit = body.trim().length >= 5 && body.length <= maxLen;
 
-  const fmt = useMemo(
-    () => new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }),
-    []
-  );
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
@@ -130,39 +113,35 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
     setSubmitting(true);
     setError(null);
 
-    const ac = new AbortController();
-    const timer = window.setTimeout(() => ac.abort(), 20000);
-
     try {
       const headers: HeadersInit = { "Content-Type": "application/json" };
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
       const payload = {
-        normalizedKey: keyForApi,
+        normalizedKey,
         brand,
         model,
         type,
         body: body.trim(),
         authorName: token ? username ?? undefined : authorName || undefined,
         authorEmail: token ? undefined : authorEmail || undefined,
-        hp
+        hp,
       };
 
       const r = await fetch(`${COMMENTS_BASE}/api/comments`, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
-        signal: ac.signal
       });
 
-      let ok = false;
-      try {
-        const j: unknown = await r.clone().json();
-        ok = isObject(j) && j.ok === true;
-      } catch { ok = false; }
-      if (!r.ok || !ok) {
-        const txt = await r.text().catch(() => "");
-        throw new Error(txt || `Failed to submit comment (${r.status})`);
+      const j: unknown = await r.json();
+      if (!r.ok || !isObject(j) || j.ok !== true) {
+        const msg =
+          (isObject(j) && isObject(j.error) &&
+            typeof (j.error as Record<string, unknown>).message === "string" &&
+            String((j.error as Record<string, unknown>).message)) ||
+          "Failed to submit comment.";
+        throw new Error(msg);
       }
 
       setSubmitted(true);
@@ -172,39 +151,30 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
     } catch (e: unknown) {
       setError(getErrorMessage(e));
     } finally {
-      window.clearTimeout(timer);
       setSubmitting(false);
     }
   }
 
+  async function callAdmin(method: "PATCH" | "DELETE", id: string, action?: "visible" | "hide") {
+    if (!canModerate) return;
+    const url =
+      method === "DELETE"
+        ? `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}`
+        : `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/${action}`;
+    const r = await fetch(url, { method, headers: { "x-admin-key": adminKey } });
+    const j: unknown = await r.json();
+    if (!r.ok || !isObject(j) || j.ok !== true) {
+      throw new Error("Admin action failed");
+    }
+    await fetchList();
+  }
+
   return (
     <>
-      {/* Divider above the submit box */}
-      <div className="comments-divider" aria-hidden="true" />
-
-      {/* Submit box (keeps your original .comments-panel styles) */}
+      {/* --- Submission card --- */}
       <section className="comments-panel">
-        <h2 className="comments-title">Comments</h2>
+        <h2 className="comments-title">Leave a comment</h2>
 
-        {/* Admin key input (only reveals moderation controls when filled) */}
-        <CommentKey onChange={setAdminKey} />
-
-        {/* Filters */}
-        <div className="comments-filters" role="tablist" aria-label="Filter comments">
-          {(["all", "missing-data", "correction", "general"] as Filter[]).map((key) => (
-            <button
-              key={key}
-              className={`chip ${filter === key ? "active" : ""}`}
-              onClick={() => setFilter(key)}
-              role="tab"
-              aria-selected={filter === key}
-            >
-              {key === "all" ? "All" : key === "missing-data" ? "Missing data" : key === "correction" ? "Corrections" : "General"}
-            </button>
-          ))}
-        </div>
-
-        {/* Form */}
         <form className="comments-form" onSubmit={handleSubmit} noValidate>
           <div className="row">
             <label htmlFor="comment-type">Type</label>
@@ -278,7 +248,7 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
           {error && <div className="error">{error}</div>}
           {submitted ? (
             <div className="success">
-              Thanks — your comment was received{adminKey ? "" : " and will appear after review"}.
+              Thanks — your comment was received and will appear after review.
             </div>
           ) : (
             <button type="submit" className="submit" disabled={!canSubmit || submitting}>
@@ -288,11 +258,32 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
         </form>
       </section>
 
-      {/* Separate stream box below; scrollable with overflow hiding */}
-      <section className="comments-streamBox">
-        <h3 className="stream-title">Recent comments</h3>
+      {/* --- Comments stream OUTSIDE the submission card --- */}
+      <section className="comments-section" aria-live="polite" aria-busy={loading ? "true" : "false"}>
+        <h2 className="comments-title">Comments</h2>
 
-        <div className="comments-scroll">
+        {/* Filters belong to the list, not the form */}
+        <div className="comments-filters" role="tablist" aria-label="Filter comments">
+          {(["all", "missing-data", "correction", "general"] as Filter[]).map((key) => (
+            <button
+              key={key}
+              className={`chip ${filter === key ? "active" : ""}`}
+              onClick={() => setFilter(key)}
+              role="tab"
+              aria-selected={filter === key}
+            >
+              {key === "all"
+                ? "All"
+                : key === "missing-data"
+                ? "Missing data"
+                : key === "correction"
+                ? "Corrections"
+                : "General"}
+            </button>
+          ))}
+        </div>
+
+        <div className="comments-list">
           {loading && <div className="info">Loading comments…</div>}
           {!loading && filtered.length === 0 && <div className="info">No comments yet.</div>}
 
@@ -300,12 +291,17 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
             filtered.map((c) => (
               <CommentCard
                 key={c._id}
-                item={c}
-                fmt={fmt}
-                showStatus={!!adminKey}          // show visibility chip in admin mode
-                showAdminActions={!!adminKey}     // icon actions for testing (admin key present)
-                baseUrl={COMMENTS_BASE}
-                onAfter={fetchList}
+                item={{
+                  _id: c._id,
+                  type: c.type,
+                  body: c.body,
+                  authorName: c.authorName,
+                  createdAt: c.createdAt,
+                }}
+                canModerate={canModerate}
+                onApprove={(id) => callAdmin("PATCH", id, "visible")}
+                onHide={(id) => callAdmin("PATCH", id, "hide")}
+                onDelete={(id) => callAdmin("DELETE", id)}
               />
             ))}
         </div>
