@@ -12,8 +12,8 @@ type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse = ApiOkOnly | ApiErr;
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "") ||
-  "https://alutracker-api.onrender.com";
+  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
+  "http://127.0.0.1:3004";
 
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
