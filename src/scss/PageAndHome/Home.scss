@@ -2,30 +2,23 @@
 @use '@scss/Globals/index' as *;
 
 /* ==============================
-            Variables
-   ============================== */
-
-$deep-blue: rgb(11, 7, 134);
-$gold-accent: rgb(223, 190, 7);
-$black-bg: black;
-$white-text: white;
-
-$mobileMaxWidthPortrait: 480px;
-$tablet-max: 768px;
+   Local aliases to global tokens
+============================== */
+$gold-accent: $color-gold-glow;
 
 /* ==============================
-           Asphalt Info Box
-   ============================== */
-
+   Asphalt Info Box (kept)
+============================== */
 .asphalt-info {
   display: flex;
-  color: $white-text;
-  background-color: $black-bg;
-  border: 4px solid $deep-blue;
+  color: $color-white;
+  background-color: $color-black;
+  border: 4px solid $table-border-color; /* deep blue frame */
   width: 90rem;
   height: 26rem;
-  margin: 5rem auto 5rem auto;
+  margin: 3rem auto 5rem auto; /* room under header/nav */
   box-shadow: 0 0 7px 3px $gold-accent;
+  border-radius: 12px;
   padding: 2rem;
 
   @media only screen and (max-width: $tablet-max) {
@@ -44,9 +37,8 @@ $tablet-max: 768px;
 }
 
 /* ==============================
-              Info Text
-   ============================== */
-
+   Info Text (kept)
+============================== */
 .info {
   display: flex;
   justify-content: center;
@@ -62,7 +54,7 @@ $tablet-max: 768px;
   }
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -72,86 +64,95 @@ $tablet-max: 768px;
 }
 
 /* ==============================
-         Carousel Slides
-   ============================== */
-
+   Carousel shell
+   - no bottom gap
+   - rounded corners even during slide
+============================== */
 #asphalt-carousel-slides {
   width: 90rem;
-  margin: 0 auto;
+  margin: 0 auto 5rem;
   box-shadow: 0 0 7px 6px $gold-accent;
-  padding: 1px;
-  border: 5px solid black;
-  margin-bottom: 3rem;
-  border-radius:12px;
+  border: 5px solid $color-black;
+  border-radius: 12px;
+  line-height: 0; /* eliminate inline-image baseline gap */
 
   @media only screen and (max-width: $tablet-max) {
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
     width: 38rem;
     height: 19rem;
   }
-
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin-top: 5rem;
-    margin-left: auto;
-    margin-right: auto;
     width: 21.5rem;
     height: 9.158rem;
-    border: 2px solid black;
+    border: 2px solid $color-black;
     box-shadow: 0 0 9px 3px $gold-accent;
     border-radius: 4px;
   }
 }
 
-/* Box that holds the image + spinner overlay */
-.carousel-image-box {
-  position: relative;
+/* keep corners through sliding */
+#asphalt-carousel-slides .carousel-inner {
+  border-radius: inherit;
+  overflow: hidden; /* rounds during transitions */
 }
 
-/* Overlay (dark) while loading */
+/* fix slide height; DO NOT override Bootstrap display */
+#asphalt-carousel-slides .carousel-item {
+  /* your sweet spot to remove bottom gap */
+  min-block-size: 37rem;
+
+  @media only screen and (max-width: $tablet-max) { min-block-size: 19rem; }
+  @media only screen and (max-width: $mobileMaxWidthPortrait) { min-block-size: 9.158rem; }
+
+  /* ensure the internal box fills the slide */
+  > .carousel-image-box {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+/* container for image + overlay */
+.carousel-image-box {
+  position: relative;
+  border-radius: inherit;
+  overflow: hidden; /* keeps image corners rounded while sliding */
+  line-height: 0;
+}
+
+/* dark overlay while loading */
 .carousel-overlay {
   position: absolute;
   inset: 0;
   background-color: #1f1f1f;
   z-index: 1;
+  pointer-events: none;
 }
 
-/* Centered spinner holder */
+/* centered spinner */
 .carousel-spinner {
   position: absolute;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
   text-align: center;
-  border-radius: 13px;
 }
 
 /* ==============================
-        Carousel Images
+   Carousel Images
 ============================== */
-
 .d-block {
-  border-radius: 6px;
-  width: 100%;
-  object-fit: contain;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;     /* fills the enforced slide height */
+  object-fit: contain;  /* car fully visible, no crop */
+  border-radius: inherit;
 
-  @media only screen and (max-width: $tablet-max) {
-    height: 19rem;
-  }
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    height: 6rem;
-    width: 100%;
-    border-radius: 6px;
-  }
+  @media only screen and (max-width: $tablet-max) { block-size: 100%; }
+  @media only screen and (max-width: $mobileMaxWidthPortrait) { block-size: 100%; }
 }
 
 /* ==============================
-   Motion accessibility (non-empty)
+   Motion accessibility
 ============================== */
 @media (prefers-reduced-motion: reduce) {
   .carousel,
