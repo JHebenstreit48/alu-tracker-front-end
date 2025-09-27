@@ -73,6 +73,8 @@
     border: 1px solid rgba(223,190,7,0.35);
     border-radius: 8px;
     padding: 0.5rem 0.7rem;
+    /* keep it compact so it never covers the submit button area */
+    max-width: 28rem;
   }
 
   .submit {
@@ -141,6 +143,38 @@
       }
 
       .body { margin: 0.55rem 0 0; color: $color-white; line-height: 1.55; white-space: pre-wrap; }
+
+      /* --- Buttons for owner & moderator controls --- */
+      .comment-actions {
+        display: flex;
+        gap: 0.4rem;
+        margin-top: 0.4rem;
+
+        button {
+          background: transparent;
+          color: $color-gold-glow;
+          border: 1px solid rgba(223,190,7,0.35);
+          border-radius: 10px;
+          width: 2rem; height: 2rem;
+          display: grid; place-items: center;
+          cursor: pointer;
+          transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+          &:hover { transform: translateY(-1px); box-shadow: 0 0 10px rgba(223,190,7,0.25); background: rgba(223,190,7,0.08); }
+          &:disabled { opacity: 0.5; cursor: not-allowed; }
+        }
+      }
+
+      /* Edit textarea inside a comment */
+      textarea {
+        width: 100%;
+        background: rgba(0,0,0,0.35);
+        color: $color-white;
+        border: 1px solid rgba(223,190,7,0.35);
+        border-radius: 8px;
+        padding: 0.6rem 0.7rem;
+        outline: none;
+        box-sizing: border-box;
+      }
     }
   }
 }
