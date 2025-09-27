@@ -19,7 +19,7 @@ import MaxStarStatsTable from '@/components/CarInformation/CarDetails/Tables/Max
 import GoldMaxStatsTable from '@/components/CarInformation/CarDetails/Tables/GoldMaxStats';
 import BlueprintsTable from '@/components/CarInformation/CarDetails/Tables/BlueprintsTable';
 import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';
-import CommentsPanel from '@/components/CarInformation/CarDetails/OtherComponents/Comments/CommentsPanel';
+import CommentsPanel from '@/components/CarInformation/CarDetails/OtherComponents/Comments/Panel';
 
 import {
   getCarTrackingData,

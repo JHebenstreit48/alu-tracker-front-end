@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/SignupLogin/hooks/useAuth";
-import CommentCard, { type CommentCardItem } from "./CommentCard";
+import Card, { type CommentCardItem } from "./Card";
 import "@/scss/Cars/CarComments.scss";
 
 type CommentType = "missing-data" | "correction" | "general";
@@ -20,6 +20,12 @@ type ApiOk<T> = { ok: true; data: T };
 type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse<T> = ApiOk<T> | ApiErr;
 
+type CreateCommentData = {
+  id: string;
+  status?: "visible" | "pending" | "hidden";
+  editKey?: string;
+};
+
 interface Props {
   normalizedKey: string;
   brand?: string;
@@ -27,31 +33,55 @@ interface Props {
 }
 
 const COMMENTS_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://127.0.0.1:3004";
+  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") || "http://127.0.0.1:3004";
 
-/* ---------- tiny helpers (no-any) ---------- */
-function isObject(v: unknown): v is Record<string, unknown> {
+/* ---------- helpers (no any) ---------- */
+function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
 function isApiResponseComments(v: unknown): v is ApiResponse<CommentsListData> {
-  if (!isObject(v) || typeof v.ok !== "boolean") return false;
-  if (v.ok === true) {
-    if (!("data" in v) || !isObject(v.data)) return false;
-    const data = v.data as Record<string, unknown>;
-    return Array.isArray(data.comments);
-  }
-  if (!("error" in v) || !isObject(v.error)) return false;
-  const err = v.error as Record<string, unknown>;
-  return typeof err.message === "string";
+  if (!isRecord(v) || typeof v.ok !== "boolean") return false;
+  if (v.ok) return isRecord(v.data) && Array.isArray((v.data as Record<string, unknown>).comments);
+  const e = (v as { error?: unknown }).error;
+  return isRecord(e) && typeof e.message === "string" && typeof e.code === "string";
 }
-function getErrorMessage(e: unknown): string {
+function isCreateData(v: unknown): v is CreateCommentData {
+  return (
+    isRecord(v) &&
+    typeof v.id === "string" &&
+    (v.status === undefined ||
+      v.status === "visible" ||
+      v.status === "pending" ||
+      v.status === "hidden") &&
+    (v.editKey === undefined || typeof v.editKey === "string")
+  );
+}
+function isOkWithCreateData(v: unknown): v is ApiOk<CreateCommentData> {
+  return isRecord(v) && v.ok === true && isCreateData(v.data);
+}
+async function safeJson(res: Response): Promise<unknown> {
+  try {
+    return await res.json();
+  } catch {
+    return {};
+  }
+}
+function apiErrorMessage(payload: unknown): string | null {
+  if (!isRecord(payload)) return null;
+  const e = payload.error;
+  if (isRecord(e) && typeof e.message === "string") return e.message;
+  return null;
+}
+function messageOf(e: unknown): string {
   if (e instanceof Error) return e.message;
-  if (isObject(e) && typeof e.message === "string") return e.message;
+  if (isRecord(e) && typeof (e as { message?: unknown }).message === "string") {
+    return String((e as { message?: unknown }).message);
+  }
   return "Unexpected error";
 }
 
-export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
+/* ---------- Component ---------- */
+export default function Panel({ normalizedKey, brand, model }: Props) {
   const auth = useAuth?.();
   const token = auth?.token ?? null;
   const username = auth?.username ?? null;
@@ -80,14 +110,14 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
     setError(null);
     try {
       const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(normalizedKey)}`);
-      const j: unknown = await r.json();
-      if (isApiResponseComments(j) && j.ok) {
-        setComments(j.data.comments);
+      const j = await safeJson(r);
+      if (isApiResponseComments(j) && (j as ApiResponse<CommentsListData>).ok) {
+        setComments((j as ApiOk<CommentsListData>).data.comments);
       } else {
         setError("Failed to load comments.");
       }
-    } catch (e: unknown) {
-      setError(getErrorMessage(e));
+    } catch (e) {
+      setError(messageOf(e));
     } finally {
       setLoading(false);
     }
@@ -97,6 +127,13 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
 
   useEffect(() => { localStorage.setItem("commentAuthorName", authorName); }, [authorName]);
   useEffect(() => { localStorage.setItem("commentAuthorEmail", authorEmail); }, [authorEmail]);
+
+  // Auto-hide the success toast after a short delay
+  useEffect(() => {
+    if (!submitted) return;
+    const t = setTimeout(() => setSubmitted(false), 2500);
+    return () => clearTimeout(t);
+  }, [submitted]);
 
   const filtered = useMemo(() => {
     if (filter === "all") return comments;
@@ -125,31 +162,33 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
         body: body.trim(),
         authorName: token ? username ?? undefined : authorName || undefined,
         authorEmail: token ? undefined : authorEmail || undefined,
-        hp,
+        hp
       };
 
       const r = await fetch(`${COMMENTS_BASE}/api/comments`, {
         method: "POST",
         headers,
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
-      const j: unknown = await r.json();
-      if (!r.ok || !isObject(j) || j.ok !== true) {
-        const msg =
-          (isObject(j) && isObject(j.error) &&
-            typeof (j.error as Record<string, unknown>).message === "string" &&
-            String((j.error as Record<string, unknown>).message)) ||
-          "Failed to submit comment.";
+      const j = await safeJson(r);
+      if (!r.ok || !isOkWithCreateData(j)) {
+        const msg = apiErrorMessage(j) ?? "Failed to submit comment.";
         throw new Error(msg);
+      }
+
+      const id = (j as ApiOk<CreateCommentData>).data.id;
+      const editKey = (j as ApiOk<CreateCommentData>).data.editKey;
+      if (id && editKey) {
+        localStorage.setItem(`comment_editkey_${id}`, editKey);
       }
 
       setSubmitted(true);
       setBody("");
       setType("general");
       await fetchList();
-    } catch (e: unknown) {
-      setError(getErrorMessage(e));
+    } catch (e) {
+      setError(messageOf(e));
     } finally {
       setSubmitting(false);
     }
@@ -162,11 +201,65 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
         ? `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}`
         : `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/${action}`;
     const r = await fetch(url, { method, headers: { "x-admin-key": adminKey } });
-    const j: unknown = await r.json();
-    if (!r.ok || !isObject(j) || j.ok !== true) {
+    const j = await safeJson(r);
+    if (!r.ok || !isRecord(j) || (j as { ok?: unknown }).ok !== true) {
       throw new Error("Admin action failed");
     }
     await fetchList();
+  }
+
+  // ---- Self edit/delete (guest via editKey) ----
+  async function saveSelf(id: string, newBody: string): Promise<void> {
+    const key = localStorage.getItem(`comment_editkey_${id}`) || "";
+    if (!key) throw new Error("Missing edit key for this comment.");
+
+    // optimistic update
+    const prev = comments;
+    const next = prev.map((c) => (c._id === id ? { ...c, body: newBody } : c));
+    setComments(next);
+
+    try {
+      const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/self`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: newBody, editKey: key })
+      });
+      if (!r.ok) {
+        const j = await safeJson(r);
+        const m = apiErrorMessage(j) ?? `Failed to save (${r.status})`;
+        throw new Error(m);
+      }
+    } catch (e) {
+      setComments(comments); // rollback
+      throw e instanceof Error ? e : new Error("Failed to save changes.");
+    }
+  }
+
+  async function deleteSelf(id: string): Promise<void> {
+    const key = localStorage.getItem(`comment_editkey_${id}`) || "";
+    if (!key) throw new Error("Missing edit key for this comment.");
+
+    // optimistic removal
+    const prev = comments;
+    const next = prev.filter((c) => c._id !== id);
+    setComments(next);
+
+    try {
+      const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/self`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ editKey: key })
+      });
+      if (!r.ok) {
+        const j = await safeJson(r);
+        const m = apiErrorMessage(j) ?? `Failed to delete (${r.status})`;
+        throw new Error(m);
+      }
+      localStorage.removeItem(`comment_editkey_${id}`);
+    } catch (e) {
+      setComments(comments); // rollback
+      throw e instanceof Error ? e : new Error("Failed to delete comment.");
+    }
   }
 
   return (
@@ -246,9 +339,10 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
           />
 
           {error && <div className="error">{error}</div>}
+
           {submitted ? (
-            <div className="success">
-              Thanks — your comment was received and will appear after review.
+            <div className="success" role="status" aria-live="polite">
+              Thanks — comment posted!
             </div>
           ) : (
             <button type="submit" className="submit" disabled={!canSubmit || submitting}>
@@ -262,7 +356,6 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
       <section className="comments-section" aria-live="polite" aria-busy={loading ? "true" : "false"}>
         <h2 className="comments-title">Comments</h2>
 
-        {/* Filters belong to the list, not the form */}
         <div className="comments-filters" role="tablist" aria-label="Filter comments">
           {(["all", "missing-data", "correction", "general"] as Filter[]).map((key) => (
             <button
@@ -288,22 +381,22 @@ export default function CommentsPanel({ normalizedKey, brand, model }: Props) {
           {!loading && filtered.length === 0 && <div className="info">No comments yet.</div>}
 
           {!loading &&
-            filtered.map((c) => (
-              <CommentCard
-                key={c._id}
-                item={{
-                  _id: c._id,
-                  type: c.type,
-                  body: c.body,
-                  authorName: c.authorName,
-                  createdAt: c.createdAt,
-                }}
-                canModerate={canModerate}
-                onApprove={(id) => callAdmin("PATCH", id, "visible")}
-                onHide={(id) => callAdmin("PATCH", id, "hide")}
-                onDelete={(id) => callAdmin("DELETE", id)}
-              />
-            ))}
+            filtered.map((c) => {
+              const hasGuestKey = Boolean(localStorage.getItem(`comment_editkey_${c._id}`));
+              return (
+                <Card
+                  key={c._id}
+                  item={{ _id: c._id, type: c.type, body: c.body, authorName: c.authorName, createdAt: c.createdAt }}
+                  canModerate={canModerate}
+                  onApprove={(id) => callAdmin("PATCH", id, "visible")}
+                  onHide={(id) => callAdmin("PATCH", id, "hide")}
+                  onDelete={(id) => callAdmin("DELETE", id)}
+                  canEdit={hasGuestKey}
+                  onSaveSelf={saveSelf}
+                  onDeleteSelf={deleteSelf}
+                />
+              );
+            })}
         </div>
       </section>
     </>
