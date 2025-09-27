@@ -1,113 +1,137 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
 /* ==============================
             Variables
    ============================== */
 
-   @use "sass:color";
+$deep-blue: rgb(11, 7, 134);
+$gold-accent: rgb(223, 190, 7);
+$black-bg: black;
+$white-text: white;
 
-   $deep-blue: rgb(11, 7, 134);
-   $gold-accent: rgb(223, 190, 7);
-   $black-bg: black;
-   $white-text: white;
-   
-   $mobileMaxWidthPortrait: 480px;
-   $tablet-max: 768px;
-   
-   /* ==============================
-              Asphalt Info Box
-      ============================== */
-   
-   .asphalt-info {
-     display: flex;
-     color: $white-text;
-     background-color: $black-bg;
-     border: 4px solid $deep-blue;
-     width: 90rem;
-     height: 26rem;
-     margin: 16rem auto 5rem auto;
-     box-shadow: 0 0 7px 3px $gold-accent;
-     padding: 2rem;
-   
-     @media only screen and (max-width: $tablet-max) {
-       margin-top: 15rem;
-       max-width: 40rem;
-       margin-bottom: 4rem;
-       height: 31rem;
-     }
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       flex-direction: column;
-       margin-top: 8rem;
-       width: 18rem;
-       height: 83rem;
-     }
-   }
-   
-   /* ==============================
-                 Info Text
-      ============================== */
-   
-   .info {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     flex-direction: column;
-     width: 92%;
-     font-size: 21px;
-     padding-right: 0;
-     margin: 2rem auto;
-   
-     @media only screen and (max-width: $tablet-max) {
-       width: 35rem;
-     }
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-      display:flex;
-      justify-content: center;
-      align-items: center;
-       text-align: center;
-       margin-top: 1.5rem auto;
-       width: 18rem;
-     }
-   }
-   
-   /* ==============================
-            Carousel Slides
-      ============================== */
-   
-   #asphalt-carousel-slides {
-     width: 90rem;
-     margin: 0 auto;
-     box-shadow: 0 0 7px 6px $gold-accent;
-     padding: 1px;
-     border: 5px solid black;
-     margin-bottom: 10rem;
-     border-radius: 6px;
-   
-     @media only screen and (max-width: $tablet-max) {
-       display: flex;
-       margin-left: auto;
-       margin-right: auto;
-       width: 38rem;
-       height: 19rem;
-     }
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       margin-top: 5rem;
-       margin-left: auto;
-       margin-right: auto;
-       width: 21.5rem;
-       height: 9.158rem;
-       border: 2px solid black;
-       box-shadow: 0 0 9px 3px $gold-accent;
-       border-radius: 4px;
-     }
-   }
-   
+$mobileMaxWidthPortrait: 480px;
+$tablet-max: 768px;
+
 /* ==============================
-         Carousel Images
+           Asphalt Info Box
+   ============================== */
+
+.asphalt-info {
+  display: flex;
+  color: $white-text;
+  background-color: $black-bg;
+  border: 4px solid $deep-blue;
+  width: 90rem;
+  height: 26rem;
+  margin: 5rem auto 5rem auto;
+  box-shadow: 0 0 7px 3px $gold-accent;
+  padding: 2rem;
+
+  @media only screen and (max-width: $tablet-max) {
+    margin-top: 15rem;
+    max-width: 40rem;
+    margin-bottom: 4rem;
+    height: 31rem;
+  }
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    flex-direction: column;
+    margin-top: 8rem;
+    width: 18rem;
+    height: 83rem;
+  }
+}
+
+/* ==============================
+              Info Text
+   ============================== */
+
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 92%;
+  font-size: 21px;
+  padding-right: 0;
+  margin: 2rem auto;
+
+  @media only screen and (max-width: $tablet-max) {
+    width: 35rem;
+  }
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 1.5rem auto;
+    width: 18rem;
+  }
+}
+
+/* ==============================
+         Carousel Slides
+   ============================== */
+
+#asphalt-carousel-slides {
+  width: 90rem;
+  margin: 0 auto;
+  box-shadow: 0 0 7px 6px $gold-accent;
+  padding: 1px;
+  border: 5px solid black;
+  margin-bottom: 3rem;
+  border-radius:12px;
+
+  @media only screen and (max-width: $tablet-max) {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 38rem;
+    height: 19rem;
+  }
+
+  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 21.5rem;
+    height: 9.158rem;
+    border: 2px solid black;
+    box-shadow: 0 0 9px 3px $gold-accent;
+    border-radius: 4px;
+  }
+}
+
+/* Box that holds the image + spinner overlay */
+.carousel-image-box {
+  position: relative;
+}
+
+/* Overlay (dark) while loading */
+.carousel-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: #1f1f1f;
+  z-index: 1;
+}
+
+/* Centered spinner holder */
+.carousel-spinner {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  text-align: center;
+  border-radius: 13px;
+}
+
+/* ==============================
+        Carousel Images
 ============================== */
 
 .d-block {
@@ -120,9 +144,20 @@
   }
 
   @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    height: 12rem;
+    height: 6rem;
     width: 100%;
     border-radius: 6px;
   }
 }
-   
+
+/* ==============================
+   Motion accessibility (non-empty)
+============================== */
+@media (prefers-reduced-motion: reduce) {
+  .carousel,
+  .carousel * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

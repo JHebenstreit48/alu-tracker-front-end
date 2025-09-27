@@ -1,39 +1,38 @@
-import { useEffect, useState } from 'react';
-import { ImageCarouselType } from '@/components/HomePage/ImagesForCarousel';
-import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+import { useEffect, useMemo, useState } from "react";
+import { ImageCarouselType } from "@/components/HomePage/ImagesForCarousel";
+import LoadingSpinner from "@/components/Shared/LoadingSpinner";
 
 const backendImageUrl =
-  import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
+  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 type ImageCarouselPropsType = {
   project: ImageCarouselType[];
 };
 
-// Set to true if you're testing (e.g., <img> commented out)
+// Keep spinner until all images (or errors) reported
 const FORCE_SPINNER_MODE = false;
 const SIMULATED_DELAY = 5000;
 
 export default function ImageCarousel({ project }: ImageCarouselPropsType) {
+  const total = useMemo(() => project.length, [project]);
   const [imagesLoaded, setImagesLoaded] = useState(0);
   const [hasLoadedAll, setHasLoadedAll] = useState(false);
 
-  const handleImageLoad = () => setImagesLoaded((prev) => prev + 1);
-  const handleImageError = () => setImagesLoaded((prev) => prev + 1);
+  const handleImageLoad = () => setImagesLoaded((n) => n + 1);
+  const handleImageError = () => setImagesLoaded((n) => n + 1);
 
-  // ✅ Mark as done when images fully load
+  // Mark complete when all have reported load/error
   useEffect(() => {
-    if (!FORCE_SPINNER_MODE && imagesLoaded >= project.length && project.length > 0) {
+    if (!FORCE_SPINNER_MODE && total > 0 && imagesLoaded >= total) {
       setHasLoadedAll(true);
     }
-  }, [imagesLoaded, project.length]);
+  }, [imagesLoaded, total]);
 
-  // ✅ Only for test mode: simulate load delay
+  // Test mode (optional)
   useEffect(() => {
     if (FORCE_SPINNER_MODE) {
-      const timeout = setTimeout(() => {
-        setHasLoadedAll(true);
-      }, SIMULATED_DELAY);
-      return () => clearTimeout(timeout);
+      const t = setTimeout(() => setHasLoadedAll(true), SIMULATED_DELAY);
+      return () => clearTimeout(t);
     }
   }, []);
 
@@ -44,67 +43,50 @@ export default function ImageCarousel({ project }: ImageCarouselPropsType) {
       data-bs-ride="carousel"
       data-bs-interval="2000"
       data-bs-pause="false"
+      aria-label="Featured cars"
     >
       <div className="carousel-inner">
-        {project.map((image, index) => (
-          <div
-            className={`carousel-item ${index === 0 ? 'active' : ''}`}
-            key={index}
-          >
-            <div
-              className="carousel-image-box"
-              style={{
-                position: 'relative',
-                minHeight: '39rem',
-              }}
-            >
-              {/* ✅ Toggle this line during testing */}
-              {!FORCE_SPINNER_MODE && (
-                <img
-                  src={`${backendImageUrl}${image.path}`}
-                  alt={`Car Image ${index + 1}`}
-                  className="d-block w-100"
-                  loading="lazy"
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                  style={{
-                    opacity: hasLoadedAll ? 1 : 0.2,
-                    transition: 'opacity 0.3s ease-in-out',
-                  }}
-                />
-              )}
+        {project.map((image, index) => {
+          const src = `${backendImageUrl}${image.path}`;
+          const isFirst = index === 0;
 
-              {/* 🔄 Spinner and background overlay */}
-              {!hasLoadedAll && (
-                <>
-                  <div
+          // No `any`: set fetchpriority through a ref callback
+          const setPriorityRef = (el: HTMLImageElement | null) => {
+            if (isFirst && el) el.setAttribute("fetchpriority", "high");
+          };
+
+          return (
+            <div className={`carousel-item ${isFirst ? "active" : ""}`} key={src}>
+              <div className="carousel-image-box" style={{ position: "relative", minHeight: "39rem" }}>
+                {!FORCE_SPINNER_MODE && (
+                  <img
+                    ref={setPriorityRef}
+                    src={src}
+                    alt={`Car Image ${index + 1}`}
+                    className="d-block w-100"
+                    loading={isFirst ? "eager" : "lazy"}
+                    decoding="async"
+                    onLoad={handleImageLoad}
+                    onError={handleImageError}
                     style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: '#1f1f1f',
-                      zIndex: 1,
+                      opacity: hasLoadedAll ? 1 : 0.2,
+                      transition: "opacity 300ms ease-in-out",
                     }}
                   />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      zIndex: 2,
-                      textAlign: 'center',
-                    }}
-                  >
-                    <LoadingSpinner message="Cars entering the starting line!" />
-                  </div>
-                </>
-              )}
+                )}
+
+                {!hasLoadedAll && (
+                  <>
+                    <div className="carousel-overlay" />
+                    <div className="carousel-spinner">
+                      <LoadingSpinner message="Cars entering the starting line!" />
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

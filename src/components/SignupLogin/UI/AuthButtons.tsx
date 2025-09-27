@@ -13,18 +13,22 @@ export default function AuthButtons() {
   return (
     <>
       {token ? (
-        <div className="authWrapper">
-          <div className="authWelcome">Welcome, {username}!</div>
+        <div className="authWelcome" aria-live="polite">
+          <span className="authWelcome__text">Welcome, {username}!</span>
           <div className="logoutWrapper">
-            <button onClick={logout} className="logout">
+            <button onClick={logout} className="logout" aria-label="Log out">
               Logout
             </button>
           </div>
         </div>
       ) : (
         <div className="authControls">
-          <button onClick={() => setShowLogin(true)}>Login</button>
-          <button onClick={() => setShowSignUp(true)}>Sign Up</button>
+          <button onClick={() => setShowLogin(true)} aria-haspopup="dialog" aria-controls="login-modal">
+            Login
+          </button>
+          <button onClick={() => setShowSignUp(true)} aria-haspopup="dialog" aria-controls="signup-modal">
+            Sign Up
+          </button>
         </div>
       )}
 

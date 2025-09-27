@@ -3,7 +3,6 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import PageTab from '@/components/Shared/PageTab';
 import Header from '@/components/Shared/Header';
-import Navigation from '@/components/Shared/Navigation';
 
 import { Car, Blueprints } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
 import { StockStats } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces/StarStats/StockStats';
@@ -155,7 +154,6 @@ const CarDetails = () => {
     <div className="carDetail">
       <PageTab title={`${car.Brand} ${car.Model}`}>
         <Header text={`${car.Brand} ${car.Model}`} />
-        <Navigation />
 
         <div className="cdetail-top">
           <button

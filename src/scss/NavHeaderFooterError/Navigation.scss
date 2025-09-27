@@ -1,9 +1,9 @@
-@use "sass:color";
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
 
 /* ==============================
-            Variables
-   ============================== */
-
+   Tokens
+============================== */
 $gold-accent: rgb(223, 190, 7);
 $purple-glow: #7a05be;
 
@@ -11,132 +11,162 @@ $mobileMaxWidthPortrait: 480px;
 $tablet-max: 768px;
 
 /* ==============================
-              Hamburger Button
-   ============================== */
-
+   Hamburger (mobile-only, bullet-proof)
+============================== */
 .Hamburger {
-  display: none;
+  display: none; /* default: hidden on desktop */
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 0.5rem;
+  left: 0.75rem;
   background: none;
   color: $gold-accent;
-  font-size: 2.5rem;
+  font-size: 2rem;
   z-index: 101;
   border: none;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    display: block;
-    position: fixed;
+  &:focus-visible {
+    outline: 2px solid $gold-accent;
+    outline-offset: 2px;
   }
 }
+@media (max-width: $mobileMaxWidthPortrait) { .Hamburger { display: block; position: fixed; } }
+@media (min-width: #{($mobileMaxWidthPortrait + 1px)}) { .Hamburger { display: none !important; } }
 
 /* ==============================
-            Navigation Wrapper
-   ============================== */
-
+   Wrapper
+   - Transparent on desktop so header gradient shows through
+============================== */
 .NavigationWrapper {
-  position: absolute;
-  top: 7rem; /* ✅ Higher inside the header visually */
-  left: 0;
+  position: static;
   width: 100%;
-  background-color: transparent; /* ✅ No background, blends into header gradient */
+  background: transparent;
+  padding-block: 0.5rem;
   z-index: 100;
+}
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+/* Mobile drawer: solid bg so content doesn’t bleed through */
+@media (max-width: $mobileMaxWidthPortrait) {
+  .NavigationWrapper {
     position: fixed;
-    top: 0;
+    top: clamp(3.5rem, 9vw, 6rem);
     left: 0;
-    height: 100vh;
+    height: calc(100dvh - clamp(3.5rem, 9vw, 6rem));
     width: 70%;
     background-color: #2a0055;
-    padding-top: 5rem;
+    padding: 1rem 0.5rem;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
-    z-index: 100;
 
-    &.open {
-      transform: translateX(0);
-    }
+    &.open { transform: translateX(0); }
   }
 }
 
 /* ==============================
-              Navigation Layout
-   ============================== */
-
+   Layout
+============================== */
 .nav-css {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  width: 100%;
-  padding: 1rem 0;
-  background-color: transparent; /* ✅ Remove purple entirely desktop */
+  gap: clamp(0.25rem, 1.2vw, 1rem);
+  padding: 0;
   margin: 0;
+  list-style: none;
 
-  @media only screen and (max-width: $tablet-max) {
-    flex-wrap: wrap;
-  }
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  @media (max-width: $tablet-max) { flex-wrap: wrap; }
+  @media (max-width: $mobileMaxWidthPortrait) {
     flex-direction: column;
-    background-color: transparent;
+    align-items: stretch;
+    gap: 0.25rem;
   }
 }
 
 /* ==============================
-               Button Styles
-   ============================== */
-
+   Buttons-as-tabs
+   – No blue box. Clean underline on hover/focus/active.
+============================== */
 .btn-primary {
-  display: flex;
-  font-family: "Cinzel Decorative", serif;
+  font-family: "Cinzel", serif; /* swap to "Cinzel Decorative" if desired */
   font-weight: 700;
-  font-style: normal;
-  background-color: unset;
-  border-color: unset;
+  background: none;
   border: none;
   border-radius: 0;
 }
 
+/* kill default tap highlight on mobile */
+.nav-css, .btn-lg { -webkit-tap-highlight-color: transparent; }
+
 .btn-lg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  min-height: 44px;
+  padding: 0.25rem clamp(0.5rem, 1.4vw, 0.75rem);
   color: $gold-accent;
-  text-shadow: 3px 2px 2px $purple-glow;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 2px rgba(122, 5, 190, 0.7);
   text-decoration: none;
-  margin-top: 0;
-  margin-left: 15px;
-  margin-right: 15px;
-  width: 11rem;
 
+  /* Remove any default backgrounds/boxes from frameworks */
+  background: transparent !important;
+  box-shadow: none !important;
+
+  transition: opacity 120ms ease, transform 120ms ease;
+
+  /* Animated gold underline (appears on hover/focus/active) */
+  &::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -6px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(
+      90deg,
+      rgba(223, 190, 7, 0.2),
+      rgba(223, 190, 7, 1),
+      rgba(223, 190, 7, 0.2)
+    );
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 180ms ease, height 120ms ease;
+  }
+
+  /* Hover: subtle lift + show underline. No blue box. */
   &:hover {
-    text-shadow: 3px 2px 2px $purple-glow;
-    text-decoration: none;
-    background-color: unset;
-    border-top: 1.5px solid $purple-glow;
-    border-left: 1.5px solid $purple-glow;
-    border-right: 1.5px solid $purple-glow;
+    opacity: 0.95;
+    transform: translateY(-1px);
   }
+  &:hover::after { transform: scaleX(1); }
 
-  @media only screen and (max-width: $tablet-max) {
-    margin-top: 1rem;
-    margin-bottom: 0.6rem;
+  /* Focus (keyboard): accessible, non-boxy glow + thicker underline */
+  &:focus { outline: none; }
+  &:focus-visible {
+    text-shadow:
+      0 2px 2px rgba(122, 5, 190, 0.9),
+      0 0 6px rgba(223, 190, 7, 0.55),
+      0 0 14px rgba(223, 190, 7, 0.25);
   }
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    margin-top: 1rem;
-    margin-bottom: 0.6rem;
+  &:focus-visible::after {
+    transform: scaleX(1);
+    height: 3px;
+    filter: drop-shadow(0 0 6px rgba(223, 190, 7, 0.45));
   }
 }
 
-/* ==============================
-               Active Link
-   ============================== */
+/* Active page: persistent underline + slight glow (no borders/box) */
+.is-active {
+  text-shadow:
+    0 2px 2px rgba(122, 5, 190, 0.9),
+    0 0 6px rgba(223, 190, 7, 0.55);
+}
+.is-active::after { transform: scaleX(1); }
 
-.active-link {
-  border-left: 1.5px solid $gold-accent;
-  border-right: 1.5px solid $gold-accent;
+/* Legacy class cleanup (prevents side borders if present anywhere) */
+.active-link { border: none !important; }
+
+/* Motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .btn-lg { transition: none; }
+  .btn-lg::after { transition: none; }
 }

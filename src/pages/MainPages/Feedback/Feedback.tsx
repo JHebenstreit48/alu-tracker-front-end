@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
-import Navigation from "@/components/Shared/Navigation";
 import FeedbackAdminPanel from "@/components/Shared/FeedbackAdminPanel";
 import "@/scss/MiscellaneousStyle/Feedback.scss";
 
@@ -94,8 +93,7 @@ export default function Feedback() {
 
   return (
     <PageTab title="Feedback">
-      <Header text="FEEDBACK" />
-      <Navigation />
+      <Header text="Feedback" />
 
       <div className="feedback-wrap">
         <div className="feedback-page">

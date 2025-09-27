@@ -1,3 +1,4 @@
+import Navigation from "@/components/Shared/Navigation";
 import AuthButtons from "@/components/SignupLogin/UI/AuthButtons";
 
 interface HeaderProps {
@@ -7,13 +8,22 @@ interface HeaderProps {
 
 export default function Header({ text, className }: HeaderProps) {
   return (
-    <div className={`Header ${className || ""}`}>
-      <div>
-        <h1 className="PageHeader">{text}</h1>
+    <header className={`Header ${className || ""}`} role="banner">
+      <div className="Header__inner">
+        {/* center column */}
+        <h1 className="PageHeader" title={text}>
+          {text}
+        </h1>
+
+        {/* right column */}
+        <div className="Header__auth">
+          <AuthButtons />
+        </div>
       </div>
-      <div>
-        <AuthButtons />
+
+      <div className="Header__navRow" role="presentation">
+        <Navigation />
       </div>
-    </div>
+    </header>
   );
 }
