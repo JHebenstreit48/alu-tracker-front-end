@@ -1,12 +1,13 @@
-import { OneStarMaxStats as OneStarMaxStatsData } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
+import { GoldMaxStats } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 
-interface OneStarMaxStatsProps {
-  car: OneStarMaxStatsData;
+// Accept a broader car shape, not just GoldMaxStats
+interface GoldMaxStatsProps {
+  car: Partial<GoldMaxStats>; // or FullCar if you want full access
   unitPreference: "metric" | "imperial";
   trackerMode?: boolean;
 }
 
-const OneStarStockStatsTable: React.FC<OneStarMaxStatsProps> = ({ car, unitPreference }) => {
+const GoldMaxStatsTable: React.FC<GoldMaxStatsProps> = ({ car, unitPreference }) => {
   const safeParse = (value: unknown): number => {
     if (typeof value === "number") return value;
     return 0;
@@ -29,36 +30,33 @@ const OneStarStockStatsTable: React.FC<OneStarMaxStatsProps> = ({ car, unitPrefe
       <table className="carInfoTable">
         <thead>
           <tr>
-            <th className="tableHeader2" colSpan={2}>
-              One Star Max
-            </th>
+            <th className="tableHeader2" colSpan={2}>Gold Max</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Rank</td>
-            <td>{car.One_Star_Max_Rank}</td>
+            <td>{car.Gold_Max_Rank ?? "—"}</td>
           </tr>
           <tr>
             <td>Top Speed</td>
-            <td>{convertTopSpeed(car.One_Star_Max_Top_Speed)}</td>
+            <td>{convertTopSpeed(car.Gold_Top_Speed)}</td>
           </tr>
           <tr>
             <td>Acceleration</td>
-            <td>{formatStat(car.One_Star_Max_Acceleration)}</td>
+            <td>{formatStat(car.Gold_Acceleration)}</td>
           </tr>
           <tr>
             <td>Handling</td>
-            <td>{formatStat(car.One_Star_Max_Handling)}</td>
+            <td>{formatStat(car.Gold_Handling)}</td>
           </tr>
           <tr>
             <td>Nitro</td>
-            <td>{formatStat(car.One_Star_Max_Nitro)}</td>
+            <td>{formatStat(car.Gold_Nitro)}</td>
           </tr>
         </tbody>
       </table>
-      
   );
 };
 
-export default OneStarStockStatsTable;
+export default GoldMaxStatsTable;

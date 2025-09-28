@@ -13,9 +13,9 @@ import { useAutoSyncDependency } from '@/components/CarInformation/UserDataSync/
 import CarDataStatusCard from '@/components/CarInformation/CarDetails/OtherComponents/DataStatusCard';
 import CarImage from '@/components/CarInformation/CarDetails/OtherComponents/CarImage';
 import ClassRank from '@/components/CarInformation/CarDetails/Tables/ClassRank';
-import StockStatsTable from '@/components/CarInformation/CarDetails/Tables/StockStats';
-import MaxStarStatsTable from '@/components/CarInformation/CarDetails/Tables/MaxStarStats';
-import GoldMaxStatsTable from '@/components/CarInformation/CarDetails/Tables/GoldMaxStats';
+import StockStatsTable from '@/components/CarInformation/CarDetails/Tables/StarsStats/Stock';
+import MaxStarTable from '@/components/CarInformation/CarDetails/Tables/StarsStats/Max';
+import GoldMaxStatsTable from '@/components/CarInformation/CarDetails/Tables/StarsStats/Gold';
 import BlueprintsTable from '@/components/CarInformation/CarDetails/Tables/BlueprintsTable';
 import KeyInfo from '@/components/CarInformation/CarDetails/Tables/KeyInfo';
 import CommentsPanel from '@/components/CarInformation/CarDetails/OtherComponents/Comments/Panel';
@@ -202,7 +202,7 @@ const CarDetails = () => {
               trackerMode={trackerMode}
             />
           </div>
-          <MaxStarStatsTable
+          <MaxStarTable
             car={car}
             unitPreference={unitPreference}
             trackerMode={trackerMode}
