@@ -21,14 +21,14 @@ $gold-accent: $color-gold-glow;
   border-radius: 12px;
   padding: 2rem;
 
-  @media only screen and (max-width: $tablet-max) {
+  @include maxw($tablet-portrait) {
     margin-top: 15rem;
     max-width: 40rem;
     margin-bottom: 4rem;
     height: 31rem;
   }
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  @include maxw($cellphone-portrait) {
     flex-direction: column;
     margin-top: 8rem;
     width: 18rem;
@@ -49,11 +49,9 @@ $gold-accent: $color-gold-glow;
   padding-right: 0;
   margin: 2rem auto;
 
-  @media only screen and (max-width: $tablet-max) {
-    width: 35rem;
-  }
+  @include maxw($tablet-portrait) { width: 35rem; }
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  @include maxw($cellphone-portrait) {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,11 +74,11 @@ $gold-accent: $color-gold-glow;
   border-radius: 12px;
   line-height: 0; /* eliminate inline-image baseline gap */
 
-  @media only screen and (max-width: $tablet-max) {
+  @include maxw($tablet-portrait) {
     width: 38rem;
     height: 19rem;
   }
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  @include maxw($cellphone-portrait) {
     margin-top: 5rem;
     width: 21.5rem;
     height: 9.158rem;
@@ -101,8 +99,8 @@ $gold-accent: $color-gold-glow;
   /* your sweet spot to remove bottom gap */
   min-block-size: 37rem;
 
-  @media only screen and (max-width: $tablet-max) { min-block-size: 19rem; }
-  @media only screen and (max-width: $mobileMaxWidthPortrait) { min-block-size: 9.158rem; }
+  @include maxw($tablet-portrait)   { min-block-size: 19rem; }
+  @include maxw($cellphone-portrait){ min-block-size: 9.158rem; }
 
   /* ensure the internal box fills the slide */
   > .carousel-image-box {
@@ -147,8 +145,8 @@ $gold-accent: $color-gold-glow;
   object-fit: contain;  /* car fully visible, no crop */
   border-radius: inherit;
 
-  @media only screen and (max-width: $tablet-max) { block-size: 100%; }
-  @media only screen and (max-width: $mobileMaxWidthPortrait) { block-size: 100%; }
+  @include maxw($tablet-portrait)   { block-size: 100%; }
+  @include maxw($cellphone-portrait){ block-size: 100%; }
 }
 
 /* ==============================

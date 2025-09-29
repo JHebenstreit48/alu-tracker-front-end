@@ -10,7 +10,8 @@
   align-items: center;
   margin: 0;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  /* phones (width-only) */
+  @include maxw($cellphone-portrait) {
     justify-content: center;
     align-items: center;
     margin: 6rem auto 0 auto;
@@ -40,13 +41,9 @@
       background-color: $tracker-btn-on-bg;
       color: $color-white;
 
-      .circleIndicator {
-        background-color: $circle-color-on;
-      }
+      .circleIndicator { background-color: $circle-color-on; }
 
-      &:hover {
-        box-shadow: $tracker-btn-hover-glow;
-      }
+      &:hover { box-shadow: $tracker-btn-hover-glow; }
     }
 
     &.off {
@@ -59,12 +56,11 @@
       }
     }
 
-    &.pulse {
-      animation: pulse 1.5s infinite;
-    }
+    &.pulse { animation: pulse 1.5s infinite; }
   }
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+  /* phones in portrait (orientation-specific tweak) */
+  @include phone-portrait {
     .trackerButton {
       font-size: 1.2rem;
       padding: 8px 18px;
@@ -76,13 +72,7 @@
    Pulse Animation
    ============================= */
 @keyframes pulse {
-  0% {
-    box-shadow: 0 0 0px rgba(0, 255, 153, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 10px 4px rgba(0, 255, 153, 0.9);
-  }
-  100% {
-    box-shadow: 0 0 0px rgba(0, 255, 153, 0.7);
-  }
+  0%   { box-shadow: 0 0 0px rgba(0, 255, 153, 0.7); }
+  50%  { box-shadow: 0 0 10px 4px rgba(0, 255, 153, 0.9); }
+  100% { box-shadow: 0 0 0px rgba(0, 255, 153, 0.7); }
 }

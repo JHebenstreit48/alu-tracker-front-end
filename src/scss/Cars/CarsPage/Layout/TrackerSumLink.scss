@@ -11,7 +11,8 @@
   align-items: center;
   margin: 1rem 2rem;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  /* phones (width-only) */
+  @include maxw($cellphone-portrait) {
     flex-direction: column;
     gap: 1.5rem;
     margin: 1.6rem auto 3rem auto;
@@ -24,7 +25,8 @@
   margin: 0.8rem 1.6rem 0 auto;
   position: relative;
 
-  @media only screen and (max-width: 390px) {
+  /* very narrow phones */
+  @include maxw(390px) {
     justify-content: center;
     margin: 0 auto;
   }
@@ -44,7 +46,8 @@
       color: rgb(255, 255, 255);
     }
 
-    @media only screen and (max-width: 390px) {
+    /* very narrow phones */
+    @include maxw(390px) {
       padding: 1rem 1rem;
       font-size: 1rem;
       width: 11rem;
