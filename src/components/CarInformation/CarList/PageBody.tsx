@@ -1,6 +1,5 @@
 import ClassTables from "@/components/CarInformation/CarList/ClassTables/ClassTables";
 import CarFilters from "@/components/CarInformation/CarList/CarFilters/CarFilters";
-import CarTrackerToggle from "@/components/CarInformation/CarList/TrackerButtons/CarTrackerToggle";
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,6 @@ import { Car } from "@/components/CarInformation/CarList/CarFilters/types/CarTyp
 interface CarDataProps {
   loading: boolean;
   trackerMode: boolean;
-  toggleTrackerMode: (val: boolean) => void;
 
   // Filters
   filterProps: {
@@ -52,7 +50,6 @@ interface CarDataProps {
 export default function CarData({
   loading,
   trackerMode,
-  toggleTrackerMode,
   filterProps,
   cars,
   selectedClass,
@@ -67,13 +64,12 @@ export default function CarData({
       <PageTab title="Cars">
         <Header text="Cars" className="carsHeader" />
 
-        <div className="trackerControlsRow">
-          <CarTrackerToggle isEnabled={trackerMode} onToggle={toggleTrackerMode} />
-          <div className="trackerSummaryLink">
-            <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
-              Account Progress
-            </button>
-          </div>
+        {/* Tracker toggle moved to CarDetails page.
+            Keep Account Progress shortcut here if you want */}
+        <div className="trackerSummaryLink">
+          <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
+            Account Progress
+          </button>
         </div>
 
         <CarFilters

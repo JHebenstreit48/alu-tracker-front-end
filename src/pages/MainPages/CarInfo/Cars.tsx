@@ -8,8 +8,8 @@ import {
   useCarFilters,
   useCarHandlers,
   useCarPagination,
-  useTrackerToggle,
 } from "@/components/CarInformation/CarList/Utilities/CarDataFetch";
+import { useTrackerMode } from "@/components/CarInformation/shared/useTrackerMode";
 
 import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
@@ -39,8 +39,8 @@ export default function Cars() {
   const [showOwned, setShowOwned] = useState(localStorage.getItem("showOwned") === "true");
   const [showKeyCars, setShowKeyCars] = useState(localStorage.getItem("showKeyCars") === "true");
 
-  // 🧠 Tracker toggle
-  const { trackerMode, toggleTrackerMode } = useTrackerToggle();
+  // 🧠 Tracker mode (shared source of truth)
+  const { trackerMode } = useTrackerMode();
 
   // 🚗 Fetch cars + tracking
   const tracking = getAllCarTrackingData();
@@ -94,7 +94,6 @@ export default function Cars() {
     <CarData
       loading={loading}
       trackerMode={trackerMode}
-      toggleTrackerMode={toggleTrackerMode}
       filterProps={{
         searchTerm,
         selectedStars,
