@@ -26,7 +26,8 @@
   color: $color-white;
   font-size: $filter-font-size;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  /* phones (width-only, like your original) */
+  @include maxw($cellphone-portrait) {
     width: 16rem;
     margin: 0 auto;
     justify-content: center;
@@ -84,39 +85,21 @@
     z-index: 10;
   }
 
-  .starFilter {
-    grid-area: star;
-  }
-  .classFilter {
-    grid-area: class;
-  }
-  .unitFilter {
-    grid-area: units;
-  }
-  .rarityFilter {
-    grid-area: rarity;
-  }
-  .brandFilter {
-    grid-area: brand;
-  }
-  .countryFilter {
-    grid-area: country;
-  }
-  .searchFilter {
-    grid-area: search;
-  }
-  .ownedFilter {
-    grid-area: owned;
-  }
-  .keyCarFilter {
-    grid-area: keycar;
-  }
+  .starFilter    { grid-area: star; }
+  .classFilter   { grid-area: class; }
+  .unitFilter    { grid-area: units; }
+  .rarityFilter  { grid-area: rarity; }
+  .brandFilter   { grid-area: brand; }
+  .countryFilter { grid-area: country; }
+  .searchFilter  { grid-area: search; }
+  .ownedFilter   { grid-area: owned; }
+  .keyCarFilter  { grid-area: keycar; }
 
   #searchInput {
     width: 50%;
     margin: 0 auto;
 
-    @media only screen and (max-width: $mobileMaxWidthPortrait) {
+    @include maxw($cellphone-portrait) {
       width: 18rem;
       margin: 0 auto;
       justify-content: center;

@@ -1,20 +1,17 @@
-@use 'sass:color';
-@use '@scss/Globals/index' as *;
+@use "sass:color";
+@use "@scss/Globals/index" as *;
 
 /* ==============================
-   Tokens
+   Tokens (project-local only)
 ============================== */
 $gold-accent: rgb(223, 190, 7);
 $purple-glow: #7a05be;
-
-$mobileMaxWidthPortrait: 480px;
-$tablet-max: 768px;
 
 /* ==============================
    Hamburger (mobile-only, bullet-proof)
 ============================== */
 .Hamburger {
-  display: none; /* default: hidden on desktop */
+  display: none; /* desktop default */
   position: absolute;
   top: 0.5rem;
   left: 0.75rem;
@@ -29,8 +26,20 @@ $tablet-max: 768px;
     outline-offset: 2px;
   }
 }
-@media (max-width: $mobileMaxWidthPortrait) { .Hamburger { display: block; position: fixed; } }
-@media (min-width: #{($mobileMaxWidthPortrait + 1px)}) { .Hamburger { display: none !important; } }
+
+/* Show on phone widths */
+@include maxw($cellphone-portrait) {
+  .Hamburger { display: block; position: fixed; }
+}
+
+/* Bullet-proof: force-hide again above phone width (guards against overrides) */
+@include minw($cellphone-portrait + 1px) {
+  .Hamburger { display: none !important; }
+}
+
+/* If you also want it visible on landscape phones, optionally:
+@include phone-landscape-wide { .Hamburger { display: block; position: fixed; } }
+*/
 
 /* ==============================
    Wrapper
@@ -45,7 +54,7 @@ $tablet-max: 768px;
 }
 
 /* Mobile drawer: solid bg so content doesn’t bleed through */
-@media (max-width: $mobileMaxWidthPortrait) {
+@include maxw($cellphone-portrait) {
   .NavigationWrapper {
     position: fixed;
     top: clamp(3.5rem, 9vw, 6rem);
@@ -61,6 +70,14 @@ $tablet-max: 768px;
   }
 }
 
+/* Optional comfort: landscape phones are short on height */
+@include phone-landscape-short {
+  .NavigationWrapper {
+    top: 3.25rem;
+    height: calc(100dvh - 3.25rem);
+  }
+}
+
 /* ==============================
    Layout
 ============================== */
@@ -73,8 +90,11 @@ $tablet-max: 768px;
   margin: 0;
   list-style: none;
 
-  @media (max-width: $tablet-max) { flex-wrap: wrap; }
-  @media (max-width: $mobileMaxWidthPortrait) {
+  /* tablet & below can wrap */
+  @include maxw($tablet-portrait) { flex-wrap: wrap; }
+
+  /* phone stack */
+  @include maxw($cellphone-portrait) {
     flex-direction: column;
     align-items: stretch;
     gap: 0.25rem;
@@ -86,7 +106,7 @@ $tablet-max: 768px;
    – No blue box. Clean underline on hover/focus/active.
 ============================== */
 .btn-primary {
-  font-family: "Cinzel", serif; /* swap to "Cinzel Decorative" if desired */
+  font-family: "Cinzel", serif;
   font-weight: 700;
   background: none;
   border: none;
@@ -133,10 +153,7 @@ $tablet-max: 768px;
   }
 
   /* Hover: subtle lift + show underline. No blue box. */
-  &:hover {
-    opacity: 0.95;
-    transform: translateY(-1px);
-  }
+  &:hover { opacity: 0.95; transform: translateY(-1px); }
   &:hover::after { transform: scaleX(1); }
 
   /* Focus (keyboard): accessible, non-boxy glow + thicker underline */

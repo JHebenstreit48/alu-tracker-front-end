@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use '@scss/Globals' as *;
+@use "sass:color";
+@use "@scss/Globals/index" as *;
 
 /* ==============================
    Page Layout & Footer Spacing
@@ -10,8 +10,8 @@
 }
 
 /* ==============================
-     New Car Count & Pagination Styling
-     ============================== */
+   New Car Count & Pagination Styling
+============================== */
 .carCount {
   font-size: 1.5rem;
   color: rgb(21, 201, 232);
@@ -26,7 +26,8 @@
   margin-top: 2rem;
   gap: 1rem;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+  /* phones in portrait */
+  @include phone-portrait {
     flex-flow: row wrap;
   }
 
@@ -34,7 +35,7 @@
     font-size: 1.3rem;
     color: rgb(21, 201, 232);
 
-    @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+    @include phone-portrait {
       flex-direction: row;
     }
   }
@@ -66,7 +67,8 @@
     }
   }
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+  /* phones in portrait */
+  @include phone-portrait {
     align-items: center;
     text-align: center;
 
