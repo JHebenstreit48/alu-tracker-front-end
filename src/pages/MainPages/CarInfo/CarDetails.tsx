@@ -27,6 +27,9 @@ import {
   normalizeString,
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 
+import { useTrackerMode } from '@/components/CarInformation/shared/useTrackerMode';
+import CarTrackerToggle from '@/components/CarInformation/CarDetails/OtherComponents/CarTrackerToggle';
+
 import '@/scss/Cars/CarDetail.scss';
 import '@/scss/Cars/CarStatus.scss';
 
@@ -56,15 +59,13 @@ const CarDetails = () => {
   const [status, setStatus] = useState<CarStatus | null>(null);
   const [error, setError] = useState(false);
   const [keyObtained, setKeyObtained] = useState(false);
-  const [trackerMode, setTrackerMode] = useState(false);
 
+  // 🔁 Shared tracker mode (single source of truth across pages)
+  const { trackerMode, toggleTrackerMode } = useTrackerMode();
+
+  // Units (we'll add a UI switch beside the tracker toggle later)
   const unitPreference =
     localStorage.getItem('preferredUnit') === 'imperial' ? 'imperial' : 'metric';
-
-  useEffect(() => {
-    const stored = localStorage.getItem('trackerMode') === 'true';
-    setTrackerMode(stored);
-  }, [location]);
 
   useEffect(() => {
     if (!slug) return;
@@ -84,7 +85,7 @@ const CarDetails = () => {
         const data: FullCar = await res.json();
         setCar(data);
 
-        // 2) Fetch status (separate collection)
+        // status doc
         try {
           const sRes = await fetch(`${API_BASE_URL}/api/status/by-slug/${normalizedSlug}`);
           if (sRes.ok) {
@@ -104,6 +105,7 @@ const CarDetails = () => {
         const key = generateCarKey(data.Brand, data.Model);
         const stored = getCarTrackingData(key);
 
+        // initialize tracked stars for key cars in tracker mode
         if (trackerMode && data.KeyCar && stored.stars === undefined) {
           const updated = { ...stored, stars: 1 };
           setCarTrackingData(key, updated);
@@ -127,10 +129,7 @@ const CarDetails = () => {
 
   const handleGoBack = () => {
     const lastSelectedClass = location.state?.selectedClass;
-    const trackerState = trackerMode ? { trackerMode: true } : {};
-    navigate(lastSelectedClass ? `/cars?class=${lastSelectedClass}` : '/cars', {
-      state: trackerState,
-    });
+    navigate(lastSelectedClass ? `/cars?class=${lastSelectedClass}` : '/cars');
   };
 
   if (error) {
@@ -170,6 +169,11 @@ const CarDetails = () => {
               inline
             />
           </div>
+        </div>
+
+        {/* Tools row: tracker toggle now lives here (unit switch will join later) */}
+        <div className="toolsRow">
+          <CarTrackerToggle isEnabled={trackerMode} onToggle={toggleTrackerMode} />
         </div>
 
         <CarImage car={car} />
@@ -220,7 +224,7 @@ const CarDetails = () => {
         <hr className="content-divider" />
 
         <CommentsPanel
-          normalizedKey={slug!} // slug is normalized by redirect above
+          normalizedKey={slug!}
           brand={car.Brand}
           model={car.Model}
         />

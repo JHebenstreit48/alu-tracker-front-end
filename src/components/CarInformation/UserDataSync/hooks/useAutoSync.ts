@@ -22,17 +22,32 @@ const debouncedSync = debounce((token: string) => {
 
 /**
  * useAutoSyncDependency
- * Hook to automatically sync account progress when any value in the dependencies array changes.
- * Only triggers if a valid token is present.
+ * Triggers a debounced sync when any of the provided dependencies change,
+ * provided a valid auth token exists.
+ *
+ * IMPORTANT: We collapse the (potentially variable-length) deps array into a
+ * single stable string key so the effect's dependency array length is constant.
  */
 export function useAutoSyncDependency(dependencies: unknown[]): void {
   const { token } = useContext(AuthContext);
+
+  // Always coerce to array to be safe
+  const safeDeps = Array.isArray(dependencies) ? dependencies : [];
+
+  // Build a stable signature for the deps (no functions, dates normalized)
+  const depsKey = JSON.stringify(
+    safeDeps,
+    (_k, v) => {
+      if (typeof v === "function") return "__fn__";
+      if (v instanceof Date) return v.toISOString();
+      return v;
+    }
+  );
 
   useEffect(() => {
     if (typeof token === "string" && token.trim() !== "") {
       debouncedSync(token);
     }
-    // We intentionally exclude `debouncedSync` from deps to avoid re-creating
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies);
+    // ✅ Dependency array length is now constant (always 2)
+  }, [token, depsKey]);
 }
