@@ -1,4 +1,3 @@
-// src/components/CarInformation/CarDetails/hooks/useKeyObtained.ts
 import { useMemo } from "react";
 import {
   generateCarKey,
@@ -10,8 +9,10 @@ import type { FullCar } from "@/components/CarInformation/CarDetails/types";
 type Setter = (v: boolean) => void;
 
 /**
- * Returns a stable handler that persists `keyObtained`
- * (and marks `owned` true when obtained).
+ * Stable handler for Key Obtained:
+ * - checking => keyObtained: true, owned: true
+ * - unchecking (mistake fix) => keyObtained: false, owned: false, goldMaxed: false
+ * Stars are never changed here.
  */
 export function useKeyObtained(car: FullCar | null, setKeyObtained: Setter) {
   return useMemo(
@@ -19,11 +20,12 @@ export function useKeyObtained(car: FullCar | null, setKeyObtained: Setter) {
       if (!car) return;
       const k = generateCarKey(car.Brand, car.Model);
       const prev = getCarTrackingData(k);
-      const next = {
-        ...prev,
-        keyObtained: obtained,
-        owned: obtained ? true : prev?.owned ?? false,
-      };
+
+      const next =
+        obtained
+          ? { ...prev, keyObtained: true, owned: true }
+          : { ...prev, keyObtained: false, owned: false, goldMaxed: false };
+
       setCarTrackingData(k, next);
       setKeyObtained(obtained);
     },
