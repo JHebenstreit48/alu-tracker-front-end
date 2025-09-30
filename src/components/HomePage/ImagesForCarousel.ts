@@ -1,4 +1,3 @@
-// ImagesForCarousel.tsx
 export type ImageCarouselType = {
   path: string;
 };
