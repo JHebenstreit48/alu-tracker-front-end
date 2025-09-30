@@ -1,9 +1,7 @@
-import { useEffect } from "react";
 import { Car } from "@/components/CarInformation/CarDetails/Miscellaneous/Interfaces";
 import {
-  getCarTrackingData,
-  setCarTrackingData,
-  generateCarKey,
+  setKeyObtainedState,   // <- keep
+  generateCarKey,        // <- keep
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
@@ -22,26 +20,19 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
 }) => {
   const carKey = generateCarKey(car.Brand, car.Model);
 
-  useEffect(() => {
-    if (trackerMode && car.KeyCar) {
-      const prevData = getCarTrackingData(carKey);
-      setCarTrackingData(carKey, {
-        ...prevData,
-        keyObtained,
-      });
-    }
-  }, [trackerMode, carKey, car.KeyCar, keyObtained]);
-
-  // ✅ Auto-sync when keyObtained changes
+  // Autosync still reacts to the controlled prop change
   useAutoSyncDependency(trackerMode && car.KeyCar ? [keyObtained] : []);
 
   if (!car.KeyCar) return null;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
-    if (onKeyObtainedChange) {
-      onKeyObtainedChange(isChecked);
-    }
+
+    // Persist with final rules (doesn't touch stars)
+    setKeyObtainedState(carKey, isChecked);
+
+    // Let parent update its controlled state
+    onKeyObtainedChange?.(isChecked);
   };
 
   return (
@@ -53,10 +44,8 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
           </tr>
         </thead>
         <tbody className="testClass">
-          <tr >
-            <td className="testClass">
-              🔑 <strong>Key Car</strong>
-            </td>
+          <tr>
+            <td className="testClass">🔑 <strong>Key Car</strong></td>
           </tr>
           {trackerMode && (
             <tr>

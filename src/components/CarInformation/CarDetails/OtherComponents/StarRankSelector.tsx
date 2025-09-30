@@ -8,7 +8,7 @@ import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/
 
 interface StarRankSelectorProps {
   maxStars: number;
-  selected?: number; // Optional for controlled mode
+  selected?: number; // Controlled mode if provided
   onSelect?: (value: number) => void;
   readOnly?: boolean;
   brand?: string;
@@ -24,48 +24,50 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
   readOnly = false,
   brand,
   model,
-  trackerMode,
-  isKeyCar,
+  trackerMode = false,
+  isKeyCar = false,
 }) => {
   const [internalStars, setInternalStars] = useState<number>(0);
 
-  const carKey =
-    brand && model ? generateCarKey(brand, model) : null;
+  const carKey = brand && model ? generateCarKey(brand, model) : null;
 
-  // Load stars from localStorage if uncontrolled
+  // Load stars from localStorage if uncontrolled; seed key cars to 1★ in tracker mode if missing.
   useEffect(() => {
-    if (carKey && selected === undefined) {
-      const data = getCarTrackingData(carKey);
-  
-      if (Number.isInteger(data.stars) && data.stars! > 0) {
-        setInternalStars(data.stars!);
-      } else if (
-        trackerMode &&
-        isKeyCar &&
-        !data.owned &&
-        !data.keyObtained
-      ) {
-        setInternalStars(1); // ✅ Default 1 star for key cars
-      } else {
-        setInternalStars(0);
-      }
+    if (!carKey || selected !== undefined) return;
+
+    const data = getCarTrackingData(carKey);
+
+    if (Number.isInteger(data.stars) && (data.stars as number) > 0) {
+      setInternalStars(data.stars as number);
+      return;
+    }
+
+    // One-time seeding for key cars in tracker mode when no stars exist yet.
+    if (trackerMode && isKeyCar) {
+      setCarTrackingData(carKey, { ...data, stars: 1 }); // persist seed so it survives refresh
+      setInternalStars(1);
+    } else {
+      setInternalStars(0);
     }
   }, [carKey, selected, trackerMode, isKeyCar]);
 
-  // ✅ Auto-sync stars if uncontrolled and tracking by carKey
-  useAutoSyncDependency(
-    carKey && selected === undefined ? [internalStars] : []
-  );
+  // Debounced autosync (server when logged-in, local only when anon) for uncontrolled usage.
+  useAutoSyncDependency(carKey && selected === undefined ? [internalStars] : []);
 
   const handleClick = (value: number) => {
     if (readOnly) return;
 
+    // Clamp to [0, maxStars] just in case
+    const next = Math.max(0, Math.min(maxStars, value));
+
     if (onSelect) {
-      onSelect(value); // Controlled mode
+      // Controlled mode: delegate up
+      onSelect(next);
     } else {
-      setInternalStars(value); // Uncontrolled mode
+      // Uncontrolled: update local state and persist
+      setInternalStars(next);
       if (carKey) {
-        setCarTrackingData(carKey, { stars: value });
+        setCarTrackingData(carKey, { stars: next });
       }
     }
   };
@@ -75,11 +77,12 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {[...Array(maxStars)].map((_, i) => {
+        const starValue = i + 1;
         const isSelected = i < displayStars;
         return (
           <span
             key={i}
-            onClick={() => handleClick(i + 1)}
+            onClick={() => handleClick(starValue)}
             style={{
               cursor: readOnly ? "default" : "pointer",
               fontSize: "2rem",
@@ -87,6 +90,8 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
               opacity: isSelected ? 1 : 0.4,
               marginRight: "4px",
             }}
+            aria-label={`${starValue} star${starValue > 1 ? "s" : ""}`}
+            role={readOnly ? undefined : "button"}
           >
             ★
           </span>

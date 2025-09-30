@@ -16,11 +16,10 @@ export function normalizeString(str: string): string {
     .replace(/[\u0300-\u036f]/g, "") // Remove accents
     .toLowerCase()
     .replace(/\./g, "")              // Remove periods
-    .replace(/-/g, "_")              // ✅ Replace dashes with underscores
+    .replace(/-/g, "_")              // Replace dashes with underscores
     .replace(/\s+/g, "_")            // Replace spaces with underscores
     .replace(/[^a-z0-9_]/g, "");     // Remove anything else weird
 }
-
 
 export function generateCarKey(brand: string, model: string): string {
   return normalizeString(`${brand}_${model}`);
@@ -35,7 +34,10 @@ export function getCarTrackingData(carKey: string): CarTrackingData {
   }
 }
 
-export function setCarTrackingData(carKey: string, update: Partial<CarTrackingData>) {
+export function setCarTrackingData(
+  carKey: string,
+  update: Partial<CarTrackingData>
+) {
   const existing = getCarTrackingData(carKey);
   const merged = { ...existing, ...update };
   localStorage.setItem(`${keyPrefix}${carKey}`, JSON.stringify(merged));
@@ -62,5 +64,40 @@ export function clearAllCarTrackingData() {
     if (key.startsWith(keyPrefix)) {
       localStorage.removeItem(key);
     }
+  }
+}
+
+/** Clear all ownership flags for a car (does not touch stars). */
+export function clearOwnership(carKey: string): void {
+  const prev = getCarTrackingData(carKey);
+  setCarTrackingData(carKey, {
+    ...prev,
+    keyObtained: false,
+    owned: false,
+    goldMaxed: false,
+  });
+}
+
+/** Set Key Obtained on/off using the final rules (does not touch stars). */
+export function setKeyObtainedState(
+  carKey: string,
+  obtained: boolean
+): void {
+  const prev = getCarTrackingData(carKey);
+  if (obtained) {
+    // Checking ⇒ also Owned = true
+    setCarTrackingData(carKey, {
+      ...prev,
+      keyObtained: true,
+      owned: true,
+    });
+  } else {
+    // Unchecking (mistake fix) ⇒ clear Key, Owned, Gold
+    setCarTrackingData(carKey, {
+      ...prev,
+      keyObtained: false,
+      owned: false,
+      goldMaxed: false,
+    });
   }
 }
