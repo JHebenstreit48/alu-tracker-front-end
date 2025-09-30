@@ -1,0 +1,22 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Cache-Control: no-store
+
+  Content-Security-Policy: default-src 'self';
+    base-uri 'self';
+    frame-ancestors 'self';
+    img-src 'self' data: https:;
+    font-src 'self' data: https: https://fonts.gstatic.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    script-src 'self' 'unsafe-inline';
+    connect-src 'self'
+      https://alutracker-api.onrender.com
+      https://alu-tracker-user-data.onrender.com
+      https://alu-tracker-comments-api.onrender.com
+      https://identity.netlify.com;
+    form-action 'self';
+    upgrade-insecure-requests;
+*/
