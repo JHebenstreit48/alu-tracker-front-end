@@ -1,4 +1,6 @@
 // src/pages/MainPages/CarInfo/CarDetails.tsx
+import { useParams } from "react-router-dom";
+
 import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
 import {
@@ -12,15 +14,16 @@ import {
 import { useCarDetailsPage } from "@/components/CarInformation/CarDetails/hooks/useCarDetailsPage";
 import { useTrackerMode } from "@/components/CarInformation/shared/useTrackerMode";
 import { useKeyCarSeeding } from "@/components/CarInformation/CarDetails/hooks/useKeyCarSeeding";
-import { useKeyObtainedHandler } from "@/components/CarInformation/CarDetails/hooks/useKeyObtained";
+import useKeyObtained from "@/components/CarInformation/CarDetails/hooks/useKeyObtained";
 import { useAutoSyncDependency } from "@/components/CarInformation/UserDataSync/hooks/useAutoSync";
 
 import "@/scss/Cars/CarDetail.scss";
 import "@/scss/Cars/CarStatus.scss";
 
 export default function CarDetails() {
+  // route param -> pass into the page hook
+  const { slug } = useParams<{ slug: string }>();
   const {
-    slug,
     car,
     status,
     error,
@@ -28,18 +31,18 @@ export default function CarDetails() {
     setKeyObtained,
     unitPreference,
     goBack,
-  } = useCarDetailsPage();
+  } = useCarDetailsPage(slug);
 
-  // Tracker state shared across pages
+  // shared tracker state
   const { trackerMode, toggleTrackerMode } = useTrackerMode();
 
-  // A) Default 1★ for key cars in tracker mode (no overwrite)
+  // seed 1★ for key cars (doesn't overwrite existing)
   useKeyCarSeeding(car, trackerMode);
 
-  // B) Persist “Key obtained” (+ mark owned when true)
-  const handleKeyObtainedChange = useKeyObtainedHandler(car, setKeyObtained);
+  // persist KeyObtained (+ mark owned when true)
+  const handleKeyObtainedChange = useKeyObtained(car, setKeyObtained);
 
-  // C) Debounced autosync
+  // debounced autosync on meaningful changes
   useAutoSyncDependency([keyObtained, trackerMode, car?.Brand, car?.Model]);
 
   if (error) {
@@ -60,16 +63,11 @@ export default function CarDetails() {
     <div className="carDetail">
       <PageTab title={title}>
         <Header text={title} />
-
-        {/* No title duplication here */}
         <DetailHeader onBack={goBack} updatedAt={car.updatedAt} status={status} />
-
         <div className="toolsRow">
           <CarTrackerToggle isEnabled={trackerMode} onToggle={toggleTrackerMode} />
         </div>
-
         <CarImage car={car} />
-
         <TablesGrid
           car={car}
           trackerMode={trackerMode}
@@ -77,7 +75,6 @@ export default function CarDetails() {
           onKeyObtainedChange={handleKeyObtainedChange}
           unitPreference={unitPreference}
         />
-
         <hr className="content-divider" />
         <CommentsPanel normalizedKey={slug!} brand={car.Brand} model={car.Model} />
       </PageTab>
