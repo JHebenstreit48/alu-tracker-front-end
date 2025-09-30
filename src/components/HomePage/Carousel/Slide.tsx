@@ -23,7 +23,8 @@ function SlideBase({
   return (
     <div
       className={`carousel-item ${isActive ? "active" : ""}`}
-      style={{ display: isActive ? "block" : "none" }} // hide inactive
+      aria-hidden={!isActive}
+      // IMPORTANT: no display:none; the track handles what’s visible
     >
       <div className="carousel-image-box">
         <img

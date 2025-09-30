@@ -88,19 +88,34 @@ $gold-accent: $color-gold-glow;
   }
 }
 
-/* keep corners through sliding */
+/* keep corners through sliding + ensure the frame keeps its height */
 #asphalt-carousel-slides .carousel-inner {
   border-radius: inherit;
-  overflow: hidden; /* rounds during transitions */
+  overflow: hidden;                 /* rounds during transitions */
+  /* mirror slide height so the window never collapses */
+  min-block-size: 37rem;
+  @include maxw($tablet-portrait)    { min-block-size: 19rem; }
+  @include maxw($cellphone-portrait) { min-block-size: 9.158rem; }
 }
 
-/* fix slide height; DO NOT override Bootstrap display */
+/* ==============================
+   Sliding TRACK (Bootstrap-like)
+   - one row of items that we translate
+============================== */
+#asphalt-carousel-slides .carousel-track {
+  display: flex;
+  width: 100%;
+  transition: transform 600ms ease-in-out;
+}
+
+/* Each slide occupies exactly one frame width */
 #asphalt-carousel-slides .carousel-item {
+  flex: 0 0 100%;
   /* your sweet spot to remove bottom gap */
   min-block-size: 37rem;
 
-  @include maxw($tablet-portrait)   { min-block-size: 19rem; }
-  @include maxw($cellphone-portrait){ min-block-size: 9.158rem; }
+  @include maxw($tablet-portrait)    { min-block-size: 19rem; }
+  @include maxw($cellphone-portrait) { min-block-size: 9.158rem; }
 
   /* ensure the internal box fills the slide */
   > .carousel-image-box {
@@ -145,8 +160,8 @@ $gold-accent: $color-gold-glow;
   object-fit: contain;  /* car fully visible, no crop */
   border-radius: inherit;
 
-  @include maxw($tablet-portrait)   { block-size: 100%; }
-  @include maxw($cellphone-portrait){ block-size: 100%; }
+  @include maxw($tablet-portrait)    { block-size: 100%; }
+  @include maxw($cellphone-portrait) { block-size: 100%; }
 }
 
 /* ==============================

@@ -20,9 +20,11 @@ export default function ImageCarousel({
   intervalMs = 2500,
   pauseOnHover = true,
 }: Props) {
-  const slides = useMemo(() => project ?? [], [project]);
-  const [imagesLoaded, setImagesLoaded] = useState(0);
-  const [isReady, setIsReady] = useState(
+  const slides = useMemo<ImageCarouselType[]>(() => project ?? [], [project]);
+  const slidesPlus = useMemo(() => (slides.length ? [...slides, slides[0]] : slides), [slides]);
+
+  const [imagesLoaded, setImagesLoaded] = useState<number>(0);
+  const [isReady, setIsReady] = useState<boolean>(
     () => sessionStorage.getItem("carouselReady") === "1"
   );
   const timerRef = useRef<number | null>(null);
@@ -33,26 +35,66 @@ export default function ImageCarousel({
     pauseOnHover,
   });
 
-  const markReady = useCallback(() => {
+  // --- seamless wrap state ---
+  const prevActiveRef = useRef<number>(0);
+  const [displayIndex, setDisplayIndex] = useState<number>(0);      // index used for translateX
+  const [txEnabled, setTxEnabled] = useState<boolean>(true);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  // Update displayIndex when active changes; handle n-1 -> 0 wrap
+  useEffect(() => {
+    const n = slides.length;
+    const prev = prevActiveRef.current;
+    if (n === 0) return;
+
+    if (prev === n - 1 && active === 0) {
+      // move to the cloned first slide (index n) to keep motion leftward
+      setDisplayIndex(n);
+    } else {
+      setDisplayIndex(active);
+    }
+    prevActiveRef.current = active;
+  }, [active, slides.length]);
+
+  // After landing on clone (index n), snap to real 0 without animation
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+
+    const onEnd = () => {
+      const n = slides.length;
+      if (n > 0 && displayIndex === n) {
+        setTxEnabled(false);
+        setDisplayIndex(0);
+        // re-enable transition on next frame (twice for safety)
+        requestAnimationFrame(() => requestAnimationFrame(() => setTxEnabled(true)));
+      }
+    };
+
+    el.addEventListener("transitionend", onEnd);
+    return () => el.removeEventListener("transitionend", onEnd);
+  }, [displayIndex, slides.length]);
+
+  // --- spinner readiness ---
+  const markReady = useCallback((): void => {
     setIsReady(true);
     sessionStorage.setItem("carouselReady", "1");
   }, []);
-
   const onLoad = useCallback(() => setImagesLoaded((n) => n + 1), []);
   const onError = onLoad;
 
-  // hide spinner when all images load once
   useEffect(() => {
-    if (isReady) return;
-    if (slides.length > 0 && imagesLoaded >= slides.length) markReady();
+    if (!isReady && slides.length > 0 && imagesLoaded >= slides.length) markReady();
   }, [imagesLoaded, isReady, slides.length, markReady]);
 
-  // fallback timer
   useEffect(() => {
     if (isReady) return;
     timerRef.current = window.setTimeout(markReady, MAX_SPINNER_MS);
     return () => {
-      if (timerRef.current) window.clearTimeout(timerRef.current);
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
     };
   }, [isReady, markReady]);
 
@@ -67,18 +109,29 @@ export default function ImageCarousel({
       {...hoverProps}
     >
       <div className="carousel-inner" onFocus={() => setActive(active)}>
-        {slides.map((image, i) => (
-          <Slide
-            key={i}
-            src={`${backendImageUrl}${image.path}`}
-            alt={`Car Image ${i + 1}`}
-            isActive={i === active}
-            showOverlay={!isReady}
-            eager={i === 0}
-            onLoad={onLoad}
-            onError={onError}
-          />
-        ))}
+        <div
+          ref={trackRef}
+          className="carousel-track"
+          style={{
+            transform: `translateX(-${displayIndex * 100}%)`,
+            transition: txEnabled ? "transform 600ms ease-in-out" : "none",
+            display: "flex",
+            width: "100%",
+          }}
+        >
+          {slidesPlus.map((image, i) => (
+            <Slide
+              key={i}
+              src={`${backendImageUrl}${image.path}`}
+              alt={`Car Image ${i + 1}`}
+              isActive={i === active}           // a11y hook; style handled by track
+              showOverlay={!isReady}
+              eager={i === 0}
+              onLoad={onLoad}
+              onError={onError}
+            />
+          ))}
+        </div>
       </div>
 
       {!isReady && (
