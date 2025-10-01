@@ -1,9 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import FeedbackCard, { FeedbackItem, FeedbackStatus } from "@/components/Shared/Feedback/FeedbackCard";
 
-const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
-  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
+// never allow empty base in production
+const API_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "https://alu-tracker-comments-api.onrender.com")
+).replace(/\/+$/, "");
+
+// tiny safe join helper
+function join(base: string, path: string) {
+  const b = base.replace(/\/+$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+}
+
+// one-tap kill switch for testing: add ?nofeedback=1 to URL to skip feedback calls
+const DISABLE_FEEDBACK =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("nofeedback");
 
 type OkList = { ok: true; data: { items: FeedbackItem[] } };
 type Ok = { ok: true };
@@ -41,13 +55,13 @@ export default function FeedbackAdminPanel() {
   );
 
   const load = useCallback(async () => {
-    if (!adminKey) return;
+    if (!adminKey || DISABLE_FEEDBACK) return;
     setLoading(true);
     setErr(null);
     try {
       const qs = new URLSearchParams();
       if (statusFilter !== "all") qs.set("status", statusFilter);
-      const r = await fetch(`${API_BASE}/api/feedback/admin/list?${qs.toString()}`, {
+      const r = await fetch(join(API_BASE, `api/feedback/admin/list?${qs.toString()}`), {
         headers: { "x-admin-key": adminKey }
       });
       const j: unknown = await r.json().catch(() => ({}));
@@ -65,9 +79,9 @@ export default function FeedbackAdminPanel() {
   }, [load]);
 
   const patchStatus = useCallback(async (id: string, status: FeedbackStatus) => {
-    if (!adminKey) return;
+    if (!adminKey || DISABLE_FEEDBACK) return;
     try {
-      const r = await fetch(`${API_BASE}/api/feedback/${encodeURIComponent(id)}`, {
+      const r = await fetch(join(API_BASE, `api/feedback/${encodeURIComponent(id)}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "x-admin-key": adminKey },
         body: JSON.stringify({ status })
@@ -81,9 +95,9 @@ export default function FeedbackAdminPanel() {
   }, [adminKey, load]);
 
   const del = useCallback(async (id: string) => {
-    if (!adminKey) return;
+    if (!adminKey || DISABLE_FEEDBACK) return;
     try {
-      const r = await fetch(`${API_BASE}/api/feedback/${encodeURIComponent(id)}`, {
+      const r = await fetch(join(API_BASE, `api/feedback/${encodeURIComponent(id)}`), {
         method: "DELETE",
         headers: { "x-admin-key": adminKey }
       });

@@ -32,9 +32,24 @@ interface Props {
   model?: string;
 }
 
-const COMMENTS_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
-  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
+// never allow empty base in production
+const COMMENTS_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "https://alu-tracker-comments-api.onrender.com")
+).replace(/\/+$/, "");
+
+// tiny safe join helper
+function join(base: string, path: string) {
+  const b = base.replace(/\/+$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+}
+
+// one-tap kill switch for testing: add ?nocomments=1 (or ?nofeedback=1) to skip API calls
+const DISABLE_COMMENTS =
+  typeof window !== "undefined" &&
+  (new URLSearchParams(window.location.search).has("nocomments") ||
+    new URLSearchParams(window.location.search).has("nofeedback"));
 
 /* ---------- helpers (no any) ---------- */
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -107,10 +122,15 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
   const canModerate = adminKey.length > 0;
 
   const fetchList = useCallback(async () => {
+    if (DISABLE_COMMENTS) {
+      setComments([]); // pretend empty, don’t hit network
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(normalizedKey)}`);
+      const r = await fetch(join(COMMENTS_BASE, `api/comments/${encodeURIComponent(normalizedKey)}`));
       const j = await safeJson(r);
       if (isApiResponseComments(j) && (j as ApiResponse<CommentsListData>).ok) {
         setComments((j as ApiOk<CommentsListData>).data.comments);
@@ -148,6 +168,14 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
 
+    if (DISABLE_COMMENTS) {
+      // simulate local-only success; still show the success toast
+      setSubmitted(true);
+      setBody("");
+      setType("general");
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
@@ -166,7 +194,7 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
         hp
       };
 
-      const r = await fetch(`${COMMENTS_BASE}/api/comments`, {
+      const r = await fetch(join(COMMENTS_BASE, "api/comments"), {
         method: "POST",
         headers,
         body: JSON.stringify(payload)
@@ -196,11 +224,11 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
   }
 
   async function callAdmin(method: "PATCH" | "DELETE", id: string, action?: "visible" | "hide") {
-    if (!canModerate) return;
+    if (!canModerate || DISABLE_COMMENTS) return;
     const url =
       method === "DELETE"
-        ? `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}`
-        : `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/${action}`;
+        ? join(COMMENTS_BASE, `api/comments/${encodeURIComponent(id)}`)
+        : join(COMMENTS_BASE, `api/comments/${encodeURIComponent(id)}/${action}`);
     const r = await fetch(url, { method, headers: { "x-admin-key": adminKey } });
     const j = await safeJson(r);
     if (!r.ok || !isRecord(j) || (j as { ok?: unknown }).ok !== true) {
@@ -220,7 +248,8 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
     setComments(next);
 
     try {
-      const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/self`, {
+      if (DISABLE_COMMENTS) return; // keep optimistic update, skip network
+      const r = await fetch(join(COMMENTS_BASE, `api/comments/${encodeURIComponent(id)}/self`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ body: newBody, editKey: key })
@@ -246,7 +275,11 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
     setComments(next);
 
     try {
-      const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}/self`, {
+      if (DISABLE_COMMENTS) {
+        localStorage.removeItem(`comment_editkey_${id}`);
+        return;
+      }
+      const r = await fetch(join(COMMENTS_BASE, `api/comments/${encodeURIComponent(id)}/self`), {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ editKey: key })

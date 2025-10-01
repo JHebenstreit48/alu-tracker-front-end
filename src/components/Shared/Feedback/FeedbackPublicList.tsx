@@ -16,9 +16,23 @@ type Props = {
   onSynced?: () => void;
 };
 
-const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
-  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
+// never allow empty base in production
+const API_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "https://alu-tracker-comments-api.onrender.com")
+).replace(/\/+$/, "");
+
+// tiny safe join helper
+function join(base: string, path: string) {
+  const b = base.replace(/\/+$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+}
+
+// one-tap kill switch for testing: add ?nofeedback=1 to URL to skip feedback calls
+const DISABLE_FEEDBACK =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("nofeedback");
 
 type OkList = { ok: true; data: { items: FeedbackItem[] } };
 
@@ -53,14 +67,14 @@ export default function FeedbackPublicList({
     let alive = true;
 
     (async () => {
-      if (!API_BASE) return;
+      if (DISABLE_FEEDBACK) return;
       setLoading(true);
       setErr(null);
       setNoPublicEndpoint(false);
 
       try {
         // 1) Preferred: public endpoint (server decides “recent” vs “all”)
-        let url = `${API_BASE}/api/feedback/public?mode=${mode}`;
+        let url = join(API_BASE, `api/feedback/public?mode=${mode}`);
         let init: RequestInit | undefined;
         let r = await fetch(url);
 
@@ -76,7 +90,7 @@ export default function FeedbackPublicList({
               qs.set("status", "all");
               qs.set("limit", "100");
             }
-            url = `${API_BASE}/api/feedback/admin/list?${qs.toString()}`;
+            url = join(API_BASE, `api/feedback/admin/list?${qs.toString()}`);
             init = { headers: { "x-admin-key": adminKey } };
             r = await fetch(url, init);
           } else {
