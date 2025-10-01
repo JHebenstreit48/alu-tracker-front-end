@@ -3,7 +3,7 @@ import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
 import FeedbackAdminPanel from "@/components/Shared/Feedback/FeedbackAdminPanel";
 import FeedbackPublicList from "@/components/Shared/Feedback/FeedbackPublicList";
-import type { FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
+import { type FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
 import "@/scss/MiscellaneousStyle/Feedback.scss";
 
 type Category = "bug" | "feature" | "content" | "other";
@@ -17,6 +17,7 @@ const API_BASE =
   import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
   (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
+// ---- type guards ----
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
@@ -32,6 +33,12 @@ function getErrorMessage(e: unknown): string {
   return "Unexpected error";
 }
 
+// Safe id generator (no `any`)
+function genId(): string {
+  const c = globalThis.crypto as { randomUUID?: () => string } | undefined;
+  return c?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export default function Feedback() {
   const [category, setCategory] = useState<Category>("bug");
   const [message, setMessage] = useState("");
@@ -42,9 +49,12 @@ export default function Feedback() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // public list refresh + show just-posted item immediately
+  // list refresh + local optimistic items
   const [refreshKey, setRefreshKey] = useState(0);
-  const [localFeedback, setLocalFeedback] = useState<FeedbackItem[]>([]);
+  const [localItems, setLocalItems] = useState<FeedbackItem[]>([]);
+
+  // tabs: "recent" or "all"
+  const [mode, setMode] = useState<"recent" | "all">("recent");
 
   const maxLen = 3000;
   const remaining = maxLen - message.length;
@@ -75,6 +85,7 @@ export default function Feedback() {
         body: JSON.stringify(payload)
       });
       const j: unknown = await r.json();
+
       if (!r.ok || !isApiResponse(j) || j.ok !== true) {
         const msg =
           (isObject(j) &&
@@ -89,9 +100,9 @@ export default function Feedback() {
       setDone(true);
       setMessage("");
 
-      // add a temporary local item so it appears instantly
-      const local: FeedbackItem = {
-        _id: crypto?.randomUUID?.() || String(Date.now()),
+      // Optimistic add so it appears immediately (no `any`)
+      const optimistic: FeedbackItem = {
+        _id: genId(),
         category,
         message: payload.message,
         email: payload.email,
@@ -99,8 +110,9 @@ export default function Feedback() {
         status: "new",
         createdAt: new Date().toISOString()
       };
-      setLocalFeedback((prev) => [local, ...prev]);
+      setLocalItems((prev) => [optimistic, ...prev]);
 
+      // Trigger server refetch
       setRefreshKey((n) => n + 1);
     } catch (e: unknown) {
       setError(getErrorMessage(e));
@@ -115,12 +127,49 @@ export default function Feedback() {
 
       <div className="feedback-wrap">
         <div className="feedback-grid">
-          {/* Card 1: Public list (separate card) */}
+          {/* LIST CARD (separate from form card) */}
           <section className="feedback-card feedback-card--list">
-            <FeedbackPublicList refreshKey={refreshKey} localItems={localFeedback} />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: ".75rem"
+              }}
+            >
+              <h2 className="comments-title" style={{ margin: 0 }}>
+                {mode === "recent" ? "Recent Feedback" : "All Feedback"}
+              </h2>
+              <div role="tablist" aria-label="Feedback view" style={{ display: "flex", gap: ".5rem" }}>
+                <button
+                  type="button"
+                  className={`chip ${mode === "recent" ? "active" : ""}`}
+                  onClick={() => setMode("recent")}
+                  aria-selected={mode === "recent"}
+                >
+                  Recent
+                </button>
+                <button
+                  type="button"
+                  className={`chip ${mode === "all" ? "active" : ""}`}
+                  onClick={() => setMode("all")}
+                  aria-selected={mode === "all"}
+                >
+                  All
+                </button>
+              </div>
+            </div>
+
+            {/* Hide internal title so we don't double-render headings */}
+            <FeedbackPublicList
+              mode={mode}
+              refreshKey={refreshKey}
+              localItems={localItems}
+              showTitle={false}
+            />
           </section>
 
-          {/* Card 2: Submit form (own card) */}
+          {/* FORM CARD */}
           <section className="feedback-card feedback-card--form">
             <p className="subtitle">Spotted a bug? Have a suggestion? Tell us below.</p>
 
@@ -200,7 +249,6 @@ export default function Feedback() {
               </button>
             </form>
 
-            {/* Hidden unless ?admin=1 */}
             {showAdmin && <FeedbackAdminPanel />}
           </section>
         </div>

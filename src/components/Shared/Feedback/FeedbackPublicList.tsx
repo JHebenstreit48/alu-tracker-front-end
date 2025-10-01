@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import FeedbackCard, { type FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
 
+type Mode = "recent" | "all";
+
 type Props = {
   /** Bump this to force a refetch after a successful post */
   refreshKey?: number;
   /** Items to show immediately (e.g., the one you just posted) */
   localItems?: FeedbackItem[];
+  /** Which tab/mode to show */
+  mode?: Mode;
+  /** If the parent already renders a heading, hide this component's title */
+  showTitle?: boolean;
 };
 
 const API_BASE =
@@ -24,7 +30,12 @@ function isOkList(v: unknown): v is OkList {
   return isObject(v) && v.ok === true && isObject(v.data) && hasItemsBlock(v.data);
 }
 
-export default function FeedbackPublicList({ refreshKey = 0, localItems = [] }: Props) {
+export default function FeedbackPublicList({
+  refreshKey = 0,
+  localItems = [],
+  mode = "recent",
+  showTitle = true,
+}: Props) {
   const [items, setItems] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -45,16 +56,24 @@ export default function FeedbackPublicList({ refreshKey = 0, localItems = [] }: 
       setNoPublicEndpoint(false);
 
       try {
-        // Preferred future route
-        let url = `${API_BASE}/api/feedback/public?status=triaged`;
+        // 1) Preferred: public endpoint (server decides “recent” vs “all”)
+        let url = `${API_BASE}/api/feedback/public?mode=${mode}`;
         let init: RequestInit | undefined;
         let r = await fetch(url);
 
-        // Fallback: admin list if an admin key exists
+        // 2) Fallback for admins if public route isn’t available
         if (r.status === 404) {
           const adminKey = sessionStorage.getItem("feedbackAdminKey") || "";
           if (adminKey) {
-            url = `${API_BASE}/api/feedback/admin/list?status=triaged`;
+            const qs = new URLSearchParams();
+            if (mode === "recent") {
+              qs.set("status", "new,triaged");
+              qs.set("limit", "20");
+            } else {
+              qs.set("status", "all");
+              qs.set("limit", "100");
+            }
+            url = `${API_BASE}/api/feedback/admin/list?${qs.toString()}`;
             init = { headers: { "x-admin-key": adminKey } };
             r = await fetch(url, init);
           } else {
@@ -62,13 +81,19 @@ export default function FeedbackPublicList({ refreshKey = 0, localItems = [] }: 
               setNoPublicEndpoint(true);
               setItems([]);
             }
-            return; // No public listing available
+            return;
           }
         }
 
         const j: unknown = await r.json().catch(() => ({}));
         if (!r.ok || !isOkList(j)) throw new Error(`Failed to load feedback (${r.status})`);
-        if (alive) setItems(j.data.items);
+
+        // newest first (server may already do this)
+        const serverItems = [...j.data.items].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
+        if (alive) setItems(serverItems);
       } catch (e) {
         if (alive) setErr(e instanceof Error ? e.message : "Failed to load feedback.");
       } finally {
@@ -76,21 +101,29 @@ export default function FeedbackPublicList({ refreshKey = 0, localItems = [] }: 
       }
     })();
 
-    return () => { alive = false; };
-  }, [refreshKey]);
+    return () => {
+      alive = false;
+    };
+  }, [refreshKey, mode]);
 
-  // Show freshly posted items immediately (local) above server items
-  const merged = localItems.concat(items);
+  // merge local just-posted items at the top without duplicates
+  const freshIds = new Set(localItems.map((i) => i._id));
+  const merged: FeedbackItem[] = [...localItems, ...items.filter((i) => !freshIds.has(i._id))];
+
+  const showNoPublicMsg = noPublicEndpoint && merged.length === 0 && !loading && !err;
 
   return (
-    <section className="feedback-public-list" style={{ marginBottom: "1.25rem" }}>
-      <h2 className="comments-title">Recent Feedback</h2>
+    <section className="feedback-public-list">
+      {showTitle && (
+        <h2 className="comments-title">
+          {mode === "recent" ? "Recent Feedback" : "All Feedback"}
+        </h2>
+      )}
+
       {loading && <div className="info">Loading…</div>}
       {err && <div className="error">{err}</div>}
-      {!loading && noPublicEndpoint && (
-        <div className="info">Public feedback listing isn’t available yet.</div>
-      )}
-      {!loading && !err && !noPublicEndpoint && merged.length === 0 && (
+      {showNoPublicMsg && <div className="info">Public feedback listing isn’t available yet.</div>}
+      {!loading && !err && !showNoPublicMsg && merged.length === 0 && (
         <div className="info">No feedback yet.</div>
       )}
 
