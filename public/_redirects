@@ -1,1 +1,4 @@
 /*  /index.html  200
+/api-core/*      https://alutracker-api.onrender.com/:splat            200
+/api-auth/*      https://alu-tracker-user-data.onrender.com/:splat     200
+/api-comments/*  https://alu-tracker-comments-api.onrender.com/:splat  200
