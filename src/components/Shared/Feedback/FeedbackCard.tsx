@@ -1,5 +1,3 @@
-import React from "react";
-
 export type FeedbackStatus = "new" | "triaged" | "closed";
 export type FeedbackCategory = "bug" | "feature" | "content" | "other";
 

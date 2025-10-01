@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
-import FeedbackAdminPanel from "@/components/Shared/FeedbackAdminPanel";
+import FeedbackAdminPanel from "@/components/Shared/Feedback/FeedbackAdminPanel";
+import FeedbackPublicList from "@/components/Shared/Feedback/FeedbackPublicList";
+import { type FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
 import "@/scss/MiscellaneousStyle/Feedback.scss";
 
 type Category = "bug" | "feature" | "content" | "other";
@@ -12,9 +14,10 @@ type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse = ApiOkOnly | ApiErr;
 
 const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://127.0.0.1:3004";
+  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
+// ---- type guards ----
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
@@ -30,6 +33,12 @@ function getErrorMessage(e: unknown): string {
   return "Unexpected error";
 }
 
+// Safe id generator (no `any`)
+function genId(): string {
+  const c = globalThis.crypto as { randomUUID?: () => string } | undefined;
+  return c?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export default function Feedback() {
   const [category, setCategory] = useState<Category>("bug");
   const [message, setMessage] = useState("");
@@ -40,12 +49,18 @@ export default function Feedback() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // list refresh + local optimistic items
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [localItems, setLocalItems] = useState<FeedbackItem[]>([]);
+
+  // tabs: "recent" or "all"
+  const [mode, setMode] = useState<"recent" | "all">("recent");
+
   const maxLen = 3000;
   const remaining = maxLen - message.length;
   const canSubmit = message.trim().length >= 5 && message.length <= maxLen;
 
   const showAdmin = useMemo(() => {
-    // Only render admin panel if URL has ?admin=1 (keeps it hidden for normal users)
     if (typeof window === "undefined") return false;
     return new URLSearchParams(window.location.search).get("admin") === "1";
   }, []);
@@ -70,20 +85,35 @@ export default function Feedback() {
         body: JSON.stringify(payload)
       });
       const j: unknown = await r.json();
+
       if (!r.ok || !isApiResponse(j) || j.ok !== true) {
         const msg =
           (isObject(j) &&
             isObject((j as Record<string, unknown>).error) &&
-            typeof ((j as Record<string, unknown>).error as Record<string, unknown>).message ===
-              "string" &&
-            String(
-              ((j as Record<string, unknown>).error as Record<string, unknown>).message
-            )) || "Failed to send feedback.";
+            typeof ((j as Record<string, unknown>).error as Record<string, unknown>).message === "string" &&
+            String(((j as Record<string, unknown>).error as Record<string, unknown>).message)) ||
+          "Failed to send feedback.";
         throw new Error(msg);
       }
+
       localStorage.setItem("feedbackEmail", email);
       setDone(true);
       setMessage("");
+
+      // Optimistic add so it appears immediately (no `any`)
+      const optimistic: FeedbackItem = {
+        _id: genId(),
+        category,
+        message: payload.message,
+        email: payload.email,
+        pageUrl: payload.pageUrl,
+        status: "new",
+        createdAt: new Date().toISOString()
+      };
+      setLocalItems((prev) => [optimistic, ...prev]);
+
+      // Trigger server refetch
+      setRefreshKey((n) => n + 1);
     } catch (e: unknown) {
       setError(getErrorMessage(e));
     } finally {
@@ -96,87 +126,131 @@ export default function Feedback() {
       <Header text="Feedback" />
 
       <div className="feedback-wrap">
-        <div className="feedback-page">
-          <p className="subtitle">Spotted a bug? Have a suggestion? Tell us below.</p>
-
-          <form className="feedback-form" onSubmit={onSubmit} noValidate>
-            <div className="row">
-              <label htmlFor="fb-category">Category</label>
-              <select
-                id="fb-category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as Category)}
-              >
-                <option value="bug">Bug</option>
-                <option value="feature">Feature</option>
-                <option value="content">Content</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div className="row">
-              <label htmlFor="fb-message">Message</label>
-              <textarea
-                id="fb-message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={maxLen}
-                rows={8}
-                placeholder="What happened? What would you like to see?"
-              />
-              <div className={`char-count ${remaining < 0 ? "over" : ""}`}>
-                {remaining} / {maxLen}
+        <div className="feedback-grid">
+          {/* LIST CARD (separate from form card) */}
+          <section className="feedback-card feedback-card--list">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: ".75rem"
+              }}
+            >
+              <h2 className="comments-title" style={{ margin: 0 }}>
+                {mode === "recent" ? "Recent Feedback" : "All Feedback"}
+              </h2>
+              <div role="tablist" aria-label="Feedback view" style={{ display: "flex", gap: ".5rem" }}>
+                <button
+                  type="button"
+                  className={`chip ${mode === "recent" ? "active" : ""}`}
+                  onClick={() => setMode("recent")}
+                  aria-selected={mode === "recent"}
+                >
+                  Recent
+                </button>
+                <button
+                  type="button"
+                  className={`chip ${mode === "all" ? "active" : ""}`}
+                  onClick={() => setMode("all")}
+                  aria-selected={mode === "all"}
+                >
+                  All
+                </button>
               </div>
             </div>
 
-            <div className="row grid">
-              <div className="col">
-                <label htmlFor="fb-email">Email (optional)</label>
-                <input
-                  id="fb-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  maxLength={254}
-                  placeholder="So we can follow up (optional)"
-                  autoComplete="email"
-                />
-              </div>
-              <div className="col checkbox">
-                <label htmlFor="fb-include-url">
-                  <input
-                    id="fb-include-url"
-                    type="checkbox"
-                    checked={includeUrl}
-                    onChange={(e) => setIncludeUrl(e.target.checked)}
-                  />
-                  Include current page URL
-                </label>
-              </div>
-            </div>
-
-            {/* Honeypot */}
-            <input
-              type="text"
-              name="hp"
-              value={hp}
-              onChange={(e) => setHp(e.target.value)}
-              className="hp"
-              aria-hidden="true"
-              tabIndex={-1}
-              autoComplete="off"
+            {/* Hide internal title so we don't double-render headings */}
+            <FeedbackPublicList
+              mode={mode}
+              refreshKey={refreshKey}
+              localItems={localItems}
+              showTitle={false}
             />
+          </section>
 
-            {error && <div className="error">{error}</div>}
-            {done && <div className="success">Thanks — we’ve received your feedback!</div>}
+          {/* FORM CARD */}
+          <section className="feedback-card feedback-card--form">
+            <p className="subtitle">Spotted a bug? Have a suggestion? Tell us below.</p>
 
-            <button className="submit" type="submit" disabled={!canSubmit || submitting}>
-              {submitting ? "Sending…" : "Send feedback"}
-            </button>
-          </form>
+            <form className="feedback-form" onSubmit={onSubmit} noValidate>
+              <div className="row">
+                <label htmlFor="fb-category">Category</label>
+                <select
+                  id="fb-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as Category)}
+                >
+                  <option value="bug">Bug</option>
+                  <option value="feature">Feature</option>
+                  <option value="content">Content</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
 
-          {/* Hidden unless ?admin=1 */}
-          {showAdmin && <FeedbackAdminPanel />}
+              <div className="row">
+                <label htmlFor="fb-message">Message</label>
+                <textarea
+                  id="fb-message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  maxLength={maxLen}
+                  rows={8}
+                  placeholder="What happened? What would you like to see?"
+                />
+                <div className={`char-count ${remaining < 0 ? "over" : ""}`}>
+                  {remaining} / {maxLen}
+                </div>
+              </div>
+
+              <div className="row grid">
+                <div className="col">
+                  <label htmlFor="fb-email">Email (optional)</label>
+                  <input
+                    id="fb-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    maxLength={254}
+                    placeholder="So we can follow up (optional)"
+                    autoComplete="email"
+                  />
+                </div>
+                <div className="col checkbox">
+                  <label htmlFor="fb-include-url">
+                    <input
+                      id="fb-include-url"
+                      type="checkbox"
+                      checked={includeUrl}
+                      onChange={(e) => setIncludeUrl(e.target.checked)}
+                    />
+                    Include current page URL
+                  </label>
+                </div>
+              </div>
+
+              {/* Honeypot */}
+              <input
+                type="text"
+                name="hp"
+                value={hp}
+                onChange={(e) => setHp(e.target.value)}
+                className="hp"
+                aria-hidden="true"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
+              {error && <div className="error">{error}</div>}
+              {done && <div className="success">Thanks — we’ve received your feedback!</div>}
+
+              <button className="submit" type="submit" disabled={!canSubmit || submitting}>
+                {submitting ? "Sending…" : "Send feedback"}
+              </button>
+            </form>
+
+            {showAdmin && <FeedbackAdminPanel />}
+          </section>
         </div>
       </div>
     </PageTab>

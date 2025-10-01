@@ -33,7 +33,8 @@ interface Props {
 }
 
 const COMMENTS_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") || "http://127.0.0.1:3004";
+  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
 /* ---------- helpers (no any) ---------- */
 function isRecord(v: unknown): v is Record<string, unknown> {

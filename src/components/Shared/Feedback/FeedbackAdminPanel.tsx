@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import FeedbackCard, { FeedbackItem, FeedbackStatus } from "@/pages/MainPages/Feedback/FeedbackCard";
+import FeedbackCard, { FeedbackItem, FeedbackStatus } from "@/components/Shared/Feedback/FeedbackCard";
 
 const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://127.0.0.1:3004";
+  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
 type OkList = { ok: true; data: { items: FeedbackItem[] } };
 type Ok = { ok: true };
