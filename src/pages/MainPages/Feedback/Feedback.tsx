@@ -100,7 +100,7 @@ export default function Feedback() {
       setDone(true);
       setMessage("");
 
-      // Optimistic add so it appears immediately (no `any`)
+      // Optimistic add so it appears immediately
       const optimistic: FeedbackItem = {
         _id: genId(),
         category,
@@ -166,6 +166,7 @@ export default function Feedback() {
               refreshKey={refreshKey}
               localItems={localItems}
               showTitle={false}
+              onSynced={() => setLocalItems([])}  // <-- clear optimistic items once server list is in
             />
           </section>
 
