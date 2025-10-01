@@ -12,6 +12,8 @@ type Props = {
   mode?: Mode;
   /** If the parent already renders a heading, hide this component's title */
   showTitle?: boolean;
+  /** Called after the component loads server items; parent can clear optimistic items to avoid duplicates */
+  onSynced?: () => void;
 };
 
 const API_BASE =
@@ -35,6 +37,7 @@ export default function FeedbackPublicList({
   localItems = [],
   mode = "recent",
   showTitle = true,
+  onSynced,
 }: Props) {
   const [items, setItems] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -93,7 +96,11 @@ export default function FeedbackPublicList({
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
 
-        if (alive) setItems(serverItems);
+        if (alive) {
+          setItems(serverItems);
+          // Tell the parent we have synced with the server so it can clear optimistic items.
+          onSynced?.();
+        }
       } catch (e) {
         if (alive) setErr(e instanceof Error ? e.message : "Failed to load feedback.");
       } finally {
@@ -104,9 +111,9 @@ export default function FeedbackPublicList({
     return () => {
       alive = false;
     };
-  }, [refreshKey, mode]);
+  }, [refreshKey, mode, onSynced]);
 
-  // merge local just-posted items at the top without duplicates
+  // merge local just-posted items at the top without duplicates (the parent clears localItems after sync)
   const freshIds = new Set(localItems.map((i) => i._id));
   const merged: FeedbackItem[] = [...localItems, ...items.filter((i) => !freshIds.has(i._id))];
 
