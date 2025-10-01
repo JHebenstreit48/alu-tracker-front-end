@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import FeedbackCard, { FeedbackItem, FeedbackStatus } from "@/pages/MainPages/Feedback/FeedbackCard";
 
+/**
+ * Dev keeps localhost fallback; Prod does NOT.
+ */
 const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://127.0.0.1:3004";
+  (import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") as string | undefined) ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
 type OkList = { ok: true; data: { items: FeedbackItem[] } };
 type Ok = { ok: true };
@@ -41,7 +44,7 @@ export default function FeedbackAdminPanel() {
   );
 
   const load = useCallback(async () => {
-    if (!adminKey) return;
+    if (!adminKey || !API_BASE) return; // prod safety
     setLoading(true);
     setErr(null);
     try {
@@ -65,7 +68,7 @@ export default function FeedbackAdminPanel() {
   }, [load]);
 
   const patchStatus = useCallback(async (id: string, status: FeedbackStatus) => {
-    if (!adminKey) return;
+    if (!adminKey || !API_BASE) return; // prod safety
     try {
       const r = await fetch(`${API_BASE}/api/feedback/${encodeURIComponent(id)}`, {
         method: "PATCH",
@@ -81,7 +84,7 @@ export default function FeedbackAdminPanel() {
   }, [adminKey, load]);
 
   const del = useCallback(async (id: string) => {
-    if (!adminKey) return;
+    if (!adminKey || !API_BASE) return; // prod safety
     try {
       const r = await fetch(`${API_BASE}/api/feedback/${encodeURIComponent(id)}`, {
         method: "DELETE",

@@ -32,8 +32,13 @@ interface Props {
   model?: string;
 }
 
+/**
+ * IMPORTANT: Dev keeps localhost fallback; Prod does NOT.
+ * This prevents mixed-content / AV blocks in Chrome.
+ */
 const COMMENTS_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") || "http://127.0.0.1:3004";
+  (import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") as string | undefined) ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
 /* ---------- helpers (no any) ---------- */
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -108,6 +113,14 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
   const fetchList = useCallback(async () => {
     setLoading(true);
     setError(null);
+
+    // Prod safety: don't attempt localhost if env is missing
+    if (!COMMENTS_BASE) {
+      setLoading(false);
+      setError("Comments service is temporarily unavailable.");
+      return;
+    }
+
     try {
       const r = await fetch(`${COMMENTS_BASE}/api/comments/${encodeURIComponent(normalizedKey)}`);
       const j = await safeJson(r);
@@ -146,6 +159,12 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
+
+    // Prod safety: don't attempt localhost if env is missing
+    if (!COMMENTS_BASE) {
+      setError("Comments service is temporarily unavailable.");
+      return;
+    }
 
     setSubmitting(true);
     setError(null);
@@ -196,6 +215,8 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
 
   async function callAdmin(method: "PATCH" | "DELETE", id: string, action?: "visible" | "hide") {
     if (!canModerate) return;
+    if (!COMMENTS_BASE) return; // prod safety
+
     const url =
       method === "DELETE"
         ? `${COMMENTS_BASE}/api/comments/${encodeURIComponent(id)}`
@@ -212,6 +233,7 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
   async function saveSelf(id: string, newBody: string): Promise<void> {
     const key = localStorage.getItem(`comment_editkey_${id}`) || "";
     if (!key) throw new Error("Missing edit key for this comment.");
+    if (!COMMENTS_BASE) throw new Error("Comments service is unavailable.");
 
     // optimistic update
     const prev = comments;
@@ -238,6 +260,7 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
   async function deleteSelf(id: string): Promise<void> {
     const key = localStorage.getItem(`comment_editkey_${id}`) || "";
     if (!key) throw new Error("Missing edit key for this comment.");
+    if (!COMMENTS_BASE) throw new Error("Comments service is unavailable.");
 
     // optimistic removal
     const prev = comments;
@@ -380,7 +403,7 @@ export default function Panel({ normalizedKey, brand, model }: Props) {
           {loading && <div className="info">Loading comments…</div>}
           {!loading && filtered.length === 0 && <div className="info">No comments yet.</div>}
 
-          {!loading &&
+        {!loading &&
             filtered.map((c) => {
               const hasGuestKey = Boolean(localStorage.getItem(`comment_editkey_${c._id}`));
               return (

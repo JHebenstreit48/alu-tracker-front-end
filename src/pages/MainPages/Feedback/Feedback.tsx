@@ -11,9 +11,12 @@ type ApiOkOnly = { ok: true };
 type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse = ApiOkOnly | ApiErr;
 
+/**
+ * Dev keeps localhost fallback; Prod does NOT.
+ */
 const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://127.0.0.1:3004";
+  (import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") as string | undefined) ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
@@ -53,6 +56,12 @@ export default function Feedback() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
+
+    // Prod safety: don't attempt localhost if env is missing
+    if (!API_BASE) {
+      setError("Feedback service is temporarily unavailable.");
+      return;
+    }
 
     setSubmitting(true);
     setError(null);
