@@ -1,9 +1,10 @@
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
-  # Avoid disabling caching site-wide; let Netlify’s immutable asset headers do the work
+  # Cache-Control: (let Netlify handle immutable assets; uncomment only if you truly want no caching)
   # Cache-Control: no-store
 
   Content-Security-Policy: \

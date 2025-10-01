@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import PageTab from "@/components/Shared/PageTab";
 import Header from "@/components/Shared/Header";
-import FeedbackAdminPanel from "@/components/Shared/FeedbackAdminPanel";
+import FeedbackAdminPanel from "@/components/Shared/Feedback/FeedbackAdminPanel";
+import FeedbackPublicList from "@/components/Shared/Feedback/FeedbackPublicList";
+import type { FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
 import "@/scss/MiscellaneousStyle/Feedback.scss";
 
 type Category = "bug" | "feature" | "content" | "other";
@@ -11,11 +13,8 @@ type ApiOkOnly = { ok: true };
 type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse = ApiOkOnly | ApiErr;
 
-/**
- * Dev keeps localhost fallback; Prod does NOT.
- */
 const API_BASE =
-  (import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") as string | undefined) ??
+  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
   (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
 
 function isObject(v: unknown): v is Record<string, unknown> {
@@ -43,12 +42,15 @@ export default function Feedback() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // public list refresh + show just-posted item immediately
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [localFeedback, setLocalFeedback] = useState<FeedbackItem[]>([]);
+
   const maxLen = 3000;
   const remaining = maxLen - message.length;
   const canSubmit = message.trim().length >= 5 && message.length <= maxLen;
 
   const showAdmin = useMemo(() => {
-    // Only render admin panel if URL has ?admin=1 (keeps it hidden for normal users)
     if (typeof window === "undefined") return false;
     return new URLSearchParams(window.location.search).get("admin") === "1";
   }, []);
@@ -56,12 +58,6 @@ export default function Feedback() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
-
-    // Prod safety: don't attempt localhost if env is missing
-    if (!API_BASE) {
-      setError("Feedback service is temporarily unavailable.");
-      return;
-    }
 
     setSubmitting(true);
     setError(null);
@@ -83,16 +79,29 @@ export default function Feedback() {
         const msg =
           (isObject(j) &&
             isObject((j as Record<string, unknown>).error) &&
-            typeof ((j as Record<string, unknown>).error as Record<string, unknown>).message ===
-              "string" &&
-            String(
-              ((j as Record<string, unknown>).error as Record<string, unknown>).message
-            )) || "Failed to send feedback.";
+            typeof ((j as Record<string, unknown>).error as Record<string, unknown>).message === "string" &&
+            String(((j as Record<string, unknown>).error as Record<string, unknown>).message)) ||
+          "Failed to send feedback.";
         throw new Error(msg);
       }
+
       localStorage.setItem("feedbackEmail", email);
       setDone(true);
       setMessage("");
+
+      // add a temporary local item so it appears instantly
+      const local: FeedbackItem = {
+        _id: crypto?.randomUUID?.() || String(Date.now()),
+        category,
+        message: payload.message,
+        email: payload.email,
+        pageUrl: payload.pageUrl,
+        status: "new",
+        createdAt: new Date().toISOString()
+      };
+      setLocalFeedback((prev) => [local, ...prev]);
+
+      setRefreshKey((n) => n + 1);
     } catch (e: unknown) {
       setError(getErrorMessage(e));
     } finally {
@@ -105,87 +114,95 @@ export default function Feedback() {
       <Header text="Feedback" />
 
       <div className="feedback-wrap">
-        <div className="feedback-page">
-          <p className="subtitle">Spotted a bug? Have a suggestion? Tell us below.</p>
+        <div className="feedback-grid">
+          {/* Card 1: Public list (separate card) */}
+          <section className="feedback-card feedback-card--list">
+            <FeedbackPublicList refreshKey={refreshKey} localItems={localFeedback} />
+          </section>
 
-          <form className="feedback-form" onSubmit={onSubmit} noValidate>
-            <div className="row">
-              <label htmlFor="fb-category">Category</label>
-              <select
-                id="fb-category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as Category)}
-              >
-                <option value="bug">Bug</option>
-                <option value="feature">Feature</option>
-                <option value="content">Content</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+          {/* Card 2: Submit form (own card) */}
+          <section className="feedback-card feedback-card--form">
+            <p className="subtitle">Spotted a bug? Have a suggestion? Tell us below.</p>
 
-            <div className="row">
-              <label htmlFor="fb-message">Message</label>
-              <textarea
-                id="fb-message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={maxLen}
-                rows={8}
-                placeholder="What happened? What would you like to see?"
-              />
-              <div className={`char-count ${remaining < 0 ? "over" : ""}`}>
-                {remaining} / {maxLen}
+            <form className="feedback-form" onSubmit={onSubmit} noValidate>
+              <div className="row">
+                <label htmlFor="fb-category">Category</label>
+                <select
+                  id="fb-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as Category)}
+                >
+                  <option value="bug">Bug</option>
+                  <option value="feature">Feature</option>
+                  <option value="content">Content</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
-            </div>
 
-            <div className="row grid">
-              <div className="col">
-                <label htmlFor="fb-email">Email (optional)</label>
-                <input
-                  id="fb-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  maxLength={254}
-                  placeholder="So we can follow up (optional)"
-                  autoComplete="email"
+              <div className="row">
+                <label htmlFor="fb-message">Message</label>
+                <textarea
+                  id="fb-message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  maxLength={maxLen}
+                  rows={8}
+                  placeholder="What happened? What would you like to see?"
                 />
+                <div className={`char-count ${remaining < 0 ? "over" : ""}`}>
+                  {remaining} / {maxLen}
+                </div>
               </div>
-              <div className="col checkbox">
-                <label htmlFor="fb-include-url">
+
+              <div className="row grid">
+                <div className="col">
+                  <label htmlFor="fb-email">Email (optional)</label>
                   <input
-                    id="fb-include-url"
-                    type="checkbox"
-                    checked={includeUrl}
-                    onChange={(e) => setIncludeUrl(e.target.checked)}
+                    id="fb-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    maxLength={254}
+                    placeholder="So we can follow up (optional)"
+                    autoComplete="email"
                   />
-                  Include current page URL
-                </label>
+                </div>
+                <div className="col checkbox">
+                  <label htmlFor="fb-include-url">
+                    <input
+                      id="fb-include-url"
+                      type="checkbox"
+                      checked={includeUrl}
+                      onChange={(e) => setIncludeUrl(e.target.checked)}
+                    />
+                    Include current page URL
+                  </label>
+                </div>
               </div>
-            </div>
 
-            {/* Honeypot */}
-            <input
-              type="text"
-              name="hp"
-              value={hp}
-              onChange={(e) => setHp(e.target.value)}
-              className="hp"
-              aria-hidden="true"
-              tabIndex={-1}
-              autoComplete="off"
-            />
+              {/* Honeypot */}
+              <input
+                type="text"
+                name="hp"
+                value={hp}
+                onChange={(e) => setHp(e.target.value)}
+                className="hp"
+                aria-hidden="true"
+                tabIndex={-1}
+                autoComplete="off"
+              />
 
-            {error && <div className="error">{error}</div>}
-            {done && <div className="success">Thanks — we’ve received your feedback!</div>}
+              {error && <div className="error">{error}</div>}
+              {done && <div className="success">Thanks — we’ve received your feedback!</div>}
 
-            <button className="submit" type="submit" disabled={!canSubmit || submitting}>
-              {submitting ? "Sending…" : "Send feedback"}
-            </button>
-          </form>
+              <button className="submit" type="submit" disabled={!canSubmit || submitting}>
+                {submitting ? "Sending…" : "Send feedback"}
+              </button>
+            </form>
 
-          {/* Hidden unless ?admin=1 */}
-          {showAdmin && <FeedbackAdminPanel />}
+            {/* Hidden unless ?admin=1 */}
+            {showAdmin && <FeedbackAdminPanel />}
+          </section>
         </div>
       </div>
     </PageTab>
