@@ -1,9 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 
-// same base logic as the form — keep it consistent
-const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
-  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
+// never allow empty base in production
+const API_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "https://alu-tracker-comments-api.onrender.com")
+).replace(/\/+$/, "");
+
+// tiny safe join helper
+function join(base: string, path: string) {
+  const b = base.replace(/\/+$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+}
+
+// one-tap kill switch for testing: add ?nofeedback=1 to URL to skip feedback calls
+const DISABLE_FEEDBACK =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("nofeedback");
 
 export type PublicFeedbackItem = {
   _id: string;
@@ -42,13 +55,12 @@ export default function FeedbackList() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      if (!API_BASE) return; // prod safety
+      if (DISABLE_FEEDBACK) return; // testing guard
       setLoading(true);
       setErr(null);
       try {
-        // Use a dedicated public endpoint you expose from the comments/feedback API.
-        // If you only have one list endpoint, you can filter by status here or on the server.
-        const r = await fetch(`${API_BASE}/api/feedback/public?status=triaged`);
+        // Dedicated public endpoint (server filters to triaged)
+        const r = await fetch(join(API_BASE, "api/feedback/public?status=triaged"));
         const j: unknown = await r.json().catch(() => ({}));
         if (!r.ok || !isOkList(j)) throw new Error(`Failed to load feedback (${r.status})`);
         if (alive) setItems(j.data.items);

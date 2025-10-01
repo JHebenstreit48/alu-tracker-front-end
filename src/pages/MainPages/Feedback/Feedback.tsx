@@ -13,9 +13,18 @@ type ApiOkOnly = { ok: true };
 type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse = ApiOkOnly | ApiErr;
 
-const API_BASE =
-  import.meta.env.VITE_COMMENTS_API_BASE_URL?.replace(/\/+$/, "") ??
-  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "");
+// never allow empty base in production
+const API_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ??
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "https://alu-tracker-comments-api.onrender.com")
+).replace(/\/+$/, "");
+
+// tiny safe join helper
+function join(base: string, path: string) {
+  const b = base.replace(/\/+$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+}
 
 // ---- type guards ----
 function isObject(v: unknown): v is Record<string, unknown> {
@@ -79,7 +88,7 @@ export default function Feedback() {
         pageUrl: includeUrl ? window.location.href : undefined,
         hp
       };
-      const r = await fetch(`${API_BASE}/api/feedback`, {
+      const r = await fetch(join(API_BASE, "api/feedback"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
