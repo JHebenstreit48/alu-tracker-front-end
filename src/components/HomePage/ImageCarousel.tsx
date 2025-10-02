@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ImageCarouselType } from "@/components/HomePage/ImagesForCarousel";
-import LoadingSpinner from "@/components/Shared/LoadingSpinner";
-import { useCarousel } from "@/components/HomePage/Carousel/useCarousel";
-import { Slide } from "@/components/HomePage/Carousel/Slide";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ImageCarouselType } from '@/components/HomePage/ImagesForCarousel';
+import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+import { useCarousel } from '@/components/HomePage/Carousel/useCarousel';
+import { Slide } from '@/components/HomePage/Carousel/Slide';
 
-const backendImageUrl =
-  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
+const backendImageUrl = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
 type Props = {
   project: ImageCarouselType[];
@@ -13,21 +12,14 @@ type Props = {
   pauseOnHover?: boolean;
 };
 
-const MAX_SPINNER_MS = 4000;
-
-export default function ImageCarousel({
-  project,
-  intervalMs = 2500,
-  pauseOnHover = true,
-}: Props) {
+export default function ImageCarousel({ project, intervalMs = 2500, pauseOnHover = true }: Props) {
   const slides = useMemo<ImageCarouselType[]>(() => project ?? [], [project]);
   const slidesPlus = useMemo(() => (slides.length ? [...slides, slides[0]] : slides), [slides]);
 
   const [imagesLoaded, setImagesLoaded] = useState<number>(0);
   const [isReady, setIsReady] = useState<boolean>(
-    () => sessionStorage.getItem("carouselReady") === "1"
+    () => sessionStorage.getItem('carouselReady') === '1'
   );
-  const timerRef = useRef<number | null>(null);
 
   const { active, setActive, hoverProps } = useCarousel({
     length: slides.length,
@@ -37,7 +29,7 @@ export default function ImageCarousel({
 
   // --- seamless wrap state ---
   const prevActiveRef = useRef<number>(0);
-  const [displayIndex, setDisplayIndex] = useState<number>(0);      // index used for translateX
+  const [displayIndex, setDisplayIndex] = useState<number>(0); // index used for translateX
   const [txEnabled, setTxEnabled] = useState<boolean>(true);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
@@ -71,32 +63,23 @@ export default function ImageCarousel({
       }
     };
 
-    el.addEventListener("transitionend", onEnd);
-    return () => el.removeEventListener("transitionend", onEnd);
+    el.addEventListener('transitionend', onEnd);
+    return () => el.removeEventListener('transitionend', onEnd);
   }, [displayIndex, slides.length]);
 
-  // --- spinner readiness ---
+  // --- spinner readiness (wait for ALL images) ---
   const markReady = useCallback((): void => {
     setIsReady(true);
-    sessionStorage.setItem("carouselReady", "1");
+    sessionStorage.setItem('carouselReady', '1');
   }, []);
   const onLoad = useCallback(() => setImagesLoaded((n) => n + 1), []);
   const onError = onLoad;
 
   useEffect(() => {
-    if (!isReady && slides.length > 0 && imagesLoaded >= slides.length) markReady();
+    if (!isReady && slides.length > 0 && imagesLoaded >= slides.length) {
+      markReady();
+    }
   }, [imagesLoaded, isReady, slides.length, markReady]);
-
-  useEffect(() => {
-    if (isReady) return;
-    timerRef.current = window.setTimeout(markReady, MAX_SPINNER_MS);
-    return () => {
-      if (timerRef.current !== null) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
-    };
-  }, [isReady, markReady]);
 
   if (!slides.length) return null;
 
@@ -108,15 +91,18 @@ export default function ImageCarousel({
       aria-label="Featured cars"
       {...hoverProps}
     >
-      <div className="carousel-inner" onFocus={() => setActive(active)}>
+      <div
+        className="carousel-inner"
+        onFocus={() => setActive(active)}
+      >
         <div
           ref={trackRef}
           className="carousel-track"
           style={{
             transform: `translateX(-${displayIndex * 100}%)`,
-            transition: txEnabled ? "transform 600ms ease-in-out" : "none",
-            display: "flex",
-            width: "100%",
+            transition: txEnabled ? 'transform 600ms ease-in-out' : 'none',
+            display: 'flex',
+            width: '100%',
           }}
         >
           {slidesPlus.map((image, i) => (
@@ -124,8 +110,8 @@ export default function ImageCarousel({
               key={i}
               src={`${backendImageUrl}${image.path}`}
               alt={`Car Image ${i + 1}`}
-              isActive={i === active}           // a11y hook; style handled by track
-              showOverlay={!isReady}
+              isActive={i === active}
+              showOverlay={false} // ⬅️ was {!isReady}; turn it off so spinner never moves
               eager={i === 0}
               onLoad={onLoad}
               onError={onError}
