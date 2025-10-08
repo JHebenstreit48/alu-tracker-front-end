@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
 
-const LegendStoreFilters: React.FC<{
+const Filters: React.FC<{
   onFiltersChange: Dispatch<
     SetStateAction<{
       selectedClass: string;
@@ -215,4 +215,4 @@ const LegendStoreFilters: React.FC<{
   );
 };
 
-export default LegendStoreFilters;
+export default Filters;

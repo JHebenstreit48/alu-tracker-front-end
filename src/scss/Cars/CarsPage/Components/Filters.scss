@@ -28,8 +28,8 @@
 
   /* phones (width-only, like your original) */
   @include maxw($cellphone-portrait) {
-    width: 16rem;
-    margin: 0 auto;
+    width: 22rem;
+    margin: 2rem auto;
     justify-content: center;
     align-items: center;
     text-align: center;

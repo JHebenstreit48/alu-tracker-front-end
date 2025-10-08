@@ -1,8 +1,9 @@
 import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
-import LegendStoreFilters from "@/components/LegendStore/LegendStoreFiltersAndSearch";
-import LegendStoreTables from "@/components/LegendStore/LegendStoreTables";
-import '@/scss/MiscellaneousStyle/LegendStore.scss';
+import Filters from "@/components/LegendStore/Filters";
+import Tables from "@/components/LegendStore/Tables";
+import '@/scss/LegendStore/LegendStore.scss';
+
 import { useState } from "react";
 
 export default function LegendStorePrices() {
@@ -27,8 +28,8 @@ export default function LegendStorePrices() {
       <div>
         <PageTab title="Legend Store Prices">
           <Header text="Legend Store" />
-          <LegendStoreFilters onFiltersChange={setFilters} />
-          <LegendStoreTables
+          <Filters onFiltersChange={setFilters} />
+          <Tables
             selectedClass={filters.selectedClass}
             selectedCarRarity={filters.selectedCarRarity}
             searchTerm={filters.searchTerm}
@@ -41,4 +42,3 @@ export default function LegendStorePrices() {
     </>
   );
 }
-
