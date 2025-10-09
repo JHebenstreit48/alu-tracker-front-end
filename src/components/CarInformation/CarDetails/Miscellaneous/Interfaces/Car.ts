@@ -1,12 +1,12 @@
 export interface Car {
   Id: number;
   Image: string;
-  ImageStatus?: 'available' | 'coming-soon' | 'unavailable';
+  ImageStatus?: "available" | "coming-soon" | "unavailable";
   Brand: string;
   Model: string;
-  Country: string;
+  Country: string; 
   Rarity: string;
-  ObtainableVia: string[] | string | null;
+  ObtainableVia: string;
   Class: string;
   Stars: number;
   KeyCar?: boolean;
