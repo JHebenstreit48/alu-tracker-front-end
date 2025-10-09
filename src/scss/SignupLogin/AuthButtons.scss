@@ -1,52 +1,79 @@
 @use "sass:color";
-@use '@scss/Globals/index' as *;
+@use "@scss/Globals/index" as *;
 
-/* ==============================
-            Variables
-============================== */
+/* =========================================
+   Auth Buttons (Login / Sign Up / Logout)
+   - Header positions the wrapper (.Header__auth) absolutely;
+     these styles only handle alignment + sizing.
+========================================= */
+
 $gold-accent: rgb(255, 196, 0);
-$dark-shadow: #19191a;
 $purple-glow: #7a05be;
+$btn-border: 1px solid $gold-accent;
+$btn-font: "Cinzel", serif;
 
-$mobileMaxWidthPortrait: 480px;
-$tablet-max: 768px;
-
-/* Keep these positioned inside the header area, but align with new grid */
-.authControls,
-.authWelcome {
+/* Ensure the right-side cluster stacks neatly inside the header */
+.Header__auth {
   display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: flex-end;
-}
+  flex-direction: column;          /* stack Login over Sign Up */
+  align-items: flex-end;
+  gap: 0.35rem;
 
-.authControls {
-  /* sit in the header’s right column */
-  grid-column: 2;
-}
-
-.authWelcome {
-  grid-column: 2;
-
-  .authWelcome__text {
-    text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+  @include maxw($cellphone-portrait) {
+    gap: 0.3rem;
   }
 }
 
-.logoutWrapper {
+/* Shared cluster styles (logged-in + logged-out) */
+.authControls,
+.authWelcome {
   display: flex;
+  flex-direction: column;          /* column to match the header stack */
+  align-items: flex-end;
+  gap: 0.35rem;
+
+  @include maxw($cellphone-portrait) {
+    gap: 0.3rem;
+  }
 }
 
+/* Logged-in “Welcome, {name}” cluster */
+.authWelcome {
+  .authWelcome__text {
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    text-align: right;
+
+    @include maxw($cellphone-portrait) {
+      font-size: 0.9rem;
+    }
+  }
+
+  .logoutWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Buttons (Login, Sign Up, Logout) */
 .authControls button,
 .logout {
-  font-family: "Cinzel Decorative", serif;
+  font-family: $btn-font;
   font-weight: 700;
   background: none;
-  border: 1px solid $gold-accent;
+  border: $btn-border;
   color: $gold-accent;
-  padding: 0.4rem 0.8rem;
-  min-height: 40px; /* a11y tap target */
+  padding: 0.28rem 0.6rem;
+  min-height: 34px;
+  font-size: 0.95rem;
   cursor: pointer;
+  border-radius: 0.5rem;
+  line-height: 1;
+  white-space: nowrap;             /* avoid wrapping “Sign Up” */
+  text-align: center;
+  min-width: 5.25rem;              /* keeps a consistent pill width */
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
 
   &:hover,
   &:focus-visible {
@@ -55,25 +82,28 @@ $tablet-max: 768px;
     border-color: $purple-glow;
     outline: none;
   }
-}
 
-/* Responsive tweaks */
-@media only screen and (max-width: $tablet-max) {
-  .authControls button,
-  .logout {
-    padding: 0.35rem 0.7rem;
+  /* Tablet and down: slightly tighter */
+  @include maxw($tablet-portrait) {
+    padding: 0.25rem 0.55rem;
+    min-height: 32px;
+    font-size: 0.9rem;
+  }
+
+  /* Phone: compact but tappable */
+  @include maxw($cellphone-portrait) {
+    font-size: 0.88rem;
+    min-height: 1.55rem;
+    min-width: 5rem;
   }
 }
 
-@media only screen and (max-width: $mobileMaxWidthPortrait) {
-  .authControls,
-  .authWelcome {
-    gap: 0.4rem;
-  }
-
-  .authControls button,
-  .logout {
-    font-size: 0.85rem;
-    min-height: 38px;
+/* Optional: consistent gaps if supported */
+@supports (gap: 0.25rem) {
+  @include maxw($cellphone-portrait) {
+    .authControls,
+    .authWelcome {
+      gap: 0.3rem;
+    }
   }
 }

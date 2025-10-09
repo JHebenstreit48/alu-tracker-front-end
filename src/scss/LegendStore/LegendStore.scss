@@ -1,0 +1,332 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* =========================================
+   Legend Store — Full Styles (Filters + Table)
+   With proper nesting + maxw($cellphone-portrait)
+   ========================================= */
+
+/* =============================
+   Local Variables (page-scoped)
+   ============================= */
+$control-grid-gap: 2rem;
+$control-width: 46rem;
+$control-border-color: black;
+$control-box-shadow-color: rgb(223, 190, 7);
+$control-bg-color: black;
+$control-padding: 4rem;
+$control-font-size: 1rem;
+
+$select-height: 2rem;
+$search-input-height: 1.8rem;
+$search-placeholder-color: rgba(0, 0, 0, 0);
+
+$filter-heading-color: white;
+$filter-heading-font-size: 1.9rem;
+
+$dropdown-label-color: white;
+$dropdown-label-gap: 10px;
+
+$option-uncommon-bg: rgb(1, 188, 250);
+$option-rare-bg: rgb(111, 8, 170);
+$option-epic-bg: rgb(255, 174, 0);
+$option-text-color: black;
+$option-text-color-white: white;
+
+$reset-button-bg: rgb(52, 1, 75);
+$reset-button-hover-bg: rgb(193, 71, 250);
+$reset-button-text-color: white;
+$reset-button-hover-text-color: rgb(0, 0, 0);
+$reset-button-box-shadow-color: rgb(223, 190, 7);
+$reset-button-padding: 7px;
+$reset-button-width: 9rem;
+$reset-button-font-size: 1rem;
+$reset-button-border-radius: 1rem;
+
+$table-border-color: rgb(11, 7, 134);
+$shadow-gold-xl-color: rgb(223, 190, 7);
+$table-width: 95rem;
+$table-bg-color: black;
+$color-black: black;
+$color-accent-blue: white;
+$class-header-text-color: rgb(21, 201, 232);
+$class-header-border-color: rgb(204, 19, 255);
+$class-header-font-size: 2rem;
+$class-header-padding: 15px;
+
+$no-results-text-color: #888;
+$no-results-margin-top: 20px;
+
+/* =========================================
+   FILTERS (parity with Cars .carFilters)
+   ========================================= */
+.legendStoreControls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'heading heading'
+    'cumulative individual'
+    'star      rarity'
+    'class     search'
+    'reset     reset';
+  background-color: $color-black;
+  border: $filter-border;
+  box-shadow: $shadow-gold-lg;
+  width: $filter-width;
+  margin: 3rem auto 0 auto;
+  padding: $filter-padding;
+  gap: $filter-gap;
+  color: $color-white;
+  font-size: $filter-font-size;
+
+  /* mobile layout for the grid container */
+  @include maxw($cellphone-portrait) {
+    width: 22rem;
+    margin: 2rem auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'heading'
+      'cumulative'
+      'individual'
+      'star'
+      'rarity'
+      'class'
+      'search'
+      'reset';
+  }
+
+  .filterHeading {
+    grid-area: heading;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: $filter-heading-color;
+  }
+
+  .DropdownLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    position: relative;
+
+    select,
+    input {
+      height: $input-height;
+      padding: 4px 8px;
+      border-radius: $input-radius;
+      text-align: center;
+      overflow-y: auto;
+      max-height: 200px;
+      z-index: 1;
+    }
+
+    select {
+      appearance: none;
+      background-color: white;
+      color: black;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* mobile tweaks scoped to the control */
+    @include maxw($cellphone-portrait) {
+      width: 100%;
+    }
+  }
+
+  /* Map label order to grid areas (no JSX changes) */
+  > label.DropdownLabel:nth-of-type(1) {
+    grid-area: cumulative;
+  }
+  > label.DropdownLabel:nth-of-type(2) {
+    grid-area: individual;
+  }
+  > label.DropdownLabel:nth-of-type(3) {
+    grid-area: star;
+  }
+  > label.DropdownLabel:nth-of-type(4) {
+    grid-area: rarity;
+  }
+  > label.DropdownLabel:nth-of-type(5) {
+    grid-area: class;
+  }
+  > label.DropdownLabel:nth-of-type(6) {
+    grid-area: search;
+  }
+
+  #searchInput {
+    height: $search-input-height;
+    width: 50%;
+    margin: 0 auto;
+
+    &::placeholder {
+      text-align: center;
+    }
+    &:focus::placeholder {
+      color: $search-placeholder-color;
+    }
+
+    @include maxw($cellphone-portrait) {
+      width: 18rem;
+      margin: 0 auto;
+      font-size: 1.2rem;
+    }
+  }
+
+  .optionUncommon {
+    background-color: $option-uncommon-bg;
+    color: $option-text-color;
+    text-align: center;
+  }
+  .optionRare {
+    background-color: $option-rare-bg;
+    color: $option-text-color-white;
+    text-align: center;
+  }
+  .optionEpic {
+    background-color: $option-epic-bg;
+    color: $option-text-color;
+    text-align: center;
+  }
+
+  .resetButton {
+    grid-area: reset;
+    margin-top: 1rem;
+    justify-self: center;
+    background-color: $reset-btn-bg;
+    color: white;
+    padding: 0.6rem 2rem;
+    border-radius: $reset-btn-radius;
+    box-shadow: $shadow-gold-basic;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: $table-border-color;
+      color: $color-white;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* =========================================
+   TABLE (desktop unchanged, mobile → cards)
+   ========================================= */
+.responsiveTable {
+  text-align: center;
+  border: 3px solid $table-border-color !important;
+  box-shadow: 0 0 10px 6px $shadow-gold-xl-color;
+  width: $table-width !important;
+  background-color: $table-bg-color;
+  margin: 6rem auto 5rem auto;
+
+  th,
+  td {
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  /* mobile transformation scoped within table */
+  @include maxw($cellphone-portrait) {
+    width: 20rem !important;
+    margin: 4rem auto;
+    border: 2px solid $table-border-color !important;
+
+    thead {
+      display: none; /* column headers hidden on phones */
+    }
+
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 0.8rem;
+        border: 1px solid $table-border-color;
+        background-color: rgb(32, 31, 31);
+        border-radius: 10px;
+        padding: 0.4rem 0.6rem;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 15px;
+        padding: 0.45rem 0;
+        border-left: 0;
+        border-right: 0;
+
+        /* right-side value behavior */
+        > * {
+          max-width: 60%;
+          text-align: right;
+          word-break: break-word;
+        }
+
+        /* labels sourced from data-label (JS populates from thead) */
+        &::before {
+          content: attr(data-label) ':';
+          font-weight: 700;
+          margin-right: 0.5rem;
+          text-align: left;
+          /* optional: color: $class-header-text-color; */
+        }
+
+        &:last-child {
+          font-weight: 700;
+          font-variant-numeric: tabular-nums;
+        }
+      }
+    }
+  }
+}
+
+.classSelectionHeader {
+  text-align: center;
+  font-size: $class-header-font-size;
+  font-weight: bold;
+  background-color: $table-bg-color;
+  color: $class-header-text-color;
+  padding: $class-header-padding;
+  border-bottom: 1px solid $class-header-border-color;
+
+  @include maxw($cellphone-portrait) {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 1rem;
+    border: 1px solid $class-header-border-color;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 6px $shadow-gold-xl-color;
+  }
+}
+
+.tableHeaderRow {
+  background-color: $color-black;
+  color: $color-accent-blue;
+
+  th {
+    justify-content: space-between;
+    padding: 15px;
+    border-right: 1px solid $class-header-border-color;
+  }
+
+  @include maxw($cellphone-portrait) {
+    display: none;
+  }
+}
+
+td {
+  height: 2rem;
+  font-size: 1rem;
+}
+
+.no-results {
+  text-align: center;
+  color: $no-results-text-color;
+  margin-top: $no-results-margin-top;
+}

@@ -136,6 +136,10 @@ td {
     color: $color-link-blue;
     text-decoration: none;
     max-width: calc(100% - 45px);
+
+    @include maxw($cellphone-portrait) {
+      font-size: 1rem;
+    }
   }
 
   @include maxw($cellphone-portrait) {
@@ -143,7 +147,7 @@ td {
     display: block;
     font-size: 1.1rem;
     line-height: 1.5rem;
-    padding: 0.75rem 0;
+    padding: 0;
     border-bottom: 1px solid $td-border-color;
   }
 }

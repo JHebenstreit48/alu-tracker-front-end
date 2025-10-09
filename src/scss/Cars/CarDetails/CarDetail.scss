@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use '@scss/Globals/index' as *; // ← loads the status card styles for this page
+@use "sass:color";
+@use "@scss/Globals/index" as *; // ← tokens + mixins (maxw, etc)
 
 /* =============================
    Variables
@@ -7,12 +7,10 @@
 $car-detail-text-color: #333;
 
 $back-btn-bg-color: #333;
-// $color-accent-blue-color: white;
 $back-btn-hover-bg-color: #555;
 $back-btn-padding: 10px 1.5rem;
 
 $car-name-font-size: 2.8rem;
-// $car-name-text-color: white;
 $car-name-margin-bottom: 15px;
 
 $car-image-width: 60rem;
@@ -31,12 +29,7 @@ $blueprints-width: 50rem;
 $blueprints-font-size: 1.4rem;
 
 $max-rank-font-size: 1.6rem;
-
 $car-info-font-size: 1.2rem;
-// $car-info-text-color: white;
-
-$mobileMaxWidthPortrait: 480px;
-$cellphone-landscape: 390px;
 
 /* =============================
    Car Detail Page Layout
@@ -44,10 +37,6 @@ $cellphone-landscape: 390px;
 .carDetail {
   grid-template-columns: $table-grid-columns;
   color: $car-detail-text-color;
-
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
-    /* media content later */
-  }
 
   .loading-message {
     color: white;
@@ -67,7 +56,6 @@ $cellphone-landscape: 390px;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid color.change($car-image-shadow-color, $alpha: 0.45);
 
-    // In this top bar only, remove the big page margin on the back button
     .backBtn {
       margin: 0;
       border-radius: 8px;
@@ -77,9 +65,7 @@ $cellphone-landscape: 390px;
       border: none;
       cursor: pointer;
 
-      &:hover {
-        background-color: $back-btn-hover-bg-color;
-      }
+      &:hover { background-color: $back-btn-hover-bg-color; }
     }
 
     .cdetail-status {
@@ -88,17 +74,13 @@ $cellphone-landscape: 390px;
       display: flex;
       justify-content: flex-end;
     }
-  }
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
-    .cdetail-top {
+    @include maxw($cellphone-portrait) {
       flex-direction: column;
       align-items: stretch;
       gap: 0.5rem;
 
-      .cdetail-status {
-        justify-content: flex-start; // timestamp drops below Back on mobile
-      }
+      .cdetail-status { justify-content: flex-start; }
     }
   }
   
@@ -125,6 +107,11 @@ $cellphone-landscape: 390px;
     margin: $car-image-margin;
     border: 3px solid $car-image-border-color;
     box-shadow: 0 0 7px 4px $car-image-shadow-color;
+
+    @include maxw($cellphone-portrait) {
+      width: 23rem;
+      margin: 2rem auto 0 auto;
+    }
   }
 
   /* =============================
@@ -133,6 +120,11 @@ $cellphone-landscape: 390px;
   .keyInfoTableContainer {
     margin: 0.8rem auto 2rem auto;
     width: $car-image-width;
+
+    @include maxw($cellphone-portrait) {
+      width: 22rem;
+      margin: 1.4rem auto;
+    }
 
     .keyInfoTable {
       width: 100%;
@@ -143,21 +135,22 @@ $cellphone-landscape: 390px;
       box-shadow: 0 0 7px 4px rgb(223, 190, 7);
       margin: 0 auto;
 
+      /* PHONE-ONLY: reduce vertical white space around this table */
+      @include maxw($cellphone-portrait) {
+        margin: 38px auto 3px auto;  // ← your DevTools value
+      }
+
       th {
         background-color: black;
-        color: rgb(21, 201, 232);
+        color: $color-accent-blue;
         font-size: 1.8rem;
         padding: 5px;
         text-align: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         margin: 0 auto;
       }
 
-      .testClass {
-        height: 3rem;
-        padding: 0.5;
-        margin: 0;
-      }
+      .testClass { height: 3rem; padding: 0.5; margin: 0; }
 
       td {
         color: gold;
@@ -168,29 +161,42 @@ $cellphone-landscape: 390px;
         margin: 0 auto;
       }
 
-      input[type='checkbox'] {
+      input[type="checkbox"] {
         transform: scale(1.2);
         margin-right: 0.5rem;
       }
 
-      label {
-        color: white;
-        font-size: 1.2rem;
-      }
+      label { color: white; font-size: 1.2rem; }
     }
   }
 
   /* =============================
-      Car Detail Tables
+      Car Detail Tables (desktop base)
      ============================= */
-  .carDetailTables {
+  .carDetailsTables {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: flex-start;
-    gap: 1rem 5rem;
+    gap: 1rem 5rem;     /* desktop spacing stays */
     margin-top: 0;
     padding: 0;
+
+    /* PHONE-ONLY overrides nested here */
+    @include maxw($cellphone-portrait) {
+      gap: 0rem; /* tighter than desktop */
+
+      /* kill the desktop spacer between odd cards */
+      .tableCard:not(:nth-child(2n)) { margin-right: 0; }
+
+      /* ensure every child (incl. unwrapped MaxStarTable) sizes like a card */
+      > * {
+        box-sizing: border-box;
+        width: auto;                /* override fixed 45rem on cards */
+        min-height: unset;          /* avoid tall blank space */
+        flex: 0 1 clamp(22rem, 40vw, 24rem); /* keeps 2-up on phones */
+      }
+    }
   }
 
   .tableCard {
@@ -201,10 +207,16 @@ $cellphone-landscape: 390px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
+    /* PHONE-ONLY: remove tall minimum so short tables don’t look spaced out */
+    @include maxw($cellphone-portrait) {
+      width: auto;       /* use flex-basis from parent override */
+      min-height: unset; /* content-height */
+    }
   }
 
   .tableCard:not(:nth-child(2n)) {
-    margin-right: 5rem;
+    margin-right: 5rem;  /* desktop only; phone override above cancels it */
   }
 
   .carInfoTable {
@@ -213,14 +225,24 @@ $cellphone-landscape: 390px;
     border-collapse: collapse;
     table-layout: fixed;
     flex-grow: 1;
-  }
 
-  .carInfoTable td,
-  .carInfoTable th {
-    padding: 10px 16px;
-    text-align: center;
-    vertical-align: middle;
-    height: auto;
+    /* PHONE-ONLY: reduce vertical white space around each table */
+    @include maxw($cellphone-portrait) {
+      margin: 38px auto 3px auto;  // ← your DevTools value
+    }
+
+    td,
+    th {
+      padding: 10px 16px;
+      text-align: center;
+      vertical-align: middle;
+      height: auto;
+    }
+
+    /* PHONE-ONLY: compact cells a touch */
+    @include maxw($cellphone-portrait) {
+      td, th { padding: 6px 8px; font-size: 0.98rem; }
+    }
   }
 
   .tableHeader2 {
@@ -230,7 +252,12 @@ $cellphone-landscape: 390px;
     height: 50px;
     padding: 15px 80px 20px 80px !important;
     font-size: $table-header-font-size !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+    @include maxw($cellphone-portrait) {
+      font-size: 1.25rem !important;
+      padding: 12px 18px !important;
+    }
   }
 
   /* =============================
@@ -240,6 +267,10 @@ $cellphone-landscape: 390px;
     width: 22px;
     height: 22px;
     margin: 2px;
+
+    @include maxw($cellphone-portrait) {
+      width: 18px; height: 18px;
+    }
   }
 
   /* =============================
@@ -253,18 +284,10 @@ $cellphone-landscape: 390px;
     color: white;
   }
 
-  .blueprintsTable td {
-    text-align: center;
-    vertical-align: middle;
-  }
+  .blueprintsTable td { text-align: center; vertical-align: middle; }
 
-  .blueprintStarCell {
-    width: 40%;
-  }
-
-  .blueprintValueCell {
-    width: 10%;
-  }
+  .blueprintStarCell { width: 40%; }
+  .blueprintValueCell { width: 10%; }
 
   .starIconWrapper {
     display: flex;
@@ -282,9 +305,7 @@ $cellphone-landscape: 390px;
   /* =============================
       Max Rank and Car Info Text
      ============================= */
-  .maxRank {
-    font-size: $max-rank-font-size;
-  }
+  .maxRank { font-size: $max-rank-font-size; }
 
   .carInfo {
     font-size: $car-info-font-size;
@@ -293,6 +314,9 @@ $cellphone-landscape: 390px;
   }
 }
 
+/* =============================
+   Divider
+   ============================= */
 .content-divider {
   border: none;
   height: 2px;

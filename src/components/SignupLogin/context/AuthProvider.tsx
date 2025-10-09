@@ -9,36 +9,53 @@ interface Props {
 export const AuthProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [syncReady, setSyncReady] = useState<boolean>(false); // ✅ gate autosync
 
+  // Load persisted credentials and hydrate once
   useEffect(() => {
-    const storedToken = localStorage.getItem("token"); // ✅ consistent key
+    const storedToken = localStorage.getItem("token");
     const storedUsername = localStorage.getItem("username");
-
     if (storedToken && storedUsername) {
       setToken(storedToken);
       setUsername(storedUsername);
+      (async () => {
+        setSyncReady(false);
+        try {
+          await syncFromAccount(storedToken); // ✅ merge-based hydrate (no clearing)
+        } finally {
+          setSyncReady(true);
+        }
+      })();
     }
   }, []);
 
   const login = (newToken: string, newUsername: string) => {
-    localStorage.setItem("token", newToken); // ✅ corrected key
+    localStorage.setItem("token", newToken);
     localStorage.setItem("username", newUsername);
     setToken(newToken);
     setUsername(newUsername);
 
-    console.log("🔄 Syncing progress from account after login...");
-    syncFromAccount(newToken);
+    // Hydrate from server BEFORE enabling autosync
+    (async () => {
+      setSyncReady(false);
+      try {
+        await syncFromAccount(newToken);
+      } finally {
+        setSyncReady(true);
+      }
+    })();
   };
 
   const logout = () => {
-    localStorage.removeItem("token"); // ✅ corrected key
+    localStorage.removeItem("token");
     localStorage.removeItem("username");
     setToken(null);
     setUsername(null);
+    setSyncReady(false);
   };
 
   return (
-    <AuthContext.Provider value={{ token, username, login, logout }}>
+    <AuthContext.Provider value={{ token, username, syncReady, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

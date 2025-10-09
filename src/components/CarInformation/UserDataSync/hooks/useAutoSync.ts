@@ -3,10 +3,7 @@ import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { syncToAccount } from "@/components/CarInformation/UserDataSync/syncToAccount";
 
 // Type-safe debounce function
-function debounce<T extends (...args: Parameters<T>) => void>(
-  fn: T,
-  delay: number
-): (...args: Parameters<T>) => void {
+function debounce<T extends (...args: Parameters<T>) => void>(fn: T, delay: number): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
@@ -21,20 +18,15 @@ const debouncedSync = debounce((token: string) => {
 }, 1000);
 
 /**
- * useAutoSyncDependency
  * Triggers a debounced sync when any of the provided dependencies change,
- * provided a valid auth token exists.
+ * provided a valid auth token exists AND post-login hydrate has completed.
  *
- * IMPORTANT: We collapse the (potentially variable-length) deps array into a
- * single stable string key so the effect's dependency array length is constant.
+ * We collapse deps to a JSON key so the effect array is stable-length.
  */
 export function useAutoSyncDependency(dependencies: unknown[]): void {
-  const { token } = useContext(AuthContext);
+  const { token, syncReady } = useContext(AuthContext);
 
-  // Always coerce to array to be safe
   const safeDeps = Array.isArray(dependencies) ? dependencies : [];
-
-  // Build a stable signature for the deps (no functions, dates normalized)
   const depsKey = JSON.stringify(
     safeDeps,
     (_k, v) => {
@@ -45,9 +37,10 @@ export function useAutoSyncDependency(dependencies: unknown[]): void {
   );
 
   useEffect(() => {
-    if (typeof token === "string" && token.trim() !== "") {
+    if (typeof token === "string" && token.trim() !== "" && syncReady) {
       debouncedSync(token);
+    } else {
+      // If no token or not ready, do nothing (prevents early/empty writes)
     }
-    // ✅ Dependency array length is now constant (always 2)
-  }, [token, depsKey]);
+  }, [token, syncReady, depsKey]);
 }

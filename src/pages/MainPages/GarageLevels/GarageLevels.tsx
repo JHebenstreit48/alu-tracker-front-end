@@ -39,7 +39,7 @@ useEffect(() => {
   return (
     <div>
       <PageTab title="Garage Levels">
-        <Header text="Garage Levels" />
+        <Header text="Garage Levels" className="garageLevelsHeader" />
         <GLTrackerToggle onToggle={setIsTrackerMode} />
         {isTrackerMode && <GarageLevelTracker levels={garageLevels} />}
         <GarageLevelsDropDown levels={garageLevels} />

@@ -1,39 +1,69 @@
 import {
   setCarTrackingData,
-  clearAllCarTrackingData,
   generateCarKey,
   CarTrackingData,
+  getCarTrackingData,
 } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
-export const syncFromAccount = async (token: string) => {
-  try {
-    clearAllCarTrackingData();
+type CarStarsMap = Record<string, number>;
 
+interface ServerProgress {
+  carStars?: CarStarsMap;
+  ownedCars?: string[];
+  goldMaxedCars?: string[];
+  keyCarsOwned?: string[];
+  xp?: number;
+}
+interface ProgressResponse {
+  progress?: ServerProgress;
+}
+
+function isProgressResponse(u: unknown): u is ProgressResponse {
+  if (typeof u !== "object" || u === null) return false;
+  // We only check shape lightly; detailed validation not required here
+  return "progress" in u;
+}
+
+/**
+ * Pull server progress and merge into local per-car records:
+ * - stars: max(server, local)
+ * - owned/gold/key: union
+ * NO clearAllCarTrackingData() — avoids "empty window" races.
+ */
+export const syncFromAccount = async (token: string): Promise<void> => {
+  try {
     const res = await fetch(
       `${import.meta.env.VITE_AUTH_API_URL}/api/users/get-progress`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
 
     const rawText = await res.text();
-    console.log("🔍 Raw response text from backend:", rawText);
-
-    let result;
+    let resultUnknown: unknown;
     try {
-      result = JSON.parse(rawText);
+      resultUnknown = rawText ? JSON.parse(rawText) : {};
     } catch {
       console.error("❌ Failed to parse response JSON:", rawText);
       return;
     }
 
-    console.log("📦 Parsed response object:", result);
+    if (!res.ok) {
+      const msg =
+        (typeof resultUnknown === "object" &&
+          resultUnknown !== null &&
+          ("message" in resultUnknown || "error" in resultUnknown) &&
+          ((resultUnknown as { message?: string; error?: string }).message ??
+            (resultUnknown as { message?: string; error?: string }).error)) ||
+        `HTTP ${res.status}`;
+      console.error("❌ Invalid response:", msg);
+      return;
+    }
 
-    if (!res.ok || !result.progress) {
-      console.error("❌ Invalid response or missing 'progress' field:", result);
+    if (!isProgressResponse(resultUnknown) || !resultUnknown.progress) {
+      console.error("❌ Missing 'progress' field in response:", resultUnknown);
       return;
     }
 
@@ -42,67 +72,62 @@ export const syncFromAccount = async (token: string) => {
       ownedCars = [],
       goldMaxedCars = [],
       keyCarsOwned = [],
-    } = result.progress;
+    } = resultUnknown.progress;
 
-    const allEmpty =
-      Object.keys(carStars).length === 0 &&
-      ownedCars.length === 0 &&
-      goldMaxedCars.length === 0 &&
-      keyCarsOwned.length === 0;
+    // Index arrays for quick lookup
+    const ownedSet = new Set(ownedCars);
+    const goldSet = new Set(goldMaxedCars);
+    const keySet = new Set(keyCarsOwned);
 
-    if (allEmpty) {
-      console.warn("⚠️ Sync succeeded but no progress data was found for this account.");
-    }
+    // Merge each mentioned car from carStars
+    const touched = new Set<string>();
 
-    // ✅ Apply carStars
-    for (const rawKey in carStars) {
+    for (const rawKey of Object.keys(carStars)) {
       const [brand, ...modelParts] = rawKey.split(" ");
       const key = generateCarKey(brand, modelParts.join(" "));
-      const update: CarTrackingData = { stars: carStars[rawKey] };
+      const local = getCarTrackingData(key);
+
+      const serverStar = carStars[rawKey] ?? 0;
+      const localStar = typeof local.stars === "number" ? local.stars : 0;
+      const mergedStars = Math.max(localStar, serverStar);
+      const starsField = mergedStars > 0 ? { stars: mergedStars } : {};
+
+      const update: CarTrackingData = {
+        ...local,
+        ...starsField,
+        owned: Boolean(local.owned || ownedSet.has(rawKey)),
+        goldMaxed: Boolean(local.goldMaxed || goldSet.has(rawKey)),
+        keyObtained: Boolean(local.keyObtained || keySet.has(rawKey)),
+      };
+      setCarTrackingData(key, update);
+      touched.add(key);
+    }
+
+    // Ensure cars present only in arrays still get merged
+    const arraysOnly = new Set<string>([
+      ...ownedCars,
+      ...goldMaxedCars,
+      ...keyCarsOwned,
+    ]);
+
+    for (const rawKey of arraysOnly) {
+      const [brand, ...modelParts] = rawKey.split(" ");
+      const key = generateCarKey(brand, modelParts.join(" "));
+      if (touched.has(key)) continue;
+
+      const local = getCarTrackingData(key);
+      const update: CarTrackingData = {
+        ...local,
+        owned: Boolean(local.owned || ownedSet.has(rawKey)),
+        goldMaxed: Boolean(local.goldMaxed || goldSet.has(rawKey)),
+        keyObtained: Boolean(local.keyObtained || keySet.has(rawKey)),
+      };
       setCarTrackingData(key, update);
     }
 
-    // ✅ Apply ownedCars
-    for (const rawKey of ownedCars) {
-      const [brand, ...modelParts] = rawKey.split(" ");
-      const key = generateCarKey(brand, modelParts.join(" "));
-      const update: CarTrackingData = { owned: true };
-      setCarTrackingData(key, update);
-    }
-
-    // ✅ Apply goldMaxedCars
-    for (const rawKey of goldMaxedCars) {
-      const [brand, ...modelParts] = rawKey.split(" ");
-      const key = generateCarKey(brand, modelParts.join(" "));
-      const update: CarTrackingData = { goldMaxed: true };
-      setCarTrackingData(key, update);
-    }
-
-    // ✅ Apply keyCarsOwned
-    for (const rawKey of keyCarsOwned) {
-      const [brand, ...modelParts] = rawKey.split(" ");
-      const key = generateCarKey(brand, modelParts.join(" "));
-      const update: CarTrackingData = { keyObtained: true };
-      setCarTrackingData(key, update);
-    }
-
-    // ✅ Final debug printout
-    const allKeys = Object.keys(localStorage).filter((k) =>
-      k.startsWith("car-tracker-")
-    );
-
-    const allTracked: Record<string, CarTrackingData> = {};
-    for (const key of allKeys) {
-      try {
-        const parsed = JSON.parse(localStorage.getItem(key) || "{}");
-        allTracked[key] = parsed as CarTrackingData;
-      } catch {
-        console.warn(`⚠️ Could not parse tracking data for key: ${key}`);
-      }
-    }
-
-    console.log("✅ Sync complete — local tracking:", allTracked);
-  } catch (err) {
-    console.error("❌ Failed to sync from account:", err);
+    console.log("✅ Sync-from-account completed (merged safely)");
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error during sync-from-account.";
+    console.error("❌ Failed to sync from account:", message);
   }
 };
