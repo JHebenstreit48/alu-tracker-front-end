@@ -11,7 +11,3 @@ export interface Car {
   Stars: number;
   KeyCar?: boolean;
 }
-
-// Join nicely for display
-export const normalizeObtainableVia = (v: Car['ObtainableVia']): string[] =>
-  Array.isArray(v) ? v : typeof v === 'string' ? [v] : [];
