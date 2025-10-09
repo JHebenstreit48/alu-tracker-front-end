@@ -30,7 +30,7 @@ export default function TablesGrid({
         onKeyObtainedChange={onKeyObtainedChange}
       />
 
-      <div className="carDetailTables">
+      <div className="carDetailsTables">
         <div className="tableCard">
           <ClassRank car={car} trackerMode={trackerMode} forceOwned={car.KeyCar && keyObtained} />
         </div>
