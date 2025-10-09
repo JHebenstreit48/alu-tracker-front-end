@@ -3,147 +3,245 @@
 
 /* ==============================
    Local tokens / fallbacks
-   (Keep these until you centralize them in Globals)
 ============================== */
 $gold-text: rgb(255, 196, 0) !default;
+$gold-accent: rgb(223, 190, 7) !default;
 $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%) !default;
 $box-shadow-dark: 0 2px 5px #5b1479 !default;
 
-$mobileMaxWidthPortrait: 480px !default;
-$tablet-max: 768px !default;
-
 /* ==============================
-   Header Wrapper
+   Header (title centered, buttons safe)
 ============================== */
 .Header {
+  /* Title sizing via CSS custom properties (override per page via className) */
+  --title-min: 1.35rem;
+  --title-fluid: 4.8vw;
+  --title-max: 3rem;
+  --title-lines: 2;
+  --title-track: 0.01em;
+
+  /* Desktop/tablet: symmetric side columns keep the title *geometrically* centered */
+  --side-col: clamp(72px, 17vw, 112px);
+
+  /* Phone: reserve space for hamburger on the left & let auth size itself on the right */
+  --burger-col: clamp(44px, 10vw, 64px);
+
   position: sticky;
   top: 0;
   left: 0;
   width: 100%;
-  background-image: $header-gradient; /* gradient spans title + nav */
-  color: $gold-text;
-  box-shadow: $box-shadow-dark;
   z-index: 99;
+  color: $gold-text;
+  background-image: $header-gradient;
+  box-shadow: $box-shadow-dark;
+
+  /* ===== Row 1: Title row ===== */
+  .Header__inner {
+    position: relative;
+
+    /* Desktop/tablet: L | Title | R (symmetric) */
+    display: grid;
+    grid-template-columns: var(--side-col) 1fr var(--side-col);
+    align-items: center;
+    min-height: clamp(4.75rem, 8.5vw, 7.75rem);
+    padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+
+    /* Phone: reserve real hamburger width on left; auth auto on right */
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: var(--burger-col) 1fr auto; /* [burger] [title] [auth] */
+      column-gap: 0.5rem;
+    }
+
+    /* Center title */
+    .PageHeader {
+      grid-column: 2;
+      justify-self: center;
+      margin: 0;
+      text-align: center;
+      line-height: 1.12;
+      max-width: 100%;
+      padding-inline: 0.2rem;
+
+      font-family: var(--display-font, "Cinzel"), serif;
+      letter-spacing: var(--title-track, 0.01em);
+
+      /* A fitter script can set --fit-size; else clamp applies */
+      font-size: var(
+        --fit-size,
+        clamp(var(--title-min), var(--title-fluid), var(--title-max))
+      );
+
+      /* Robust wrapping */
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
+
+      /* Multi-line clamp */
+      line-clamp: var(--title-lines);
+      -webkit-line-clamp: var(--title-lines);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @include maxw($cellphone-portrait) {
+        letter-spacing: 0.015em;
+      }
+    }
+
+    /* Right column = auth stack (Login / Sign Up or Welcome + Logout) */
+    .Header__auth {
+      grid-column: 3;
+      justify-self: end;
+      display: flex;
+      flex-direction: column; /* Login above Sign Up */
+      align-items: flex-end;
+      gap: 0.35rem;
+
+      @include maxw($cellphone-portrait) {
+        gap: 0.3rem;
+      }
+    }
+  }
+
+  /* ===== Row 2: Nav shelf + gold lines (unchanged visuals) ===== */
+  .Header__navRow {
+    position: relative;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.12) 0%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+    box-shadow:
+      inset 0 6px 10px rgba(0, 0, 0, 0.22),
+      inset 0 -4px 8px rgba(0, 0, 0, 0.30);
+    padding-top: 0.35rem;
+    padding-bottom: 0.15rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1.5px;
+      background: linear-gradient(
+        90deg,
+        rgba($gold-accent, 0) 0%,
+        rgba($gold-accent, .28) 12%,
+        rgba($gold-accent, .85) 50%,
+        rgba($gold-accent, .28) 88%,
+        rgba($gold-accent, 0) 100%
+      );
+      box-shadow:
+        0 0 6px rgba($gold-accent, .28),
+        0 0 1px rgba($gold-accent, .6) inset;
+      pointer-events: none;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        rgba($gold-accent, 0) 0%,
+        rgba($gold-accent, .14) 50%,
+        rgba($gold-accent, 0) 100%
+      );
+      opacity: .55;
+      pointer-events: none;
+    }
+  }
+
+  /* ===== Per-page presets (override only variables) ===== */
+
+  /* Home (long site title) */
+  &.homeHeader {
+    --title-max: 3.4rem;
+    --title-fluid: 5.2vw;
+    --title-min: 1.55rem;
+    --title-lines: 2;
+
+    @include maxw($cellphone-portrait) {
+      --title-max: 1.55rem;   /* smaller so it never collides with auth */
+      --title-fluid: 4.2vw;
+      --title-min: 1.05rem;
+      --title-lines: 3;       /* allow wrap for “Asphalt Legends Unite Tracker” */
+    }
+  }
+
+  /* Brands */
+  &.brandsHeader {
+    --title-max: 3.1rem;
+    --title-fluid: 4.9vw;
+    --title-min: 1.45rem;
+
+    @include maxw($cellphone-portrait) {
+      --title-max: 2.05rem;
+      --title-fluid: 5.6vw;
+      --title-min: 1.3rem;
+    }
+  }
+
+  /* Legend Store */
+  &.legendStoreHeader {
+    --title-max: 3.1rem;
+    --title-fluid: 4.9vw;
+    --title-min: 1.45rem;
+
+    @include maxw($cellphone-portrait) {
+      --title-max: 2.05rem;
+      --title-fluid: 5.6vw;
+      --title-min: 1.3rem;
+    }
+  }
+
+  /* Cars list */
+  &.carsHeader {
+    --title-max: 3.2rem;
+    --title-fluid: 5vw;
+    --title-min: 1.5rem;
+
+    @include maxw($cellphone-portrait) {
+      --title-max: 2.1rem;
+      --title-fluid: 5.8vw;
+      --title-min: 1.32rem;
+    }
+  }
+
+  /* Garage Levels */
+  &.garageLevelsHeader {
+    --title-max: 3.2rem;
+    --title-fluid: 5vw;
+    --title-min: 1.5rem;
+
+    @include maxw($cellphone-portrait) {
+      --title-max: 2.1rem;
+      --title-fluid: 5.6vw;
+      --title-min: 1.28rem;
+    }
+  }
+
+  /* Car Details: *very* long names → smaller + more lines on phones */
+  &.carDetailsHeader {
+    /* desktop/tablet defaults */
+    --title-max: 2.4rem;
+    --title-fluid: 3.6vw;
+    --title-min: 1.05rem;
+    --title-lines: 3;
+
+    @include maxw($cellphone-portrait) {
+      --title-max: 0.95rem;  /* keeps “Veyron ... Vitesse” in view */
+      --title-fluid: 2.9vw;
+      --title-min: 0.76rem;
+      --title-lines: 4;
+      --title-track: 0.012em;
+    }
+  }
 }
 
-/* 1fr | auto | 1fr keeps the title truly centered */
-.Header__inner {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  padding-inline: clamp(0.75rem, 2vw, 2rem);
-  min-height: clamp(4.75rem, 8.5vw, 7.75rem);
-}
-
-/* place the title in the middle track, auth to the right */
-.PageHeader { grid-column: 2; }
-.Header__auth { grid-column: 3; justify-self: end; }
-
-/* nav sits on the same gradient; hairline separators for structure */
-/* Gold divider + subtle “shelf” for the nav row */
-$gold-accent: rgb(223, 190, 7);
-
-.Header__navRow {
-  position: relative;
-  /* slightly lighter shelf so the gradient still reads */
-  background-image: linear-gradient(
-    to bottom,
-    rgba(0,0,0,.12) 0%,
-    rgba(0,0,0,.38) 100%
-  );
-  /* gentler depth */
-  box-shadow:
-    inset 0 6px 10px rgba(0,0,0,.22),
-    inset 0 -4px 8px rgba(0,0,0,.30);
-  /* breathing room between gold line and labels */
-  padding-top: .35rem;
-  padding-bottom: .15rem;
-}
-
-/* top gold line: a touch thinner + softer glow */
-.Header__navRow::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1.5px;                 /* was 2px */
-  background: linear-gradient(
-    90deg,
-    rgba(223,190,7,0) 0%,
-    rgba(223,190,7,.28) 12%,
-    rgba(223,190,7,.85) 50%,
-    rgba(223,190,7,.28) 88%,
-    rgba(223,190,7,0) 100%
-  );
-  box-shadow:
-    0 0 6px rgba(223,190,7,.28),
-    0 0 1px rgba(223,190,7,.6) inset;
-  pointer-events: none;
-}
-
-/* faint bottom finish to “cap” the shelf without a box */
-.Header__navRow::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(223,190,7,0) 0%,
-    rgba(223,190,7,.14) 50%,
-    rgba(223,190,7,0) 100%
-  );
-  opacity: .55;
-  pointer-events: none;
-}
-
-/* optional: tame underline collision on very small screens */
-@media (max-width: 560px) {
-  .btn-lg::after { bottom: -4px; } /* was -6px */
-}
-
-/* ==============================
-   Title styling (modernized)
-============================== */
-.PageHeader {
-  margin: 0;
-  text-align: center;
-  line-height: 1.12;
-  max-width: min(95vw, 1200px);
-
-  /* swapable display face; defaults to Cinzel Decorative */
-  font-family: var(--display-font, "Cinzel"), serif;
-  text-transform: none;
-  letter-spacing: .01em;
-
-  font-size: clamp(1.6rem, 4.8vw, 3.2rem);
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-
-  /* 2-line clamp */
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Cars list */
-.carsHeader .PageHeader {
-  font-size: clamp(1.8rem, 5vw, 3.2rem);
-}
-
-/* CarDetails: extra breathing space + slightly smaller clamp */
-.carDetailsHeader .Header__inner {
-  min-height: clamp(5.25rem, 10vw, 8.75rem);
-}
-.carDetailsHeader .PageHeader {
-  font-size: clamp(1.35rem, 3.6vw, 2.55rem);
-  max-width: min(92vw, 1200px);
-  letter-spacing: .02em;
-}
-
-@media only screen and (max-width: $tablet-max) {
-  .Header__inner { grid-template-columns: 1fr auto 1fr; }
+/* Optional: tiny fix for underline collisions on ultra-narrow screens */
+@include maxw(560px) {
+  .btn-lg::after { bottom: -4px; }
 }

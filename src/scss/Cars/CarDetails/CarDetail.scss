@@ -10,33 +10,23 @@ $back-btn-bg-color: #333;
 // $color-accent-blue-color: white;
 $back-btn-hover-bg-color: #555;
 $back-btn-padding: 10px 1.5rem;
-
 $car-name-font-size: 2.8rem;
 // $car-name-text-color: white;
 $car-name-margin-bottom: 15px;
-
 $car-image-width: 60rem;
 $car-image-margin: 5rem auto 0 auto;
 $car-image-border-color: rgb(0, 0, 0);
 $car-image-shadow-color: rgb(223, 190, 7);
-
 $table-grid-columns: 1fr 1fr;
 $info-table-width: 45rem;
-
 $color-black: black;
 $color-accent-blue: rgb(21, 201, 232);
 $table-header-font-size: 1.8rem;
-
 $blueprints-width: 50rem;
 $blueprints-font-size: 1.4rem;
-
 $max-rank-font-size: 1.6rem;
-
 $car-info-font-size: 1.2rem;
 // $car-info-text-color: white;
-
-$mobileMaxWidthPortrait: 480px;
-$cellphone-landscape: 390px;
 
 /* =============================
    Car Detail Page Layout
@@ -45,7 +35,7 @@ $cellphone-landscape: 390px;
   grid-template-columns: $table-grid-columns;
   color: $car-detail-text-color;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+  @include maxw($cellphone-portrait) {
     /* media content later */
   }
 
@@ -90,7 +80,7 @@ $cellphone-landscape: 390px;
     }
   }
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) {
+  @include maxw($cellphone-portrait) {
     .cdetail-top {
       flex-direction: column;
       align-items: stretch;
@@ -125,6 +115,11 @@ $cellphone-landscape: 390px;
     margin: $car-image-margin;
     border: 3px solid $car-image-border-color;
     box-shadow: 0 0 7px 4px $car-image-shadow-color;
+
+    @include maxw($cellphone-portrait) {
+      width: 23rem;
+      margin: 2rem auto 0 auto;
+    }
   }
 
   /* =============================

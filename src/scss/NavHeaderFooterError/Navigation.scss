@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "@scss/Globals/index" as *;
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
 
 /* ==============================
    Tokens (project-local only)
@@ -13,8 +13,8 @@ $purple-glow: #7a05be;
 .Hamburger {
   display: none; /* desktop default */
   position: absolute;
-  top: 0.5rem;
-  left: 0.75rem;
+  top: 0.8rem;
+  left: 0rem;
   background: none;
   color: $gold-accent;
   font-size: 2rem;
@@ -29,12 +29,17 @@ $purple-glow: #7a05be;
 
 /* Show on phone widths */
 @include maxw($cellphone-portrait) {
-  .Hamburger { display: block; position: fixed; }
+  .Hamburger {
+    display: block;
+    position: fixed;
+  }
 }
 
 /* Bullet-proof: force-hide again above phone width (guards against overrides) */
 @include minw($cellphone-portrait + 1px) {
-  .Hamburger { display: none !important; }
+  .Hamburger {
+    display: none !important;
+  }
 }
 
 /* If you also want it visible on landscape phones, optionally:
@@ -66,7 +71,9 @@ $purple-glow: #7a05be;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
 
-    &.open { transform: translateX(0); }
+    &.open {
+      transform: translateX(0);
+    }
   }
 }
 
@@ -91,7 +98,9 @@ $purple-glow: #7a05be;
   list-style: none;
 
   /* tablet & below can wrap */
-  @include maxw($tablet-portrait) { flex-wrap: wrap; }
+  @include maxw($tablet-portrait) {
+    flex-wrap: wrap;
+  }
 
   /* phone stack */
   @include maxw($cellphone-portrait) {
@@ -106,7 +115,7 @@ $purple-glow: #7a05be;
    – No blue box. Clean underline on hover/focus/active.
 ============================== */
 .btn-primary {
-  font-family: "Cinzel", serif;
+  font-family: 'Cinzel', serif;
   font-weight: 700;
   background: none;
   border: none;
@@ -114,7 +123,10 @@ $purple-glow: #7a05be;
 }
 
 /* kill default tap highlight on mobile */
-.nav-css, .btn-lg { -webkit-tap-highlight-color: transparent; }
+.nav-css,
+.btn-lg {
+  -webkit-tap-highlight-color: transparent;
+}
 
 .btn-lg {
   position: relative;
@@ -134,7 +146,7 @@ $purple-glow: #7a05be;
 
   /* Animated gold underline (appears on hover/focus/active) */
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     left: 10%;
     right: 10%;
@@ -153,15 +165,20 @@ $purple-glow: #7a05be;
   }
 
   /* Hover: subtle lift + show underline. No blue box. */
-  &:hover { opacity: 0.95; transform: translateY(-1px); }
-  &:hover::after { transform: scaleX(1); }
+  &:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
 
   /* Focus (keyboard): accessible, non-boxy glow + thicker underline */
-  &:focus { outline: none; }
+  &:focus {
+    outline: none;
+  }
   &:focus-visible {
-    text-shadow:
-      0 2px 2px rgba(122, 5, 190, 0.9),
-      0 0 6px rgba(223, 190, 7, 0.55),
+    text-shadow: 0 2px 2px rgba(122, 5, 190, 0.9), 0 0 6px rgba(223, 190, 7, 0.55),
       0 0 14px rgba(223, 190, 7, 0.25);
   }
   &:focus-visible::after {
@@ -173,17 +190,23 @@ $purple-glow: #7a05be;
 
 /* Active page: persistent underline + slight glow (no borders/box) */
 .is-active {
-  text-shadow:
-    0 2px 2px rgba(122, 5, 190, 0.9),
-    0 0 6px rgba(223, 190, 7, 0.55);
+  text-shadow: 0 2px 2px rgba(122, 5, 190, 0.9), 0 0 6px rgba(223, 190, 7, 0.55);
 }
-.is-active::after { transform: scaleX(1); }
+.is-active::after {
+  transform: scaleX(1);
+}
 
 /* Legacy class cleanup (prevents side borders if present anywhere) */
-.active-link { border: none !important; }
+.active-link {
+  border: none !important;
+}
 
 /* Motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .btn-lg { transition: none; }
-  .btn-lg::after { transition: none; }
+  .btn-lg {
+    transition: none;
+  }
+  .btn-lg::after {
+    transition: none;
+  }
 }
