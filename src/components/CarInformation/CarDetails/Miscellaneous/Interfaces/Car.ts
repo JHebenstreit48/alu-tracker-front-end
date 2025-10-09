@@ -6,7 +6,7 @@ export interface Car {
     Model: string;
     Country: string; 
     Rarity: string;
-    ObtainableVia: string;
+    ObtainableVia: string[];
     Class: string;
     Stars: number;
     KeyCar?: boolean;
