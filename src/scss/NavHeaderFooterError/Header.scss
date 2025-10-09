@@ -9,22 +9,15 @@ $gold-accent: rgb(223, 190, 7) !default;
 $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%) !default;
 $box-shadow-dark: 0 2px 5px #5b1479 !default;
 
-/* ==============================
-   Header (title centered, buttons safe)
-============================== */
 .Header {
-  /* Title sizing via CSS custom properties (override per page via className) */
   --title-min: 1.35rem;
   --title-fluid: 4.8vw;
   --title-max: 3rem;
   --title-lines: 2;
   --title-track: 0.01em;
 
-  /* Desktop/tablet: symmetric side columns keep the title *geometrically* centered */
-  --side-col: clamp(72px, 17vw, 112px);
-
-  /* Phone: reserve space for hamburger on the left & let auth size itself on the right */
-  --burger-col: clamp(44px, 10vw, 64px);
+  --side-col: clamp(72px, 17vw, 112px);     /* desktop/tablet */
+  --burger-col: clamp(44px, 10vw, 64px);    /* phone */
 
   position: sticky;
   top: 0;
@@ -35,24 +28,19 @@ $box-shadow-dark: 0 2px 5px #5b1479 !default;
   background-image: $header-gradient;
   box-shadow: $box-shadow-dark;
 
-  /* ===== Row 1: Title row ===== */
   .Header__inner {
     position: relative;
-
-    /* Desktop/tablet: L | Title | R (symmetric) */
     display: grid;
     grid-template-columns: var(--side-col) 1fr var(--side-col);
     align-items: center;
     min-height: clamp(4.75rem, 8.5vw, 7.75rem);
     padding-inline: clamp(0.5rem, 2vw, 1.25rem);
 
-    /* Phone: reserve real hamburger width on left; auth auto on right */
     @include maxw($cellphone-portrait) {
-      grid-template-columns: var(--burger-col) 1fr auto; /* [burger] [title] [auth] */
+      grid-template-columns: var(--burger-col) 1fr auto; /* burger | title | auth */
       column-gap: 0.5rem;
     }
 
-    /* Center title */
     .PageHeader {
       grid-column: 2;
       justify-self: center;
@@ -65,19 +53,16 @@ $box-shadow-dark: 0 2px 5px #5b1479 !default;
       font-family: var(--display-font, "Cinzel"), serif;
       letter-spacing: var(--title-track, 0.01em);
 
-      /* A fitter script can set --fit-size; else clamp applies */
       font-size: var(
         --fit-size,
         clamp(var(--title-min), var(--title-fluid), var(--title-max))
       );
 
-      /* Robust wrapping */
       white-space: normal;
       overflow-wrap: anywhere;
       word-break: break-word;
       hyphens: auto;
 
-      /* Multi-line clamp */
       line-clamp: var(--title-lines);
       -webkit-line-clamp: var(--title-lines);
       display: -webkit-box;
@@ -85,27 +70,20 @@ $box-shadow-dark: 0 2px 5px #5b1479 !default;
       overflow: hidden;
       text-overflow: ellipsis;
 
-      @include maxw($cellphone-portrait) {
-        letter-spacing: 0.015em;
-      }
+      @include maxw($cellphone-portrait) { letter-spacing: 0.015em; }
     }
 
-    /* Right column = auth stack (Login / Sign Up or Welcome + Logout) */
     .Header__auth {
       grid-column: 3;
       justify-self: end;
       display: flex;
-      flex-direction: column; /* Login above Sign Up */
+      flex-direction: column;
       align-items: flex-end;
       gap: 0.35rem;
-
-      @include maxw($cellphone-portrait) {
-        gap: 0.3rem;
-      }
+      @include maxw($cellphone-portrait) { gap: 0.3rem; }
     }
   }
 
-  /* ===== Row 2: Nav shelf + gold lines (unchanged visuals) ===== */
   .Header__navRow {
     position: relative;
     background-image: linear-gradient(
@@ -154,94 +132,45 @@ $box-shadow-dark: 0 2px 5px #5b1479 !default;
     }
   }
 
-  /* ===== Per-page presets (override only variables) ===== */
-
-  /* Home (long site title) */
+  /* ===== per-page presets ===== */
   &.homeHeader {
-    --title-max: 3.4rem;
-    --title-fluid: 5.2vw;
-    --title-min: 1.55rem;
-    --title-lines: 2;
-
+    --title-max: 3.4rem; --title-fluid: 5.2vw; --title-min: 1.55rem; --title-lines: 2;
     @include maxw($cellphone-portrait) {
-      --title-max: 1.55rem;   /* smaller so it never collides with auth */
-      --title-fluid: 4.2vw;
-      --title-min: 1.05rem;
-      --title-lines: 3;       /* allow wrap for “Asphalt Legends Unite Tracker” */
+      --title-max: 1.55rem; --title-fluid: 4.2vw; --title-min: 1.05rem; --title-lines: 3;
     }
   }
 
-  /* Brands */
-  &.brandsHeader {
-    --title-max: 3.1rem;
-    --title-fluid: 4.9vw;
-    --title-min: 1.45rem;
-
-    @include maxw($cellphone-portrait) {
-      --title-max: 2.05rem;
-      --title-fluid: 5.6vw;
-      --title-min: 1.3rem;
-    }
-  }
-
-  /* Legend Store */
+  &.brandsHeader,
   &.legendStoreHeader {
-    --title-max: 3.1rem;
-    --title-fluid: 4.9vw;
-    --title-min: 1.45rem;
-
+    --title-max: 3.1rem; --title-fluid: 4.9vw; --title-min: 1.45rem;
     @include maxw($cellphone-portrait) {
-      --title-max: 2.05rem;
-      --title-fluid: 5.6vw;
-      --title-min: 1.3rem;
+      --title-max: 2.05rem; --title-fluid: 5.6vw; --title-min: 1.3rem;
     }
   }
 
-  /* Cars list */
-  &.carsHeader {
-    --title-max: 3.2rem;
-    --title-fluid: 5vw;
-    --title-min: 1.5rem;
-
-    @include maxw($cellphone-portrait) {
-      --title-max: 2.1rem;
-      --title-fluid: 5.8vw;
-      --title-min: 1.32rem;
-    }
-  }
-
-  /* Garage Levels */
+  &.carsHeader,
   &.garageLevelsHeader {
-    --title-max: 3.2rem;
-    --title-fluid: 5vw;
-    --title-min: 1.5rem;
-
+    --title-max: 3.2rem; --title-fluid: 5vw; --title-min: 1.5rem;
     @include maxw($cellphone-portrait) {
-      --title-max: 2.1rem;
-      --title-fluid: 5.6vw;
-      --title-min: 1.28rem;
+      --title-max: 2.1rem; --title-fluid: 5.8vw; --title-min: 1.32rem;
     }
   }
 
-  /* Car Details: *very* long names → smaller + more lines on phones */
+  /* >>> CarDetails: more aggressive on phones <<< */
   &.carDetailsHeader {
-    /* desktop/tablet defaults */
-    --title-max: 2.4rem;
-    --title-fluid: 3.6vw;
-    --title-min: 1.05rem;
-    --title-lines: 3;
+    --title-max: 2.35rem; --title-fluid: 3.5vw; --title-min: 1.0rem; --title-lines: 3;
 
     @include maxw($cellphone-portrait) {
-      --title-max: 0.95rem;  /* keeps “Veyron ... Vitesse” in view */
-      --title-fluid: 2.9vw;
-      --title-min: 0.76rem;
+      /* Smaller ceiling + up to 4 lines; long names fit without touching buttons */
+      --title-max: 0.88rem;
+      --title-fluid: 2.6vw;
+      --title-min: 0.70rem;
       --title-lines: 4;
       --title-track: 0.012em;
     }
   }
 }
 
-/* Optional: tiny fix for underline collisions on ultra-narrow screens */
 @include maxw(560px) {
   .btn-lg::after { bottom: -4px; }
 }
