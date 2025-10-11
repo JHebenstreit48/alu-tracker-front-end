@@ -5,20 +5,12 @@ import { mfaInit, mfaConfirm, mfaDisable } from "@/components/SignupLogin/api/ac
 
 export default function TwoFASetupCard(): JSX.Element {
   const { token } = useContext(AuthContext);
+
   const [enabled, setEnabled] = useState<boolean>(false);
-
-  // Setup payload (kept in state only while setting up)
-  const [otpauthUrl, setOtpauthUrl] = useState<string>("");
-  const [secret, setSecret] = useState<string>("");
-
-  // UX state
+  const [otpauthUrl, setOtpauthUrl] = useState<string>(""); // QR only; never render raw value as text
   const [code, setCode] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
   const [err, setErr] = useState<string>("");
-
-  // Visibility toggles (masked by default)
-  const [showSecret, setShowSecret] = useState<boolean>(false);
-  const [showUrl, setShowUrl] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -34,10 +26,8 @@ export default function TwoFASetupCard(): JSX.Element {
   const start = async (): Promise<void> => {
     if (!token) return;
     setMsg(""); setErr(""); setCode("");
-    setShowSecret(false); setShowUrl(false);
-    const resp = await mfaInit(token); // normalized to { otpauthUrl, secret }
+    const resp = await mfaInit(token); // returns { otpauthUrl, secret } but we intentionally do NOT show secret/URL
     setOtpauthUrl(resp.otpauthUrl);
-    setSecret(resp.secret);
   };
 
   const confirm = async (): Promise<void> => {
@@ -47,9 +37,9 @@ export default function TwoFASetupCard(): JSX.Element {
       const resp = await mfaConfirm(token, code.trim());
       setEnabled(Boolean(resp.twoFactorEnabled));
       setMsg("2FA enabled. Save your recovery codes if shown.");
-      // security hygiene: clear sensitive fields
-      setOtpauthUrl(""); setSecret(""); setCode("");
-      setShowSecret(false); setShowUrl(false);
+      // Clear sensitive state after enabling
+      setOtpauthUrl("");
+      setCode("");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Failed to enable 2FA");
     }
@@ -61,32 +51,13 @@ export default function TwoFASetupCard(): JSX.Element {
     try {
       await mfaDisable(token);
       setEnabled(false);
-      // clear any in-progress setup data
-      setOtpauthUrl(""); setSecret(""); setCode("");
-      setShowSecret(false); setShowUrl(false);
+      // Clear any in-progress setup data
+      setOtpauthUrl("");
+      setCode("");
       setMsg("2FA disabled.");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Failed to disable 2FA");
     }
-  };
-
-  const copy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setMsg("Copied to clipboard.");
-      // auto-clear message after a moment
-      window.setTimeout(() => setMsg(""), 1200);
-    } catch {
-      setErr("Unable to copy to clipboard.");
-      window.setTimeout(() => setErr(""), 1500);
-    }
-  };
-
-  // Mask helpers
-  const mask = (value: string, keep = 4): string => {
-    if (!value) return "";
-    if (value.length <= keep) return "*".repeat(value.length);
-    return value.slice(0, keep) + "…" + "*".repeat(Math.max(0, value.length - keep - 1));
   };
 
   return (
@@ -105,7 +76,7 @@ export default function TwoFASetupCard(): JSX.Element {
             </button>
           ) : (
             <>
-              {/* QR first: preferred setup path */}
+              {/* QR only — do not reveal secret or raw otpauth URL */}
               <div style={{ marginTop: ".75rem" }}>
                 <div style={{ marginBottom: ".4rem" }}>
                   <strong>Scan with your authenticator app:</strong>
@@ -117,44 +88,11 @@ export default function TwoFASetupCard(): JSX.Element {
                   alt="Scan this QR with your authenticator app"
                   style={{ borderRadius: 8 }}
                 />
-              </div>
-
-              {/* Secret (masked by default) */}
-              <div style={{ marginTop: ".75rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
-                  <strong>Secret:</strong>
-                  <span style={{ wordBreak: "break-all", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
-                    {showSecret ? secret : mask(secret)}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: ".5rem", marginTop: ".35rem", flexWrap: "wrap" }}>
-                  <button type="button" onClick={() => setShowSecret(s => !s)}>
-                    {showSecret ? "Hide" : "Reveal"}
-                  </button>
-                  <button type="button" onClick={() => copy(secret)}>Copy</button>
-                </div>
-              </div>
-
-              {/* otpauth URL (masked; rarely needed) */}
-              <div style={{ marginTop: ".75rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap" }}>
-                  <strong>URL:</strong>
-                  <span style={{ wordBreak: "break-all", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
-                    {showUrl ? otpauthUrl : mask(otpauthUrl, 12)}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: ".5rem", marginTop: ".35rem", flexWrap: "wrap" }}>
-                  <button type="button" onClick={() => setShowUrl(s => !s)}>
-                    {showUrl ? "Hide" : "Reveal"}
-                  </button>
-                  <button type="button" onClick={() => copy(otpauthUrl)}>Copy</button>
-                </div>
                 <div className="AccountHint" style={{ marginTop: ".35rem" }}>
-                  Tip: Most authenticator apps only need the QR. Revealing the secret/URL is optional.
+                  After scanning, enter the 6-digit code below to finish enabling 2FA.
                 </div>
               </div>
 
-              {/* Confirmation code */}
               <div style={{ marginTop: ".75rem" }}>
                 <input
                   placeholder="Enter 6-digit code"
