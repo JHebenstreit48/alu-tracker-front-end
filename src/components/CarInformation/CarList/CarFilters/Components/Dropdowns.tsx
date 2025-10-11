@@ -65,8 +65,8 @@ export default function Dropdowns({
           value={unitPreference}
           onChange={onUnitChange}
         >
-          <option value="metric">Metric</option>
-          <option value="imperial">Imperial</option>
+          <option value="metric">KPH</option>
+          <option value="imperial">MPH</option>
         </select>
       </label>
 

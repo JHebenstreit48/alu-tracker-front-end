@@ -45,7 +45,27 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Top row: Back + timestamp
+     Tools Row: Tracker left, Units right
+     ============================= */
+  .toolsRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 1.5rem;         /* small edge gutters left/right */
+    margin: 0.5rem 0 0.75rem;  /* breathe a little */
+
+    /* PHONE-ONLY: stack vertically */
+    @include maxw($cellphone-portrait) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.9rem;
+      padding: 0 1rem;
+    }
+  }
+
+  /* =============================
+     Top row: Back + timestamp
      ============================= */
   .cdetail-top {
     display: flex;
@@ -83,9 +103,9 @@ $car-info-font-size: 1.2rem;
       .cdetail-status { justify-content: flex-start; }
     }
   }
-  
+
   /* =============================
-      Car Name
+     Car Name
      ============================= */
   .carName {
     display: flex;
@@ -97,7 +117,7 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Car Image
+     Car Image
      ============================= */
   .carImage {
     display: flex;
@@ -115,7 +135,7 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Key Info Table
+     Key Info Table
      ============================= */
   .keyInfoTableContainer {
     margin: 0.8rem auto 2rem auto;
@@ -171,7 +191,7 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Car Detail Tables (desktop base)
+     Car Detail Tables (desktop base)
      ============================= */
   .carDetailsTables {
     display: flex;
@@ -261,7 +281,7 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Stars in Tables
+     Stars in Tables
      ============================= */
   .starIcon {
     width: 22px;
@@ -274,7 +294,7 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Blueprint Table
+     Blueprint Table
      ============================= */
   .blueprintTotalLabel {
     text-align: center;
@@ -303,7 +323,7 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
-      Max Rank and Car Info Text
+     Max Rank and Car Info Text
      ============================= */
   .maxRank { font-size: $max-rank-font-size; }
 
