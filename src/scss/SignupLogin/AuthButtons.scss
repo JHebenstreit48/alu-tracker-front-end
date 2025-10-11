@@ -2,9 +2,7 @@
 @use "@scss/Globals/index" as *;
 
 /* =========================================
-   Auth Buttons (Login / Sign Up / Logout)
-   - Header positions the wrapper (.Header__auth) absolutely;
-     these styles only handle alignment + sizing.
+   Auth Buttons (Login / Account / Logout)
 ========================================= */
 
 $gold-accent: rgb(255, 196, 0);
@@ -12,10 +10,10 @@ $purple-glow: #7a05be;
 $btn-border: 1px solid $gold-accent;
 $btn-font: "Cinzel", serif;
 
-/* Ensure the right-side cluster stacks neatly inside the header */
+/* Cluster alignment (top right of header) */
 .Header__auth {
   display: flex;
-  flex-direction: column;          /* stack Login over Sign Up */
+  flex-direction: column;
   align-items: flex-end;
   gap: 0.35rem;
 
@@ -24,11 +22,11 @@ $btn-font: "Cinzel", serif;
   }
 }
 
-/* Shared cluster styles (logged-in + logged-out) */
+/* Shared clusters */
 .authControls,
 .authWelcome {
   display: flex;
-  flex-direction: column;          /* column to match the header stack */
+  flex-direction: column;
   align-items: flex-end;
   gap: 0.35rem;
 
@@ -37,15 +35,39 @@ $btn-font: "Cinzel", serif;
   }
 }
 
-/* Logged-in “Welcome, {name}” cluster */
+/* ========== LOGGED-IN STATE ========== */
 .authWelcome {
-  .authWelcome__text {
-    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+  /* Clickable username now acts as account link */
+  .accountLink {
+    font-family: $btn-font;
+    font-weight: 700;
+    color: $gold-accent;
+    text-decoration: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.25s ease;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.45rem;
     white-space: nowrap;
-    text-align: right;
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgba($purple-glow, 0.35);
+      color: white;
+      box-shadow: 0 0 6px rgba($purple-glow, 0.65);
+      outline: none;
+    }
+
+    &:active {
+      background-color: rgba($purple-glow, 0.55);
+      box-shadow: 0 0 10px rgba($purple-glow, 0.8);
+    }
 
     @include maxw($cellphone-portrait) {
       font-size: 0.9rem;
+      padding: 0.2rem 0.45rem;
     }
   }
 
@@ -56,7 +78,7 @@ $btn-font: "Cinzel", serif;
   }
 }
 
-/* Buttons (Login, Sign Up, Logout) */
+/* ========== LOGGED-OUT STATE (Sign in) ========== */
 .authControls button,
 .logout {
   font-family: $btn-font;
@@ -70,10 +92,10 @@ $btn-font: "Cinzel", serif;
   cursor: pointer;
   border-radius: 0.5rem;
   line-height: 1;
-  white-space: nowrap;             /* avoid wrapping “Sign Up” */
+  white-space: nowrap;
   text-align: center;
-  min-width: 5.25rem;              /* keeps a consistent pill width */
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+  min-width: 5.25rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
 
   &:hover,
   &:focus-visible {
@@ -83,14 +105,12 @@ $btn-font: "Cinzel", serif;
     outline: none;
   }
 
-  /* Tablet and down: slightly tighter */
   @include maxw($tablet-portrait) {
     padding: 0.25rem 0.55rem;
     min-height: 32px;
     font-size: 0.9rem;
   }
 
-  /* Phone: compact but tappable */
   @include maxw($cellphone-portrait) {
     font-size: 0.88rem;
     min-height: 1.55rem;
@@ -98,7 +118,7 @@ $btn-font: "Cinzel", serif;
   }
 }
 
-/* Optional: consistent gaps if supported */
+/* Optional consistency tweak */
 @supports (gap: 0.25rem) {
   @include maxw($cellphone-portrait) {
     .authControls,

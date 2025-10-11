@@ -1,0 +1,194 @@
+@use "sass:color";
+@use "@scss/Globals/index" as *;
+
+/* ===== Local tokens (fall back if not provided by Globals) ===== */
+$gold-accent: rgb(255, 196, 0) !default;
+$panel-bg: linear-gradient(180deg, #19121f 0%, #120c18 60%, #0b0910 100%) !default;
+$panel-border: 1px solid rgba($gold-accent, 0.35) !default;
+$panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !default;
+$page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
+
+/* ===== Page wrapper ===== */
+.AccountPage {
+  max-width: 960px;
+  margin-inline: auto;
+  padding: $page-padding;
+  color: #e9e6ee;
+
+  /* generic gate/error/info panel */
+  .AccountGate {
+    background: $panel-bg;
+    border: $panel-border;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    box-shadow: $panel-shadow;
+  }
+}
+
+/* ===== Back row (in-page, not the global site header) ===== */
+.AccountBackRow {
+  display: flex;
+  justify-content: flex-start;
+  margin: .25rem 0 .5rem;
+}
+
+.AccountBackBtn {
+  background: none;
+  border: 1px solid rgba($gold-accent, .45);
+  color: $gold-accent;
+  border-radius: .5rem;
+  padding: .25rem .6rem;
+  font-family: var(--display-font, "Cinzel"), serif;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(#7a05be, .35);
+    color: #fff;
+    outline: none;
+  }
+
+  &:active {
+    background: rgba(#7a05be, .55);
+    box-shadow: 0 0 10px rgba(#7a05be, .6);
+  }
+}
+
+/* ===== Header ===== */
+.AccountHeader {
+  margin: 1.25rem 0 0.75rem;
+
+  .AccountTitle {
+    margin: 0;
+    font-family: var(--display-font, "Cinzel"), serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+    letter-spacing: 0.01em;
+    color: $gold-accent;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .AccountSubtitle {
+    margin: 0.25rem 0 0;
+    color: #bfb6cc;
+
+    strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ===== Grid layout for sections ===== */
+.AccountGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* allow any single-wide section to span both columns if needed */
+  .AccountSection--full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ===== Cards in Account page (scoped) ===== */
+.AccountPage .card {
+  background: $panel-bg;
+  border: $panel-border;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  box-shadow: $panel-shadow;
+
+  h2,
+  h3 {
+    margin: 0 0 .5rem 0;
+    font-family: var(--display-font, "Cinzel"), serif;
+    color: $gold-accent;
+    font-weight: 700;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    background: #0f0a14;
+    color: #e9e6ee;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: .6rem .7rem;
+    outline: none;
+
+    &::placeholder {
+      color: #9d93a6;
+    }
+
+    &:focus {
+      border-color: rgba($gold-accent, .75);
+      box-shadow: 0 0 0 3px rgba($gold-accent, .18);
+    }
+  }
+
+  button {
+    font-family: "Cinzel", serif;
+    font-weight: 700;
+    background: linear-gradient(180deg, rgba(#7a05be, .95), rgba(#7a05be, .75));
+    color: #fff;
+    border: 1px solid rgba(#7a05be, .5);
+    border-radius: 8px;
+    padding: .55rem .8rem;
+    cursor: pointer;
+    line-height: 1;
+
+    &:hover {
+      background: linear-gradient(180deg, #7a05be, rgba(#7a05be, .9));
+    }
+
+    &:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
+  }
+
+  .authSuccess {
+    color: #36d399;
+    font-weight: 700;
+  }
+
+  .authError {
+    color: #ff4d6d;
+    font-weight: 700;
+  }
+
+  /* Nice spacing for stacked elements inside cards */
+  .AccountRow {
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .AccountHint {
+    color: #bfb6cc;
+    font-size: .95rem;
+  }
+
+  /* Helpful for QR images in 2FA card (won’t affect other pages) */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+}
+
+/* ===== Phone-specific tweaks ===== */
+@include maxw($cellphone-portrait) {
+  .AccountGrid { gap: .75rem; }
+  .AccountPage .card { padding: .85rem .9rem; }
+}

@@ -13,6 +13,7 @@ import LegendStorePrices from "@/pages/MainPages/LegendStore/LegendStore";
 import CarTrackerPage from "@/pages/Subpages/CarTracker";
 
 import Feedback from "@/pages/MainPages/Feedback/Feedback"; // ← NEW
+import Account from "@/pages/Subpages/Account";            // ← NEW
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: "/garagelevels", element: <GarageLevels /> },
       { path: "/legendstoreprices", element: <LegendStorePrices /> },
       { path: "/feedback", element: <Feedback /> }, // ← NEW
+      { path: "/account", element: <Account /> },   // ← NEW
     ],
   },
 ]);

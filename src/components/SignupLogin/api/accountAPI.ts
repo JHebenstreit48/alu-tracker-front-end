@@ -36,11 +36,14 @@ export async function forgotUsername(email: string) {
 
 // --- MFA ---
 export async function mfaInit(token: string) {
+  // BE returns: { otpauthUrl, base32 }
   const res = await fetch(`${API_BASE_URL}/auth/mfa/init`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
   });
-  return json(res); // { otpauthUrl, secret }
+  const data = await json(res); // expect { otpauthUrl, base32 }
+  // Normalize to your existing FE shape:
+  return { otpauthUrl: data.otpauthUrl, secret: data.base32 as string };
 }
 
 export async function mfaConfirm(token: string, code: string) {
@@ -61,4 +64,13 @@ export async function mfaDisable(token: string) {
     headers: { Authorization: `Bearer ${token}` },
   });
   return json(res); // { twoFactorEnabled:false }
+}
+
+export async function mfaLogin(userId: string, code: string) {
+  const res = await fetch(`${API_BASE_URL}/auth/mfa/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, code }),
+  });
+  return json(res) as Promise<{ token: string; username: string; userId: string; twoFactorEnabled?: boolean }>;
 }
