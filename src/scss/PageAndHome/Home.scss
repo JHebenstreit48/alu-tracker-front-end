@@ -1,174 +1,155 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
 
-/* ==============================
-   Local aliases to global tokens
-============================== */
-$gold-accent: $color-gold-glow;
+/* ------------------------------------
+   Local tokens (derived from Globals)
+   ------------------------------------ */
+$gold: $color-gold-glow;
+$frame: $table-border-color; /* deep blue you already use */
+$panel-bg-top: #1a0e20;
+$panel-bg-bot: #0a0610;
 
-/* ==============================
-   Asphalt Info Box (kept)
-============================== */
+/* Shared halo for framed blocks (info box + carousel) */
+@mixin gold-halo($radius: 16px, $width: 4px) {
+  border-radius: $radius;
+  border: $width solid $frame;
+  box-shadow: 0 0 0 1px rgba($gold, 0.32) inset, 0 0 10px 3px rgba($gold, 0.58);
+}
+
+/* ====================================
+   Asphalt Info Box
+   ==================================== */
 .asphalt-info {
-  display: flex;
+  /* size & centering */
+  max-inline-size: 90rem;
+  margin: 3rem auto 5rem auto;
+  padding: clamp(1rem, 2.2vw, 2rem);
+
+  /* theme background with subtle gradient depth */
+  background: linear-gradient(180deg, $panel-bg-top 0%, $panel-bg-bot 100%);
   color: $color-white;
-  background-color: $color-black;
-  border: 4px solid $table-border-color; /* deep blue frame */
-  width: 90rem;
-  height: 25rem;
-  margin: 3rem auto 5rem auto; /* room under header/nav */
-  box-shadow: 0 0 7px 3px $gold-accent;
-  border-radius: 12px;
-  padding: 2rem;
 
+  @include gold-halo(16px, 2px);
+
+  /* inner content wrapper (your GameInfo div) */
+  > div {
+    max-inline-size: 78rem;
+    margin-inline: auto;
+  }
+
+  /* paragraphs: consistent across browsers */
+  p.info {
+    /* keep paragraphs as normal blocks (flex removed for consistency) */
+    font-size: clamp(1rem, 1.35vw, 1.25rem);
+    line-height: 1.6;
+    letter-spacing: 0.1px;
+    /* spacing between paragraphs, no top margin on first */
+    & + .info {
+      margin-block-start: 0.9rem;
+    }
+  }
+
+  /* responsive */
   @include maxw($tablet-portrait) {
-    margin-top: 15rem;
-    max-width: 40rem;
-    margin-bottom: 4rem;
-    height: 31rem;
+    margin-top: 10rem;
+    padding: 1.25rem;
   }
 
   @include maxw($cellphone-portrait) {
-    flex-direction: column;
-    margin: 3rem auto 3rem auto;
-    width: 22rem;
-    height: 65rem;
-    padding: 0rem 1.5rem;
+    margin: 2rem auto 3rem;
+    max-inline-size: 22.5rem;
+    padding: 1rem;
+    > div {
+      max-inline-size: 20rem;
+    }
+    p.info {
+      font-size: 1rem;
+    }
   }
 }
 
-/* ==============================
-   Info Text (kept)
-============================== */
-.info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 92%;
-  font-size: 21px;
-  padding-right: 0;
-  margin: 1rem auto;
-
-  @include maxw($tablet-portrait) { width: 35rem; }
-
-  @include maxw($cellphone-portrait) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 1.5rem auto;
-    width: 18rem;
-  }
-}
-
-/* ==============================
-   Carousel shell
-   - no bottom gap
-   - rounded corners even during slide
-============================== */
+/* ====================================
+   Carousel Shell (same frame language)
+   ==================================== */
 #asphalt-carousel-slides {
   position: relative;
-  width: 90rem;
-  margin: 0 auto 2rem;
-  box-shadow: 0 0 7px 6px $gold-accent;
+  max-inline-size: 90rem;
+  margin: 0 auto 2.25rem;
   border: 5px solid $color-black;
-  border-radius: 12px;
-  line-height: 0; /* eliminate inline-image baseline gap */
+  border-radius: 16px;
+  box-shadow: 0 0 9px 3px rgba($gold, 0.55);
+  background-color: #000;
+  overflow: hidden;
 
   @include maxw($tablet-portrait) {
-    width: 38rem;
-    height: 19rem;
+    max-inline-size: 38rem;
   }
   @include maxw($cellphone-portrait) {
-    margin-top: 2rem;
-    width: 23rem;
-    height: 10rem;
-    border: 2px solid $color-black;
-    box-shadow: 0 0 9px 3px $gold-accent;
-    border-radius: 4px;
+    max-inline-size: 23rem;
+    border-width: 2px;
+    border-radius: 8px;
+    box-shadow: 0 0 9px 3px rgba($gold, 0.5);
   }
-}
 
-/* keep corners through sliding + ensure the frame keeps its height */
-#asphalt-carousel-slides .carousel-inner {
-  border-radius: inherit;
-  overflow: hidden;                 /* rounds during transitions */
-  /* mirror slide height so the window never collapses */
-  min-block-size: 37rem;
-  @include maxw($tablet-portrait)    { min-block-size: 19rem; }
-  @include maxw($cellphone-portrait) { min-block-size: 9.158rem; }
-}
+  /* inner keeps rounded corners while sliding */
+  .carousel-inner {
+    border-radius: inherit;
+    overflow: hidden;
+    min-block-size: 37rem;
+    background-color: #000;
+    @include maxw($tablet-portrait) {
+      min-block-size: 19rem;
+    }
+    @include maxw($cellphone-portrait) {
+      min-block-size: 9.16rem;
+    }
+  }
 
-/* ==============================
-   Sliding TRACK (Bootstrap-like)
-   - one row of items that we translate
-============================== */
-#asphalt-carousel-slides .carousel-track {
-  display: flex;
-  width: 100%;
-  transition: transform 600ms ease-in-out;
-}
+  .carousel-track {
+    display: flex;
+    width: 100%;
+    transition: transform 600ms ease-in-out;
+  }
 
-/* Each slide occupies exactly one frame width */
-#asphalt-carousel-slides .carousel-item {
-  flex: 0 0 100%;
-  /* your sweet spot to remove bottom gap */
-  min-block-size: 37rem;
+  .carousel-item {
+    flex: 0 0 100%;
+    min-block-size: 37rem;
+    @include maxw($tablet-portrait) {
+      min-block-size: 19rem;
+    }
+    @include maxw($cellphone-portrait) {
+      min-block-size: 9.16rem;
+    }
 
-  @include maxw($tablet-portrait)    { min-block-size: 19rem; }
-  @include maxw($cellphone-portrait) { min-block-size: 9.158rem; }
+    > .carousel-image-box {
+      inline-size: 100%;
+      block-size: 100%;
+      border-radius: inherit;
+      overflow: hidden;
+      line-height: 0;
+    }
+  }
 
-  /* ensure the internal box fills the slide */
-  > .carousel-image-box {
+  .carousel-spinner {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+  }
+
+  .d-block {
+    display: block;
     inline-size: 100%;
     block-size: 100%;
+    object-fit: contain;
+    border-radius: inherit;
   }
 }
 
-/* container for image + overlay */
-.carousel-image-box {
-  position: relative;
-  border-radius: inherit;
-  overflow: hidden; /* keeps image corners rounded while sliding */
-  line-height: 0;
-}
-
-/* dark overlay while loading */
-.carousel-overlay {
-  position: absolute;
-  inset: 0;
-  background-color: #1f1f1f;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* centered spinner */
-.carousel-spinner {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  text-align: center;
-}
-
-/* ==============================
-   Carousel Images
-============================== */
-.d-block {
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;     /* fills the enforced slide height */
-  object-fit: contain;  /* car fully visible, no crop */
-  border-radius: inherit;
-
-  @include maxw($tablet-portrait)    { block-size: 100%; }
-  @include maxw($cellphone-portrait) { block-size: 100%; }
-}
-
-/* ==============================
+/* ====================================
    Motion accessibility
-============================== */
+   ==================================== */
 @media (prefers-reduced-motion: reduce) {
   .carousel,
   .carousel * {
