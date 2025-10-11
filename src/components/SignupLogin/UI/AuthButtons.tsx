@@ -11,9 +11,21 @@ export default function AuthButtons(): JSX.Element {
     <>
       {token ? (
         <div className="authWelcome" aria-live="polite">
-          <span className="authWelcome__text">{username}</span>
+          {/* Username acts as Account link */}
+          <a
+            href="/account"
+            className="authWelcome__text accountLink"
+            title="View your account"
+          >
+            {username}
+          </a>
+
           <div className="logoutWrapper">
-            <button onClick={logout} className="logout" aria-label="Log out">
+            <button
+              onClick={logout}
+              className="logout"
+              aria-label="Log out"
+            >
               Logout
             </button>
           </div>

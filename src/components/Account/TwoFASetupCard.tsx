@@ -16,7 +16,7 @@ export default function TwoFASetupCard(): JSX.Element {
       if (!token) return;
       const { ok, data } = await fetchMe(token);
       if (ok && data) {
-        const payload: MePayload = data; // ← explicit use of MePayload
+        const payload: MePayload = data;
         setEnabled(Boolean(payload.twoFactorEnabled));
       }
     })();
@@ -25,14 +25,14 @@ export default function TwoFASetupCard(): JSX.Element {
   const start = async (): Promise<void> => {
     if (!token) return;
     setMsg("");
-    const resp: { otpauthUrl: string; secret: string } = await mfaInit(token);
+    const resp = await mfaInit(token); // normalized to { otpauthUrl, secret }
     setOtpauthUrl(resp.otpauthUrl);
     setSecret(resp.secret);
   };
 
   const confirm = async (): Promise<void> => {
     if (!token) return;
-    const resp: { twoFactorEnabled: boolean; recoveryCodes?: string[] } = await mfaConfirm(token, code);
+    const resp = await mfaConfirm(token, code);
     setEnabled(Boolean(resp.twoFactorEnabled));
     setMsg("2FA enabled. Save your recovery codes if shown.");
   };
@@ -62,6 +62,17 @@ export default function TwoFASetupCard(): JSX.Element {
                 <div><strong>Secret:</strong> {secret}</div>
                 <div style={{ wordBreak: "break-all" }}>
                   <strong>URL:</strong> {otpauthUrl}
+                </div>
+                {/* QR code for authenticator apps */}
+                <div style={{ marginTop: ".5rem" }}>
+                  <div style={{ marginBottom: ".4rem" }}><strong>Scan with your authenticator app:</strong></div>
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(otpauthUrl)}&size=220x220`}
+                    width={220}
+                    height={220}
+                    alt="Scan this QR with your authenticator app"
+                    style={{ borderRadius: 8 }}
+                  />
                 </div>
               </div>
               <div style={{ marginTop: ".5rem" }}>
