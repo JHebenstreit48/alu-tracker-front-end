@@ -1,65 +1,12 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
 
-/* =========================================
-   Legend Store — Full Styles (Filters + Table)
-   With proper nesting + maxw($cellphone-portrait)
-   ========================================= */
+/* ------------------------------------ Legend Store START ------------------------------------ */
 
-/* =============================
-   Local Variables (page-scoped)
-   ============================= */
-$control-grid-gap: 2rem;
-$control-width: 46rem;
-$control-border-color: black;
-$control-box-shadow-color: rgb(223, 190, 7);
-$control-bg-color: black;
-$control-padding: 4rem;
-$control-font-size: 1rem;
+/* Page-scoped tokens kept (you can trim these later if Globals absorb them) */
+$control-bg: #0d0016;
 
-$select-height: 2rem;
-$search-input-height: 1.8rem;
-$search-placeholder-color: rgba(0, 0, 0, 0);
-
-$filter-heading-color: white;
-$filter-heading-font-size: 1.9rem;
-
-$dropdown-label-color: white;
-$dropdown-label-gap: 10px;
-
-$option-uncommon-bg: rgb(1, 188, 250);
-$option-rare-bg: rgb(111, 8, 170);
-$option-epic-bg: rgb(255, 174, 0);
-$option-text-color: black;
-$option-text-color-white: white;
-
-$reset-button-bg: rgb(52, 1, 75);
-$reset-button-hover-bg: rgb(193, 71, 250);
-$reset-button-text-color: white;
-$reset-button-hover-text-color: rgb(0, 0, 0);
-$reset-button-box-shadow-color: rgb(223, 190, 7);
-$reset-button-padding: 7px;
-$reset-button-width: 9rem;
-$reset-button-font-size: 1rem;
-$reset-button-border-radius: 1rem;
-
-$table-border-color: rgb(11, 7, 134);
-$shadow-gold-xl-color: rgb(223, 190, 7);
-$table-width: 95rem;
-$table-bg-color: black;
-$color-black: black;
-$color-accent-blue: white;
-$class-header-text-color: rgb(21, 201, 232);
-$class-header-border-color: rgb(204, 19, 255);
-$class-header-font-size: 2rem;
-$class-header-padding: 15px;
-
-$no-results-text-color: #888;
-$no-results-margin-top: 20px;
-
-/* =========================================
-   FILTERS (parity with Cars .carFilters)
-   ========================================= */
+/* ===== Filters ===== */
 .legendStoreControls {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -67,26 +14,25 @@ $no-results-margin-top: 20px;
     'heading heading'
     'cumulative individual'
     'star      rarity'
-    'class     search'
+    'class     class' /* full row centered */
+    'search    search' /* full row centered */
     'reset     reset';
-  background-color: $color-black;
+  background: radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.55)), $control-bg;
   border: $filter-border;
-  box-shadow: $shadow-gold-lg;
+  border-radius: 18px;
+  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.25) inset, 0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba($color-gold-glow, 0.18);
   width: $filter-width;
   margin: 3rem auto 0 auto;
-  padding: $filter-padding;
+  padding: clamp(1.25rem, 2.2vw, 2.25rem);
   gap: $filter-gap;
   color: $color-white;
   font-size: $filter-font-size;
 
-  /* mobile layout for the grid container */
   @include maxw($cellphone-portrait) {
     width: 22rem;
     margin: 2rem auto;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-
     grid-template-columns: 1fr;
     grid-template-areas:
       'heading'
@@ -102,44 +48,55 @@ $no-results-margin-top: 20px;
   .filterHeading {
     grid-area: heading;
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: $filter-heading-color;
+    font-size: clamp(1.6rem, 2.2vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    margin: 0.25rem 0 1rem;
+    text-shadow: 0 0 10px rgba($color-gold-glow, 0.28);
   }
 
   .DropdownLabel {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    position: relative;
+    gap: 0.5rem;
 
     select,
     input {
       height: $input-height;
-      padding: 4px 8px;
-      border-radius: $input-radius;
+      padding: 6px 12px;
+      border-radius: 12px;
       text-align: center;
-      overflow-y: auto;
-      max-height: 200px;
-      z-index: 1;
+      border: 1px solid rgba(#fff, 0.15);
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.18)),
+        #0f0f10;
+      color: #eee;
+      transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.05s ease;
+
+      &:hover {
+        border-color: rgba($color-gold-glow, 0.45);
+      }
+      &:focus {
+        outline: none;
+        border-color: rgba($color-gold-glow, 0.8);
+        box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.35), 0 4px 16px rgba(0, 0, 0, 0.45) inset;
+      }
+      &:active {
+        transform: translateY(1px);
+      }
     }
 
     select {
       appearance: none;
-      background-color: white;
-      color: black;
-      z-index: 10;
-      position: relative;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2));
+      color: #f5f5f5;
     }
 
-    /* mobile tweaks scoped to the control */
     @include maxw($cellphone-portrait) {
       width: 100%;
     }
   }
 
-  /* Map label order to grid areas (no JSX changes) */
+  /* map labels to areas (unchanged JSX) */
   > label.DropdownLabel:nth-of-type(1) {
     grid-area: cumulative;
   }
@@ -152,77 +109,109 @@ $no-results-margin-top: 20px;
   > label.DropdownLabel:nth-of-type(4) {
     grid-area: rarity;
   }
+
+  /* Class row centered (5th label) */
   > label.DropdownLabel:nth-of-type(5) {
     grid-area: class;
+    justify-self: center;
+    width: 100%;
+
+    select {
+      width: clamp(14rem, 55%, 26rem);
+      margin-inline: auto;
+    }
+    @include maxw($cellphone-portrait) {
+      select {
+        width: 18rem;
+      }
+    }
   }
+
+  /* Search row centered + same width rules as Cars (6th label) */
   > label.DropdownLabel:nth-of-type(6) {
     grid-area: search;
-  }
 
-  #searchInput {
-    height: $search-input-height;
-    width: 50%;
-    margin: 0 auto;
-
-    &::placeholder {
-      text-align: center;
-    }
-    &:focus::placeholder {
-      color: $search-placeholder-color;
-    }
-
-    @include maxw($cellphone-portrait) {
-      width: 18rem;
+    #searchInput {
+      /* inherit height from the shared .DropdownLabel input rule (=$input-height) */
+      width: 50%;
       margin: 0 auto;
-      font-size: 1.2rem;
+
+      &::placeholder {
+        text-align: center;
+      }
+      &:focus::placeholder {
+        color: rgba(0, 0, 0, 0);
+      }
+
+      @include maxw($cellphone-portrait) {
+        width: 18rem;
+        font-size: 1.2rem;
+      }
     }
   }
 
-  .optionUncommon {
-    background-color: $option-uncommon-bg;
-    color: $option-text-color;
-    text-align: center;
-  }
-  .optionRare {
-    background-color: $option-rare-bg;
-    color: $option-text-color-white;
-    text-align: center;
-  }
-  .optionEpic {
-    background-color: $option-epic-bg;
-    color: $option-text-color;
-    text-align: center;
+  /* Rarity options — modern black list with colored text */
+  > label.DropdownLabel:nth-of-type(4) select {
+    option {
+      background-color: $color-black;
+      color: $rarity-text-neutral;
+    }
+    .optionUncommon {
+      @include rarity-option-on-black($rarity-text-uncommon);
+    }
+    .optionRare {
+      @include rarity-option-on-black($rarity-text-rare);
+    }
+    .optionEpic {
+      @include rarity-option-on-black($rarity-text-epic);
+    }
+
+    &:has(option:checked.optionUncommon) {
+      @include rarity-select-outline($rarity-text-uncommon);
+    }
+    &:has(option:checked.optionRare) {
+      @include rarity-select-outline($rarity-text-rare);
+    }
+    &:has(option:checked.optionEpic) {
+      @include rarity-select-outline($rarity-text-epic);
+    }
   }
 
   .resetButton {
     grid-area: reset;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     justify-self: center;
-    background-color: $reset-btn-bg;
+    background: linear-gradient(
+      to bottom,
+      $reset-btn-bg,
+      color.scale($reset-btn-bg, $lightness: -6%)
+    );
     color: white;
-    padding: 0.6rem 2rem;
-    border-radius: $reset-btn-radius;
-    box-shadow: $shadow-gold-basic;
+    padding: 0.65rem 2.1rem;
+    border-radius: 14px;
+    border: 1px solid rgba($color-gold-glow, 0.35);
+    box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.18) inset, 0 8px 18px rgba(0, 0, 0, 0.6);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: transform 0.06s ease, box-shadow 0.18s ease, background-color 0.2s ease;
 
     &:hover {
       background-color: $table-border-color;
       color: $color-white;
-      font-size: 1.1rem;
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.26) inset, 0 10px 22px rgba(0, 0, 0, 0.6);
+    }
+    &:active {
+      transform: translateY(1px);
     }
   }
 }
 
-/* =========================================
-   TABLE (desktop unchanged, mobile → cards)
-   ========================================= */
+/* ===== Table (kept, just minor polish opportunities remain) ===== */
 .responsiveTable {
   text-align: center;
   border: 3px solid $table-border-color !important;
-  box-shadow: 0 0 10px 6px $shadow-gold-xl-color;
+  box-shadow: 0 0 10px 6px rgba($color-gold-glow, 0.6);
   width: $table-width !important;
-  background-color: $table-bg-color;
+  background-color: black;
   margin: 6rem auto 5rem auto;
 
   th,
@@ -231,14 +220,13 @@ $no-results-margin-top: 20px;
     text-align: center;
   }
 
-  /* mobile transformation scoped within table */
   @include maxw($cellphone-portrait) {
     width: 20rem !important;
     margin: 4rem auto;
     border: 2px solid $table-border-color !important;
 
     thead {
-      display: none; /* column headers hidden on phones */
+      display: none;
     }
 
     tbody {
@@ -250,32 +238,24 @@ $no-results-margin-top: 20px;
         border-radius: 10px;
         padding: 0.4rem 0.6rem;
       }
-
       td {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
         font-size: 15px;
         padding: 0.45rem 0;
-        border-left: 0;
-        border-right: 0;
 
-        /* right-side value behavior */
         > * {
           max-width: 60%;
           text-align: right;
           word-break: break-word;
         }
 
-        /* labels sourced from data-label (JS populates from thead) */
         &::before {
           content: attr(data-label) ':';
           font-weight: 700;
           margin-right: 0.5rem;
-          text-align: left;
-          /* optional: color: $class-header-text-color; */
         }
-
         &:last-child {
           font-weight: 700;
           font-variant-numeric: tabular-nums;
@@ -287,21 +267,21 @@ $no-results-margin-top: 20px;
 
 .classSelectionHeader {
   text-align: center;
-  font-size: $class-header-font-size;
+  font-size: 2rem;
   font-weight: bold;
-  background-color: $table-bg-color;
-  color: $class-header-text-color;
-  padding: $class-header-padding;
-  border-bottom: 1px solid $class-header-border-color;
+  background-color: black;
+  color: rgb(21, 201, 232);
+  padding: 15px;
+  border-bottom: 1px solid rgb(204, 19, 255);
 
   @include maxw($cellphone-portrait) {
     width: 100%;
     font-size: 1.5rem;
     padding: 1rem;
-    border: 1px solid $class-header-border-color;
+    border: 1px solid rgb(204, 19, 255);
     margin-bottom: 1rem;
     border-radius: 10px;
-    box-shadow: 0 0 6px $shadow-gold-xl-color;
+    box-shadow: 0 0 6px rgba($color-gold-glow, 0.6);
   }
 }
 
@@ -312,7 +292,7 @@ $no-results-margin-top: 20px;
   th {
     justify-content: space-between;
     padding: 15px;
-    border-right: 1px solid $class-header-border-color;
+    border-right: 1px solid rgb(204, 19, 255);
   }
 
   @include maxw($cellphone-portrait) {
@@ -327,6 +307,8 @@ td {
 
 .no-results {
   text-align: center;
-  color: $no-results-text-color;
-  margin-top: $no-results-margin-top;
+  color: #888;
+  margin-top: 20px;
 }
+
+/* ------------------------------------ Legend Store END -------------------------------------- */

@@ -1,4 +1,10 @@
-// Cars page
+@use "sass:color";
+
+/* ============================================================================
+   COLORS.TS — Global tokens & helpers
+   ============================================================================ */
+
+/* ------------------------------------ Cars page START ------------------------------------ */
 $table-border-color: rgb(11, 7, 134);
 $color-accent-blue: rgb(21, 201, 232);
 $color-black: black;
@@ -13,8 +19,10 @@ $tracker-btn-off-color: rgb(200, 200, 200);
 $circle-color-on: #00ff99;
 $circle-color-off: #bbb;
 $color-gold-glow: rgb(223, 190, 7);
+/* ------------------------------------ Cars page END -------------------------------------- */
 
-// CarTracker page
+
+/* ------------------------------------ CarTracker page START ------------------------------------ */
 $ring-color-green: #00ff22;
 $ring-color-gold: #fcb900; // Different from $color-gold-glow, so safe
 $ring-color-blue: #00ccff;
@@ -22,3 +30,43 @@ $progress-ring-trail: #2c2c2c;
 $table-bg: #1e1e1e;
 $table-header-bg: #2a2a2a;
 $table-outline-border: #444;
+/* ------------------------------------ CarTracker page END -------------------------------------- */
+
+
+/* ------------------------------------ RARITY (shared site-wide) START ------------------------------------ */
+/**
+ * These tokens/mixins are used by both:
+ *  - Cars page Filters (rarity dropdown)
+ *  - Legend Store Filters (rarity dropdown)
+ *
+ * Approach: dropdown list background is black; rarity is expressed via text color.
+ */
+
+/* Text colors to use on a BLACK dropdown list */
+$rarity-text-uncommon: #01bcfa !default; // bright cyan (matches your Legend Store look)
+$rarity-text-rare:     #6f08aa !default; // royal purple
+$rarity-text-epic:     #ffae00 !default; // gold/orange
+
+/* Neutral for “All Rarities” on black */
+$rarity-text-neutral:  #cfd6ff !default;
+
+/* Helper: style an <option> for a black list background */
+@mixin rarity-option-on-black($text-color) {
+  background-color: $color-black;
+  color: $text-color;
+
+  &:hover,
+  &:focus,
+  &:checked {
+    // subtle lift while staying “black”
+    background-color: color.scale($color-black, $lightness: 8%);
+    color: color.scale($text-color, $lightness: 10%);
+  }
+}
+
+/* Optional: tint the CLOSED <select> border to the selected rarity */
+@mixin rarity-select-outline($text-color) {
+  outline: none;
+  box-shadow: inset 0 0 0 2px $text-color;
+}
+/* ------------------------------------ RARITY (shared site-wide) END -------------------------------------- */

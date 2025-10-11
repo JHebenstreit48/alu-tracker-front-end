@@ -1,0 +1,60 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* ==============================
+   CarDetails – Unit toggle
+   Theme: dark capsule + subtle gold glow
+============================== */
+.UnitToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+
+  /* Dark capsule with a gentle 3D-ish gradient + gold glow */
+  background-image: linear-gradient(180deg, #1a0b24 0%, #090113 70%, #000 100%);
+  border: 1px solid color.change($color-gold-glow, $alpha: .35);
+  box-shadow:
+    0 0 6px 1px color.change($color-gold-glow, $alpha: .25),
+    inset 0 2px 3px rgba(255, 255, 255, .06),
+    inset 0 -2px 6px rgba(0, 0, 0, .45);
+
+  .UnitToggle__btn {
+    border: 1px solid transparent;
+    background: transparent;
+    color: $color-white;
+    padding: 0.32rem 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+
+    /* hover nudge */
+    &:hover { transform: translateY(-1px); }
+
+    /* active (selected) look: subtle gold edge + inner highlight */
+    &.is-active {
+      background-image:
+        radial-gradient(120% 120% at 30% 15%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(0,0,0,.35) 100%);
+      border-color: color.change($color-gold-glow, $alpha: .55);
+      box-shadow:
+        0 0 6px color.change($color-gold-glow, $alpha: .35),
+        inset 0 1px 2px rgba(255,255,255,.1),
+        inset 0 -2px 6px rgba(0,0,0,.5);
+      color: $color-gold-glow;
+      text-shadow: 0 0 6px color.change($color-gold-glow, $alpha: .4);
+    }
+
+    /* PHONE-ONLY: slightly tighter paddings */
+    @include maxw($cellphone-portrait) { padding: 0.28rem 0.7rem; }
+  }
+
+  .UnitToggle__divider {
+    opacity: .65;
+    color: $color-white;
+    user-select: none;
+  }
+}

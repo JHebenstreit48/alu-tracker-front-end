@@ -14,7 +14,6 @@ import { useTrackerMode } from "@/components/CarInformation/shared/useTrackerMod
 import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
 
 export default function Cars() {
-  // 📦 Core filter + pagination state
   const {
     searchTerm,
     selectedStars,
@@ -32,21 +31,16 @@ export default function Cars() {
     handleResetFilters,
   } = useCarHandlers();
 
-  const [unitPreference, setUnitPreference] = useState<"metric" | "imperial">(
-    localStorage.getItem("preferredUnit") === "imperial" ? "imperial" : "metric"
-  );
+  // removed unitPreference state
 
   const [showOwned, setShowOwned] = useState(localStorage.getItem("showOwned") === "true");
   const [showKeyCars, setShowKeyCars] = useState(localStorage.getItem("showKeyCars") === "true");
 
-  // 🧠 Tracker mode (shared source of truth)
   const { trackerMode } = useTrackerMode();
 
-  // 🚗 Fetch cars + tracking
   const tracking = getAllCarTrackingData();
   const { cars, loading, error } = useCarAPI(selectedClass);
 
-  // 🧹 Filter & paginate
   const { filteredCars, filteredBrands, availableCountries } = useCarFilters({
     cars,
     tracking,
@@ -60,13 +54,8 @@ export default function Cars() {
     showKeyCars,
   });
 
-  const {
-    paginatedCars,
-    totalFiltered,
-    handlePageSizeChange,
-  } = useCarPagination(filteredCars);
+  const { paginatedCars, totalFiltered, handlePageSizeChange } = useCarPagination(filteredCars);
 
-  // ✅ Toggles
   const toggleOwned = () => {
     const next = !showOwned;
     setShowOwned(next);
@@ -101,7 +90,6 @@ export default function Cars() {
         selectedCountry,
         selectedClass,
         selectedRarity,
-        unitPreference,
         showOwned,
         showKeyCars,
         availableBrands: filteredBrands,
@@ -112,11 +100,6 @@ export default function Cars() {
         onRarityChange: handleRarityChange,
         onBrandChange: handleBrandChange,
         onCountryChange: handleCountryChange,
-        onUnitChange: (e) => {
-          const newVal = e.target.value as "metric" | "imperial";
-          setUnitPreference(newVal);
-          localStorage.setItem("preferredUnit", newVal);
-        },
         onToggleOwned: toggleOwned,
         onToggleKeyCars: toggleKeyCars,
         onReset: handleResetFilters,

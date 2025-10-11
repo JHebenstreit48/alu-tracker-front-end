@@ -9,14 +9,12 @@ export default function CarFilters({
   onSearch,
   onStarsChange,
   onClassChange,
-  onUnitChange,
   onRarityChange,
   onBrandChange,
   onCountryChange,
   onReset,
   selectedStars,
   selectedClass,
-  unitPreference,
   selectedRarity,
   selectedBrand,
   selectedCountry,
@@ -31,20 +29,16 @@ export default function CarFilters({
 }: CarFiltersProps) {
   return (
     <div className="carFilters">
-
       <div className="filterHeading">Car Filters</div>
 
-      {/* Dropdowns appear in rows */}
       <Dropdowns
         onStarsChange={onStarsChange}
         onClassChange={onClassChange}
-        onUnitChange={onUnitChange}
         onRarityChange={onRarityChange}
         onBrandChange={onBrandChange}
         onCountryChange={onCountryChange}
         selectedStars={selectedStars}
         selectedClass={selectedClass}
-        unitPreference={unitPreference}
         selectedRarity={selectedRarity}
         selectedBrand={selectedBrand}
         selectedCountry={selectedCountry}
@@ -53,10 +47,8 @@ export default function CarFilters({
         availableCountries={availableCountries}
       />
 
-      {/* Search centered on its own row */}
-        <SearchBar searchTerm={searchTerm} onSearch={onSearch} />
+      <SearchBar searchTerm={searchTerm} onSearch={onSearch} />
 
-      {/* Owned & Key Car checkboxes */}
       <Checkboxes
         showOwned={showOwned}
         showKeyCars={showKeyCars}
@@ -64,11 +56,9 @@ export default function CarFilters({
         onToggleKeyCars={onToggleKeyCars}
       />
 
-      {/* Reset button row */}
-        <button className="resetButton" onClick={onReset}>
-          Reset Filters
-        </button>
-        
+      <button className="resetButton" onClick={onReset}>
+        Reset Filters
+      </button>
     </div>
   );
 }
