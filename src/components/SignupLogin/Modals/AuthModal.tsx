@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { loginUser, registerUser } from "@/components/SignupLogin/api/authAPI";
+import { mfaLogin } from "@/components/SignupLogin/api/accountAPI";
 import "@/scss/SignupLogin/LoginSignupModal.scss";
 
 type Mode = "login" | "signup";
@@ -23,21 +24,47 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [infoMsg, setInfoMsg] = useState<string>("");
+
+  // MFA second step
   const [needs2fa, setNeeds2fa] = useState<{ userId: string } | null>(null);
+  const [mfaCode, setMfaCode] = useState<string>("");
+
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  // NEW: after successful auth, wait for first hydrate to complete before closing
+  // After successful auth, wait for first hydrate to complete before closing
   const [postAuth, setPostAuth] = useState<boolean>(false);
 
   useEffect(() => {
     if (postAuth && token && syncReady) {
-      onClose(); // close as soon as the first /users/me + syncFromAccount are done
+      onClose(); // close once /users/me + syncFromAccount finish
     }
   }, [postAuth, token, syncReady, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg(""); setInfoMsg(""); setNeeds2fa(null);
+    setErrorMsg(""); setInfoMsg("");
+
+    // If we're in the MFA step, verify code now
+    if (needs2fa) {
+      if (mfaCode.trim().length < 6) {
+        setErrorMsg("Enter your 6-digit code.");
+        return;
+      }
+      setSubmitting(true);
+      try {
+        const res = await mfaLogin(needs2fa.userId, mfaCode.trim());
+        login(res.token, res.username);
+        setPostAuth(true);
+        setInfoMsg("Signing you in… syncing your garage.");
+      } catch (e) {
+        setErrorMsg(e instanceof Error ? e.message : "Invalid or expired 2FA code");
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    // Otherwise normal login/signup
     setSubmitting(true);
     try {
       if (mode === "login") {
@@ -46,12 +73,13 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
 
         if ("requires2fa" in res && res.requires2fa) {
           setNeeds2fa({ userId: res.userId });
-          return; // Optional: add code-entry step here later
+          setInfoMsg("Enter your 6-digit code to finish signing in.");
+          return; // wait for MFA verify
         }
 
         if ("token" in res && res.token && res.username) {
           login(res.token, res.username);
-          setPostAuth(true);           // ← wait for hydrate
+          setPostAuth(true);              // wait for hydrate
           setInfoMsg("Signing you in… syncing your garage.");
           return;
         }
@@ -62,7 +90,7 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
 
         if (reg.token && reg.username) {
           login(reg.token, reg.username);
-          setPostAuth(true);           // ← wait for hydrate
+          setPostAuth(true);              // wait for hydrate
           setInfoMsg("Creating your account… syncing your garage.");
           return;
         }
@@ -81,10 +109,10 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
           <div className="tabRow" role="tablist" aria-label="Auth tabs">
             <button
               role="tab"
-              aria-selected={mode === "login"}
-              className={mode === "login" ? "tab active" : "tab"}
-              onClick={() => setMode("login")}
-              disabled={submitting || postAuth}
+              aria-selected={mode === "login" && !needs2fa}
+              className={mode === "login" && !needs2fa ? "tab active" : "tab"}
+              onClick={() => { if (!submitting && !postAuth && !needs2fa) setMode("login"); }}
+              disabled={submitting || postAuth || !!needs2fa}
             >
               Sign in
             </button>
@@ -92,8 +120,8 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
               role="tab"
               aria-selected={mode === "signup"}
               className={mode === "signup" ? "tab active" : "tab"}
-              onClick={() => setMode("signup")}
-              disabled={submitting || postAuth}
+              onClick={() => { if (!submitting && !postAuth && !needs2fa) setMode("signup"); }}
+              disabled={submitting || postAuth || !!needs2fa}
             >
               Create account
             </button>
@@ -102,7 +130,7 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
             className="closeButton"
             onClick={onClose}
             aria-label="Close"
-            disabled={submitting || postAuth} // lock close while we hydrate
+            disabled={submitting || postAuth}
             title={postAuth ? "Finishing first sync…" : "Close"}
           >
             ×
@@ -110,7 +138,8 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
         </div>
 
         <form onSubmit={handleSubmit} className="authForm">
-          {mode === "signup" && (
+          {/* Signup-only field */}
+          {mode === "signup" && !needs2fa && (
             <input
               type="text"
               placeholder="Username"
@@ -121,51 +150,71 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
             />
           )}
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            required
-            style={{ textTransform: "lowercase" }}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={submitting || postAuth}
-          />
+          {/* Hide email/password during MFA step */}
+          {!needs2fa && (
+            <>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                required
+                style={{ textTransform: "lowercase" }}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={submitting || postAuth}
+              />
 
-          <div className="passwordWrapper">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={submitting || postAuth}
-            />
-            <button
-              type="button"
-              className="togglePasswordButton"
-              onClick={() => setShowPassword((s) => !s)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
-              disabled={submitting || postAuth}
-            >
-              {showPassword ? "👁" : "🙈"}
-            </button>
-          </div>
-
-          {needs2fa && (
-            <div className="authInfo">
-              2FA required — we’ll complete this on the Account page (or add the code step here next).
-            </div>
+              <div className="passwordWrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={submitting || postAuth}
+                />
+                <button
+                  type="button"
+                  className="togglePasswordButton"
+                  onClick={() => setShowPassword((s) => !s)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  disabled={submitting || postAuth}
+                >
+                  {showPassword ? "👁" : "🙈"}
+                </button>
+              </div>
+            </>
           )}
+
+          {/* MFA second-step */}
+          {needs2fa && (
+            <>
+              <div className="authInfo">
+                2FA enabled on your account. Enter your 6-digit code to finish signing in.
+              </div>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
+                placeholder="6-digit code"
+                value={mfaCode}
+                onChange={(e) => setMfaCode(e.target.value)}
+                disabled={submitting || postAuth}
+              />
+            </>
+          )}
+
           {errorMsg && <div className="authError">{errorMsg}</div>}
           {infoMsg && <div className="authSuccess">{infoMsg}</div>}
 
           <button type="submit" disabled={submitting || postAuth}>
-            {submitting
-              ? (mode === "login" ? "Signing in…" : "Creating account…")
-              : (mode === "login" ? "Sign in" : "Create account")}
+            {needs2fa
+              ? (submitting ? "Verifying…" : "Verify code")
+              : (submitting
+                  ? (mode === "login" ? "Signing in…" : "Creating account…")
+                  : (mode === "login" ? "Sign in" : "Create account"))}
           </button>
 
-          {mode === "login" && (
+          {mode === "login" && !needs2fa && (
             <div className="authLinks">
               <a href="/account">Forgot password?</a>
               <a href="/account">Forgot username?</a>
@@ -173,7 +222,7 @@ export default function AuthModal({ onClose, initialMode = "login" }: Props): JS
           )}
         </form>
 
-        {/* NEW: inline footer status while waiting for first hydrate */}
+        {/* Inline footer status while waiting for first hydrate */}
         {postAuth && (
           <div className="authSyncFooter" role="status" aria-live="polite">
             <span className="spinner" aria-hidden="true" />

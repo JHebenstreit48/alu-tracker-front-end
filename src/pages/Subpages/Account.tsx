@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PageTab from "@/components/Shared/PageTab";
+import Header from "@/components/Shared/Header";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import ProfileCard from "@/components/Account/ProfileCard";
 import TwoFASetupCard from "@/components/Account/TwoFASetupCard";
@@ -14,6 +15,9 @@ export default function Account(): JSX.Element {
   if (!token) {
     return (
       <PageTab title="Account">
+        {/* Global site header for navigation/access to auth controls */}
+        <Header text="Account" className="accountHeader" />
+
         <div className="AccountPage">
           <div className="AccountBackRow">
             <button
@@ -36,6 +40,9 @@ export default function Account(): JSX.Element {
 
   return (
     <PageTab title="Account">
+      {/* Same global Header used on Home—keeps nav consistent */}
+      <Header text="Account" className="accountHeader" />
+
       <div className="AccountPage">
         <div className="AccountBackRow">
           <button
