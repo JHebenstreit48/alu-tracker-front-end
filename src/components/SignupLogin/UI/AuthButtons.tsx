@@ -1,14 +1,11 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import LoginModal from "@/components/SignupLogin/Modals/Login";
-import SignUpModal from "@/components/SignupLogin/Modals/Signup";
-
+import AuthModal from "@/components/SignupLogin/Modals/AuthModal";
 import "@/scss/SignupLogin/AuthButtons.scss";
 
-export default function AuthButtons() {
+export default function AuthButtons(): JSX.Element {
   const { token, username, logout } = useContext(AuthContext);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(false);
+  const [showAuth, setShowAuth] = useState<boolean>(false);
 
   return (
     <>
@@ -23,17 +20,19 @@ export default function AuthButtons() {
         </div>
       ) : (
         <div className="authControls">
-          <button onClick={() => setShowLogin(true)} aria-haspopup="dialog" aria-controls="login-modal">
-            Login
-          </button>
-          <button onClick={() => setShowSignUp(true)} aria-haspopup="dialog" aria-controls="signup-modal">
-            Sign Up
+          <button
+            onClick={() => setShowAuth(true)}
+            aria-haspopup="dialog"
+            aria-controls="auth-modal"
+          >
+            Sign in
           </button>
         </div>
       )}
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-      {showSignUp && <SignUpModal onClose={() => setShowSignUp(false)} />}
+      {showAuth && (
+        <AuthModal onClose={() => setShowAuth(false)} initialMode="login" />
+      )}
     </>
   );
 }

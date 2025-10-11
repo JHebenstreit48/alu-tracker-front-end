@@ -26,12 +26,10 @@ function revertCarKey(key: string): string {
 }
 
 function isErrorBody(u: unknown): u is { message?: string; error?: string } {
-  return (
-    typeof u === "object" &&
-    u !== null &&
-    ("message" in u || "error" in u)
-  );
+  return typeof u === "object" && u !== null && ("message" in u || "error" in u);
 }
+
+const uniq = <T,>(arr: T[]): T[] => Array.from(new Set(arr));
 
 export const syncToAccount = async (token: string): Promise<SyncResult> => {
   try {
@@ -55,14 +53,21 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
     const xpValue = localStorage.getItem("garageXP");
     const xp = Number.isFinite(Number(xpValue)) ? parseInt(xpValue ?? "0", 10) : 0;
 
-    const payload: ProgressPayload = { carStars, ownedCars, goldMaxedCars, keyCarsOwned, xp };
+    // ✅ de-dupe arrays before payload (prevents duplicate entries)
+    const payload: ProgressPayload = {
+      carStars,
+      ownedCars: uniq(ownedCars),
+      goldMaxedCars: uniq(goldMaxedCars),
+      keyCarsOwned: uniq(keyCarsOwned),
+      xp,
+    };
 
     // Never send an empty-ish payload — prevents accidental wipes.
     const isEmpty =
       Object.keys(carStars).length === 0 &&
-      ownedCars.length === 0 &&
-      goldMaxedCars.length === 0 &&
-      keyCarsOwned.length === 0 &&
+      payload.ownedCars.length === 0 &&
+      payload.goldMaxedCars.length === 0 &&
+      payload.keyCarsOwned.length === 0 &&
       xp === 0;
 
     if (isEmpty) {
