@@ -1,16 +1,15 @@
-// path: src/App.tsx
-import { Suspense, useEffect, useState, useContext } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-import Footer from "@/components/Shared/Footer";
-import LoadingSpinner from "@/components/Shared/LoadingSpinner";
+import { Suspense, useEffect, useState, useContext } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import Footer from '@/components/Shared/Footer';
+import LoadingSpinner from '@/components/Shared/LoadingSpinner';
 
-import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { syncFromAccount } from "@/components/CarInformation/UserDataSync/syncFromAccount";
+import { AuthContext } from '@/components/SignupLogin/context/AuthContext';
+import { syncFromAccount } from '@/components/CarInformation/UserDataSync/syncFromAccount';
 
-import "@/scss/PageAndHome/Page.scss";
-import "@/scss/NavHeaderFooterError/Header.scss";
-import "@/scss/NavHeaderFooterError/Navigation.scss";
-import "@/scss/NavHeaderFooterError/Footer.scss";
+import '@/scss/PageAndHome/Page.scss';
+import '@/scss/NavHeaderFooterError/Header.scss';
+import '@/scss/NavHeaderFooterError/Navigation.scss';
+import '@/scss/NavHeaderFooterError/Footer.scss';
 
 export default function App() {
   const location = useLocation();
@@ -19,7 +18,8 @@ export default function App() {
 
   // expose syncFromAccount for debugging
   useEffect(() => {
-    (window as unknown as { syncFromAccount: typeof syncFromAccount }).syncFromAccount = syncFromAccount;
+    (window as unknown as { syncFromAccount: typeof syncFromAccount }).syncFromAccount =
+      syncFromAccount;
   }, []);
 
   // re-mount footer after route change (keeps its gradient re-render smooth)
@@ -31,16 +31,19 @@ export default function App() {
 
   // first-run sync if user is logged in and local store empty
   useEffect(() => {
-    const hasLocalData = Object.keys(localStorage).some((key) => key.startsWith("car-tracker-"));
+    const hasLocalData = Object.keys(localStorage).some((key) => key.startsWith('car-tracker-'));
     if (token && !hasLocalData) {
-      console.log("[AutoSync] No local tracker found. Syncing from account...");
+      console.log('[AutoSync] No local tracker found. Syncing from account...');
       syncFromAccount(token);
     }
   }, [token]);
 
   return (
     <div className="AppRoot">
-      <main id="content" className="AppMain">
+      <main
+        id="content"
+        className="AppMain"
+      >
         <Suspense fallback={<LoadingSpinner />}>
           <Outlet />
         </Suspense>

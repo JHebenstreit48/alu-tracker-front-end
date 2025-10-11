@@ -20,7 +20,7 @@ export default function Dropdowns({
   return (
     <>
       <label className="DropdownLabel starFilter">
-        Star Rank:
+        Max Star Rank:
         <select
           className="starRanks"
           value={selectedStars ?? 'All'}

@@ -1,12 +1,12 @@
-import ClassTables from "@/components/CarInformation/CarList/ClassTables/ClassTables";
-import CarFilters from "@/components/CarInformation/CarList/CarFilters/CarFilters";
-import Header from "@/components/Shared/Header";
-import PageTab from "@/components/Shared/PageTab";
-import { useNavigate } from "react-router-dom";
+import ClassTables from '@/components/CarInformation/CarList/ClassTables/ClassTables';
+import CarFilters from '@/components/CarInformation/CarList/CarFilters/CarFilters';
+import Header from '@/components/Shared/Header';
+import PageTab from '@/components/Shared/PageTab';
+import { useNavigate } from 'react-router-dom';
 
-import "@/scss/Cars/CarsPage/index.scss";
+import '@/scss/Cars/CarsPage/index.scss';
 
-import { Car } from "@/components/CarInformation/CarList/CarFilters/types/CarTypes";
+import { Car } from '@/components/CarInformation/CarList/CarFilters/types/CarTypes';
 
 interface CarDataProps {
   loading: boolean;
@@ -59,21 +59,29 @@ export default function CarData({
   return (
     <div className="cars">
       <PageTab title="Cars">
-        <Header text="Cars" className="carsHeader" />
-
-        <div className="trackerSummaryLink">
-          <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
-            Account Progress
-          </button>
-        </div>
-
-        <CarFilters
-          {...filterProps}
-          availableStars={[3, 4, 5, 6]}
+        <Header
+          text="Cars"
+          className="carsHeader"
         />
 
+        <div className="filtersAndTrackerLink">
+          <CarFilters
+            {...filterProps}
+            availableStars={[3, 4, 5, 6]}
+          />
+
+          <div className="trackerSummaryLink">
+            <button
+              className="trackerSummary"
+              onClick={() => navigate('/car-tracker')}
+            >
+              Account Progress
+            </button>
+          </div>
+        </div>
+
         <p className="carCount">
-          Showing {cars.length} of {totalFiltered} car{totalFiltered !== 1 ? "s" : ""}
+          Showing {cars.length} of {totalFiltered} car{totalFiltered !== 1 ? 's' : ''}
         </p>
 
         <ClassTables
