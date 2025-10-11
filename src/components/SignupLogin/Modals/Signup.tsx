@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { registerUser } from "@/components/SignupLogin/api/authAPI";
+import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import "@/scss/SignupLogin/LoginSignupModal.scss";
 
-interface SignUpModalProps {
-  onClose: () => void;
-}
+interface SignUpModalProps { onClose: () => void }
 
 export default function SignUpModal({ onClose }: SignUpModalProps) {
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,12 +16,21 @@ export default function SignUpModal({ onClose }: SignUpModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await registerUser(username, email, password);
-    if (result.success) {
-      setSuccessMsg("Account created! You can now log in.");
-    } else {
+    setErrorMsg(""); setSuccessMsg("");
+    const result = await registerUser(username, email.toLowerCase(), password);
+
+    if (!result.success) {
       setErrorMsg(result.message || "Sign up failed");
+      return;
     }
+    // Auto-login using token returned by register
+    if (result.token && result.username) {
+      login(result.token, result.username);
+      onClose();
+      return;
+    }
+    // Fallback (should not happen): show success but don’t auto-login
+    setSuccessMsg("Account created! Please log in.");
   };
 
   return (
@@ -63,6 +72,7 @@ export default function SignUpModal({ onClose }: SignUpModalProps) {
               {showPassword ? "👁" : "🙈"}
             </button>
           </div>
+
           {errorMsg && <div className="authError">{errorMsg}</div>}
           {successMsg && <div className="authSuccess">{successMsg}</div>}
           <button type="submit">Sign Up</button>
