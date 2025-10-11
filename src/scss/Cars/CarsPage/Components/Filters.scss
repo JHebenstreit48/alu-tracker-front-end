@@ -4,10 +4,14 @@
 /* ------------------------------------ Cars Filters START ------------------------------------ */
 
 .carFilters {
-  /* ==== Modern card container ==== */
+  /* Card tokens */
   --card-bg: #0d0016;
   --card-grad-top: rgba(255, 215, 0, 0.06);
   --card-grad-bottom: rgba(0, 0, 0, 0.55);
+
+  /* Tighter uniform widths */
+  --ctrl-w: clamp(11rem, 18vw, 13rem);
+  --search-w: clamp(11rem, 18vw, 13rem);
 
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -19,54 +23,47 @@
     "search  search"
     "owned   keycar"
     "reset   reset";
+
   background:
     radial-gradient(120% 120% at 10% -10%, var(--card-grad-top), transparent 60%),
     linear-gradient(to bottom, rgba(255,255,255,0.02), var(--card-grad-bottom)),
     var(--card-bg);
+
   border: $filter-border;
   box-shadow:
     0 0 0 1px rgba($color-gold-glow, .25) inset,
     0 10px 30px rgba(0,0,0,.55),
     0 0 18px rgba($color-gold-glow, .18);
-  backdrop-filter: blur(1px);
   border-radius: 18px;
-  width: $filter-width;
-  margin: 0 auto;
-  padding: clamp(1.25rem, 2.2vw, 2.25rem);
-  gap: $filter-gap;
+
+  width: $filter-width;       /* from Globals */
+  padding: $filter-padding;   /* from Globals */
+  gap: $filter-gap;           /* from Globals */
+  column-gap: .5rem;          /* pulls the two columns closer */
   color: $color-white;
   font-size: $filter-font-size;
+  text-align: center;
+  align-items: center;
 
-  @include maxw($cellphone-portrait) {
-    width: 22rem;
-    margin: 2rem auto;
-    text-align: center;
-    border-radius: 14px;
-  }
-
-  /* ===== Heading ===== */
   .filterHeading {
     grid-area: heading;
-    text-align: center;
     font-size: clamp(1.6rem, 2.2vw, 1.9rem);
     font-weight: 800;
     letter-spacing: .01em;
-    margin: .25rem 0 1rem;
+    margin: .15rem 0 .6rem;
     text-shadow: 0 0 10px rgba($color-gold-glow, .28);
   }
 
-  /* ===== Control wrappers ===== */
   .DropdownLabel {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    align-items: center;
+    gap: .4rem;
     position: relative;
 
-    label { font-weight: 600; }
-
-    /* Inputs + selects share the same modern style */
     select,
     input {
+      width: var(--ctrl-w);
       height: $input-height;
       padding: 6px 12px;
       border-radius: 12px;
@@ -77,32 +74,26 @@
         #0f0f10;
       color: #eee;
       transition: box-shadow .18s ease, border-color .18s ease, transform .05s ease;
+      margin-inline: auto;
 
-      &:hover {
-        border-color: rgba($color-gold-glow, .45);
-      }
-      &:focus {
+      &:hover  { border-color: rgba($color-gold-glow, .45); }
+      &:focus  {
         outline: none;
         border-color: rgba($color-gold-glow, .8);
-        box-shadow:
-          0 0 0 2px rgba($color-gold-glow, .35),
-          0 4px 16px rgba(0,0,0,.45) inset;
+        box-shadow: 0 0 0 2px rgba($color-gold-glow, .35), 0 4px 16px rgba(0,0,0,.45) inset;
       }
       &:active { transform: translateY(1px); }
     }
 
-    /* WebKit dropdown arrow stays minimal */
     select {
       appearance: none;
-      background-image:
-        linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,.2));
+      background-image: linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,.2));
       color: #f5f5f5;
     }
   }
 
   .scrollableDropdown { max-height: 10rem; overflow-y: auto; }
 
-  /* ===== Grid area assignments ===== */
   .starFilter   { grid-area: star; }
   .classFilter  { grid-area: class; }
   .rarityFilter { grid-area: rarity; }
@@ -110,86 +101,86 @@
 
   .countryFilter {
     grid-area: country;
-    justify-self: center;
-    width: 100%;
-
-    select {
-      width: clamp(14rem, 55%, 26rem);
-      margin-inline: auto;
-    }
-    @include maxw($cellphone-portrait) { select { width: 18rem; } }
+    select { width: var(--ctrl-w); }
   }
 
   .searchFilter { grid-area: search; }
+  #searchInput  { width: var(--search-w); margin: 0 auto; }
 
-  #searchInput {
-    width: 50%;
-    margin: 0 auto;
-    @include maxw($cellphone-portrait) {
-      width: 18rem;
-      font-size: 1.2rem;
-    }
-  }
-
-  /* ===== Rarity dropdown — black list with colored text ===== */
   .rarityFilter select {
     option { background-color: $color-black; color: $rarity-text-neutral; }
     .optionUncommon { @include rarity-option-on-black($rarity-text-uncommon); }
     .optionRare     { @include rarity-option-on-black($rarity-text-rare); }
     .optionEpic     { @include rarity-option-on-black($rarity-text-epic); }
 
-    /* closed select outline tint (supported on modern engines) */
     &:has(option:checked.optionUncommon) { @include rarity-select-outline($rarity-text-uncommon); }
     &:has(option:checked.optionRare)     { @include rarity-select-outline($rarity-text-rare);     }
     &:has(option:checked.optionEpic)     { @include rarity-select-outline($rarity-text-epic);     }
   }
 
-  /* ===== Checkboxes (keep simple, sharpen UI) ===== */
-  .ownedFilter, .keyCarFilter {
-    display: flex;
+  .ownedFilter  { grid-area: owned;  justify-self: end;   }
+  .keyCarFilter { grid-area: keycar; justify-self: start; }
+
+  .CheckboxLabel {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: .55rem;
+    font-size: 1.05rem;
+    user-select: none;
+    margin-top: .15rem;
 
-    .CheckboxLabel {
-      display: inline-flex;
-      align-items: center;
-      gap: .6rem;
-      font-size: 1.2rem;
-      user-select: none;
-
-      input[type="checkbox"] {
-        width: 18px; height: 18px;
-        border-radius: 6px;
-        accent-color: $color-gold-glow; /* modern browsers */
-        cursor: pointer;
-      }
+    input[type="checkbox"] {
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      accent-color: $color-gold-glow;
+      cursor: pointer;
     }
   }
 
-  /* ===== Reset button ===== */
+  @include maxw($cellphone-portrait) {
+    --ctrl-w: 18rem;
+    --search-w: 18rem;
+
+    width: 22rem;
+    margin: 2rem auto;
+    border-radius: 14px;
+
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "heading"
+      "star"
+      "class"
+      "rarity"
+      "brand"
+      "country"
+      "search"
+      "owned"
+      "keycar"
+      "reset";
+
+    .ownedFilter, .keyCarFilter { justify-self: center; }
+  }
+
   .resetButton {
     grid-area: reset;
-    margin-top: .75rem;
+    margin-top: .5rem;
     justify-self: center;
     background: linear-gradient(to bottom, $reset-btn-bg, color.scale($reset-btn-bg, $lightness: -6%));
     color: white;
-    padding: .65rem 2.1rem;
+    padding: .6rem 2rem;
     border-radius: 14px;
     border: 1px solid rgba($color-gold-glow, .35);
-    box-shadow:
-      0 0 0 2px rgba($color-gold-glow, .18) inset,
-      0 8px 18px rgba(0,0,0,.6);
+    box-shadow: 0 0 0 2px rgba($color-gold-glow, .18) inset, 0 8px 18px rgba(0,0,0,.6);
     cursor: pointer;
     transition: transform .06s ease, box-shadow .18s ease, background-color .2s ease;
 
     &:hover {
       background-color: $table-border-color;
       color: $color-white;
-      box-shadow:
-        0 0 0 2px rgba($color-gold-glow, .26) inset,
-        0 10px 22px rgba(0,0,0,.6);
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, .26) inset, 0 10px 22px rgba(0,0,0,.6);
     }
     &:active { transform: translateY(1px); }
   }
 }
+
 /* ------------------------------------ Cars Filters END -------------------------------------- */

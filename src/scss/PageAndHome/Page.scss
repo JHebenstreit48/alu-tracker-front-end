@@ -1,24 +1,48 @@
-/* ===== Reset (add at the very top) ===== */
-html, body { margin: 0; padding: 0; }
+/* ===== Page Background ONLY (no margins/padding/borders) ===== */
 
-html { box-sizing: border-box; }
-*, *::before, *::after { box-sizing: inherit; }
-
-/* ===== Variables ===== */
+/* Keep these if you like the old structure */
 $deep-purple: rgb(91, 9, 129);
 $dark-overlay: rgb(41 0 60 / 96%);
-$gradient-bg: linear-gradient(
+
+/* Option A: your original gradient (commented by default) */
+$legacy-gradient: linear-gradient(
   to bottom,
   rgb(55 19 138) 15%,
-  rgb(120, 32, 220) 34%,
+  rgb(120 32 220) 34%,
   rgb(40 5 80) 88%
 );
 
-/* ===== Global Styles ===== */
+/* Option B: subtle modern layered gradient (soft, no banding) */
+$modern-gradient: 
+  radial-gradient(1200px 800px at 10% -10%, rgba(142, 63, 255, 0.18), transparent 60%),
+  radial-gradient(900px 700px at 90% 0%, rgba(214, 130, 255, 0.12), transparent 55%),
+  radial-gradient(1000px 700px at 50% 120%, rgba(60, 0, 120, 0.45), transparent 65%),
+  linear-gradient(180deg, #3a0a6b 0%, #1b0330 55%, #12031c 100%);
+
+/* ZERO layout influence; just the background */
+html, body { margin: 0; padding: 0; } /* redundant but harmless */
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
+
+  /* Base color: from your original, safe with the site */
   background-color: $dark-overlay;
+
+  /* Choose ONE of the following: */
+
+  /* 1) Solid only (no gradient) — safest */
+  // background-image: none;
+
+  /* 2) Legacy gradient (your previous look) */
+  // background-image: $legacy-gradient;
+
+  /* 3) Modern layered gradient (recommended) */
+  background-image: $modern-gradient;
+
   background-size: cover;
   background-attachment: fixed;
-  // background-image: $gradient-bg;
+
+  /* Fallback for older browsers that ignore multiple fixed layers */
+  @supports not (background: paint(worklet)) {
+    background-color: #1b0330;
+  }
 }
