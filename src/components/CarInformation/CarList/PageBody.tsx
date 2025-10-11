@@ -20,7 +20,6 @@ interface CarDataProps {
     selectedCountry: string;
     selectedClass: string;
     selectedRarity: string | null;
-    unitPreference: "metric" | "imperial";
     showOwned: boolean;
     showKeyCars: boolean;
     availableBrands: string[];
@@ -31,17 +30,15 @@ interface CarDataProps {
     onRarityChange: (rarity: string | null) => void;
     onBrandChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onCountryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onUnitChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    // onUnitChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;  <-- REMOVE THIS LINE
     onToggleOwned: () => void;
     onToggleKeyCars: () => void;
     onReset: () => void;
   };
 
-  // Table Data
   cars: Car[];
   selectedClass: string;
 
-  // Pagination Controls
   carsPerPage: number;
   handlePageSizeChange: (size: number) => void;
   totalFiltered: number;
@@ -64,8 +61,6 @@ export default function CarData({
       <PageTab title="Cars">
         <Header text="Cars" className="carsHeader" />
 
-        {/* Tracker toggle moved to CarDetails page.
-            Keep Account Progress shortcut here if you want */}
         <div className="trackerSummaryLink">
           <button className="trackerSummary" onClick={() => navigate("/car-tracker")}>
             Account Progress

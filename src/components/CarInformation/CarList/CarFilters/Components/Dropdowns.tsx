@@ -5,13 +5,11 @@ const renderStars = (count: number) => '★'.repeat(count);
 export default function Dropdowns({
   onStarsChange,
   onClassChange,
-  onUnitChange,
   onRarityChange,
   onBrandChange,
   onCountryChange,
   selectedStars,
   selectedClass,
-  unitPreference,
   selectedRarity,
   selectedBrand,
   selectedCountry,
@@ -56,17 +54,6 @@ export default function Dropdowns({
               {cls}
             </option>
           ))}
-        </select>
-      </label>
-
-      <label className="DropdownLabel unitFilter">
-        Units:
-        <select
-          value={unitPreference}
-          onChange={onUnitChange}
-        >
-          <option value="metric">KPH</option>
-          <option value="imperial">MPH</option>
         </select>
       </label>
 
