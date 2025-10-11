@@ -19,9 +19,7 @@ interface ProgressResponse {
 }
 
 function isProgressResponse(u: unknown): u is ProgressResponse {
-  if (typeof u !== "object" || u === null) return false;
-  // We only check shape lightly; detailed validation not required here
-  return "progress" in u;
+  return typeof u === "object" && u !== null && "progress" in (u as object);
 }
 
 /**
@@ -63,7 +61,7 @@ export const syncFromAccount = async (token: string): Promise<void> => {
     }
 
     if (!isProgressResponse(resultUnknown) || !resultUnknown.progress) {
-      console.error("❌ Missing 'progress' field in response:", resultUnknown);
+      console.warn("ℹ️ No progress returned (first-time user?).");
       return;
     }
 
@@ -72,6 +70,7 @@ export const syncFromAccount = async (token: string): Promise<void> => {
       ownedCars = [],
       goldMaxedCars = [],
       keyCarsOwned = [],
+      // xp is currently not stored locally here (kept for future use)
     } = resultUnknown.progress;
 
     // Index arrays for quick lookup

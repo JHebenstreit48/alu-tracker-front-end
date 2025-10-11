@@ -1,57 +1,82 @@
 @use "sass:color";
+@use "@scss/Globals/index" as *;
 
 /* ==============================
-            Variables            
- ============================== */
-$modal-bg: rgba(0, 0, 0, 0.6);
-$modal-content-bg: #fff;
-$modal-text-color: #111;
-$modal-shadow: rgba(0, 0, 0, 0.3);
-$close-color: #444;
-$close-hover: #000;
-$error-color: #b00020;
-$success-color: #007b00;
+   Local tokens (fall back if not in Globals)
+============================== */
+$gold-accent: rgb(255, 196, 0) !default;
+$purple-glow: #7a05be !default;
+$bg-veil: rgba(0, 0, 0, 0.72) !default;
+
+/* Panel surface + borders */
+$panel-bg: linear-gradient(180deg, #19121f 0%, #120c18 60%, #0b0910 100%) !default;
+$panel-border: 1px solid rgba($gold-accent, 0.35) !default;
+$panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !default;
+
+/* Text + inputs */
+$panel-text: #e9e6ee !default;
+$muted: #bfb6cc !default;
+$danger: #ff4d6d !default;
+$success: #36d399 !default;
+
+$input-bg: #0f0a14 !default;
+$input-border: 1px solid rgba(255, 255, 255, 0.12) !default;
+$input-border-focus: 1px solid rgba($gold-accent, 0.75) !default;
+$placeholder: #9d93a6 !default;
+
+/* Buttons */
+$btn-bg: linear-gradient(180deg, rgba($purple-glow, .95), rgba($purple-glow, .75)) !default;
+$btn-bg-hover: linear-gradient(180deg, rgba($purple-glow, 1), rgba($purple-glow, .9)) !default;
+$btn-text: #fff !default;
 
 /* ==============================
-         Modal Container       
- ============================== */
+   Modal Container
+============================== */
 .authModal {
   position: fixed;
   inset: 0;
-  background-color: $modal-bg;
+  background-color: $bg-veil;
   z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @include maxw($cellphone-portrait) {
+    align-items: flex-end; /* slide up look on phones */
+  }
 }
 
 /* ==============================
-        Modal Content         
- ============================== */
+   Modal Content
+============================== */
 .authModalContent {
-  background-color: $modal-content-bg;
-  color: $modal-text-color;
-  padding: 2rem;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
-  max-height: 80vh;
+  background: $panel-bg;
+  color: $panel-text;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: min(500px, 92vw);
+  max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 8px 24px $modal-shadow;
+  box-shadow: $panel-shadow;
+  border: $panel-border;
   position: relative;
+
+  @include maxw($cellphone-portrait) {
+    width: 100%;
+    border-radius: 14px 14px 0 0;
+    padding: 1rem 1rem 1.25rem;
+  }
 }
 
 /* ==============================
-         Modal Header         
- ============================== */
+   Modal Header
+============================== */
 .authModalHeader {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
+  margin-bottom: 1rem;
 
   .closeButton {
     position: absolute;
@@ -60,89 +85,160 @@ $success-color: #007b00;
     transform: translateY(-50%);
     background: none;
     border: none;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     cursor: pointer;
-    color: $close-color;
+    color: color.adjust($panel-text, $lightness: -20%);
 
-    &:hover {
-      color: $close-hover;
-    }
+    &:hover { color: $panel-text; }
+    &:disabled { opacity: .5; cursor: not-allowed; }
   }
-}
 
-/* ==============================
-          Form Controls          
- ============================== */
- .authForm {
-    text-transform: none;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-  
-    .passwordWrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-  
-      input {
-        flex: 1;
-        padding-right: 2.5rem; // Make room for the button
-      }
-  
-      .togglePasswordButton {
-        position: absolute;
-        right: 0.75rem;
-        background: none;
-        border: none;
-        color: #444;
-        cursor: pointer;
-        font-size: 1.2rem;
-        padding: 0;
-        height: 100%;
-  
-        &:hover {
-          color: #000;
-        }
-      }
-    }
-  
-    button {
-      padding: 0.75rem;
-      border: none;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      font-size: 1rem;
+  .tabRow {
+    display: inline-flex;
+    gap: .5rem;
+
+    .tab {
+      background: transparent;
+      border: 1px solid rgba($gold-accent, .45);
+      color: $gold-accent;
+      border-radius: .5rem;
+      padding: .25rem .6rem;
+      font-weight: 700;
+      line-height: 1;
       cursor: pointer;
-  
-      &:hover {
-        background-color: color.adjust(#007bff, $lightness: -10%);
 
+      &:disabled { opacity: .5; cursor: default; }
+
+      &.active {
+        box-shadow: 0 0 0 2px rgba($gold-accent, .18) inset;
+        background: rgba(255, 255, 255, .03);
       }
+
+      &:hover { background: rgba(255, 255, 255, .04); }
     }
   }
-  
+}
 
 /* ==============================
-      Error & Success Messages      
- ============================== */
-.authError {
-  color: $error-color;
-  font-weight: bold;
-  text-align: center;
+   Form Controls
+============================== */
+.authForm {
+  text-transform: none;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: $input-border;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: $input-bg;
+    color: $panel-text;
+    outline: none;
+
+    &::placeholder { color: $placeholder; }
+
+    &:focus {
+      border: $input-border-focus;
+      box-shadow: 0 0 0 3px rgba($gold-accent, .18);
+    }
+
+    &:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
+  }
+
+  .passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      flex: 1;
+      padding-right: 2.5rem; // room for the toggle button
+    }
+
+    .togglePasswordButton {
+      position: absolute;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      color: $muted;
+      cursor: pointer;
+      font-size: 1.2rem;
+      height: 100%;
+      display: grid;
+      place-items: center;
+
+      &:hover { color: $panel-text; }
+      &:disabled { opacity: .6; cursor: not-allowed; }
+    }
+  }
+
+  button {
+    padding: 0.75rem;
+    border: 1px solid rgba($purple-glow, .5);
+    border-radius: 8px;
+    background: $btn-bg;
+    color: $btn-text;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 700;
+
+    &:hover { background: $btn-bg-hover; }
+    &:disabled { opacity: .7; cursor: progress; }
+  }
+
+  .authLinks {
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-top: .5rem;
+
+    a {
+      color: $gold-accent;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+
+      &:hover { color: color.adjust($gold-accent, $lightness: 8%); }
+    }
+
+    @include maxw($cellphone-portrait) {
+      flex-direction: column;
+      align-items: center;
+      gap: .35rem;
+    }
+  }
 }
 
-.authSuccess {
-  color: $success-color;
-  font-weight: bold;
-  text-align: center;
+/* ==============================
+   Messages
+============================== */
+.authError   { color: $danger;  font-weight: 700; text-align: center; }
+.authSuccess { color: $success; font-weight: 700; text-align: center; }
+
+/* ==============================
+   Inline footer status INSIDE modal (post-auth hydrate)
+============================== */
+.authSyncFooter {
+  margin-top: .85rem;
+  padding-top: .75rem;
+  border-top: 1px dashed rgba($gold-accent, .35);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  color: $panel-text;
+
+  .spinner {
+    width: 16px; height: 16px; border-radius: 999px;
+    border: 2px solid rgba($gold-accent, .35);
+    border-top-color: $gold-accent;
+    animation: spin 0.9s linear infinite;
+  }
 }
+
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,52 +1,48 @@
 import { useState, useEffect, ReactNode } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { syncFromAccount } from "@/components/CarInformation/UserDataSync/syncFromAccount";
+import { fetchMe } from "@/components/SignupLogin/api/authAPI";
 
-interface Props {
-  children: ReactNode;
-}
+interface Props { children: ReactNode }
 
 export const AuthProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
-  const [syncReady, setSyncReady] = useState<boolean>(false); // ✅ gate autosync
+  const [syncReady, setSyncReady] = useState<boolean>(false);
 
-  // Load persisted credentials and hydrate once
+  // hydrate from local storage then /users/me
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUsername = localStorage.getItem("username");
     if (storedToken && storedUsername) {
       setToken(storedToken);
       setUsername(storedUsername);
-      (async () => {
-        setSyncReady(false);
-        try {
-          await syncFromAccount(storedToken); // ✅ merge-based hydrate (no clearing)
-        } finally {
-          setSyncReady(true);
-        }
-      })();
+      hydrate(storedToken);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const hydrate = async (tok: string) => {
+    setSyncReady(false);
+    try {
+      const { ok, data } = await fetchMe(tok);
+      if (!ok) return hardLogout(); // 401/expired → out
+      if (data?.username) setUsername(data.username);
+      await syncFromAccount(tok); // merge, no wipes
+    } finally {
+      setSyncReady(true);
+    }
+  };
 
   const login = (newToken: string, newUsername: string) => {
     localStorage.setItem("token", newToken);
     localStorage.setItem("username", newUsername);
     setToken(newToken);
     setUsername(newUsername);
-
-    // Hydrate from server BEFORE enabling autosync
-    (async () => {
-      setSyncReady(false);
-      try {
-        await syncFromAccount(newToken);
-      } finally {
-        setSyncReady(true);
-      }
-    })();
+    hydrate(newToken);
   };
 
-  const logout = () => {
+  const hardLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setToken(null);
@@ -55,7 +51,7 @@ export const AuthProvider = ({ children }: Props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, username, syncReady, login, logout }}>
+    <AuthContext.Provider value={{ token, username, syncReady, login, logout: hardLogout }}>
       {children}
     </AuthContext.Provider>
   );
