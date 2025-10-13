@@ -31,7 +31,7 @@ $control-bg: #0d0016;
   font-size: $filter-font-size;
 
   @include maxw($cellphone-portrait) {
-    width: 22rem;
+    width: 20rem;
     margin: 2rem auto;
     grid-template-columns: 1fr;
     grid-template-areas:

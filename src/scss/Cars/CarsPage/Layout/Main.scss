@@ -27,7 +27,7 @@
   gap: 1rem;
 
   /* phones in portrait */
-  @include phone-portrait {
+  @include maxw($cellphone-portrait) {
     flex-flow: row wrap;
   }
 
@@ -35,8 +35,12 @@
     font-size: 1.3rem;
     color: rgb(21, 201, 232);
 
-    @include phone-portrait {
+    @include maxw($cellphone-portrait) {
       flex-direction: row;
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
     }
   }
 
@@ -55,6 +59,11 @@
     text-align: center;
     border-radius: 0.3rem;
 
+    @include maxw($cellphone-portrait) {
+      display: flex;
+      text-align: center;
+    }
+
     &:disabled {
       background-color: rgb(50, 50, 50);
       color: gray;
@@ -64,23 +73,6 @@
     &:hover:not(:disabled) {
       background-color: rgb(21, 201, 232);
       color: black;
-    }
-  }
-
-  /* phones in portrait */
-  @include phone-portrait {
-    align-items: center;
-    text-align: center;
-
-    .paginationLabel {
-      text-align: center;
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-
-    .carsPerPage {
-      display: inline-block;
-      margin: 0.4rem;
     }
   }
 }
