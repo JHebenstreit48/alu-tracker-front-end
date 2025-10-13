@@ -14,11 +14,14 @@
 
   /* Dark capsule with a gentle 3D-ish gradient + gold glow */
   background-image: linear-gradient(180deg, #1a0b24 0%, #090113 70%, #000 100%);
-  border: 1px solid color.change($color-gold-glow, $alpha: .35);
-  box-shadow:
-    0 0 6px 1px color.change($color-gold-glow, $alpha: .25),
-    inset 0 2px 3px rgba(255, 255, 255, .06),
-    inset 0 -2px 6px rgba(0, 0, 0, .45);
+  border: 1px solid color.change($color-gold-glow, $alpha: 0.35);
+  box-shadow: 0 0 6px 1px color.change($color-gold-glow, $alpha: 0.25),
+    inset 0 2px 3px rgba(255, 255, 255, 0.06), inset 0 -2px 6px rgba(0, 0, 0, 0.45);
+
+  @include maxw($cellphone-portrait) {
+    width: 8rem;
+    margin: 0 auto;
+  }
 
   .UnitToggle__btn {
     border: 1px solid transparent;
@@ -29,31 +32,37 @@
     letter-spacing: 0.02em;
     border-radius: 999px;
     cursor: pointer;
-    transition: transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+    transition: transform 0.08s ease, box-shadow 0.18s ease, background 0.18s ease,
+      border-color 0.18s ease;
 
     /* hover nudge */
-    &:hover { transform: translateY(-1px); }
+    &:hover {
+      transform: translateY(-1px);
+    }
 
     /* active (selected) look: subtle gold edge + inner highlight */
     &.is-active {
-      background-image:
-        radial-gradient(120% 120% at 30% 15%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 60%),
-        linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(0,0,0,.35) 100%);
-      border-color: color.change($color-gold-glow, $alpha: .55);
-      box-shadow:
-        0 0 6px color.change($color-gold-glow, $alpha: .35),
-        inset 0 1px 2px rgba(255,255,255,.1),
-        inset 0 -2px 6px rgba(0,0,0,.5);
+      background-image: radial-gradient(
+          120% 120% at 30% 15%,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0) 60%
+        ),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.35) 100%);
+      border-color: color.change($color-gold-glow, $alpha: 0.55);
+      box-shadow: 0 0 6px color.change($color-gold-glow, $alpha: 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1), inset 0 -2px 6px rgba(0, 0, 0, 0.5);
       color: $color-gold-glow;
-      text-shadow: 0 0 6px color.change($color-gold-glow, $alpha: .4);
+      text-shadow: 0 0 6px color.change($color-gold-glow, $alpha: 0.4);
     }
 
     /* PHONE-ONLY: slightly tighter paddings */
-    @include maxw($cellphone-portrait) { padding: 0.28rem 0.7rem; }
+    @include maxw($cellphone-portrait) {
+      padding: 0.28rem 0.7rem;
+    }
   }
 
   .UnitToggle__divider {
-    opacity: .65;
+    opacity: 0.65;
     color: $color-white;
     user-select: none;
   }
