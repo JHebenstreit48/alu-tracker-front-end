@@ -3,7 +3,7 @@ import Header from "@/components/Shared/Header";
 import PageTab from "@/components/Shared/PageTab";
 import GarageLevelsDropDown from "@/components/GarageLevels/GarageLevelsDropDown";
 import GLTrackerToggle from "@/components/GarageLevels/GLTrackerToggle";
-import GarageLevelTracker from "@/components/GarageLevels/GarageLevelTracker";
+import GarageLevelTracker from "@/components/GarageLevels/Tracker";
 import { GarageLevelsInterface } from "@/components/GarageLevels/interface";
 import "@/scss/GarageLevels/GarageLevelTracker.scss";
 import "@/scss/GarageLevels/GarageLevels.scss";
