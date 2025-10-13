@@ -3,25 +3,23 @@
 
 /* ==============================
    Owned Progress Ring
-   ============================== */
+============================== */
 .ownedProgressWrapper {
   width: $progress-ring-size;
   height: $progress-ring-size;
 
   .CircularProgressbar {
     font-weight: bold;
-    margin-left: 7rem;
+    margin: 0 auto;
 
     .CircularProgressbar-path {
       stroke: $ring-color-green !important;
       stroke-linecap: round;
       filter: drop-shadow($owned-ring-glow);
     }
-
     .CircularProgressbar-trail {
       stroke: $progress-ring-trail !important;
     }
-
     .CircularProgressbar-text {
       fill: $ring-color-green !important;
       font-size: 1.5rem;
@@ -30,11 +28,21 @@
 }
 
 /* ==============================
-   Gold Maxed Text
-   ============================== */
+   Owned Text
+============================== */
 .carsOwnedText {
   font-size: 1.2rem;
   text-align: center;
-  margin: 3.5rem 0 0 7rem;
+  margin: 0.5rem 0 0 0;
   color: $ring-color-green;
+
+  /* phone-only: wrap nicely and keep readable line length */
+  @include maxw($cellphone-portrait) {
+    margin: 0.6rem auto 0;
+    padding-inline: 0.6rem;
+    max-width: 32ch; /* ~optimal line length on mobile */
+    line-height: 1.35;
+    text-wrap: balance; /* progressive enhancement */
+    overflow-wrap: break-word; /* prevent overflow just in case */
+  }
 }

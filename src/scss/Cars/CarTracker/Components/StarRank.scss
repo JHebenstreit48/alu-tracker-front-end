@@ -3,37 +3,50 @@
 
 /* ==============================
    Layout Structure — Row 2: Stars + Max Tables
-   ============================== */
-
+============================== */
 .circleAndTableRow {
   display: flex;
   align-items: flex-start;
   gap: 8rem;
   width: 100%;
 
-  // Responsive stacking for very small screens
-  @media only screen and (max-width: 480px) and (orientation: portrait) {
+  /* phones portrait: stack & center */
+  @include maxw($cellphone-portrait) {
     flex-direction: column;
     align-items: center;
+    gap: 1.25rem;
   }
 }
 
 /* ==============================
    Left Side — Star Circles Grid (2x3)
-   ============================== */
-
+============================== */
 .starRankGridWrapper {
   display: flex;
+
+  @include maxw($cellphone-portrait) {
+    width: 100%;
+    justify-content: center; /* center the grid wrapper on phones */
+  }
 }
 
 .starRankGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); // 2 columns
   grid-template-rows: repeat(3, auto); // 3 rows
-  margin: 2rem 4rem 0 9rem;
+  margin: 2.75rem 4rem 0 9rem; // desktop offsets (keep)
+
+  /* PHONE FIX: remove big left margin, center items, tighten gaps */
+  @include maxw($cellphone-portrait) {
+    margin: 0.75rem 0 0 0; /* kill the desktop margins */
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    column-gap: 0.75rem;
+    row-gap: 0.75rem;
+    justify-items: center; /* center each circle cell */
+  }
 }
 
-/* === Individual Star Circle Container === */
+/* Each circle */
 .starRankCircleWrapper {
   width: 150px;
   height: 150px;
@@ -43,12 +56,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  /* optional: very small phones could scale down a touch */
+  @include maxw(360px) {
+    width: 140px;
+    height: 140px;
+  }
 }
 
-/* === Stars inside circle (fixed wrap) === */
 .starIconsContainer {
   display: flex;
-  flex-wrap: wrap; // Allow multiline stars
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   max-width: 80px;
@@ -56,116 +74,99 @@
   gap: 4px;
   margin-bottom: 4px;
 }
-
 .starIcon {
   width: 20px;
   height: 20px;
 }
 
-/* === Label below each star circle === */
 .circleLabel {
   font-size: 0.9rem;
   margin-top: 4px;
-  color: white;
+  color: $color-white;
   text-align: center;
 }
 
 /* ==============================
    Right Side — Max Star Tables Grid (2x2)
-   ============================== */
-
-/* ==============================
-   Right Side — Max Star Tables Grid (2x2)
-   ============================== */
-
-/* === Table Row Wrapper === */
+============================== */
 .maxStarGridWrapper {
   display: flex;
-  justify-content: flex-start; // aligns with left star group
+  justify-content: center; /* center whole grid on desktop */
   width: 100%;
-  padding-left: 6rem; // match left margin of .starRankGrid
+  padding-left: 0;
+  margin-top: 2rem;
+
+  @include maxw($cellphone-portrait) {
+    justify-content: center; /* (explicit) */
+    margin-top: 1rem;
+    width: 21rem;
+  }
 }
 
-/* === Table Grid === */
 .maxStarGrid {
   display: grid;
-  grid-template-columns: repeat(2, 15rem); // Lock table size and enforce 2 columns
-  row-gap: 2.6rem; // ✅ Tight vertical spacing
-  column-gap: 2rem; // Balanced horizontal spacing
-  justify-content: start;
+  grid-template-columns: repeat(2, 15rem); /* desktop: 2×2 fixed width */
+  row-gap: 1rem; /* tighter vertical spacing */
+  column-gap: 1.25rem;
+  justify-content: center; /* center the two columns */
+  align-content: start;
+
+  /* phones: single centered column; no overflow */
+  @include maxw($cellphone-portrait) {
+    grid-template-columns: minmax(260px, 92vw);
+    justify-content: center;
+    row-gap: 0.9rem;
+  }
 }
 
-/* === Table Container === */
-.maxStarGridWrapper {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  padding-left: 1rem;       // 🔽 reduced from 6rem to move left
-  margin-top: 4rem;         // 🔽 added or adjusted to move it downward
-}
-
-
-/* === Table Style === */
+/* Tables */
 .maxStarTable {
   width: 100%;
-  margin: 0; // ✅ Eliminate vertical spacing
+  margin: 0;
   border-collapse: collapse;
-  background-color: #1e1e1e;
-  border: 1px solid #444;
+  background-color: $table-bg;
+  border: 1px solid $table-outline-border;
   border-radius: 8px;
-  color: white;
+  color: $color-white;
   font-size: 0.9rem;
   overflow: hidden;
 }
-
 .maxStarTable th,
 .maxStarTable td {
-  padding: 6px 10px; // ✅ Slightly reduced padding for tighter rows
+  padding: 6px 10px;
   text-align: left;
-  line-height: 1.2; // ✅ Tighten vertical height per row
+  line-height: 1.2;
 }
-
 .maxStarTable th {
-  background-color: #2a2a2a;
+  background-color: $table-header-bg;
   font-weight: bold;
-  text-align: center; // ✅ Already centers text
-  padding: 9px 11px; // ✅ Remove side padding for perfect centering
+  text-align: center;
+  padding: 9px 11px;
 }
-
 .maxStarTable td {
-  height: 2rem; // ✅ Set a fixed height for all rows
+  height: 2rem;
 }
 
 .totalCarNotice {
-  grid-column: 1 / -1; // 🔥 Span all columns
+  grid-column: 1 / -1;
   color: $color-gold-glow;
   text-align: center;
   margin-top: 0.5rem;
-  font-size: 1.3rem;
-}
-
-// ✅ Remove side padding for perfect centering
-.starRow {
-  display: flex;
-  justify-content: center; // ✅ Center horizontally
-  align-items: center;
-  width: 100%; // ✅ Ensure row spans full width
-  padding: 2px 0;
+  font-size: 1.1rem;
 }
 
 /* ==============================
    Inline Stars (Used Inside Tables)
-   ============================== */
-
+============================== */
 .starRow {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  padding: 2px 0;
 }
-
 .inlineStar {
   width: 20px;
   height: 20px;
   margin: 0 2px;
 }
-

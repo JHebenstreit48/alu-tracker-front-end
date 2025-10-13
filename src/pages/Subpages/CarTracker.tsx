@@ -8,7 +8,7 @@ import {
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
 
-import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
+// import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
 
 import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
 import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
@@ -137,33 +137,78 @@ export default function CarTracker() {
           Back to Cars
         </button>
 
-        <SyncButton />
+        {/* <SyncButton /> */}
 
         <div className="trackerSummaryBlock">
+          {/* ===== Section: Car Collection Progress ===== */}
+          <hr className="sectionRule" />
+          <h2 className="carCollectionTitle">Car Collection Progress</h2>
+          <hr className="sectionRule" />
+
           <div className="summaryProgressRow">
-            <OwnedProgress ownedCount={ownedCars.length} totalCars={totalCars} />
-            <CarsOwned ownedCount={ownedCars.length} totalCars={totalCars} />
+            <div className="progressGroup">
+              <OwnedProgress
+                ownedCount={ownedCars.length}
+                totalCars={totalCars}
+              />
+              <CarsOwned
+                ownedCount={ownedCars.length}
+                totalCars={totalCars}
+              />
+            </div>
 
-            <GoldMaxedProgress goldMaxedCount={goldMaxedCars.length} totalCars={totalCars} />
-            <GoldMaxed goldMaxedCount={goldMaxedCars.length} totalCars={totalCars} />
+            <div className="progressGroup">
+              <GoldMaxedProgress
+                goldMaxedCount={goldMaxedCars.length}
+                totalCars={totalCars}
+              />
+              <GoldMaxed
+                goldMaxedCount={goldMaxedCars.length}
+                totalCars={totalCars}
+              />
+            </div>
 
-            <OwnedKeyProgress obtained={keyCarSummary.obtained} total={keyCarSummary.total} />
-            <TotalKeys
-              obtained={keyCarSummary.obtained}
-              owned={keyCarSummary.owned}
-              total={keyCarSummary.total}
-            />
+            <div className="progressGroup">
+              <OwnedKeyProgress
+                obtained={keyCarSummary.obtained}
+                total={keyCarSummary.total}
+              />
+              <TotalKeys
+                obtained={keyCarSummary.obtained}
+                owned={keyCarSummary.owned}
+                total={keyCarSummary.total}
+              />
+            </div>
           </div>
+
+          <hr className="sectionRule" />
+          {/* ===== Section: Star Rank Progress ===== */}
+          <h2 className="starProgressTitle">Star Rank Progress</h2>
+          <hr className="sectionRule" />
 
           <div className="circleAndTableRow">
-            <StarRankCircles starCounts={starCounts} totalOwned={ownedCars.length} />
+            <div className="circleColumn">
+              <StarRankCircles
+                starCounts={starCounts}
+                totalOwned={ownedCars.length}
+              />
+            </div>
 
-            <MaxStarRank
-              allCars={allCars}
-              trackedCars={enrichedTrackedCars}
-              totalCars={totalCars}
-            />
+            <div className="tableColumn">
+              <MaxStarRank
+                allCars={allCars}
+                trackedCars={enrichedTrackedCars}
+                totalCars={totalCars}
+              />
+            </div>
           </div>
+
+          {/* ===== Section: Garage Level Progress (placeholder) ===== */}
+          <hr className="sectionRule" />
+          <h2 className="garageLevelsTitle">Garage Level Progress</h2>
+          <hr className="sectionRule" />
+          <p className="comingSoonText">Coming Soon...</p>
+          {/* future content... */}
         </div>
       </PageTab>
     </div>

@@ -3,25 +3,23 @@
 
 /* ==============================
    Gold Maxed Progress Ring
-   ============================== */
+============================== */
 .goldMaxedProgressWrapper {
   width: $progress-ring-size;
   height: $progress-ring-size;
 
   .CircularProgressbar {
     font-weight: bold;
-    margin-left: 8rem;
+    margin: 0 auto;
 
     .CircularProgressbar-path {
       stroke: $ring-color-gold;
       stroke-linecap: round;
       filter: drop-shadow($gold-maxed-ring-glow);
     }
-
     .CircularProgressbar-trail {
       stroke: $progress-ring-trail;
     }
-
     .CircularProgressbar-text {
       fill: $ring-color-gold;
       font-size: 1.2rem;
@@ -31,9 +29,19 @@
 
 /* ==============================
    Gold Maxed Text
-   ============================== */
+============================== */
 .goldMaxedText {
   font-size: 1.2rem;
-  margin: 3.5rem 0 0 8rem;
+  text-align: center;
+  margin: 0.5rem 0 0 0;
   color: $ring-color-gold;
+
+  @include maxw($cellphone-portrait) {
+    margin: 0.6rem auto 0;
+    padding-inline: 0.6rem;
+    max-width: 32ch;
+    line-height: 1.35;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
 }

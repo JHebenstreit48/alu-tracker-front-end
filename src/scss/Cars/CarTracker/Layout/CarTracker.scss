@@ -1,64 +1,125 @@
-@use "sass:color";
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
 
 /* ==============================
-   Variables
-   ============================== */
+   Variables (layout-only here)
+============================== */
 $summary-gap: 1rem;
-
 $back-btn-font-size: 1.1rem;
 $back-btn-padding: 10px 18px;
 $back-btn-radius: 12px;
-$back-btn-bg: black;
-$color-accent-blue: rgb(21, 201, 232);
-$back-btn-border: 1px solid rgb(21, 201, 232);
-
-$mobileMaxWidthPortrait: 480px;
-$cellphone-landscape: 390px;
 
 /* ==============================
    Car Tracker Page Layout
-   ============================== */
+============================== */
 .carTrackerPage {
   margin: 0;
 
-  /* Back Button */
   .carTrackerBackBtn {
-    margin: 2.5rem auto 0 3rem;
-    background-color: $back-btn-bg;
+    margin: 1.3rem auto 0 1rem;
+    background-color: $color-black;
     color: $color-accent-blue;
     padding: $back-btn-padding;
     font-size: $back-btn-font-size;
-    border: $back-btn-border;
+    border: 1px solid $color-accent-blue;
     border-radius: $back-btn-radius;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: rgb(21, 201, 232);
-      color: black;
+      background-color: $color-accent-blue;
+      color: $color-black;
+    }
+
+    @include maxw($cellphone-portrait) {
+      margin: 0.5rem auto 0 0.5rem;
+      display: inline-flex;
     }
   }
 
-  /* === Tracker Summary Section (Both Rows) === */
   .trackerSummaryBlock {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
     gap: $summary-gap;
     width: 100%;
-    margin-top: 3rem
+    margin-top: 1rem;
+    /* ✅ if you still want a little inner breathing room, put it here not on the page */
+    padding-inline: clamp(10px, 3vw, 20px);
+
+    @include maxw($cellphone-portrait) {
+      padding-inline: 0;
+    }
   }
 
-  /* ==============================
-     Row 1: Progress Circles + Labels
-     ============================== */
+  /* ===== Titles + Rule ===== */
+  .carCollectionTitle,
+  .starProgressTitle,
+  .garageLevelsTitle {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0.25rem 0 0.35rem;
+    color: $color-gold-glow; /* ✅ gold headings */
+    font-family: var(--display-font, 'Cinzel'), serif;
+  }
+
+  .sectionRule {
+    border: 0;
+    height: 1px;
+    margin: 0 0 0.85rem;
+    background: linear-gradient(
+      90deg,
+      rgba($color-gold-glow, 0) 0%,
+      rgba($color-gold-glow, 0.28) 12%,
+      rgba($color-gold-glow, 0.85) 50%,
+      rgba($color-gold-glow, 0.28) 88%,
+      rgba($color-gold-glow, 0) 100%
+    );
+    box-shadow: 0 0 6px rgba($color-gold-glow, 0.18), 0 0 1px rgba($color-gold-glow, 0.5) inset;
+  }
+
+  /* Row 1 unchanged aside from previous grid centering */
   .summaryProgressRow {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: $summary-gap;
-    // Responsive stacking on narrow screens
-    @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
-      flex-direction: column;
-      align-items: center;
+
+    @include minw($tablet-portrait) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+      gap: 1.25rem;
     }
+
+    .progressGroup {
+      display: grid;
+      gap: 0.5rem;
+      justify-items: center;
+
+      svg,
+      canvas,
+      .ownedRing,
+      .goldMaxedRing,
+      .ownedKeyRing {
+        width: min(80vw, 320px);
+        height: auto;
+        max-width: 100%;
+        display: block;
+      }
+
+      .carsOwnedText,
+      .goldMaxedText,
+      .keysOwnedText {
+        text-align: center;
+        word-break: break-word;
+        margin: 0.5rem 0 0 0;
+      }
+    }
+  }
+
+  .comingSoonText {
+    text-align: center;
+    font-size: 2rem;
+    color: $color-gold-glow;
+    font-style: italic;
+    margin-top: 1rem;
   }
 }
