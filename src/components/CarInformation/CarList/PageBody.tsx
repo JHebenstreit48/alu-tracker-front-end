@@ -30,7 +30,6 @@ interface CarDataProps {
     onRarityChange: (rarity: string | null) => void;
     onBrandChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onCountryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    // onUnitChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;  <-- REMOVE THIS LINE
     onToggleOwned: () => void;
     onToggleKeyCars: () => void;
     onReset: () => void;

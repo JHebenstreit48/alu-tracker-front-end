@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import StarRank from '@/components/CarInformation/CarDetails/OtherComponents/StarRank';
+import StarRank from '@/components/Shared/Stars/StarRank';
 import { generateCarKey } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import LoadingSpinner from '@/components/Shared/LoadingSpinner';
 
@@ -7,7 +7,7 @@ interface Car {
   Brand: string;
   Model: string;
   Stars: number;
-  Image?: string;
+  Image?: string; // absolute URL now
   ImageStatus?: 'Coming Soon' | 'Available' | 'Removed';
 }
 
@@ -17,6 +17,10 @@ interface ClassTablesProps {
   loading: boolean;
   trackerMode?: boolean;
 }
+
+// Optional fallback hosted on your Image Vault (add later when ready)
+const FALLBACK =
+  `${import.meta.env.VITE_IMG_CDN_BASE ?? 'https://alu-tracker-image-vault.onrender.com'}/images/fallbacks/car-missing.jpg`;
 
 export default function ClassTables({
   cars,
@@ -31,12 +35,7 @@ export default function ClassTables({
       <table>
         <tbody>
           <tr className="tableHeaderRow">
-            <th
-              className="tableHeader"
-              colSpan={2}
-            >
-              {headerText}
-            </th>
+            <th className="tableHeader" colSpan={2}>{headerText}</th>
           </tr>
           <tr className="headings">
             <th className="tableHeaders">Manufacturer & Model</th>
@@ -52,22 +51,13 @@ export default function ClassTables({
           ) : (
             cars.map((car) => {
               const carKey = generateCarKey(car.Brand, car.Model);
-              const imageSrc = car.Image
-                ? `${import.meta.env.VITE_API_BASE_URL}${car.Image}`
-                : null;
+              const imageSrc = car.Image ?? null; // already absolute from hook/backend
               const altText = `${car.Brand} ${car.Model}`;
 
-              console.log(car.Model, car.Image, car.ImageStatus);
               return (
-                <tr
-                  className="tableData"
-                  key={carKey}
-                >
+                <tr className="tableData" key={carKey}>
                   <td className="carName">
-                    <Link
-                      to={`/cars/${carKey}`}
-                      state={{ trackerMode }}
-                    >
+                    <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
                       {car.Brand} {car.Model}
                     </Link>
                   </td>
@@ -78,16 +68,22 @@ export default function ClassTables({
                         <span className="noImage">🚫 Removed from Game</span>
                       ) : car.ImageStatus === 'Coming Soon' ? (
                         <span className="noImage">🚧 Image Coming Soon</span>
-                      ) : car.Image ? (
+                      ) : imageSrc ? (
                         <>
                           <img
                             className="carPic"
-                            src={imageSrc!}
+                            src={imageSrc}
                             alt={altText}
                             onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              e.currentTarget.parentElement!.innerHTML =
-                                '<span class="noImage">❌ File Not Found</span>';
+                              const img = e.currentTarget as HTMLImageElement;
+                              // Try fallback once; if that fails, show text
+                              if (img.src !== FALLBACK) {
+                                img.src = FALLBACK;
+                              } else {
+                                img.style.display = 'none';
+                                img.parentElement!.innerHTML =
+                                  '<span class="noImage">❌ File Not Found</span>';
+                              }
                             }}
                           />
                           <div className="starOverlay">
