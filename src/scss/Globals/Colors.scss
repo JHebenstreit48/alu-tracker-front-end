@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 /* ============================================================================
    COLORS.TS — Global tokens & helpers
@@ -21,7 +21,6 @@ $circle-color-off: #bbb;
 $color-gold-glow: rgb(223, 190, 7);
 /* ------------------------------------ Cars page END -------------------------------------- */
 
-
 /* ------------------------------------ CarTracker page START ------------------------------------ */
 $ring-color-green: #00ff22;
 $ring-color-gold: #fcb900; // Different from $color-gold-glow, so safe
@@ -31,7 +30,6 @@ $table-bg: #1e1e1e;
 $table-header-bg: #2a2a2a;
 $table-outline-border: #444;
 /* ------------------------------------ CarTracker page END -------------------------------------- */
-
 
 /* ------------------------------------ RARITY (shared site-wide) START ------------------------------------ */
 /**
@@ -44,11 +42,11 @@ $table-outline-border: #444;
 
 /* Text colors to use on a BLACK dropdown list */
 $rarity-text-uncommon: #01bcfa !default; // bright cyan (matches your Legend Store look)
-$rarity-text-rare:     #6f08aa !default; // royal purple
-$rarity-text-epic:     #ffae00 !default; // gold/orange
+$rarity-text-rare: #6f08aa !default; // royal purple
+$rarity-text-epic: #ffae00 !default; // gold/orange
 
 /* Neutral for “All Rarities” on black */
-$rarity-text-neutral:  #cfd6ff !default;
+$rarity-text-neutral: #cfd6ff !default;
 
 /* Helper: style an <option> for a black list background */
 @mixin rarity-option-on-black($text-color) {

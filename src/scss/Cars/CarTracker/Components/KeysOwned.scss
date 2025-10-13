@@ -3,7 +3,7 @@
 
 /* ==============================
    Keys Owned Progress Ring
-   ============================== */
+============================== */
 .ownedKeyProgressWrapper {
   overflow: visible;
   width: $progress-ring-size;
@@ -11,17 +11,15 @@
 
   .CircularProgressbar {
     font-weight: bold;
-    margin-left: 1rem;
+    margin: 0 auto;
 
     .CircularProgressbar-path {
       stroke: $ring-color-blue !important;
       stroke-linecap: round;
     }
-
     .CircularProgressbar-trail {
       stroke: $progress-ring-trail !important;
     }
-
     .CircularProgressbar-text {
       fill: $ring-color-blue !important;
       font-size: $progress-ring-font-size;
@@ -31,10 +29,19 @@
 
 /* ==============================
    Keys Owned Text
-   ============================== */
+============================== */
 .keysOwnedText {
   font-size: $progress-ring-font-size;
   text-align: center;
-  margin: $progress-ring-margin-top 0 0 1rem;
+  margin: 0.5rem 0 0 0;
   color: $ring-color-blue;
+
+  @include maxw($cellphone-portrait) {
+    margin: 0.6rem auto 0;
+    padding-inline: 0.6rem;
+    max-width: 32ch;
+    line-height: 1.35;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
 }

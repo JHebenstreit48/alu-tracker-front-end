@@ -67,4 +67,3 @@ interface MaxStarTableProps {
       </div>
     );
   }
-  
