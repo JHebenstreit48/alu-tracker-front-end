@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "@scss/Globals/index" as *;
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
 
 /* ------------------------------------ Cars Filters START ------------------------------------ */
 
@@ -16,30 +16,26 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "heading heading"
-    "star    class"
-    "rarity  brand"
-    "country country"
-    "search  search"
-    "owned   keycar"
-    "reset   reset";
+    'heading heading'
+    'star    class'
+    'rarity  brand'
+    'country country'
+    'search  search'
+    'owned   keycar'
+    'reset   reset';
 
-  background:
-    radial-gradient(120% 120% at 10% -10%, var(--card-grad-top), transparent 60%),
-    linear-gradient(to bottom, rgba(255,255,255,0.02), var(--card-grad-bottom)),
-    var(--card-bg);
+  background: radial-gradient(120% 120% at 10% -10%, var(--card-grad-top), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), var(--card-grad-bottom)), var(--card-bg);
 
   border: $filter-border;
-  box-shadow:
-    0 0 0 1px rgba($color-gold-glow, .25) inset,
-    0 10px 30px rgba(0,0,0,.55),
-    0 0 18px rgba($color-gold-glow, .18);
+  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.25) inset, 0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba($color-gold-glow, 0.18);
   border-radius: 18px;
 
-  width: $filter-width;       /* from Globals */
-  padding: $filter-padding;   /* from Globals */
-  gap: $filter-gap;           /* from Globals */
-  column-gap: .5rem;          /* pulls the two columns closer */
+  width: $filter-width; /* from Globals */
+  padding: $filter-padding; /* from Globals */
+  gap: $filter-gap; /* from Globals */
+  column-gap: 0.5rem; /* pulls the two columns closer */
   color: $color-white;
   font-size: $filter-font-size;
   text-align: center;
@@ -49,16 +45,16 @@
     grid-area: heading;
     font-size: clamp(1.6rem, 2.2vw, 1.9rem);
     font-weight: 800;
-    letter-spacing: .01em;
-    margin: .15rem 0 .6rem;
-    text-shadow: 0 0 10px rgba($color-gold-glow, .28);
+    letter-spacing: 0.01em;
+    margin: 0.15rem 0 0.6rem;
+    text-shadow: 0 0 10px rgba($color-gold-glow, 0.28);
   }
 
   .DropdownLabel {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: .4rem;
+    gap: 0.4rem;
     position: relative;
 
     select,
@@ -68,69 +64,112 @@
       padding: 6px 12px;
       border-radius: 12px;
       text-align: center;
-      border: 1px solid rgba(#fff, .15);
-      background:
-        linear-gradient(to bottom, rgba(255,255,255,.08), rgba(0,0,0,.18)),
+      border: 1px solid rgba(#fff, 0.15);
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.18)),
         #0f0f10;
       color: #eee;
-      transition: box-shadow .18s ease, border-color .18s ease, transform .05s ease;
+      transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.05s ease;
       margin-inline: auto;
 
-      &:hover  { border-color: rgba($color-gold-glow, .45); }
-      &:focus  {
-        outline: none;
-        border-color: rgba($color-gold-glow, .8);
-        box-shadow: 0 0 0 2px rgba($color-gold-glow, .35), 0 4px 16px rgba(0,0,0,.45) inset;
+      &:hover {
+        border-color: rgba($color-gold-glow, 0.45);
       }
-      &:active { transform: translateY(1px); }
+      &:focus {
+        outline: none;
+        border-color: rgba($color-gold-glow, 0.8);
+        box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.35), 0 4px 16px rgba(0, 0, 0, 0.45) inset;
+      }
+      &:active {
+        transform: translateY(1px);
+      }
     }
 
     select {
       appearance: none;
-      background-image: linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,.2));
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2));
       color: #f5f5f5;
     }
   }
 
-  .scrollableDropdown { max-height: 10rem; overflow-y: auto; }
+  .scrollableDropdown {
+    max-height: 10rem;
+    overflow-y: auto;
+  }
 
-  .starFilter   { grid-area: star; }
-  .classFilter  { grid-area: class; }
-  .rarityFilter { grid-area: rarity; }
-  .brandFilter  { grid-area: brand; }
+  .starFilter {
+    grid-area: star;
+  }
+  .classFilter {
+    grid-area: class;
+  }
+  .rarityFilter {
+    grid-area: rarity;
+  }
+  .brandFilter {
+    grid-area: brand;
+  }
 
   .countryFilter {
     grid-area: country;
-    select { width: var(--ctrl-w); }
+    select {
+      width: var(--ctrl-w);
+    }
   }
 
-  .searchFilter { grid-area: search; }
-  #searchInput  { width: var(--search-w); margin: 0 auto; }
+  .searchFilter {
+    grid-area: search;
+  }
+  #searchInput {
+    width: var(--search-w);
+    margin: 0 auto;
+  }
 
   .rarityFilter select {
-    option { background-color: $color-black; color: $rarity-text-neutral; }
-    .optionUncommon { @include rarity-option-on-black($rarity-text-uncommon); }
-    .optionRare     { @include rarity-option-on-black($rarity-text-rare); }
-    .optionEpic     { @include rarity-option-on-black($rarity-text-epic); }
+    option {
+      background-color: $color-black;
+      color: $rarity-text-neutral;
+    }
+    .optionUncommon {
+      @include rarity-option-on-black($rarity-text-uncommon);
+    }
+    .optionRare {
+      @include rarity-option-on-black($rarity-text-rare);
+    }
+    .optionEpic {
+      @include rarity-option-on-black($rarity-text-epic);
+    }
 
-    &:has(option:checked.optionUncommon) { @include rarity-select-outline($rarity-text-uncommon); }
-    &:has(option:checked.optionRare)     { @include rarity-select-outline($rarity-text-rare);     }
-    &:has(option:checked.optionEpic)     { @include rarity-select-outline($rarity-text-epic);     }
+    &:has(option:checked.optionUncommon) {
+      @include rarity-select-outline($rarity-text-uncommon);
+    }
+    &:has(option:checked.optionRare) {
+      @include rarity-select-outline($rarity-text-rare);
+    }
+    &:has(option:checked.optionEpic) {
+      @include rarity-select-outline($rarity-text-epic);
+    }
   }
 
-  .ownedFilter  { grid-area: owned;  justify-self: end;   }
-  .keyCarFilter { grid-area: keycar; justify-self: start; }
+  .ownedFilter {
+    grid-area: owned;
+    justify-self: end;
+  }
+  .keyCarFilter {
+    grid-area: keycar;
+    justify-self: start;
+  }
 
   .CheckboxLabel {
     display: inline-flex;
     align-items: center;
-    gap: .55rem;
+    gap: 0.55rem;
     font-size: 1.05rem;
     user-select: none;
-    margin-top: .15rem;
+    margin-top: 0.15rem;
 
-    input[type="checkbox"] {
-      width: 18px; height: 18px;
+    input[type='checkbox'] {
+      width: 18px;
+      height: 18px;
       border-radius: 6px;
       accent-color: $color-gold-glow;
       cursor: pointer;
@@ -141,46 +180,53 @@
     --ctrl-w: 18rem;
     --search-w: 18rem;
 
-    width: 22rem;
+    width: 20rem;
     margin: 2rem auto;
     border-radius: 14px;
 
     grid-template-columns: 1fr;
     grid-template-areas:
-      "heading"
-      "star"
-      "class"
-      "rarity"
-      "brand"
-      "country"
-      "search"
-      "owned"
-      "keycar"
-      "reset";
+      'heading'
+      'star'
+      'class'
+      'rarity'
+      'brand'
+      'country'
+      'search'
+      'owned'
+      'keycar'
+      'reset';
 
-    .ownedFilter, .keyCarFilter { justify-self: center; }
+    .ownedFilter,
+    .keyCarFilter {
+      justify-self: center;
+    }
   }
 
   .resetButton {
     grid-area: reset;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
     justify-self: center;
-    background: linear-gradient(to bottom, $reset-btn-bg, color.scale($reset-btn-bg, $lightness: -6%));
+    background: linear-gradient(
+      to bottom,
+      $reset-btn-bg,
+      color.scale($reset-btn-bg, $lightness: -6%)
+    );
     color: white;
-    padding: .6rem 2rem;
+    padding: 0.6rem 2rem;
     border-radius: 14px;
-    border: 1px solid rgba($color-gold-glow, .35);
-    box-shadow: 0 0 0 2px rgba($color-gold-glow, .18) inset, 0 8px 18px rgba(0,0,0,.6);
+    border: 1px solid rgba($color-gold-glow, 0.35);
+    box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.18) inset, 0 8px 18px rgba(0, 0, 0, 0.6);
     cursor: pointer;
-    transition: transform .06s ease, box-shadow .18s ease, background-color .2s ease;
+    transition: transform 0.06s ease, box-shadow 0.18s ease, background-color 0.2s ease;
 
     &:hover {
       background-color: $table-border-color;
       color: $color-white;
-      box-shadow: 0 0 0 2px rgba($color-gold-glow, .26) inset, 0 10px 22px rgba(0,0,0,.6);
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.26) inset, 0 10px 22px rgba(0, 0, 0, 0.6);
     }
-    &:active { transform: translateY(1px); }
+    &:active {
+      transform: translateY(1px);
+    }
   }
 }
-
-/* ------------------------------------ Cars Filters END -------------------------------------- */

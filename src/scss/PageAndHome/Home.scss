@@ -57,10 +57,11 @@ $panel-bg-bot: #0a0610;
 
   @include maxw($cellphone-portrait) {
     margin: 2rem auto 3rem;
-    max-inline-size: 22.5rem;
     padding: 1rem;
+    width: 20rem;
     > div {
       max-inline-size: 20rem;
+      text-align: center;
     }
     p.info {
       font-size: 1rem;

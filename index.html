@@ -1,100 +1,70 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Standard favicon -->
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="/Favicon/favicon.ico"
-    />
 
-    <!-- PNG icons -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/Favicon/ALUTracker-16x16.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/Favicon/ALUTracker-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="48x48"
-      href="/Favicon/ALUTracker-48x48.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="96x96"
-      href="/Favicon/ALUTracker-96x96.png"
-    />
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Apple Touch Icon for iOS -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/Favicon/apple-touch-icon.png"
-    />
-
-    <!-- Android / PWA icons -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/Favicon/ALUTracker-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/Favicon/ALUTracker-512x512.png"
-    />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
-
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap"
-      rel="stylesheet"
-    />
-
+    <!-- Title -->
     <title>Asphalt Legends Unite Tracker</title>
+    <meta name="application-name" content="ALU Tracker" />
+    <meta name="apple-mobile-web-app-title" content="ALU Tracker" />
+
+    <!-- Meta Description -->
+    <meta
+      name="description"
+      content="Fan-made ALU tracker (not affiliated with Gameloft). Ad-free, fast, and organized: one-stop info hub + progress tracking for cars, blueprints, stars, keys, and garage levels."
+    />
+
+    <!-- ===== Favicons (no SVGs, no PWA) ===== -->
+    <!-- Universal fallback -->
+    <link rel="icon" type="image/x-icon" href="/Favicon/favicon.ico" />
+    <!-- Common PNG sizes -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/Favicon/ALUTracker-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/Favicon/ALUTracker-16x16.png" />
+    <!-- iOS home screen -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/Favicon/apple-touch-icon.png" />
+
+    <!-- Browser UI theme color -->
+    <meta name="theme-color" content="#0b0b21" />
+
+    <!-- ===== Social previews (Open Graph + Twitter) ===== -->
+    <!-- Absolute, publicly reachable URLs -->
+    <meta property="og:site_name" content="Asphalt Legends Unite Tracker" />
+    <meta property="og:title" content="ALU Tracker — Fan-Made, Ad-Free Progress & Info Hub" />
+    <meta
+      property="og:description"
+      content="Fan-made (not affiliated with Gameloft). Track ALU progress—cars, blueprints, stars, keys, and garage levels—plus consolidated info from existing DBs and the wiki."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://asphaltlegendsunitetracker.netlify.app/" />
+    <meta property="og:image" content="https://asphaltlegendsunitetracker.netlify.app/og/alu-tracker-1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ALU Tracker — fan-made dashboard preview" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ALU Tracker — Fan-Made, Ad-Free Progress & Info Hub" />
+    <meta
+      name="twitter:description"
+      content="Fan-made (not affiliated with Gameloft). A cleaner, faster way to track your ALU progress."
+    />
+    <meta name="twitter:image" content="https://asphaltlegendsunitetracker.netlify.app/og/alu-tracker-1200x630.png" />
+    <meta name="twitter:image:alt" content="ALU Tracker — fan-made dashboard preview" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://asphaltlegendsunitetracker.netlify.app/" />
+
+    <!-- Fonts (deduped) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet" />
   </head>
 
   <body>
     <div id="root"></div>
-
-    <script
-      type="module"
-      src="/src/main.tsx"
-    ></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
