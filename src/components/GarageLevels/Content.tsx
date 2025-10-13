@@ -1,5 +1,26 @@
+// components/GarageLevels/Content.tsx
 import { Car } from "@/components/GarageLevels/interface";
 import BackToTop from "@/components/Shared/BackToTopButton";
+
+const IMG_CDN_BASE =
+  import.meta.env.VITE_IMG_CDN_BASE ?? "https://alu-tracker-image-vault.onrender.com";
+
+// Match backend sanitizer: drop spaces/'/-, map & -> and, keep Unicode letters
+const sanitizeBrand = (s: string): string =>
+  s
+    .replace(/[\s'-]/g, '')
+    .replace(/&/g, 'and')
+    .normalize('NFC')
+    .replace(/[^\p{L}0-9_-]/gu, '');
+
+const buildCarImagePath = (brand: string, file: string): string => {
+  const letter = brand?.[0]?.toUpperCase() ?? '_';
+  const folder = sanitizeBrand(brand);
+  const filename = (file || '').split('/').pop() || '';
+  return `/images/cars/${letter}/${folder}/${filename}`;
+};
+
+const FALLBACK = `${IMG_CDN_BASE}/images/fallbacks/car-missing.jpg`;
 
 interface GarageLevelProps {
   GarageLevelKey: number;
@@ -7,14 +28,8 @@ interface GarageLevelProps {
   cars: Car[];
 }
 
-// ✅ Keep accent marks (for folder names like "Citroën")
-const sanitizeBrandName = (brand: string): string =>
-  brand.replace(/\s+/g, "").replace(/[^a-zA-Z0-9À-ÿœŒ]/g, "");
-
 export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
-  if (!GarageLevelKey) {
-    return <p className="error">⚠️ Missing Garage Level Key.</p>;
-  }
+  if (!GarageLevelKey) return <p className="error">⚠️ Missing Garage Level Key.</p>;
 
   return (
     <section id={`garage-level-section-${GarageLevelKey}`}>
@@ -31,34 +46,21 @@ export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
 
       <div className="CarImagesContainer">
         {cars.length > 0 ? (
-          cars.map((car, index) => {
-            const { brand, model, image } = car;
-
-            if (!brand || !model || !image) {
-              console.warn(`⚠️ Incomplete car data at index ${index}:`, car);
-              return (
-                <div key={`incomplete-${index}`} className="warning">
-                  ⚠️ Missing data for car at index {index}.
-                </div>
-              );
-            }
-
-            const sanitizedBrand = sanitizeBrandName(brand); // preserves accents
-            const filename = image.split("/").pop(); // assume filename is clean
-            const imagePath = `${import.meta.env.VITE_API_BASE_URL}/images/cars/${sanitizedBrand[0]}/${sanitizedBrand}/${filename}`;
-
-            console.log(`[${index}] Brand: ${brand}`);
-            console.log(`[${index}] Sanitized: ${sanitizedBrand}`);
-            console.log(`[${index}] Final image path: ${imagePath}`);
-
+          cars.map((car, i) => {
+            const rel = buildCarImagePath(car.brand, car.image);
+            const src = `${IMG_CDN_BASE}${rel}`;
             return (
-              <div key={`${model}-${index}`}>
+              <div key={`${car.model}-${i}`}>
                 <img
                   className="CarImages"
-                  src={imagePath}
-                  alt={`${brand} ${model}`}
+                  src={src}
+                  alt={`${car.brand} ${car.model}`}
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (img.src !== FALLBACK) img.src = FALLBACK;
+                  }}
                 />
-                <p className="CarImagesCaption">{`${brand} ${model}`}</p>
+                <p className="CarImagesCaption">{`${car.brand} ${car.model}`}</p>
               </div>
             );
           })
