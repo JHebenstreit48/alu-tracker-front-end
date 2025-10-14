@@ -1,37 +1,85 @@
-/* =============================
-   Variables
-   ============================= */
-   $back-to-top-font-size: 1.4rem;
-   $back-to-top-margin-bottom: 2.2rem;
-   $back-to-top-button-color: rgb(255, 196, 0);
-   $back-to-top-button-padding: 0.5rem;
-   
-   $mobileMaxWidthPortrait: 480px;
-   $cellphone-landscape: 390px;
-   
-   /* =============================
-      Back To Top Layout
-      ============================= */
-   .BackToTop {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     margin-bottom: $back-to-top-margin-bottom;
-     font-size: $back-to-top-font-size;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
-       /* Media query content to be added later */
-     }
-   
-     /* =============================
-         Back To Top Button
-         ============================= */
-     .back-to-top-button {
-       display: flex;
-       color: $back-to-top-button-color;
-       font-style: italic;
-       padding: $back-to-top-button-padding;
-       cursor: pointer;
-     }
-   }
-   
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* ==============================
+   Back To Top (floating pill)
+   - Compact, fixed, no tearing
+   - Lifts up ONLY at page bottom
+============================== */
+
+/* Wrapper: fixed to viewport */
+.BackToTop {
+  position: fixed;
+  right: calc(env(safe-area-inset-right, 0px) + 14px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+  z-index: 1000;
+  pointer-events: none;      /* clicks only on the inner anchor */
+  transform: translateZ(0);  /* own GPU layer */
+  will-change: transform, bottom;
+}
+
+/* When we’ve reached the bottom (class added by TSX),
+   lift the whole pill so it clears the footer. */
+.BackToTop.at-bottom {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px + 2.5rem);
+}
+
+/* The button itself */
+.back-to-top-button {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 7.2rem;
+  padding: .44rem .72rem;
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #f7f7f7;
+
+  /* clean gradient (no blur to avoid artifacts) */
+  background: linear-gradient(180deg, rgba(135,70,210,.92), rgba($color-accent-blue,.92));
+  border: 1px solid rgba(#fff,.16);
+  text-shadow: 0 1px 0 rgba(0,0,0,.45);
+
+  /* trimmed glow so it doesn’t leave a “fog” ring */
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.35),
+    0 0 8px rgba(115,58,184,.18),
+    inset 0 1px 0 rgba(#fff,.10);
+
+  opacity: .86;
+  transform: translateZ(0);
+  transition: opacity .18s ease, transform .12s ease, box-shadow .2s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: translateY(-1px) translateZ(0);
+    box-shadow:
+      0 12px 22px rgba(0,0,0,.46),
+      0 0 12px rgba(115,58,184,.26),
+      inset 0 1px 0 rgba(#fff,.14);
+  }
+
+  &:active { transform: translateY(0) translateZ(0); }
+}
+
+/* ==============================
+   Responsive
+============================== */
+@include maxw($cellphone-portrait) {
+  .back-to-top-button {
+    min-width: 6.6rem;
+    font-size: .86rem;
+    padding: .4rem .65rem;
+  }
+
+  /* Keep the same lift amount on phones.
+     Adjust here if your mobile footer is taller. */
+  .BackToTop.at-bottom {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px + 2.5rem);
+  }
+}

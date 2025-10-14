@@ -1,6 +1,6 @@
 // src/components/CarInformation/CarDetails/OtherComponents/Comments/Panel.tsx
 import { useAuth } from "@/components/SignupLogin/hooks/useAuth";
-import "@/scss/Cars/CarComments.scss";
+import "@/scss/Cars/CarDetails/CarComments.scss";
 
 import CommentForm from "@/components/CarInformation/CarDetails/OtherComponents/Comments/CommentForm";
 import CommentsList from "@/components/CarInformation/CarDetails/OtherComponents/Comments/CommentsList";
