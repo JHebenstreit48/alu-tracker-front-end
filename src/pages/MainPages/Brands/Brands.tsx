@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Shared/Header';
 import PageTab from '@/components/Shared/PageTab';
 import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+import BackToTop from '@/components/Shared/BackToTopButton';
 
 import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
 
-import '@/scss/Brands/BrandQuickList.scss'
+import '@/scss/Brands/BrandQuickList.scss';
 // import '@/scss/Brands/BrandMap.scss';
 
 interface Manufacturer {
@@ -64,6 +65,8 @@ export default function Brands() {
         )}
 
         {/* <MapDisplay manufacturers={manufacturers} /> */}
+
+        <BackToTop />
       </PageTab>
     </div>
   );

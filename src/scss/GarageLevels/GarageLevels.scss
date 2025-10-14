@@ -1,252 +1,294 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
 /* ==============================
-            Variables
-   ============================== */
+   Local tokens
+============================== */
+$caption-gradient: linear-gradient(
+  to bottom,
+  #25034b 31%,
+  #37097e 69%,
+  #3b0c9d 86%,
+  #3c0b8f 117%,
+  #490db2
+);
 
-   @use "sass:color";
+/* ==============================
+   Dropdown (multi-column)
+============================== */
+.gl-container {
+  display: flex;
+  flex-direction: column;
 
-   $gold-accent: rgb(223, 190, 7);
-   $neon-blue: rgb(21, 201, 232);
-   $shadow-gold: rgb(223, 190, 7);
-   $caption-gradient: linear-gradient(
-     to bottom,
-     #25034b 31%,
-     #37097e 69%,
-     #3b0c9d 86%,
-     #3c0b8f 117%,
-     #490db2
-   );
-   
-   $mobileMaxWidthPortrait: 480px;
-   $tablet-max: 768px;
-   
-   /* ==============================
-                 Layout
-      ============================== */
-   
-   .GlJumpList {
-     display: flex;
-     height: 100vh;
-     margin-top: 2rem;
-   }
-   
-   .GLDropdownButton {
-     display: flex;
-     padding: 10px;
-     margin: 0 auto;
-     font-size: 16px;
-     cursor: pointer;
-     background-color: #f0f0f0;
-     border: 1px solid #ccc;
-     border-radius: 5px;
-     width: 6rem;
-     text-align: center;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       margin-top: 2rem;
-     }
-   }
-   
-   .GLDropDown {
-     display: none;
-     position: relative;
-     width: 20rem;
-     max-width: 14rem;
-     background-color: #000;
-     padding: 5px;
-     text-align: center;
-     border-radius: 8px;
-   
-     &.show {
-       display: grid;
-       margin: 0 auto;
-     }
-   }
-   
-   .GLDropDownList {
-     display: grid;
-     grid-template-columns: repeat(5, 1fr);
-     width: 100%;
-     max-height: 15rem;
-     overflow-y: auto;
-     cursor: pointer;
-     scrollbar-width: none;
-   }
-   
-   /* ==============================
-                Headings
-      ============================== */
-   
-   .glAlphabetical {
-     display: flex;
-     justify-content: center;
-     font-size: 19px;
-     margin: 10px auto;
-     text-decoration: none;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       margin: 5px 5px 5px 7px;
-       font-size: 21px;
-     }
-   }
-   
-   .mainHeading {
+  /* IMPORTANT: let children (the <section> blocks) stretch full width */
+  align-items: stretch; /* instead of center */
+
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+
+  @include maxw($cellphone-portrait) {
+    margin-top: 1.5rem;
+  }
+
+  /* Keep just the controls centered */
+  .gl-trigger,
+  .gl-panel {
+    align-self: center; /* centers only these two */
+  }
+
+  /* Make every garage-level section take 100% width so inner blocks can grow */
+  > section[id^="garage-level-section-"] {
+    width: 100%;
+  }
+
+  .gl-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.9rem;
+    min-width: 9.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba($color-gold-glow, 0.35);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.24)), #0f0f10;
+    color: #f3f3f3;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 0 #000;
+    box-shadow: 0 0 0 2px rgba($color-accent-blue, 0.18) inset, 0 10px 26px rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    transition: box-shadow 0.18s ease, transform 0.06s ease, border-color 0.18s ease;
+
+    &:hover { border-color: rgba($color-gold-glow, 0.6); }
+    &:active { transform: translateY(1px); }
+
+    @include maxw($cellphone-portrait) {
+      min-width: 8.5rem;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.95rem;
+    }
+  }
+
+  /* Panel: extra padding; don’t clip chip focus/glow */
+  .gl-panel {
+    display: none;
+    position: relative;
+    z-index: 40;
+    width: clamp(18rem, 64vw, 36rem);
+    padding: 0.9rem 1.1rem 1rem;
+    border-radius: 16px;
+    overflow: visible;
+
+    background:
+      radial-gradient(160% 120% at 10% -10%, rgba(88, 34, 180, 0.12), transparent 55%),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.2)),
+      rgba(24, 26, 30, 0.94);
+    border: 1px solid rgba(#fff, 0.1);
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba($color-accent-blue, 0.12) inset;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+
+    &.is-open { display: block; }
+
+    .gl-grid {
+      display: grid;
+      gap: 0.6rem;
+      grid-template-columns: repeat(10, 1fr);
+      max-height: 16rem;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding-inline: 0.1rem;
+      &::-webkit-scrollbar { display: none; }
+
+      @include small-laptop { grid-template-columns: repeat(12, 1fr); }
+      @include maxw($cellphone-portrait) {
+        grid-template-columns: repeat(6, 1fr);
+        max-height: 12rem;
+      }
+
+      .gl-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: #ddd;
+        padding: 0.5rem 0;
+      }
+
+      /* Ghost pills */
+      .gl-chip {
+        appearance: none;
+        border-radius: 999px;
+        padding: 0.42rem 0.5rem;
+        font: 800 0.98rem/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        letter-spacing: 0.01em;
+        color: #eef1f7;
+        background: transparent;
+        border: 1px solid rgba(135, 70, 210, 0.34);
+        box-shadow: 0 1px 0 rgba(#000, 0.35);
+        cursor: pointer;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+        transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.2s ease, transform 0.08s ease;
+
+        &:hover,
+        &:focus-visible {
+          outline: none;
+          background:
+            linear-gradient(to bottom, rgba(135, 70, 210, 0.12), rgba(135, 70, 210, 0.06)),
+            rgba(30, 32, 36, 0.18);
+          border-color: rgba(135, 70, 210, 0.58);
+          box-shadow: 0 1px 0 rgba(#000, 0.45), 0 0 12px 2px rgba(135, 70, 210, 0.26);
+        }
+
+        &:active { transform: translateY(1px); }
+      }
+    }
+  }
+}
+
+/* ==============================
+   Section headings
+============================== */
+.mainHeading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $color-accent-blue;
+  font-size: clamp(34px, 3.4vw, 46px);
+  margin: 3.25rem auto 1rem auto;
+  text-align: center;
+
+  @include maxw($cellphone-portrait) {
+    margin: 0 0 1.4rem;
+    color: rgb(255, 196, 0);
+    text-shadow: 4px 4px 4px #000;
+  }
+}
+
+.subHeading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.25rem auto 1.25rem auto;
+  color: $color-gold-glow;
+  font-size: clamp(18px, 2vw, 22px);
+}
+
+/* ==============================
+   XP strip — wide desktop default
+============================== */
+.xp {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 1.6rem;
+  width: 100%;
+
+  .xpTitle {
     display: flex;
-     color: $neon-blue;
-     font-size: 40px;
-     margin: 5rem auto 2rem auto;
-     justify-content: center;
-     align-items: center;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       text-align: center;
-       margin: 2rem 0;
-       margin-left: 0;
-       font-size: 34px;
-       color: rgb(255, 196, 0);
-       text-shadow: 4px 4px 4px #000;
-     }
-   }
-   
-   .subHeading {
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+
+    width: 100%;
+    max-width: min(90rem, 96vw); /* TWEAK HERE for bar width */
+    padding: 1rem 1.4rem;         /* TWEAK HERE for bar height */
+    font-size: 20px;
+
+    color: $color-gold-glow;
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.16)),
+      rgba(16, 16, 18, 0.55);
+    border: 1px solid rgba($color-accent-blue, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 0 10px 2px rgba($color-accent-blue, 0.22), inset 0 1px 0 rgba(#fff, 0.08);
+
+    @include maxw($cellphone-portrait) {
+      font-size: 16px;
+      width: 20.5rem;
+    }
+
+    .xpRequirement { font-weight: 700; color: $color-gold-glow; }
+  }
+}
+
+/* ==============================
+   Images grid (max 2 cols; wider cards)
+============================== */
+.CarImagesContainer {
+  margin: 0rem auto 2rem;
+  max-width: min(1300px, 96vw);                 /* TWEAK HERE: gallery width */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(32rem, 1fr)); /* TWEAK HERE: card width */
+  gap: 2.5rem 0rem;
+  justify-content: center;
+  justify-items: center;
+
+  /* card wrapper width must match the minmax above */
+  > div {
+    width: 100%;
+    max-width: 32rem;                           /* TWEAK HERE to match */
     display: flex;
-     justify-content: center;
-     align-items: center;
-     margin: 1rem auto 2rem auto;
-     color: $gold-accent;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       display: flex;
-       justify-content: center;
-       margin: 0.5rem 0 2rem;
-       margin-left: 0;
-       font-size: 20px;
-     }
-   }
-   
-   /* ==============================
-                 XP Section
-      ============================== */
-   
-   .xp {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     max-width: 1536px;
-     margin: 0 auto;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       max-width: 21.5rem;
-       margin: 0 auto;
-     }
-   }
-   
-   .xpTitle {
-     display: flex;
-     justify-content: space-evenly;
-     width: 100%;
-     color: $gold-accent;
-     font-size: 20px;
-     padding: 20px;
-     background-color: black;
-     flex-wrap: nowrap;
-     border: 1px solid $neon-blue;
-     margin-bottom: 4.5rem;
-     box-shadow: 0 0 7px 2px $shadow-gold;
-     border-radius: 10px;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       font-size: 20px;
-       display:flex;
-       margin: 0 auto;
-     }
-   }
-   
-   .xpRequirement {
-     color: $gold-accent;
-     font-size: 20px;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       font-size: 20px;
-       padding-left: 6rem;
-     }
-   }
-   
-   /* ==============================
-                 Miscellaneous
-      ============================== */
-   
-   .Top {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     margin-top: 0;
-     margin-bottom: 0;
-   }
-   
-   .BackToTop {
-     display: flex;
-     font-size: 1.5rem;
-     margin: 2.8rem 0 2rem;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       position: relative;
-       margin-bottom: 2.5rem;
-     }
-   }
-   
-   /* ==============================
-               Car Images
-      ============================== */
-   
-   .CarImagesContainer {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     margin: 0 auto;
-     max-width: 100%;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       flex-direction: column;
-       max-width: 85%;
-     }
-   }
-   
-   .CarImages {
-     display: flex;
-     justify-content: center;
-     margin: 0 22px 30px;
-     width: 26.5rem;
-     height: 12.5rem;
-     border: 3px solid #000;
-     box-shadow: 0 0 5px 2px $shadow-gold;
-     border-radius: 7px;
-   
-     @media only screen and (max-width: $mobileMaxWidthPortrait) {
-       margin: 3rem auto 30px;
-       width: 20rem;
-       height: 9.5rem;
-     }
-   }
-   
-   .CarImagesCaption {
-     display: flex;
-     justify-content: center;
-     color: white;
-     font-size: 20px;
-     background-image: $caption-gradient;
-     box-shadow: 0 0 7px 4px $neon-blue;
-     border-radius: 8px;
-     width: 79%;
-     padding: 10px 15px;
-     margin: 0 auto;
-     text-align: center;
-   }
-   
-   /* ==============================
-               Breakpoints Stub
-      ============================== */
-   
-   @media only screen and (max-width: $tablet-max) {
-     // Reserved for tablet-specific styles
-   }
-   
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* single item & odd-count centering */
+  > div:only-child,
+  > div:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  @include maxw($tablet-portrait) {
+    max-width: 88vw;
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    > div { max-width: 26rem; }
+  }
+
+  .CarImages {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    object-fit: contain;
+    background-color: #0b0b0c;
+    border: 4px solid #000;
+    box-shadow: 0 0 6px 2px $color-gold-glow;
+    border-radius: 10px;
+  }
+
+  .CarImagesCaption {
+    margin-top: 0.7rem;
+    padding: 0.6rem 1.2rem;
+    width: 100%;
+    max-width: 32rem;                            /* TWEAK HERE to match card */
+    text-align: center;
+    color: #edf1f7;
+    font-size: clamp(15px, 1.05rem, 18px);
+    font-weight: 600;
+    letter-spacing: .01em;
+
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, rgba(135, 70, 210, 0.2), rgba($color-accent-blue, 0.18));
+    border: 1px solid rgba(#fff, 0.12);
+    box-shadow:
+      0 6px 18px rgba(0, 0, 0, 0.35),
+      0 0 12px rgba($color-accent-blue, 0.18),
+      inset 0 1px 0 rgba(#fff, 0.08);
+    backdrop-filter: blur(6px);
+    text-shadow: 0 1px 0 rgba(0,0,0,.35);
+
+    @include maxw($cellphone-portrait) {
+      max-width: 20rem;                          /* TWEAK HERE to match card */
+
+    }
+  }
+}
+
+/* ==============================
+   Misc.
+============================== */
+.Top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}

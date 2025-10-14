@@ -1,9 +1,7 @@
-// components/GarageLevels/Content.tsx
-import { Car } from "@/components/GarageLevels/interface";
-import BackToTop from "@/components/Shared/BackToTopButton";
+import { Car } from '@/components/GarageLevels/interface';
 
 const IMG_CDN_BASE =
-  import.meta.env.VITE_IMG_CDN_BASE ?? "https://alu-tracker-image-vault.onrender.com";
+  import.meta.env.VITE_IMG_CDN_BASE ?? 'https://alu-tracker-image-vault.onrender.com';
 
 // Match backend sanitizer: drop spaces/'/-, map & -> and, keep Unicode letters
 const sanitizeBrand = (s: string): string =>
@@ -40,7 +38,7 @@ export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
 
       <div className="xp">
         <h3 className="xpTitle">
-          XP Required <span className="xpRequirement">{xp.toLocaleString("en-US")}</span>
+          XP Required <span className="xpRequirement">{xp.toLocaleString('en-US')}</span>
         </h3>
       </div>
 
@@ -68,8 +66,6 @@ export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
           <p>No cars available.</p>
         )}
       </div>
-
-      <BackToTop />
     </section>
   );
 }

@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import "@/scss/Brands/BrandQuickList.scss";
-import BackToTop from "@/components/Shared/BackToTopButton";
+import { Link } from 'react-router-dom';
+import '@/scss/Brands/BrandQuickList.scss';
 
 interface BrandQuickListProps {
   manufacturers: {
@@ -12,16 +11,16 @@ interface BrandQuickListProps {
 }
 
 export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
-  console.log("🧪 BrandQuickList received manufacturers:", manufacturers);
-  
+  console.log('🧪 BrandQuickList received manufacturers:', manufacturers);
+
   if (!manufacturers || manufacturers.length === 0) {
     return <div className="error-message">No manufacturers found.</div>;
   }
 
   // Group manufacturers by Country first
   const groupedByCountry = manufacturers.reduce(
-    (acc: Record<string, { _id: string; brand: string; slug: string; }[]>, manufacturer) => {
-      const countries = manufacturer.country.length > 0 ? manufacturer.country : ["Unknown"];
+    (acc: Record<string, { _id: string; brand: string; slug: string }[]>, manufacturer) => {
+      const countries = manufacturer.country.length > 0 ? manufacturer.country : ['Unknown'];
 
       countries.forEach((country) => {
         if (!acc[country]) {
@@ -45,7 +44,7 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
 
         // Group manufacturers in each country by first letter
         const groupedByLetter = countryManufacturers.reduce(
-          (acc: Record<string, { _id: string; brand: string; slug: string; }[]>, manufacturer) => {
+          (acc: Record<string, { _id: string; brand: string; slug: string }[]>, manufacturer) => {
             const firstLetter = manufacturer.brand.charAt(0).toUpperCase();
             if (!acc[firstLetter]) {
               acc[firstLetter] = [];
@@ -59,30 +58,32 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
         const sortedLetters = Object.keys(groupedByLetter).sort();
 
         return (
-          <div key={country} className="country-section">
-            
+          <div
+            key={country}
+            className="country-section"
+          >
             <hr></hr>
             <h2 className="country-header">{country}</h2>
             <hr></hr>
 
             {sortedLetters.map((letter) => (
-              <div key={letter} className="brand-letter-section">
+              <div
+                key={letter}
+                className="brand-letter-section"
+              >
                 <h3>{letter}</h3> {/* ✅ First letter header */}
                 <ul>
                   {groupedByLetter[letter]
                     .sort((a, b) => a.brand.localeCompare(b.brand))
                     .map((manufacturer) => (
                       <li key={manufacturer._id}>
-                        <Link to={`/brands/${manufacturer.slug}`}>
-                          {manufacturer.brand}
-                        </Link>
+                        <Link to={`/brands/${manufacturer.slug}`}>{manufacturer.brand}</Link>
                       </li>
                     ))}
                 </ul>
               </div>
             ))}
             <hr></hr>
-            <BackToTop />
           </div>
         );
       })}

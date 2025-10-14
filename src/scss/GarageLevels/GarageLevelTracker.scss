@@ -5,20 +5,16 @@
             Variables
    ============================== */
 
-$gold-accent: rgb(223, 190, 7);
-$background-dark: black;
-$text-color: white;
-$shadow-style: 1px 0 5px 5px $gold-accent;
+$shadow-style: 1px 0 5px 5px $color-gold-glow;
 
 $control-grid-gap: 1rem;
 $control-width: 18rem;
 $control-border-color: black;
-$control-box-shadow-color: rgb(223, 190, 7);
+$control-box-shadow-color: $color-gold-glow;
 $control-bg-color: black;
 $control-padding: 4rem;
 $control-font-size: 1.2rem;
 
-$filter-heading-color: white;
 $filter-heading-font-size: 1.9rem;
 
 /* ==============================
@@ -42,15 +38,15 @@ $filter-heading-font-size: 1.9rem;
     align-items: center;
     flex-direction: column;
     flex-wrap: wrap;
-    background-color: $background-dark;
-    color: $text-color;
+    background-color: $color-black;
+    color: $color-white;
     border-radius: 0.5rem;
     box-shadow: $shadow-style;
     padding: 0.8rem 1rem;
 
     &:hover {
-      background-color: color.scale($background-dark, $lightness: 20%);
-      color: color.scale($text-color, $lightness: -10%);
+      background-color: color.scale($color-black, $lightness: 20%);
+      color: color.scale($color-white, $lightness: -10%);
       box-shadow: $shadow-style;
     }
   }
@@ -75,7 +71,7 @@ $filter-heading-font-size: 1.9rem;
   background-color: $control-bg-color;
   padding: $control-padding;
   font-size: $control-font-size;
-  color: $text-color;
+  color: $color-white;
 
   .levelTracker {
     display: grid;
@@ -86,7 +82,7 @@ $filter-heading-font-size: 1.9rem;
     flex-wrap: wrap;
 
     .levelTrackerText {
-      color: $text-color;
+      color: $color-white;
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
