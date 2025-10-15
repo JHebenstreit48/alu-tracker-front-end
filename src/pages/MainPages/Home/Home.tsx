@@ -11,7 +11,7 @@ export default function Home() {
       <PageTab title="Home">
         <Header text="Asphalt Legends Unite Tracker" className="homeHeader"/>
         <GameInfo />
-        <ImageCarousel project={Carousel} /> {/* ✅ Using updated Carousel */}
+        <ImageCarousel project={Carousel} />
       </PageTab>
     </div>
   );
