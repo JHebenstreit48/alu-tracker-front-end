@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  VITE_API_BASE_URL = "https://alutracker-api.onrender.com"
+  VITE_CARS_API_BASE_URL = "https://alutracker-api.onrender.com"
   VITE_AUTH_API_URL = "https://alu-tracker-user-data.onrender.com"
   VITE_COMMENTS_API_BASE_URL = "https://alu-tracker-comments-api.onrender.com"
+  VITE_CONTENT_API_BASE_URL = "https://alu-content-api.onrender.com"

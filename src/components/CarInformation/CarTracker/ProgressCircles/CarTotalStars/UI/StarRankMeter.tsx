@@ -1,7 +1,7 @@
 import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const backendBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const backendBaseUrl = import.meta.env.VITE_CARS_API_BASE_URL;
 
 interface StarRankMeterProps {
   rank: number;        // 1 to 6

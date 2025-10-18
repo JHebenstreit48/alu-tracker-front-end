@@ -56,7 +56,7 @@ export default function CarTracker() {
 
     fetch(
       `${
-        import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com'
+        import.meta.env.VITE_CARS_API_BASE_URL ?? 'https://alutracker-api.onrender.com'
       }/api/cars?limit=1000&offset=0`
     )
       .then((res) => res.json())

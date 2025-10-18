@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 // ✅ Use env-based backend URL
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
+  import.meta.env.VITE_CONTENT_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 interface BlueprintCar {
   Class: string;

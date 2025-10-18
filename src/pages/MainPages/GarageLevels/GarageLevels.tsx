@@ -12,7 +12,7 @@ import '@/scss/GarageLevels/GarageLevelTracker.scss';
 import '@/scss/GarageLevels/GarageLevels.scss';
 
 // ✅ Pull from environment just like on Cars page
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_CONTENT_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
 export default function GarageLevelsPage() {
   const [garageLevels, setGarageLevels] = useState<GarageLevelsInterface[]>([]);

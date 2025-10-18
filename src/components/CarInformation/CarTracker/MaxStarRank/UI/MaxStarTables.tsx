@@ -7,7 +7,7 @@ interface MaxStarTableProps {
     percentMaxed: number;
   }
   
-  const backendBaseUrl = import.meta.env.VITE_API_BASE_URL;
+  const backendBaseUrl = import.meta.env.VITE_CARS_API_BASE_URL;
   
   export default function MaxStarTables({
     rank,

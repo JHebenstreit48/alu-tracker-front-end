@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Car } from "@/components/CarInformation/CarList/CarFilters/types/CarTypes";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
+  import.meta.env.VITE_CARS_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 const IMG_CDN_BASE =
   import.meta.env.VITE_IMG_CDN_BASE ?? "https://alu-tracker-image-vault.onrender.com";

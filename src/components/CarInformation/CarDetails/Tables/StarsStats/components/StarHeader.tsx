@@ -1,5 +1,5 @@
 export default function StarHeader({ star }: { star: number }) {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
+    const baseUrl = import.meta.env.VITE_CARS_API_BASE_URL ?? "";
     const label = star > 1 ? "Stars Max" : "Star Max";
   
     return (

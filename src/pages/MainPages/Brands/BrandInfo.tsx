@@ -22,7 +22,7 @@ export default function BrandInfo() {
   const [manufacturer, setManufacturer] = useState<Manufacturer | null>(null);
   const [error, setError] = useState(false);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
+  const API_BASE_URL = import.meta.env.VITE_CONTENT_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/manufacturers`)

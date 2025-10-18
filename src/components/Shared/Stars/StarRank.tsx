@@ -13,7 +13,7 @@ interface StarRatingProps {
   isKeyCar?: boolean; // Optional for key cars
 }
 
-const backendBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const backendBaseUrl = import.meta.env.VITE_CARS_API_BASE_URL;
 
 const StarRank: React.FC<StarRatingProps> = ({
   count,

@@ -2,7 +2,7 @@ import type { FullCar, CarStatus, ApiStatusDoc } from "@/components/CarInformati
 import { mapApiStatus } from "@/components/CarInformation/CarDetails/utils/status";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "https://alutracker-api.onrender.com";
+  import.meta.env.VITE_CARS_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
 export async function fetchCarDetail(slug: string): Promise<FullCar> {
   const res = await fetch(`${API_BASE_URL}/api/cars/detail/${slug}`);
