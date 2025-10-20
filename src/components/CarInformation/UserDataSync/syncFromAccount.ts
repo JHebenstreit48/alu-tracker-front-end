@@ -22,11 +22,40 @@ function isProgressResponse(u: unknown): u is ProgressResponse {
   return typeof u === "object" && u !== null && "progress" in (u as object);
 }
 
+// Minimal alias map inline (keeps this file self-contained)
+const ALIAS_MAP = new Map<string, string>([
+  ["Acura NSX", "Acura 2017 NSX"],
+  ["Lexus BEV Sport Concept", "Lexus Electrified Sport Concept"],
+]);
+
+/** Collapse any legacy keys in localStorage into the new canonical keys (lossless merge). */
+function migrateLegacyLocalKeysOnce() {
+  for (const [legacy, modern] of ALIAS_MAP) {
+    const [b1, ...m1] = legacy.split(" ");
+    const [b2, ...m2] = modern.split(" ");
+    const oldKey = generateCarKey(b1, m1.join(" "));
+    const newKey = generateCarKey(b2, m2.join(" "));
+    const oldData = getCarTrackingData(oldKey);
+    if (!oldData || Object.keys(oldData).length === 0) continue;
+
+    const newData = getCarTrackingData(newKey) || {};
+    const merged = {
+      ...newData,
+      owned: !!(newData.owned || oldData.owned),
+      goldMaxed: !!(newData.goldMaxed || oldData.goldMaxed),
+      keyObtained: !!(newData.keyObtained || oldData.keyObtained),
+      stars: Math.max(Number(newData.stars || 0), Number(oldData.stars || 0)) || undefined,
+    } as CarTrackingData;
+
+    setCarTrackingData(newKey, merged);
+    localStorage.removeItem(`car-tracker-${oldKey}`);
+  }
+}
+
 /**
  * Pull server progress and merge into local per-car records:
  * - stars: max(server, local)
  * - owned/gold/key: union
- * NO clearAllCarTrackingData() — avoids "empty window" races.
  */
 export const syncFromAccount = async (token: string): Promise<void> => {
   try {
@@ -70,15 +99,13 @@ export const syncFromAccount = async (token: string): Promise<void> => {
       ownedCars = [],
       goldMaxedCars = [],
       keyCarsOwned = [],
-      // xp is currently not stored locally here (kept for future use)
     } = resultUnknown.progress;
 
-    // Index arrays for quick lookup
+    // Because your backend now normalizes to canonical labels, raw keys here are already "new".
     const ownedSet = new Set(ownedCars);
     const goldSet = new Set(goldMaxedCars);
     const keySet = new Set(keyCarsOwned);
 
-    // Merge each mentioned car from carStars
     const touched = new Set<string>();
 
     for (const rawKey of Object.keys(carStars)) {
@@ -102,7 +129,6 @@ export const syncFromAccount = async (token: string): Promise<void> => {
       touched.add(key);
     }
 
-    // Ensure cars present only in arrays still get merged
     const arraysOnly = new Set<string>([
       ...ownedCars,
       ...goldMaxedCars,
@@ -123,6 +149,9 @@ export const syncFromAccount = async (token: string): Promise<void> => {
       };
       setCarTrackingData(key, update);
     }
+
+    // One-time local collapse for any legacy keys still hanging around
+    migrateLegacyLocalKeysOnce();
 
     console.log("✅ Sync-from-account completed (merged safely)");
   } catch (err: unknown) {

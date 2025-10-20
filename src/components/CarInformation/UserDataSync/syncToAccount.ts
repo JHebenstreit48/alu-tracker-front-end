@@ -10,26 +10,25 @@ interface ProgressPayload {
   xp: number;
 }
 
-interface SyncOk {
-  success: true;
-  skipped?: true;
-}
-interface SyncErr {
-  success: false;
-  message: string;
-}
+interface SyncOk { success: true; skipped?: true; }
+interface SyncErr { success: false; message: string; }
 type SyncResult = SyncOk | SyncErr;
 
 // Backend expects "Brand Model" keys; we reverse normalize here.
 function revertCarKey(key: string): string {
   return key.replace(/_/g, " ").trim();
 }
-
 function isErrorBody(u: unknown): u is { message?: string; error?: string } {
   return typeof u === "object" && u !== null && ("message" in u || "error" in u);
 }
-
 const uniq = <T,>(arr: T[]): T[] => Array.from(new Set(arr));
+
+// Inline alias map so we don't need an extra file
+const ALIAS_MAP = new Map<string, string>([
+  ["Acura NSX", "Acura 2017 NSX"],
+  ["Lexus BEV Sport Concept", "Lexus Electrified Sport Concept"],
+]);
+const canonicalize = (label: string) => ALIAS_MAP.get(label) ?? label;
 
 export const syncToAccount = async (token: string): Promise<SyncResult> => {
   try {
@@ -41,19 +40,18 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
     const keyCarsOwned: string[] = [];
 
     for (const [normalizedKey, data] of Object.entries(allTracked)) {
-      const revertedKey = revertCarKey(normalizedKey);
+      const label = canonicalize(revertCarKey(normalizedKey));
       if (typeof data.stars === "number" && data.stars > 0) {
-        carStars[revertedKey] = Math.min(6, Math.max(1, data.stars));
+        carStars[label] = Math.min(6, Math.max(1, data.stars));
       }
-      if (data.owned) ownedCars.push(revertedKey);
-      if (data.goldMaxed) goldMaxedCars.push(revertedKey);
-      if (data.keyObtained) keyCarsOwned.push(revertedKey);
+      if (data.owned)       ownedCars.push(label);
+      if (data.goldMaxed)   goldMaxedCars.push(label);
+      if (data.keyObtained) keyCarsOwned.push(label);
     }
 
     const xpValue = localStorage.getItem("garageXP");
     const xp = Number.isFinite(Number(xpValue)) ? parseInt(xpValue ?? "0", 10) : 0;
 
-    // ✅ de-dupe arrays before payload (prevents duplicate entries)
     const payload: ProgressPayload = {
       carStars,
       ownedCars: uniq(ownedCars),
@@ -62,7 +60,6 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
       xp,
     };
 
-    // Never send an empty-ish payload — prevents accidental wipes.
     const isEmpty =
       Object.keys(carStars).length === 0 &&
       payload.ownedCars.length === 0 &&
@@ -88,7 +85,6 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
       }
     );
 
-    // Some backends return 204 No Content.
     let msg = `HTTP ${res.status}`;
     const contentType = res.headers.get("content-type") ?? "";
     if (!res.ok) {
