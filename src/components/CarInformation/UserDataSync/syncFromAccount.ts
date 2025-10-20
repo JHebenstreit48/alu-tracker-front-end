@@ -1,3 +1,4 @@
+// syncFromAccount.ts
 import {
   setCarTrackingData,
   generateCarKey,
@@ -14,148 +15,128 @@ interface ServerProgress {
   keyCarsOwned?: string[];
   xp?: number;
 }
-interface ProgressResponse {
-  progress?: ServerProgress;
+interface ProgressResponse { progress?: ServerProgress }
+
+export interface PullResult {
+  success: boolean;
+  message?: string;
 }
 
+function isObject(u: unknown): u is Record<string, unknown> {
+  return typeof u === "object" && u !== null;
+}
 function isProgressResponse(u: unknown): u is ProgressResponse {
-  return typeof u === "object" && u !== null && "progress" in (u as object);
+  return isObject(u) && "progress" in u;
+}
+function safeParseJSON(text: string): unknown {
+  try { return text ? JSON.parse(text) : {}; } catch { return {}; }
 }
 
-// Minimal alias map inline (keeps this file self-contained)
-const ALIAS_MAP = new Map<string, string>([
-  ["Acura NSX", "Acura 2017 NSX"],
-  ["Lexus BEV Sport Concept", "Lexus Electrified Sport Concept"],
-]);
-
-/** Collapse any legacy keys in localStorage into the new canonical keys (lossless merge). */
-function migrateLegacyLocalKeysOnce() {
-  for (const [legacy, modern] of ALIAS_MAP) {
-    const [b1, ...m1] = legacy.split(" ");
-    const [b2, ...m2] = modern.split(" ");
-    const oldKey = generateCarKey(b1, m1.join(" "));
-    const newKey = generateCarKey(b2, m2.join(" "));
-    const oldData = getCarTrackingData(oldKey);
-    if (!oldData || Object.keys(oldData).length === 0) continue;
-
-    const newData = getCarTrackingData(newKey) || {};
-    const merged = {
-      ...newData,
-      owned: !!(newData.owned || oldData.owned),
-      goldMaxed: !!(newData.goldMaxed || oldData.goldMaxed),
-      keyObtained: !!(newData.keyObtained || oldData.keyObtained),
-      stars: Math.max(Number(newData.stars || 0), Number(oldData.stars || 0)) || undefined,
-    } as CarTrackingData;
-
-    setCarTrackingData(newKey, merged);
-    localStorage.removeItem(`car-tracker-${oldKey}`);
-  }
+// "Brand Model" → storage key
+function labelToKey(label: string): string {
+  const [brand, ...modelParts] = label.split(" ");
+  return generateCarKey(brand, modelParts.join(" "));
 }
 
-/**
- * Pull server progress and merge into local per-car records:
- * - stars: max(server, local)
- * - owned/gold/key: union
- */
-export const syncFromAccount = async (token: string): Promise<void> => {
+const KEY_PREFIX = "car-tracker-";
+
+export async function syncFromAccount(
+  token: string,
+  opts: { timeoutMs?: number } = {}
+): Promise<PullResult> {
+  const timeoutMs = typeof opts.timeoutMs === "number" ? opts.timeoutMs : 15000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_AUTH_API_URL}/api/users/get-progress`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const url = `${import.meta.env.VITE_AUTH_API_URL}/api/users/get-progress`;
+    const res = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+      headers: { Authorization: `Bearer ${token}` },
+      signal: controller.signal,
+    });
 
     const rawText = await res.text();
-    let resultUnknown: unknown;
-    try {
-      resultUnknown = rawText ? JSON.parse(rawText) : {};
-    } catch {
-      console.error("❌ Failed to parse response JSON:", rawText);
-      return;
-    }
+    const dataUnknown = safeParseJSON(rawText);
 
     if (!res.ok) {
-      const msg =
-        (typeof resultUnknown === "object" &&
-          resultUnknown !== null &&
-          ("message" in resultUnknown || "error" in resultUnknown) &&
-          ((resultUnknown as { message?: string; error?: string }).message ??
-            (resultUnknown as { message?: string; error?: string }).error)) ||
+      const message =
+        (isObject(dataUnknown) &&
+          (typeof dataUnknown["message"] === "string"
+            ? dataUnknown["message"]
+            : typeof dataUnknown["error"] === "string"
+            ? dataUnknown["error"]
+            : undefined)) ||
         `HTTP ${res.status}`;
-      console.error("❌ Invalid response:", msg);
-      return;
+      return { success: false, message };
     }
 
-    if (!isProgressResponse(resultUnknown) || !resultUnknown.progress) {
-      console.warn("ℹ️ No progress returned (first-time user?).");
-      return;
+    if (!isProgressResponse(dataUnknown) || !dataUnknown.progress) {
+      return { success: true, message: "No progress found on server" };
     }
 
-    const {
-      carStars = {},
-      ownedCars = [],
-      goldMaxedCars = [],
-      keyCarsOwned = [],
-    } = resultUnknown.progress;
+    const p = dataUnknown.progress;
+    const carStars: CarStarsMap = p.carStars ?? {};
+    const ownedCars: string[] = p.ownedCars ?? [];
+    const goldMaxedCars: string[] = p.goldMaxedCars ?? [];
+    const keyCarsOwned: string[] = p.keyCarsOwned ?? [];
 
-    // Because your backend now normalizes to canonical labels, raw keys here are already "new".
-    const ownedSet = new Set(ownedCars);
-    const goldSet = new Set(goldMaxedCars);
-    const keySet = new Set(keyCarsOwned);
-
-    const touched = new Set<string>();
-
-    for (const rawKey of Object.keys(carStars)) {
-      const [brand, ...modelParts] = rawKey.split(" ");
-      const key = generateCarKey(brand, modelParts.join(" "));
-      const local = getCarTrackingData(key);
-
-      const serverStar = carStars[rawKey] ?? 0;
-      const localStar = typeof local.stars === "number" ? local.stars : 0;
-      const mergedStars = Math.max(localStar, serverStar);
-      const starsField = mergedStars > 0 ? { stars: mergedStars } : {};
-
-      const update: CarTrackingData = {
-        ...local,
-        ...starsField,
-        owned: Boolean(local.owned || ownedSet.has(rawKey)),
-        goldMaxed: Boolean(local.goldMaxed || goldSet.has(rawKey)),
-        keyObtained: Boolean(local.keyObtained || keySet.has(rawKey)),
-      };
-      setCarTrackingData(key, update);
-      touched.add(key);
-    }
-
-    const arraysOnly = new Set<string>([
+    // Build all server labels → keys
+    const allLabels = new Set<string>([
+      ...Object.keys(carStars),
       ...ownedCars,
       ...goldMaxedCars,
       ...keyCarsOwned,
     ]);
-
-    for (const rawKey of arraysOnly) {
-      const [brand, ...modelParts] = rawKey.split(" ");
-      const key = generateCarKey(brand, modelParts.join(" "));
-      if (touched.has(key)) continue;
-
-      const local = getCarTrackingData(key);
-      const update: CarTrackingData = {
-        ...local,
-        owned: Boolean(local.owned || ownedSet.has(rawKey)),
-        goldMaxed: Boolean(local.goldMaxed || goldSet.has(rawKey)),
-        keyObtained: Boolean(local.keyObtained || keySet.has(rawKey)),
-      };
-      setCarTrackingData(key, update);
+    const serverKeys = new Set<string>();
+    for (const label of allLabels) {
+      if (typeof label === "string" && label.trim() !== "") {
+        serverKeys.add(labelToKey(label));
+      }
     }
 
-    // One-time local collapse for any legacy keys still hanging around
-    migrateLegacyLocalKeysOnce();
+    // Remove local entries not on server
+    for (let i = 0; i < localStorage.length; i++) {
+      const storageKey = localStorage.key(i);
+      if (!storageKey || !storageKey.startsWith(KEY_PREFIX)) continue;
+      const carKey = storageKey.slice(KEY_PREFIX.length);
+      if (!serverKeys.has(carKey)) {
+        localStorage.removeItem(storageKey);
+        i--;
+      }
+    }
 
-    console.log("✅ Sync-from-account completed (merged safely)");
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error during sync-from-account.";
-    console.error("❌ Failed to sync from account:", message);
+    // Write exact server truth
+    const ownedSet = new Set<string>(ownedCars);
+    const goldSet  = new Set<string>(goldMaxedCars);
+    const keySet   = new Set<string>(keyCarsOwned);
+
+    for (const label of allLabels) {
+      const key = labelToKey(label);
+      const current = getCarTrackingData(key);
+      const starsFromServer = carStars[label] ?? 0;
+
+      const next: CarTrackingData = {
+        ...current,
+        owned: ownedSet.has(label),
+        goldMaxed: goldSet.has(label),
+        keyObtained: keySet.has(label),
+        stars: starsFromServer > 0 ? starsFromServer : undefined,
+      };
+      setCarTrackingData(key, next);
+    }
+
+    return { success: true };
+  } catch (err) {
+    const message =
+      err instanceof DOMException && err.name === "AbortError"
+        ? `Request timed out after ${timeoutMs}ms`
+        : err instanceof Error
+        ? err.message
+        : "Failed to fetch user progress";
+    return { success: false, message };
+  } finally {
+    clearTimeout(timer);
   }
-};
+}

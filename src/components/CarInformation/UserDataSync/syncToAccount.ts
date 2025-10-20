@@ -10,27 +10,36 @@ interface ProgressPayload {
   xp: number;
 }
 
-interface SyncOk { success: true; skipped?: true; }
-interface SyncErr { success: false; message: string; }
-type SyncResult = SyncOk | SyncErr;
+interface SyncOk { success: true; skipped?: true }
+interface SyncErr { success: false; message: string }
+export type SyncResult = SyncOk | SyncErr;
 
-// Backend expects "Brand Model" keys; we reverse normalize here.
-function revertCarKey(key: string): string {
-  return key.replace(/_/g, " ").trim();
+export interface PushOptions {
+  /**
+   * Map of normalized keys (e.g. "acura_2017_nsx") → canonical label
+   * (e.g. "Acura 2017 NSX"). If not provided, we fallback to
+   * turning underscores into spaces.
+   */
+  labelByKey?: ReadonlyMap<string, string>;
+  /** Abort if the request takes longer than this many ms (default 15000). */
+  timeoutMs?: number;
 }
+
+// "acura_2017_nsx" → "acura 2017 nsx" (fallback if labelByKey not provided)
+function fallbackLabelFromKey(normalizedKey: string): string {
+  return normalizedKey.replace(/_/g, " ").trim();
+}
+
 function isErrorBody(u: unknown): u is { message?: string; error?: string } {
   return typeof u === "object" && u !== null && ("message" in u || "error" in u);
 }
 const uniq = <T,>(arr: T[]): T[] => Array.from(new Set(arr));
 
-// Inline alias map so we don't need an extra file
-const ALIAS_MAP = new Map<string, string>([
-  ["Acura NSX", "Acura 2017 NSX"],
-  ["Lexus BEV Sport Concept", "Lexus Electrified Sport Concept"],
-]);
-const canonicalize = (label: string) => ALIAS_MAP.get(label) ?? label;
+export async function syncToAccount(token: string, opts: PushOptions = {}): Promise<SyncResult> {
+  const timeoutMs = typeof opts.timeoutMs === "number" ? opts.timeoutMs : 15000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-export const syncToAccount = async (token: string): Promise<SyncResult> => {
   try {
     const allTracked = getAllCarTrackingData();
 
@@ -40,9 +49,13 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
     const keyCarsOwned: string[] = [];
 
     for (const [normalizedKey, data] of Object.entries(allTracked)) {
-      const label = canonicalize(revertCarKey(normalizedKey));
+      const label =
+        (opts.labelByKey && opts.labelByKey.get(normalizedKey)) ||
+        fallbackLabelFromKey(normalizedKey);
+
       if (typeof data.stars === "number" && data.stars > 0) {
-        carStars[label] = Math.min(6, Math.max(1, data.stars));
+        const stars = Math.min(6, Math.max(1, data.stars));
+        carStars[label] = stars;
       }
       if (data.owned)       ownedCars.push(label);
       if (data.goldMaxed)   goldMaxedCars.push(label);
@@ -82,12 +95,13 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       }
     );
 
-    let msg = `HTTP ${res.status}`;
-    const contentType = res.headers.get("content-type") ?? "";
     if (!res.ok) {
+      const contentType = res.headers.get("content-type") ?? "";
+      let msg = `HTTP ${res.status}`;
       if (contentType.includes("application/json")) {
         const bodyUnknown: unknown = await res.json();
         if (isErrorBody(bodyUnknown)) {
@@ -97,15 +111,19 @@ export const syncToAccount = async (token: string): Promise<SyncResult> => {
         const text = await res.text();
         msg = text || msg;
       }
-      console.error("❌ Failed to sync:", msg);
       return { success: false, message: msg };
     }
 
-    console.log("✅ Progress synced to account!");
     return { success: true };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Sync failed due to unknown error.";
-    console.error("❌ Sync error:", message);
+  } catch (err) {
+    const message =
+      err instanceof DOMException && err.name === "AbortError"
+        ? `Request timed out after ${timeoutMs}ms`
+        : err instanceof Error
+        ? err.message
+        : "Sync failed due to unknown error.";
     return { success: false, message };
+  } finally {
+    clearTimeout(timer);
   }
-};
+}
