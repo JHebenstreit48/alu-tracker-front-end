@@ -45,7 +45,8 @@ export default function CarTracker() {
     owned: 0,
   });
 
-  useEffect(() => {
+  // helper to recompute page state from localStorage + current cars list
+  const recomputeFromLocal = (carsList = allCars) => {
     const allTracked = getAllCarTrackingData();
     setTrackedCars(
       Object.entries(allTracked).map(([carId, data]) => ({
@@ -54,46 +55,53 @@ export default function CarTracker() {
       }))
     );
 
-    fetch(
-      `${
-        import.meta.env.VITE_CARS_API_BASE_URL ?? 'https://alutracker-api.onrender.com'
-      }/api/cars?limit=1000&offset=0`
-    )
+    const keyCars = carsList.filter((car) => car.KeyCar);
+    const keyCarKeys = keyCars.map((car) => generateCarKey(car.Brand, car.Model));
+
+    const keysObtained = Object.entries(allTracked)
+      .filter(([, val]) => val.keyObtained)
+      .map(([key]) => key)
+      .filter((k) => keyCarKeys.includes(k));
+
+    const ownedKeyCars = Object.entries(allTracked)
+      .filter(([, val]) => val.owned)
+      .map(([key]) => key)
+      .filter((k) => keyCarKeys.includes(k));
+
+    setKeyCarSummary({
+      total: keyCarKeys.length,
+      obtained: keysObtained.length,
+      owned: ownedKeyCars.length,
+    });
+  };
+
+  // initial load + listen for Push/Pull completion
+  useEffect(() => {
+    recomputeFromLocal();
+    const onSynced = () => recomputeFromLocal();
+    window.addEventListener('user-progress-synced', onSynced);
+    return () => window.removeEventListener('user-progress-synced', onSynced);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // fetch cars (cache-busted) and prefer live array length for total
+  useEffect(() => {
+    const url = `${
+      import.meta.env.VITE_CARS_API_BASE_URL ?? 'https://alutracker-api.onrender.com'
+    }/api/cars?limit=2000&offset=0&t=${Date.now()}`;
+
+    fetch(url, { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
-        if (typeof data.total === 'number') {
-          setTotalCars(data.total);
-        }
-
-        const cars = data.cars as Car[];
+        const cars = (Array.isArray(data?.cars) ? data.cars : []) as Car[];
         setAllCars(cars);
-
-        const keyCars = cars.filter((car) => car.KeyCar);
-        const keyCarKeys = keyCars.map((car) => generateCarKey(car.Brand, car.Model));
-
-        const keysObtained = Object.entries(allTracked)
-          .filter(([, val]) => val.keyObtained)
-          .map(([key]) => key);
-
-        const ownedKeyCars = Object.entries(allTracked)
-          .filter(([, val]) => val.owned)
-          .map(([key]) => key);
-
-        setKeyCarSummary({
-          total: keyCarKeys.length,
-          obtained: keysObtained.length,
-          owned: ownedKeyCars.length,
-        });
-
-        console.log('🧪 Key car summary:', {
-          totalFromBackend: keyCarKeys.length,
-          keysObtainedFromLocal: keysObtained.length,
-          carsOwnedInLocal: ownedKeyCars.length,
-        });
+        setTotalCars(Math.max(cars.length, Number(data?.total ?? 0)));
+        recomputeFromLocal(cars);
       })
       .catch((err) => {
         console.error('Failed to fetch total car count or key car info:', err);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const ownedCars = trackedCars.filter((car) => car.owned);
