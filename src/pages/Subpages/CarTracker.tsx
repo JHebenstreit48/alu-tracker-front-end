@@ -8,7 +8,7 @@ import {
 } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
 
-// import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
+import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
 
 import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
 import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
@@ -137,7 +137,7 @@ export default function CarTracker() {
           Back to Cars
         </button>
 
-        {/* <SyncButton /> */}
+        <SyncButton />
 
         <div className="trackerSummaryBlock">
           {/* ===== Section: Car Collection Progress ===== */}
