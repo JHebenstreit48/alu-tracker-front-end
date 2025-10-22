@@ -1,5 +1,5 @@
 import { memo } from "react";
-import LoadingSpinner from "@/components/Shared/LoadingSpinner";
+import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 
 type SlideProps = {
   src: string;

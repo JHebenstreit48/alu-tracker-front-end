@@ -1,5 +1,5 @@
-import Header from "@/components/Shared/Header";
-import PageTab from "@/components/Shared/PageTab";
+import Header from "@/components/Shared/HeaderFooter/Header";
+import PageTab from "@/components/Shared/Navigation/PageTab";
 import Filters from "@/components/LegendStore/Filters";
 import Tables from "@/components/LegendStore/Tables";
 import '@/scss/LegendStore/LegendStore.scss';

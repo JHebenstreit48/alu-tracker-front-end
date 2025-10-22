@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ImageCarouselType } from '@/components/HomePage/ImagesForCarousel';
-import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+import LoadingSpinner from '@/components/Shared/Loading/LoadingSpinner';
 import { useCarousel } from '@/components/HomePage/Carousel/useCarousel';
 import { Slide } from '@/components/HomePage/Carousel/Slide';
 

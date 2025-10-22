@@ -1,7 +1,7 @@
 import ClassTables from '@/components/CarInformation/CarList/ClassTables/ClassTables';
 import CarFilters from '@/components/CarInformation/CarList/CarFilters/CarFilters';
-import Header from '@/components/Shared/Header';
-import PageTab from '@/components/Shared/PageTab';
+import Header from '@/components/Shared/HeaderFooter/Header';
+import PageTab from '@/components/Shared/Navigation/PageTab';
 import { useNavigate } from 'react-router-dom';
 
 import '@/scss/Cars/CarsPage/index.scss';

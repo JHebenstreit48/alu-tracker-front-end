@@ -60,8 +60,8 @@ table {
   border-left: 1px solid $td-border-color;
 
   @include maxw($cellphone-portrait) {
-    width: 90%; // Match the table width on mobile
-    margin: 0 auto;   // ✅ Prevents extra space between header and rows
+    width: 90%;
+    margin: 0 auto;
     padding: 1rem;
     font-size: 1.7rem;
     text-align: center;
@@ -131,14 +131,30 @@ td {
 /* =============================
    Manufacturer & Model Column
    ============================= */
+/* Darker gray background so it isn't transparent */
 .carName {
+  background-color: rgb(18, 18, 18);
+  padding: 0 $td-padding;
+
+  /* Flex row: link expands, heart stays its size */
+  .carCell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;                // more breathing room for bigger heart
+  }
+
   a {
     color: $color-link-blue;
     text-decoration: none;
-    max-width: calc(100% - 45px);
+
+    /* DO NOT change font size — keep your default */
+    /* Single line + ellipsis; flex item can actually shrink */
+    display: block;
+    min-width: 0;                // <-- critical for flex ellipsis
+    white-space: nowrap;
 
     @include maxw($cellphone-portrait) {
-      font-size: 1rem;
+      font-size: 1rem;           // your original mobile tweak
     }
   }
 
@@ -152,27 +168,55 @@ td {
   }
 }
 
-/* Full-cell gold for owned + gold-maxed */
+/* Gold highlight for owned + gold-maxed — same look as before */
 .carName--gold {
-  background-color: $color-gold-glow;
+  .carCell { display: inline-flex; align-items: center; gap: 0.75rem; }
 
-  // keep existing borders; just ensure link is readable
   a {
+    display: block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.35rem;
+    background-color: $color-gold-glow;
     color: black;
     font-weight: 700;
-    text-decoration: none;
+    box-shadow: 0 0 10px color.scale($color-gold-glow, $alpha: -65%);
 
-    // preserve truncation behavior
-    display: inline-block;
-    max-width: calc(100% - 45px);
+    /* keep the same no-wrap behavior */
+    min-width: 0;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 
     @include maxw($cellphone-portrait) {
       font-size: 1rem;
+      padding: 0.2rem 0.45rem;
     }
   }
+}
+
+/* Bigger favorite heart — outline & filled */
+.favHeart {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  cursor: pointer;
+
+  /* beefier sizes */
+  font-size: 1.75rem;            // regular size
+  color: $color-white;
+
+  &:hover,
+  &:focus-visible { transform: scale(1.08); }
+
+  &[aria-pressed="true"] { color: #ff4d6d; }
+}
+
+/* Compact variant for tighter cells */
+.favHeart--compact {
+  font-size: 1.5rem;
 }
 
 /* =============================

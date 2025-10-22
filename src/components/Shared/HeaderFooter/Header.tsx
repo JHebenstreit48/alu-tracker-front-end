@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import Navigation from "@/components/Shared/Navigation";
+import Navigation from "@/components/Shared/Navigation/Navigation";
 import AuthButtons from "@/components/SignupLogin/UI/AuthButtons";
 
 interface HeaderProps {

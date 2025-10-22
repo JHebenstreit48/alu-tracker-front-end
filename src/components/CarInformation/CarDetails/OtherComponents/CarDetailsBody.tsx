@@ -1,5 +1,5 @@
-import PageTab from "@/components/Shared/PageTab";
-import Header from "@/components/Shared/Header";
+import PageTab from "@/components/Shared/Navigation/PageTab";
+import Header from "@/components/Shared/HeaderFooter/Header";
 import {
   DetailHeader,
   TablesGrid,
