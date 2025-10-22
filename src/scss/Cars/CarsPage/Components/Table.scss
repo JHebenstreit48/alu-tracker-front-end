@@ -152,6 +152,29 @@ td {
   }
 }
 
+/* Gold highlight for owned + gold-maxed */
+.carName--gold {
+  a {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.35rem;
+    background-color: $color-gold-glow;
+    color: black;
+    font-weight: 700;
+    box-shadow: 0 0 10px color.scale($color-gold-glow, $alpha: -0.65);
+
+    max-width: calc(100% - 45px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @include maxw($cellphone-portrait) {
+      font-size: 1rem;
+      padding: 0.2rem 0.45rem;
+    }
+  }
+}
+
 /* =============================
    Image Column
    ============================= */

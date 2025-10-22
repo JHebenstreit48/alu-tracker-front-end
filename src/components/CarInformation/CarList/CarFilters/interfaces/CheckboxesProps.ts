@@ -4,4 +4,3 @@ export interface CheckboxesProps {
     onToggleOwned: () => void;
     onToggleKeyCars: () => void;
   }
-  
