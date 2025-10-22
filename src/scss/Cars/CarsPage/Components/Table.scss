@@ -161,7 +161,7 @@ td {
     background-color: $color-gold-glow;
     color: black;
     font-weight: 700;
-    box-shadow: 0 0 10px color.scale($color-gold-glow, $alpha: -0.65);
+    box-shadow: 0 0 10px color.scale($color-gold-glow, $alpha: -65%);
 
     max-width: calc(100% - 45px);
     overflow: hidden;
