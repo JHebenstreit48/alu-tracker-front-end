@@ -1,15 +1,16 @@
-import { Link } from 'react-router-dom';
-import StarRank from '@/components/Shared/Stars/StarRank';
-import { generateCarKey } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
-import LoadingSpinner from '@/components/Shared/LoadingSpinner';
-import OwnedGoldHighlighter from '@/components/CarInformation/CarList/ClassTables/OwnedGoldHighlighter';
+import { Link } from "react-router-dom";
+import StarRank from "@/components/Shared/Stars/StarRank";
+import { generateCarKey } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
+import OwnedGoldHighlighter from "@/components/CarInformation/CarList/ClassTables/OwnedGoldHighlighter";
+import { FavoriteHeart } from "@/components/Shared/CarsAndBrands";
 
 interface Car {
   Brand: string;
   Model: string;
   Stars: number;
   Image?: string; // absolute URL now
-  ImageStatus?: 'Coming Soon' | 'Available' | 'Removed';
+  ImageStatus?: "Coming Soon" | "Available" | "Removed";
 }
 
 interface ClassTablesProps {
@@ -19,8 +20,9 @@ interface ClassTablesProps {
   trackerMode?: boolean;
 }
 
+// Optional fallback hosted on your Image Vault
 const FALLBACK =
-  `${import.meta.env.VITE_IMG_CDN_BASE ?? 'https://alu-tracker-image-vault.onrender.com'}/images/fallbacks/car-missing.jpg`;
+  `${import.meta.env.VITE_IMG_CDN_BASE ?? "https://alu-tracker-image-vault.onrender.com"}/images/fallbacks/car-missing.jpg`;
 
 export default function ClassTables({
   cars,
@@ -28,18 +30,20 @@ export default function ClassTables({
   loading,
   trackerMode = false,
 }: ClassTablesProps) {
-  const headerText = selectedClass === 'All Classes' ? 'All Classes' : selectedClass;
+  const headerText = selectedClass === "All Classes" ? "All Classes" : selectedClass;
 
   return (
     <div>
       <table>
         <tbody>
           <tr className="tableHeaderRow">
-            <th className="tableHeader" colSpan={2}>{headerText}</th>
+            <th className="tableHeader" colSpan={2}>
+              {headerText}
+            </th>
           </tr>
 
           <tr className="headings">
-            <th className="tableHeaders">Manufacturer & Model</th>
+            <th className="tableHeaders">Manufacturer &amp; Model</th>
             <th className="tableHeaders">Image/StarRank</th>
           </tr>
 
@@ -57,17 +61,22 @@ export default function ClassTables({
 
               return (
                 <tr className="tableData" key={carKey}>
+                  {/* Name cell with gold-highlighting + favorite heart */}
                   <OwnedGoldHighlighter carKey={carKey}>
-                    <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
-                      {car.Brand} {car.Model}
-                    </Link>
+                    <div className="carCell">
+                      <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
+                        {car.Brand} {car.Model}
+                      </Link>
+                      <FavoriteHeart carKey={carKey} />
+                    </div>
                   </OwnedGoldHighlighter>
 
+                  {/* Image + Star overlay */}
                   <td className="carImage">
                     <div className="imageWrapper">
-                      {car.ImageStatus === 'Removed' ? (
+                      {car.ImageStatus === "Removed" ? (
                         <span className="noImage">🚫 Removed from Game</span>
-                      ) : car.ImageStatus === 'Coming Soon' ? (
+                      ) : car.ImageStatus === "Coming Soon" ? (
                         <span className="noImage">🚧 Image Coming Soon</span>
                       ) : imageSrc ? (
                         <>
@@ -77,10 +86,11 @@ export default function ClassTables({
                             alt={altText}
                             onError={(e) => {
                               const img = e.currentTarget as HTMLImageElement;
+                              // Try fallback once; if that fails, show text
                               if (img.src !== FALLBACK) {
                                 img.src = FALLBACK;
                               } else {
-                                img.style.display = 'none';
+                                img.style.display = "none";
                                 if (img.parentElement) {
                                   img.parentElement.innerHTML =
                                     '<span class="noImage">❌ File Not Found</span>';

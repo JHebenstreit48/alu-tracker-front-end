@@ -1,5 +1,5 @@
-import Header from "@/components/Shared/Header";
-import PageTab from "@/components/Shared/PageTab";
+import Header from "@/components/Shared/HeaderFooter/Header";
+import PageTab from "@/components/Shared/Navigation/PageTab";
 import ImageCarousel from "@/components/HomePage/ImageCarousel";
 import Carousel from "@components/HomePage/ImagesForCarousel";
 import GameInfo from "@components/HomePage/GameInfo";

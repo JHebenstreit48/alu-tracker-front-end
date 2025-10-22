@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import Header from '@/components/Shared/Header';
-import PageTab from '@/components/Shared/PageTab';
-import LoadingSpinner from '@/components/Shared/LoadingSpinner';
-import BackToTop from '@/components/Shared/BackToTopButton';
+import Header from '@/components/Shared/HeaderFooter/Header';
+import PageTab from '@/components/Shared/Navigation/PageTab';
+import LoadingSpinner from '@/components/Shared/Loading/LoadingSpinner';
+import BackToTop from '@/components/Shared/Navigation/BackToTopButton';
 
 import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
 

@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState, useContext } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Footer from '@/components/Shared/Footer';
-import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+import Footer from '@/components/Shared/HeaderFooter/Footer';
+import LoadingSpinner from '@/components/Shared/Loading/LoadingSpinner';
 
 import { AuthContext } from '@/components/SignupLogin/context/AuthContext';
 import { syncFromAccount } from '@/components/CarInformation/UserDataSync/syncFromAccount';

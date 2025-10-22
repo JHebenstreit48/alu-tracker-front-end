@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Header from "@/components/Shared/Header";
-import PageTab from "@/components/Shared/PageTab";
+import Header from "@/components/Shared/HeaderFooter/Header";
+import PageTab from "@/components/Shared/Navigation/PageTab";
 import CarData from "@/components/CarInformation/CarList/PageBody";
 
 import {

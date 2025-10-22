@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import Header from '@/components/Shared/Header';
-import PageTab from '@/components/Shared/PageTab';
+import Header from '@/components/Shared/HeaderFooter/Header';
+import PageTab from '@/components/Shared/Navigation/PageTab';
 import GarageLevelsDropDown from '@/components/GarageLevels/Dropdown';
 import GLTrackerToggle from '@/components/GarageLevels/GLTrackerToggle';
 import GarageLevelTracker from '@/components/GarageLevels/Tracker';
-import BackToTop from '@/components/Shared/BackToTopButton';
+import BackToTop from '@/components/Shared/Navigation/BackToTopButton';
 
 import { GarageLevelsInterface } from '@/components/GarageLevels/interface';
 
