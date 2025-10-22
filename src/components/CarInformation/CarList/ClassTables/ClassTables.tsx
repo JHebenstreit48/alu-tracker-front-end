@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import StarRank from '@/components/Shared/Stars/StarRank';
 import { generateCarKey } from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
 import LoadingSpinner from '@/components/Shared/LoadingSpinner';
+import OwnedGoldHighlighter from '@/components/CarInformation/CarList/ClassTables/OwnedGoldHighlighter';
 
 interface Car {
   Brand: string;
@@ -18,7 +19,6 @@ interface ClassTablesProps {
   trackerMode?: boolean;
 }
 
-// Optional fallback hosted on your Image Vault (add later when ready)
 const FALLBACK =
   `${import.meta.env.VITE_IMG_CDN_BASE ?? 'https://alu-tracker-image-vault.onrender.com'}/images/fallbacks/car-missing.jpg`;
 
@@ -37,6 +37,7 @@ export default function ClassTables({
           <tr className="tableHeaderRow">
             <th className="tableHeader" colSpan={2}>{headerText}</th>
           </tr>
+
           <tr className="headings">
             <th className="tableHeaders">Manufacturer & Model</th>
             <th className="tableHeaders">Image/StarRank</th>
@@ -51,16 +52,16 @@ export default function ClassTables({
           ) : (
             cars.map((car) => {
               const carKey = generateCarKey(car.Brand, car.Model);
-              const imageSrc = car.Image ?? null; // already absolute from hook/backend
+              const imageSrc = car.Image ?? null;
               const altText = `${car.Brand} ${car.Model}`;
 
               return (
                 <tr className="tableData" key={carKey}>
-                  <td className="carName">
+                  <OwnedGoldHighlighter carKey={carKey}>
                     <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
                       {car.Brand} {car.Model}
                     </Link>
-                  </td>
+                  </OwnedGoldHighlighter>
 
                   <td className="carImage">
                     <div className="imageWrapper">
@@ -76,13 +77,14 @@ export default function ClassTables({
                             alt={altText}
                             onError={(e) => {
                               const img = e.currentTarget as HTMLImageElement;
-                              // Try fallback once; if that fails, show text
                               if (img.src !== FALLBACK) {
                                 img.src = FALLBACK;
                               } else {
                                 img.style.display = 'none';
-                                img.parentElement!.innerHTML =
-                                  '<span class="noImage">❌ File Not Found</span>';
+                                if (img.parentElement) {
+                                  img.parentElement.innerHTML =
+                                    '<span class="noImage">❌ File Not Found</span>';
+                                }
                               }
                             }}
                           />
