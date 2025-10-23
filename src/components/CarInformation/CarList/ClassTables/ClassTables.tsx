@@ -9,7 +9,7 @@ interface Car {
   Brand: string;
   Model: string;
   Stars: number;
-  Image?: string; // absolute URL now
+  Image?: string;
   ImageStatus?: "Coming Soon" | "Available" | "Removed";
 }
 
@@ -20,7 +20,6 @@ interface ClassTablesProps {
   trackerMode?: boolean;
 }
 
-// Optional fallback hosted on your Image Vault
 const FALLBACK =
   `${import.meta.env.VITE_IMG_CDN_BASE ?? "https://alu-tracker-image-vault.onrender.com"}/images/fallbacks/car-missing.jpg`;
 
@@ -61,7 +60,6 @@ export default function ClassTables({
 
               return (
                 <tr className="tableData" key={carKey}>
-                  {/* Name cell with gold-highlighting + favorite heart */}
                   <OwnedGoldHighlighter carKey={carKey}>
                     <div className="carCell">
                       <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
@@ -71,7 +69,6 @@ export default function ClassTables({
                     </div>
                   </OwnedGoldHighlighter>
 
-                  {/* Image + Star overlay */}
                   <td className="carImage">
                     <div className="imageWrapper">
                       {car.ImageStatus === "Removed" ? (
@@ -86,7 +83,6 @@ export default function ClassTables({
                             alt={altText}
                             onError={(e) => {
                               const img = e.currentTarget as HTMLImageElement;
-                              // Try fallback once; if that fails, show text
                               if (img.src !== FALLBACK) {
                                 img.src = FALLBACK;
                               } else {

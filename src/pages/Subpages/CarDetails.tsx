@@ -1,4 +1,3 @@
-// src/pages/MainPages/CarInfo/CarDetails.tsx
 import { useParams } from "react-router-dom";
 import CarDetailsBody from "@/components/CarInformation/CarDetails/OtherComponents/CarDetailsBody";
 
