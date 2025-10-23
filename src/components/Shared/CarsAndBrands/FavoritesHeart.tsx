@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  FavoritesMap,
-  loadFavorites,
-  toggleFavorite,
-} from "@/components/Shared/CarsAndBrands/FavoritesStorage";
+import { FavoritesMap, loadFavorites, toggleFavorite } from "@/components/Shared/CarsAndBrands/FavoritesStorage";
 
 type Props = { carKey: string; compact?: boolean };
 
@@ -12,12 +8,11 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
   const [busy, setBusy] = useState(false);
   const mounted = useRef(true);
 
-  const normalizedKey = useMemo(() => carKey.trim().toLowerCase(), [carKey]);
-  const isFav = !!map[normalizedKey]; // ← use normalized key
+  const normalizedKey = useMemo(() => carKey.trim().toLowerCase().replace(/-/g, "_").replace(/\./g, "").replace(/__+/g, "_"), [carKey]);
+  const isFav = !!map[normalizedKey];
 
   useEffect(() => {
     mounted.current = true;
-
     loadFavorites().then((m) => mounted.current && setMap(m));
 
     const onFav = () => loadFavorites().then((m) => mounted.current && setMap(m));
@@ -32,15 +27,13 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
     };
   }, []);
 
-  const commitNext = (next: FavoritesMap) => { if (mounted.current) setMap(next); };
-
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (busy) return;
-
     setBusy(true);
-    // optimistic flip
+
+    // Optimistic flip
     setMap((prev) => {
       const next = { ...prev };
       if (next[normalizedKey]) delete next[normalizedKey];
@@ -50,7 +43,7 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
 
     try {
       const next = await toggleFavorite(normalizedKey);
-      commitNext(next);
+      if (mounted.current) setMap(next);
     } finally {
       if (mounted.current) setBusy(false);
     }
