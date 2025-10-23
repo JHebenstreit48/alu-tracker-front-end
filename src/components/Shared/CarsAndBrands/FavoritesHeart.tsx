@@ -12,43 +12,27 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
   const [busy, setBusy] = useState(false);
   const mounted = useRef(true);
 
-  const isFav = !!map[carKey];
-
-  // Normalize once for stable lookups (in case callers pass mixed case/spacing)
   const normalizedKey = useMemo(() => carKey.trim().toLowerCase(), [carKey]);
+  const isFav = !!map[normalizedKey]; // ← use normalized key
 
   useEffect(() => {
     mounted.current = true;
 
-    // initial hydrate (local + remote merge if logged in)
-    loadFavorites().then((m) => {
-      if (mounted.current) setMap(m);
-    });
+    loadFavorites().then((m) => mounted.current && setMap(m));
 
-    // keep multiple hearts in-sync across the app & tabs
-    const onFav = () => {
-      loadFavorites().then((m) => {
-        if (mounted.current) setMap(m);
-      });
-    };
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "carFavorites") onFav();
-    };
+    const onFav = () => loadFavorites().then((m) => mounted.current && setMap(m));
+    const onStorage = (e: StorageEvent) => { if (e.key === "carFavorites") onFav(); };
 
     window.addEventListener("favorites:updated", onFav);
     window.addEventListener("storage", onStorage);
-
     return () => {
       mounted.current = false;
       window.removeEventListener("favorites:updated", onFav);
       window.removeEventListener("storage", onStorage);
     };
-  }, []); // load once; the map will update via events
+  }, []);
 
-  const commitNext = (next: FavoritesMap) => {
-    if (!mounted.current) return;
-    setMap(next);
-  };
+  const commitNext = (next: FavoritesMap) => { if (mounted.current) setMap(next); };
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
@@ -56,8 +40,7 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
     if (busy) return;
 
     setBusy(true);
-
-    // Optimistic UI: flip locally first for snappy feedback
+    // optimistic flip
     setMap((prev) => {
       const next = { ...prev };
       if (next[normalizedKey]) delete next[normalizedKey];
@@ -67,10 +50,7 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
 
     try {
       const next = await toggleFavorite(normalizedKey);
-      commitNext(next); // authoritative state after storage/network resolves
-    } catch {
-      // If toggle throws (rare), reload to real source of truth
-      loadFavorites().then(commitNext);
+      commitNext(next);
     } finally {
       if (mounted.current) setBusy(false);
     }
@@ -90,7 +70,6 @@ export default function FavoriteHeart({ carKey, compact = true }: Props) {
       onClick={handleClick}
       onKeyDown={handleKey}
       disabled={busy}
-      // optional micro UX: cursor/opacity hint while saving
       style={busy ? { opacity: 0.7, cursor: "progress" } : undefined}
     >
       {isFav ? "♥" : "♡"}
