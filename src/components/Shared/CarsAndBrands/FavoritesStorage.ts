@@ -1,11 +1,9 @@
 export type FavoritesMap = Record<string, true>;
 const FAVORITES_KEY = "carFavorites";
 
-// Use your Render API base; Netlify must have this env var set at build time
 const API_BASE = String(import.meta.env.VITE_AUTH_API_URL || "").replace(/\/+$/, "");
 const url = (p: string) => `${API_BASE}${p}`;
 
-// Be lenient about where the token might be stored
 function getToken(): string | null {
   return (
     localStorage.getItem("authToken") ||
@@ -27,38 +25,35 @@ function writeLocal(map: FavoritesMap): void {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(map));
 }
 
-async function fetchJson(input: RequestInfo, init?: RequestInit) {
+async function fetchJsonOrThrow(input: RequestInfo, init?: RequestInit) {
   const res = await fetch(input, init);
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`HTTP ${res.status}: ${text || "(no body)"}`);
+    throw new Error(`HTTP ${res.status} ${text}`);
   }
   return res.json();
 }
 
-/** Load: local first, then merge with server (if logged in). */
 export async function loadFavorites(): Promise<FavoritesMap> {
   const local = readLocal();
   const token = getToken();
   if (!token || !API_BASE) return local;
 
   try {
-    const list = await fetchJson(url("/api/users/favorites"), {
+    const list = await fetchJsonOrThrow(url("/api/users/favorites"), {
       headers: { Authorization: `Bearer ${token}` },
     }) as unknown as string[];
 
-    // merge server -> local (server is source of truth when logged in)
     const merged: FavoritesMap = { ...local };
     for (const k of Array.isArray(list) ? list : []) merged[k] = true;
     writeLocal(merged);
     return merged;
-  } catch {
-    // If server call fails, stick to local
+  } catch (err) {
+    console.warn("[favorites] GET failed:", err);
     return local;
   }
 }
 
-/** Save: write local immediately; if logged in, PUT the full snapshot to the server. */
 export async function saveFavorites(next: FavoritesMap): Promise<void> {
   writeLocal(next);
   window.dispatchEvent(new Event("favorites:updated"));
@@ -66,10 +61,9 @@ export async function saveFavorites(next: FavoritesMap): Promise<void> {
   const token = getToken();
   if (!token || !API_BASE) return;
 
-  const snapshot = Object.keys(next).sort(); // stable order
-
+  const snapshot = Object.keys(next).sort();
   try {
-    await fetch(url("/api/users/favorites"), {
+    const res = await fetch(url("/api/users/favorites"), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -77,15 +71,20 @@ export async function saveFavorites(next: FavoritesMap): Promise<void> {
       },
       body: JSON.stringify(snapshot),
     });
-  } catch {
-    // local already updated; user stays consistent visually
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      console.error("[favorites] PUT failed:", res.status, txt);
+    }
+  } catch (err) {
+    console.error("[favorites] PUT error:", err);
   }
 }
 
 export async function toggleFavorite(carKey: string): Promise<FavoritesMap> {
-  const map = await loadFavorites();           // hydrate local (and merge with server if possible)
+  const map = await loadFavorites();
+  const key = carKey.trim().toLowerCase();
   const next = { ...map };
-  if (next[carKey]) delete next[carKey]; else next[carKey] = true;
-  await saveFavorites(next);                   // PUT snapshot if logged in
+  if (next[key]) delete next[key]; else next[key] = true;
+  await saveFavorites(next);
   return next;
 }
