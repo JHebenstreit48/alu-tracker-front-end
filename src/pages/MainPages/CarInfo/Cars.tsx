@@ -1,17 +1,17 @@
 import { useState } from "react";
 import Header from "@/components/Shared/HeaderFooter/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
-import CarData from "@/components/CarInformation/CarList/PageBody";
+import CarData from "@/components/Cars/Cars/PageBody";
 
 import {
   useCarAPI,
   useCarFilters,
   useCarHandlers,
   useCarPagination,
-} from "@/components/CarInformation/CarList/Utilities/CarDataFetch";
-import { useTrackerMode } from "@/components/CarInformation/shared/useTrackerMode";
+} from "@/components/Cars/Cars/Utilities/CarDataFetch";
+import { useTrackerMode } from "@/components/Tracking/useTrackerMode";
 
-import { getAllCarTrackingData } from "@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils";
+import { getAllCarTrackingData } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
 
 export default function Cars() {
   const {

@@ -4,7 +4,7 @@ import Footer from '@/components/Shared/HeaderFooter/Footer';
 import LoadingSpinner from '@/components/Shared/Loading/LoadingSpinner';
 
 import { AuthContext } from '@/components/SignupLogin/context/AuthContext';
-import { syncFromAccount } from '@/components/CarInformation/UserDataSync/syncFromAccount';
+import { syncFromAccount } from '@/components/UserDataSync/syncFromAccount';
 
 import '@/scss/PageAndHome/Page.scss';
 import '@/scss/NavHeaderFooterError/Header.scss';

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import CarDetailsBody from "@/components/CarInformation/CarDetails/OtherComponents/CarDetailsBody";
+import CarDetailsBody from "@/components/Cars/CarDetails/OtherComponents/CarDetailsBody";
 
 export default function CarDetails() {
   const { slug } = useParams<{ slug: string }>();
