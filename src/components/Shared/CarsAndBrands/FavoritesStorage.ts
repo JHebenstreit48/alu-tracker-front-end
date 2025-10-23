@@ -1,8 +1,15 @@
 export type FavoritesMap = Record<string, true>;
 const FAVORITES_KEY = "carFavorites";
 
+const API_BASE = String(import.meta.env.VITE_AUTH_API_URL || "").replace(/\/+$/, ""); // no trailing slash
+
 const getToken = () =>
   localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+
+function apiUrl(path: string) {
+  // path should start with "/"
+  return `${API_BASE}${path}`;
+}
 
 function readLocal(): FavoritesMap {
   try {
@@ -24,7 +31,7 @@ export async function loadFavorites(): Promise<FavoritesMap> {
   if (!token) return local;
 
   try {
-    const res = await fetch("/api/users/get-progress", {
+    const res = await fetch(apiUrl("/api/users/get-progress"), {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error("get-progress failed");
@@ -48,6 +55,7 @@ export async function saveFavorites(next: FavoritesMap): Promise<void> {
   const token = getToken();
   if (!token) return; // not logged in → local-only
 
+  // compute delta
   const prevKeys = new Set(Object.keys(prev));
   const nextKeys = new Set(Object.keys(next));
 
@@ -60,7 +68,7 @@ export async function saveFavorites(next: FavoritesMap): Promise<void> {
   if (!favoritesAdd.length && !favoritesRemove.length) return;
 
   try {
-    await fetch("/api/users/save-progress", {
+    await fetch(apiUrl("/api/users/save-progress"), {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ favoritesAdd, favoritesRemove }),
