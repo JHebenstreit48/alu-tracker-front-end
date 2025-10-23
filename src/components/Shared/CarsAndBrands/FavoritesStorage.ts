@@ -4,8 +4,40 @@ const FAVORITES_KEY = "carFavorites";
 const API_BASE = String(import.meta.env.VITE_AUTH_API_URL || "").replace(/\/+$/, "");
 const url = (p: string) => `${API_BASE}${p}`;
 
-const normalizeKey = (k: string) => k.trim().toLowerCase();
-const normalizeList = (arr: string[]) => arr.map(normalizeKey);
+// Normalize to the canonical format you use across the app (underscores, lowercase, no dots)
+const normalizeKey = (k: string) =>
+  k
+    .trim()
+    .toLowerCase()
+    .replace(/\./g, "")   // strip dots (your generator does this)
+    .replace(/-/g, "_")   // convert hyphens -> underscores
+    .replace(/__+/g, "_"); // collapse doubles
+
+const listToMap = (keys: string[]): FavoritesMap => {
+  const m: FavoritesMap = {};
+  for (const raw of keys) m[normalizeKey(raw)] = true;
+  return m;
+};
+
+function readLocal(): FavoritesMap {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Record<string, true>) : {};
+    // MIGRATION: normalize **existing** local keys so old hyphen keys don’t break UI
+    const migrated: FavoritesMap = {};
+    for (const k of Object.keys(parsed)) migrated[normalizeKey(k)] = true;
+    if (raw && JSON.stringify(parsed) !== JSON.stringify(migrated)) {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(migrated));
+    }
+    return migrated;
+  } catch { return {}; }
+}
+
+function writeLocal(map: FavoritesMap): void {
+  // Always write normalized
+  const normalized = listToMap(Object.keys(map));
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(normalized));
+}
 
 function getToken(): string | null {
   return (
@@ -17,45 +49,34 @@ function getToken(): string | null {
   );
 }
 
-function readLocal(): FavoritesMap {
-  try {
-    const raw = localStorage.getItem(FAVORITES_KEY);
-    return raw ? (JSON.parse(raw) as FavoritesMap) : {};
-  } catch { return {}; }
-}
-
-function writeLocal(map: FavoritesMap): void {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(map));
-}
-
 async function getServerList(token: string): Promise<string[]> {
   const r = await fetch(url("/api/users/favorites"), {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!r.ok) throw new Error(`GET /favorites ${r.status}`);
-  const list = (await r.json()) as string[];
-  return Array.isArray(list) ? normalizeList(list) : [];
+  const list = (await r.json()) as unknown;
+  return Array.isArray(list) ? list.map(normalizeKey) : [];
 }
 
 async function putServerList(token: string, keys: string[]): Promise<void> {
+  const payload = keys.map(normalizeKey).sort();
   const r = await fetch(url("/api/users/favorites"), {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: JSON.stringify(normalizeList(keys)),
+    body: JSON.stringify(payload),
   });
   if (!r.ok) throw new Error(`PUT /favorites ${r.status} ${await r.text().catch(()=> "")}`);
 }
 
 export async function loadFavorites(): Promise<FavoritesMap> {
   const local = readLocal();
-
   const token = getToken();
   if (!token || !API_BASE) return local;
 
   try {
+    // Server = source of truth; merge into local (helps cross-device)
     const server = await getServerList(token);
-    const merged: FavoritesMap = { ...local };
-    for (const k of server) merged[k] = true;
+    const merged = { ...local, ...listToMap(server) };
     writeLocal(merged);
     return merged;
   } catch {
@@ -64,7 +85,7 @@ export async function loadFavorites(): Promise<FavoritesMap> {
 }
 
 export async function saveFavorites(next: FavoritesMap): Promise<void> {
-  // local first for snappy UI
+  // Optimistic: write local first, notify listeners
   writeLocal(next);
   window.dispatchEvent(new Event("favorites:updated"));
 
@@ -72,19 +93,15 @@ export async function saveFavorites(next: FavoritesMap): Promise<void> {
   if (!token || !API_BASE) return;
 
   try {
-    // 1) push snapshot
-    const keys = Object.keys(next);
-    await putServerList(token, keys);
-
-    // 2) pull server truth and reconcile local (handles retries/out-of-order)
+    // 1) Push snapshot
+    await putServerList(token, Object.keys(next));
+    // 2) Pull server truth and *replace* local (prevents any drift/out-of-order)
     const server = await getServerList(token);
-    const reconciled: FavoritesMap = {};
-    for (const k of server) reconciled[k] = true;
-
+    const reconciled = listToMap(server);
     writeLocal(reconciled);
-    window.dispatchEvent(new Event("favorites:updated")); // notify any listeners
+    window.dispatchEvent(new Event("favorites:updated"));
   } catch {
-    // silent: local already reflects user's intent; server can catch up later
+    // Keep optimistic local; server can catch up later
   }
 }
 
