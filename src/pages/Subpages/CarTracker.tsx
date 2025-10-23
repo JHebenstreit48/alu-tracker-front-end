@@ -5,19 +5,19 @@ import {
   getAllCarTrackingData,
   CarTrackingData,
   generateCarKey,
-} from '@/components/CarInformation/CarDetails/Miscellaneous/StorageUtils';
-import { Car } from '@/components/CarInformation/CarDetails/Miscellaneous/Interfaces';
+} from '@/components/Cars/CarDetails/Miscellaneous/StorageUtils';
+import { Car } from '@/components/Cars/CarDetails/Miscellaneous/Interfaces/Car';
 
-import SyncButton from '@/components/CarInformation/UserDataSync/SyncButton';
+import SyncButton from '@/components/UserDataSync/components/SyncButton';
 
-import CarsOwned from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
-import OwnedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
-import GoldMaxed from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/GoldMaxed';
-import GoldMaxedProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/GoldMaxedProgress';
-import TotalKeys from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/Labels/TotalKeys';
-import OwnedKeyProgress from '@/components/CarInformation/CarTracker/ProgressCircles/OwnedProgressCircles/UI/OwnedKeyProgress';
-import StarRankCircles from '@/components/CarInformation/CarTracker/ProgressCircles/CarTotalStars/Layout/StarRankCircles';
-import MaxStarRank from '@/components/CarInformation/CarTracker/MaxStarRank/Layout/MaxStarRank';
+import CarsOwned from '@/components/Tracking/Cars/ProgressCircles/OwnedProgressCircles/Labels/CarsOwned';
+import OwnedProgress from '@/components/Tracking/Cars/ProgressCircles/OwnedProgressCircles/UI/OwnedProgress';
+import GoldMaxed from '@/components/Tracking/Cars/ProgressCircles/OwnedProgressCircles/Labels/GoldMaxed';
+import GoldMaxedProgress from '@/components/Tracking/Cars/ProgressCircles/OwnedProgressCircles/UI/GoldMaxedProgress';
+import TotalKeys from '@/components/Tracking/Cars/ProgressCircles/OwnedProgressCircles/Labels/TotalKeys';
+import OwnedKeyProgress from '@/components/Tracking/Cars/ProgressCircles/OwnedProgressCircles/UI/OwnedKeyProgress';
+import StarRankCircles from '@/components/Tracking/Cars/ProgressCircles/CarTotalStars/Layout/StarRankCircles';
+import MaxStarRank from '@/components/Tracking/Cars/MaxStarRank/Layout/MaxStarRank';
 
 import '@/scss/Cars/CarTracker/Layout/CarTracker.scss';
 import '@/scss/Cars/CarTracker/Components/CarsOwned.scss';
