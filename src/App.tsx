@@ -5,6 +5,7 @@ import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { syncFromAccount } from "@/components/UserDataSync/syncFromAccount";
+
 import { wakeServices } from "@/lib/wake/wakeServices";
 import type { WakeUpdateInfo } from "@/lib/wake/wakeServices";
 
@@ -18,46 +19,48 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
-  // Fire-and-forget wake after first paint; stream a live boolean table to console.
+  // Fire-and-forget wake after first paint; stream live booleans to the console.
   useEffect(() => {
     const id = setTimeout(() => {
-      const endpoints: Record<string, string> = {
-        [import.meta.env.VITE_AUTH_API_URL as string]: "/api/health",
-        [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/health",
-        [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/health",
-        [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/health",
+      const endpoints: Record<string, string | string[]> = {
+        [import.meta.env.VITE_AUTH_API_URL as string]: ["/api/health", "/api/test"],
+        [import.meta.env.VITE_CARS_API_BASE_URL as string]: ["/api/health", "/api/test"],
+        [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: ["/api/health", "/api/test"],
+        [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: ["/api/health", "/api/test"],
       };
 
-      // strict booleans: start all false; flip true as each wakes
+      // start all false; flip true as each wakes
       const status: Record<string, boolean> = Object.fromEntries(
         Object.keys(endpoints).map((base) => [base, false])
       );
 
       console.group("🟡 Wake monitor");
-      console.table(
-        Object.entries(status).map(([service, awake]) => ({ service, awake }))
-      );
+      console.table(Object.entries(status).map(([service, awake]) => ({ service, awake })));
 
       void wakeServices({
         endpoints,
+        retries: 4,
+        timeoutMs: 7000,
+        backoffMs: 1500,
         onUpdate: (base: string, info: WakeUpdateInfo) => {
-          if (!info.done) return; // keep current value while pending
-          status[base] = !!info.ok; // false -> true on success; stays/sets false on fail
-          console.log(
-            `${info.ok ? "✅" : "❌"} ${base} — ${info.ok ? "awake" : "failed"} (tries: ${info.attempt})`
-          );
-          console.table(
-            Object.entries(status).map(([service, awake]) => ({ service, awake }))
-          );
+          if (!info.done) return;
+          status[base] = !!info.ok;
+          const bits = [
+            info.ok ? "✅ awake" : "❌ failed",
+            info.status ? `[${info.status}]` : "",
+            info.pathTried ?? "",
+            `(tries: ${info.attempt})`,
+          ].filter(Boolean);
+          console.log(`${base} — ${bits.join(" ")}`);
+          console.table(Object.entries(status).map(([service, awake]) => ({ service, awake })));
         },
       }).then((finals) => {
         console.log("— final results —");
-        console.table(
-          Object.entries(finals).map(([service, awake]) => ({ service, awake }))
-        );
+        console.table(Object.entries(finals).map(([service, awake]) => ({ service, awake })));
         console.groupEnd();
       });
     }, 300); // tiny delay avoids stampede at t=0
+
     return () => clearTimeout(id);
   }, []);
 
@@ -70,8 +73,8 @@ export default function App() {
   // Re-mount footer after each route change (keeps gradient re-render smooth)
   useEffect(() => {
     setShowFooter(false);
-    const timer = setTimeout(() => setShowFooter(true), 50);
-    return () => clearTimeout(timer);
+    const timer = window.setTimeout(() => setShowFooter(true), 50);
+    return () => window.clearTimeout(timer);
   }, [location.pathname]);
 
   // First-run sync if user is logged in but local store is empty
