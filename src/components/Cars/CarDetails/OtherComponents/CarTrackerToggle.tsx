@@ -20,7 +20,7 @@ export default function CarTrackerToggle({ isEnabled, onToggle }: Props) {
         onClick={handleClick}
       >
         <span className="circleIndicator" />
-        {isEnabled ? " Tracker Mode On" : " Tracker Mode Off"}
+        {isEnabled ? " Tracker On" : " Tracker Off"}
       </button>
     </div>
   );
