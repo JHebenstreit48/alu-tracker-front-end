@@ -2,14 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <!-- Viewport -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
 
-    <!-- Title / App names -->
     <title>Asphalt Legends Unite Tracker</title>
     <meta
       name="application-name"
@@ -19,14 +16,10 @@
       name="apple-mobile-web-app-title"
       content="ALU Tracker"
     />
-
-    <!-- Meta Description -->
     <meta
       name="description"
       content="Fan-made ALU tracker (not affiliated with Gameloft). Ad-free, fast, and organized: one-stop info hub + progress tracking for cars, blueprints, stars, keys, and garage levels."
     />
-
-    <!-- Favicons -->
     <link
       rel="icon"
       type="image/x-icon"
@@ -49,15 +42,12 @@
       sizes="180x180"
       href="/Favicon/apple-touch-icon.png"
     />
-
-    <!-- Browser UI theme color -->
     <meta
       name="theme-color"
       content="#0b0b21"
     />
 
-    <!-- ===== Social previews (Open Graph + Twitter) ===== -->
-    <!-- Note: absolute HTTPS URLs + cache-buster to break Discord cache when updated -->
+    <!-- Social previews -->
     <meta
       property="og:site_name"
       content="Asphalt Legends Unite Tracker"
@@ -78,7 +68,6 @@
       property="og:url"
       content="https://asphaltlegendsunitetracker.netlify.app/"
     />
-
     <meta
       property="og:image"
       content="https://asphaltlegendsunitetracker.netlify.app/og/alu-tracker-1200x630.png?v=2"
@@ -107,7 +96,6 @@
       property="og:locale"
       content="en_US"
     />
-
     <meta
       name="twitter:card"
       content="summary_large_image"
@@ -129,7 +117,6 @@
       content="ALU Tracker — fan-made dashboard preview"
     />
 
-    <!-- Canonical -->
     <link
       rel="canonical"
       href="https://asphaltlegendsunitetracker.netlify.app/"
@@ -145,6 +132,41 @@
       href="https://fonts.gstatic.com"
       crossorigin
     />
+
+    <!-- Backend warm client connections (does NOT wake servers, but reduces latency) -->
+    <link
+      rel="preconnect"
+      href="https://alu-tracker-user-data.onrender.com"
+    />
+    <link
+      rel="dns-prefetch"
+      href="https://alu-tracker-user-data.onrender.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://alutracker-api.onrender.com"
+    />
+    <link
+      rel="dns-prefetch"
+      href="https://alutracker-api.onrender.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://alu-content-api.onrender.com"
+    />
+    <link
+      rel="dns-prefetch"
+      href="https://alu-content-api.onrender.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://alu-tracker-comments-api.onrender.com"
+    />
+    <link
+      rel="dns-prefetch"
+      href="https://alu-tracker-comments-api.onrender.com"
+    />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap"
       rel="stylesheet"
@@ -158,4 +180,5 @@
       src="/src/main.tsx"
     ></script>
   </body>
+  
 </html>
