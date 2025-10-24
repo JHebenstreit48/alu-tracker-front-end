@@ -6,6 +6,7 @@ import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
 import { syncFromAccount } from "@/components/UserDataSync/syncFromAccount";
 import { wakeServices } from "@/lib/wake/wakeServices";
+import type { WakeUpdateInfo } from "@/lib/wake/wakeServices";
 
 import "@/scss/PageAndHome/Page.scss";
 import "@/scss/NavHeaderFooterError/Header.scss";
@@ -17,24 +18,46 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
-  // Fire-and-forget wake after first paint; use cheap /api/health probes.
+  // Fire-and-forget wake after first paint; stream a live boolean table to console.
   useEffect(() => {
     const id = setTimeout(() => {
+      const endpoints: Record<string, string> = {
+        [import.meta.env.VITE_AUTH_API_URL as string]: "/api/health",
+        [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/health",
+        [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/health",
+        [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/health",
+      };
+
+      // strict booleans: start all false; flip true as each wakes
+      const status: Record<string, boolean> = Object.fromEntries(
+        Object.keys(endpoints).map((base) => [base, false])
+      );
+
+      console.group("🟡 Wake monitor");
+      console.table(
+        Object.entries(status).map(([service, awake]) => ({ service, awake }))
+      );
+
       void wakeServices({
-        endpoints: {
-          [import.meta.env.VITE_AUTH_API_URL as string]: "/api/health",
-          [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/health",
-          [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/health",
-          [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/health",
+        endpoints,
+        onUpdate: (base: string, info: WakeUpdateInfo) => {
+          if (!info.done) return; // keep current value while pending
+          status[base] = !!info.ok; // false -> true on success; stays/sets false on fail
+          console.log(
+            `${info.ok ? "✅" : "❌"} ${base} — ${info.ok ? "awake" : "failed"} (tries: ${info.attempt})`
+          );
+          console.table(
+            Object.entries(status).map(([service, awake]) => ({ service, awake }))
+          );
         },
-      }).then((results) => {
-        console.groupCollapsed("🔔 Wake results");
+      }).then((finals) => {
+        console.log("— final results —");
         console.table(
-          Object.entries(results).map(([service, awake]) => ({ service, awake }))
+          Object.entries(finals).map(([service, awake]) => ({ service, awake }))
         );
         console.groupEnd();
       });
-    }, 300);
+    }, 300); // tiny delay avoids stampede at t=0
     return () => clearTimeout(id);
   }, []);
 

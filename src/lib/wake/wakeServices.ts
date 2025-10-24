@@ -1,4 +1,10 @@
-type WakeOpts = {
+export type WakeUpdateInfo = {
+  attempt: number;  // 1-based attempt counter
+  ok?: boolean;     // present only when done
+  done: boolean;    // true when success/fail finalizes
+};
+
+export type WakeOpts = {
   bases?: string[];
   path?: string;                         // default /api/health
   method?: "GET" | "HEAD";               // default GET
@@ -6,6 +12,7 @@ type WakeOpts = {
   timeoutMs?: number;                    // default 6000
   backoffMs?: number;                    // default 1200
   endpoints?: Record<string, string>;    // per-base override path
+  onUpdate?: (base: string, info: WakeUpdateInfo) => void; // <-- add this
 };
 
 const ENV_BASES = [
@@ -53,25 +60,32 @@ async function wakeOne(
   method: "GET" | "HEAD",
   retries: number,
   timeoutMs: number,
-  backoffMs: number
+  backoffMs: number,
+  onUpdate?: WakeOpts["onUpdate"]            // <-- add this
 ) {
   const root = base.replace(/\/+$/, "");
   const probe = `${root}${path.startsWith("/") ? "" : "/"}${path}`;
 
   for (let i = 0; i <= retries; i++) {
+    const attempt = i + 1;
     try {
-      if (DEBUG_WAKE) console.time(`wake:${probe}#${i + 1}`);
+      onUpdate?.(base, { attempt, done: false });       // <-- stream attempt start
+      if (DEBUG_WAKE) console.time(`wake:${probe}#${attempt}`);
       const res = await fetchWithTimeout(probe, { method, timeoutMs });
       if (DEBUG_WAKE) {
-        console.timeEnd(`wake:${probe}#${i + 1}`);
+        console.timeEnd(`wake:${probe}#${attempt}`);
         console.debug(`→ ${probe} ${res.ok ? "OK" : `FAIL ${res.status}`}`);
       }
-      if (res.ok) return true;
+      if (res.ok) {
+        onUpdate?.(base, { attempt, ok: true, done: true }); // <-- success
+        return true;
+      }
     } catch (e) {
-      if (DEBUG_WAKE) console.debug(`⚠️ wake error ${probe} try ${i + 1}:`, e);
+      if (DEBUG_WAKE) console.debug(`⚠️ wake error ${probe} try ${attempt}:`, e);
     }
     if (i < retries) await sleep(jitter(backoffMs * (i + 1)));
   }
+  onUpdate?.(base, { attempt: retries + 1, ok: false, done: true });  // <-- final fail
   return false;
 }
 
@@ -84,6 +98,7 @@ export async function wakeServices(opts: WakeOpts = {}) {
     timeoutMs = 6000,
     backoffMs = 1200,
     endpoints = {},
+    onUpdate,                                 // <-- pick it up
   } = opts;
 
   const allBases = Array.from(new Set([...ENV_BASES, ...bases]));
@@ -96,7 +111,7 @@ export async function wakeServices(opts: WakeOpts = {}) {
       const base = queue.shift()!;
       await sleep(jitter(150, 0.8)); // tiny start jitter per service
       const p = endpoints[base] ?? path;
-      const ok = await wakeOne(base, p, method, retries, timeoutMs, backoffMs);
+      const ok = await wakeOne(base, p, method, retries, timeoutMs, backoffMs, onUpdate); // <-- pass it
       out.push([base, ok]);
     }
   }
