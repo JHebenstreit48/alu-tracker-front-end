@@ -19,15 +19,23 @@ export default function App() {
 
   // Wake Render backends on first load (non-blocking; retries + backoff inside)
   useEffect(() => {
-    wakeServices({
-      endpoints: {
-        [import.meta.env.VITE_AUTH_API_URL as string]: "/api/test",
-        [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/cars?limit=1",
-        [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/test",
-        [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/test",
-      },
-      // defaults: retries=3, timeoutMs=8000, backoffMs=3000
-    });
+    (async () => {
+      const results = await wakeServices({
+        endpoints: {
+          [import.meta.env.VITE_AUTH_API_URL as string]: "/api/test",
+          [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/cars?limit=1",
+          [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/test",
+          [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/test",
+        },
+      });
+
+      // Pretty console report
+      console.groupCollapsed("🔔 Wake results");
+      console.table(
+        Object.entries(results).map(([service, awake]) => ({ service, awake }))
+      );
+      console.groupEnd();
+    })();
   }, []);
 
   // Expose syncFromAccount for quick manual testing in console
