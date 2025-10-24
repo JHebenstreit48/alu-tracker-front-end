@@ -1,8 +1,14 @@
 export type WakeUpdateInfo = {
-  attempt: number;  // 1-based attempt counter
-  ok?: boolean;     // present only when done
-  done: boolean;    // true when success/fail finalizes
+  attempt: number;          // 1-based attempt counter
+  ok?: boolean;             // present only when done
+  done: boolean;            // true when success/fail finalizes
+  status?: number;          // last HTTP status seen (if any)
+  pathTried?: string;       // last path tried (if any)
+  error?: string;           // last error message (if any)
 };
+
+// Accepts string or string[] per base
+export type WakeEndpoints = Record<string, string | string[]>;
 
 export type WakeOpts = {
   bases?: string[];
@@ -11,8 +17,9 @@ export type WakeOpts = {
   retries?: number;                      // default 3
   timeoutMs?: number;                    // default 6000
   backoffMs?: number;                    // default 1200
-  endpoints?: Record<string, string>;    // per-base override path
-  onUpdate?: (base: string, info: WakeUpdateInfo) => void; // <-- add this
+  endpoints?: WakeEndpoints;             // base -> path OR [paths]
+  onUpdate?: (base: string, info: WakeUpdateInfo) => void;
+  okIf?: (status: number) => boolean;    // default: s < 500 counts as awake
 };
 
 const ENV_BASES = [
@@ -22,23 +29,22 @@ const ENV_BASES = [
   import.meta.env.VITE_CONTENT_API_BASE_URL,
 ].filter(Boolean) as string[];
 
-// flip on verbose logs by setting VITE_DEBUG_WAKE=true
 const DEBUG_WAKE =
   String(import.meta.env.VITE_DEBUG_WAKE ?? "").toLowerCase() === "true";
 
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function jitter(ms: number, pct = 0.35) {
-  const d = ms * pct;
-  return ms + (Math.random() * 2 - 1) * d;
+function jitter(ms: number, pct = 0.35): number {
+  const delta = ms * pct;
+  return ms + (Math.random() * 2 - 1) * delta;
 }
 
 async function fetchWithTimeout(
   url: string,
   init: RequestInit & { timeoutMs?: number } = {}
-) {
+): Promise<Response> {
   const { timeoutMs = 6000, ...rest } = init;
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -54,42 +60,63 @@ async function fetchWithTimeout(
   }
 }
 
+async function tryPathsOnce(
+  base: string,
+  paths: string[],
+  method: "GET" | "HEAD",
+  timeoutMs: number,
+  okIf: (s: number) => boolean,
+  onUpdate?: WakeOpts["onUpdate"]
+): Promise<{ ok: boolean; status?: number; path?: string }> {
+  const root = base.replace(/\/+$/, "");
+  for (const p of paths) {
+    const probe = `${root}${p.startsWith("/") ? "" : "/"}${p}`;
+    if (DEBUG_WAKE) console.time(`wake:${probe}`);
+    try {
+      const res = await fetchWithTimeout(probe, { method, timeoutMs });
+      if (DEBUG_WAKE) {
+        console.timeEnd(`wake:${probe}`);
+        console.debug(`→ ${probe} ${res.status} ${res.ok ? "OK" : "FAIL"}`);
+      }
+      onUpdate?.(base, { attempt: 0, done: false, status: res.status, pathTried: p });
+      if (okIf(res.status)) return { ok: true, status: res.status, path: p };
+    } catch (e: unknown) {
+      onUpdate?.(base, { attempt: 0, done: false, error: String(e), pathTried: p });
+      if (DEBUG_WAKE) console.debug(`⚠️ wake error ${probe}:`, e);
+    }
+  }
+  return { ok: false };
+}
+
 async function wakeOne(
   base: string,
-  path: string,
+  paths: string[],
   method: "GET" | "HEAD",
   retries: number,
   timeoutMs: number,
   backoffMs: number,
-  onUpdate?: WakeOpts["onUpdate"]            // <-- add this
-) {
-  const root = base.replace(/\/+$/, "");
-  const probe = `${root}${path.startsWith("/") ? "" : "/"}${path}`;
-
+  okIf: (s: number) => boolean,
+  onUpdate?: WakeOpts["onUpdate"]
+): Promise<boolean> {
   for (let i = 0; i <= retries; i++) {
     const attempt = i + 1;
-    try {
-      onUpdate?.(base, { attempt, done: false });       // <-- stream attempt start
-      if (DEBUG_WAKE) console.time(`wake:${probe}#${attempt}`);
-      const res = await fetchWithTimeout(probe, { method, timeoutMs });
-      if (DEBUG_WAKE) {
-        console.timeEnd(`wake:${probe}#${attempt}`);
-        console.debug(`→ ${probe} ${res.ok ? "OK" : `FAIL ${res.status}`}`);
-      }
-      if (res.ok) {
-        onUpdate?.(base, { attempt, ok: true, done: true }); // <-- success
-        return true;
-      }
-    } catch (e) {
-      if (DEBUG_WAKE) console.debug(`⚠️ wake error ${probe} try ${attempt}:`, e);
+    onUpdate?.(base, { attempt, done: false });
+
+    const { ok, status, path } = await tryPathsOnce(
+      base, paths, method, timeoutMs, okIf, onUpdate
+    );
+
+    if (ok) {
+      onUpdate?.(base, { attempt, ok: true, done: true, status, pathTried: path });
+      return true;
     }
     if (i < retries) await sleep(jitter(backoffMs * (i + 1)));
   }
-  onUpdate?.(base, { attempt: retries + 1, ok: false, done: true });  // <-- final fail
+  onUpdate?.(base, { attempt: retries + 1, ok: false, done: true });
   return false;
 }
 
-export async function wakeServices(opts: WakeOpts = {}) {
+export async function wakeServices(opts: WakeOpts = {}): Promise<Record<string, boolean>> {
   const {
     bases = [],
     path = "/api/health",
@@ -98,31 +125,30 @@ export async function wakeServices(opts: WakeOpts = {}) {
     timeoutMs = 6000,
     backoffMs = 1200,
     endpoints = {},
-    onUpdate,                                 // <-- pick it up
+    onUpdate,
+    okIf = (s: number) => s < 500, // 2xx/3xx/4xx all mean "server is responding"
   } = opts;
 
   const allBases = Array.from(new Set([...ENV_BASES, ...bases]));
   const queue = [...allBases];
-  const out: [string, boolean][] = [];
+  const out: Array<[string, boolean]> = [];
 
-  // Limit concurrency to 2 workers to avoid socket pressure/cold-start stampede
-  async function worker() {
+  async function worker(): Promise<void> {
     while (queue.length) {
-      const base = queue.shift()!;
-      await sleep(jitter(150, 0.8)); // tiny start jitter per service
-      const p = endpoints[base] ?? path;
-      const ok = await wakeOne(base, p, method, retries, timeoutMs, backoffMs, onUpdate); // <-- pass it
+      const base = queue.shift() as string;
+      await sleep(jitter(150, 0.8));
+      const raw = endpoints[base] ?? path;
+      const paths = Array.isArray(raw) ? raw.slice() : [raw]; // normalize (mutable)
+      const ok = await wakeOne(base, paths, method, retries, timeoutMs, backoffMs, okIf, onUpdate);
       out.push([base, ok]);
     }
   }
 
-  await Promise.all([worker(), worker()]); // two workers
+  await Promise.all([worker(), worker()]);
   const result = Object.fromEntries(out) as Record<string, boolean>;
 
-  // Broadcast that at least one service is awake (optional UI hook)
   if (Object.values(result).some(Boolean)) {
     window.dispatchEvent(new Event("services-awake"));
   }
-
   return result;
 }
