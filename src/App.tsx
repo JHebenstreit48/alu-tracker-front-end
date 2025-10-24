@@ -17,25 +17,25 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
-  // Wake Render backends on first load (non-blocking; retries + backoff inside)
+  // Fire-and-forget wake after first paint; use cheap /api/health probes.
   useEffect(() => {
-    (async () => {
-      const results = await wakeServices({
+    const id = setTimeout(() => {
+      void wakeServices({
         endpoints: {
-          [import.meta.env.VITE_AUTH_API_URL as string]: "/api/test",
-          [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/cars?limit=1",
-          [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/test",
-          [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/test",
+          [import.meta.env.VITE_AUTH_API_URL as string]: "/api/health",
+          [import.meta.env.VITE_CARS_API_BASE_URL as string]: "/api/health",
+          [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: "/api/health",
+          [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: "/api/health",
         },
+      }).then((results) => {
+        console.groupCollapsed("🔔 Wake results");
+        console.table(
+          Object.entries(results).map(([service, awake]) => ({ service, awake }))
+        );
+        console.groupEnd();
       });
-
-      // Pretty console report
-      console.groupCollapsed("🔔 Wake results");
-      console.table(
-        Object.entries(results).map(([service, awake]) => ({ service, awake }))
-      );
-      console.groupEnd();
-    })();
+    }, 300);
+    return () => clearTimeout(id);
   }, []);
 
   // Expose syncFromAccount for quick manual testing in console

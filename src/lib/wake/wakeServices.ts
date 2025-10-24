@@ -1,10 +1,10 @@
 type WakeOpts = {
   bases?: string[];
-  path?: string;                         // default /api/test
+  path?: string;                         // default /api/health
   method?: "GET" | "HEAD";               // default GET
   retries?: number;                      // default 3
-  timeoutMs?: number;                    // default 8000
-  backoffMs?: number;                    // default 3000
+  timeoutMs?: number;                    // default 6000
+  backoffMs?: number;                    // default 1200
   endpoints?: Record<string, string>;    // per-base override path
 };
 
@@ -23,11 +23,16 @@ function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+function jitter(ms: number, pct = 0.35) {
+  const d = ms * pct;
+  return ms + (Math.random() * 2 - 1) * d;
+}
+
 async function fetchWithTimeout(
   url: string,
   init: RequestInit & { timeoutMs?: number } = {}
 ) {
-  const { timeoutMs = 8000, ...rest } = init;
+  const { timeoutMs = 6000, ...rest } = init;
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
@@ -65,7 +70,7 @@ async function wakeOne(
     } catch (e) {
       if (DEBUG_WAKE) console.debug(`⚠️ wake error ${probe} try ${i + 1}:`, e);
     }
-    if (i < retries) await sleep(backoffMs * (i + 1));
+    if (i < retries) await sleep(jitter(backoffMs * (i + 1)));
   }
   return false;
 }
@@ -73,25 +78,31 @@ async function wakeOne(
 export async function wakeServices(opts: WakeOpts = {}) {
   const {
     bases = [],
-    path = "/api/test",
+    path = "/api/health",
     method = "GET",
     retries = 3,
-    timeoutMs = 8000,
-    backoffMs = 3000,
+    timeoutMs = 6000,
+    backoffMs = 1200,
     endpoints = {},
   } = opts;
 
   const allBases = Array.from(new Set([...ENV_BASES, ...bases]));
+  const queue = [...allBases];
+  const out: [string, boolean][] = [];
 
-  const pairs = await Promise.all(
-    allBases.map(async (base) => {
+  // Limit concurrency to 2 workers to avoid socket pressure/cold-start stampede
+  async function worker() {
+    while (queue.length) {
+      const base = queue.shift()!;
+      await sleep(jitter(150, 0.8)); // tiny start jitter per service
       const p = endpoints[base] ?? path;
       const ok = await wakeOne(base, p, method, retries, timeoutMs, backoffMs);
-      return [base, ok] as const;
-    })
-  );
+      out.push([base, ok]);
+    }
+  }
 
-  const result = Object.fromEntries(pairs) as Record<string, boolean>;
+  await Promise.all([worker(), worker()]); // two workers
+  const result = Object.fromEntries(out) as Record<string, boolean>;
 
   // Broadcast that at least one service is awake (optional UI hook)
   if (Object.values(result).some(Boolean)) {
