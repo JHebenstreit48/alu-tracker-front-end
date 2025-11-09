@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { CommentType } from "@/components/Cars/CarDetails/OtherComponents/Comments/types";
+import type { CommentType } from "@/interfaces/Comments/comments";
 
 type Props = {
   token: string | null;

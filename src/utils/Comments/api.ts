@@ -2,7 +2,7 @@ import type {
   ApiOk,
   CommentsListData,
   CreateCommentData,
-} from '@/components/Cars/CarDetails/OtherComponents/Comments/types';
+} from '@/interfaces/Comments/types';
 
 // Relative is fine in prod (via Netlify proxy); explicit in dev.
 export const COMMENTS_BASE = (

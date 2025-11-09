@@ -1,5 +1,5 @@
 import Card from "@/components/Cars/CarDetails/OtherComponents/Comments/Card";
-import type { Filter, CommentItem } from "@/components/Cars/CarDetails/OtherComponents/Comments/types";
+import type { Filter, CommentItem } from "@/interfaces/Comments/types";
 
 type Props = {
   loading: boolean;

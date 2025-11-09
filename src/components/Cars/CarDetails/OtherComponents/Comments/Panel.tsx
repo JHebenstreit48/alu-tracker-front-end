@@ -1,11 +1,10 @@
-// src/components/Cars/CarDetails/OtherComponents/Comments/Panel.tsx
 import { useAuth } from "@/hooks/SignupLogin/useAuth";
 import "@/scss/Cars/CarDetails/CarComments.scss";
 
 import CommentForm from "@/components/Cars/CarDetails/OtherComponents/Comments/CommentForm";
 import CommentsList from "@/components/Cars/CarDetails/OtherComponents/Comments/CommentsList";
 import { useComments } from "@/components/Cars/CarDetails/OtherComponents/Comments/useComments";
-import type { PanelProps } from "@/components/Cars/CarDetails/OtherComponents/Comments/types";
+import type { PanelProps } from "@/interfaces/Comments/types";
 
 export default function Panel(props: PanelProps) {
   const auth = useAuth?.();

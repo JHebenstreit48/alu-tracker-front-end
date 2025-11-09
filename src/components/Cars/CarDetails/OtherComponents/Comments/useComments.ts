@@ -10,7 +10,7 @@ import {
   isCommentsOk,
   isCreateOk,
   isOk
-} from "@/components/Cars/CarDetails/OtherComponents/Comments/api";
+} from "@/utils/Comments/api";
 import type {
   CommentItem,
   CommentsListData,
@@ -19,7 +19,7 @@ import type {
   CommentType,
   PanelProps,
   CreateCommentData
-} from "@/components/Cars/CarDetails/OtherComponents/Comments/types";
+} from "@/interfaces/Comments/types";
 
 function msgOf(e: unknown) {
   return e instanceof Error ? e.message : "Unexpected error";
