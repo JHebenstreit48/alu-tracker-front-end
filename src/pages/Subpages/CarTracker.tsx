@@ -5,8 +5,8 @@ import {
   getAllCarTrackingData,
   CarTrackingData,
   generateCarKey,
-} from '@/components/Cars/CarDetails/Miscellaneous/StorageUtils';
-import { Car } from '@/components/Cars/CarDetails/Miscellaneous/Interfaces/Car';
+} from '@/utils/shared/StorageUtils';
+import { Car } from '@/interfaces/CarDetails';
 
 import SyncButton from '@/components/UserDataSync/components/SyncButton';
 

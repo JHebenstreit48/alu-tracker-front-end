@@ -8,10 +8,10 @@ import {
   useCarFilters,
   useCarHandlers,
   useCarPagination,
-} from "@/components/Cars/Cars/Utilities/CarDataFetch";
-import { useTrackerMode } from "@/components/Tracking/useTrackerMode";
+} from "@/hooks/Cars";
+import { useTrackerMode } from "@/hooks/shared/useTrackerMode";
 
-import { getAllCarTrackingData } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
 
 export default function Cars() {
   const {

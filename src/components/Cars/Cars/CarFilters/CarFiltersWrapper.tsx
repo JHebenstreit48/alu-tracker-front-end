@@ -1,7 +1,7 @@
 import CarFilters from "@/components/Cars/Cars/CarFilters/CarFilters";
 import { useCarFilterLogic } from "@/components/Cars/Cars/CarFilters/Utilities/useCarFilterLogic";
 import { CarFiltersProps } from "@/components/Cars/Cars/CarFilters/interfaces/CarFiltersProps";
-import { Car } from "@/components/Cars/Cars/CarFilters/types/CarTypes";
+import { Car } from "@/types/Cars/CarTypes";
 
 interface CarFiltersWrapperProps extends Omit<CarFiltersProps, "availableBrands" | "availableCountries"> {
   cars: Car[];

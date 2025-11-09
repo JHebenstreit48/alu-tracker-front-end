@@ -1,50 +1,15 @@
-import { useEffect, useState } from 'react';
+import Header from "@/components/Shared/HeaderFooter/Header";
+import PageTab from "@/components/Shared/Navigation/PageTab";
+import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
+import BackToTop from "@/components/Shared/Navigation/BackToTopButton";
 
-import Header from '@/components/Shared/HeaderFooter/Header';
-import PageTab from '@/components/Shared/Navigation/PageTab';
-import LoadingSpinner from '@/components/Shared/Loading/LoadingSpinner';
-import BackToTop from '@/components/Shared/Navigation/BackToTopButton';
+import BrandQuickList from "@/components/Brands/BrandInfo/BrandQuickList";
+import { useBrands } from "@/hooks/Brands/useBrands";
 
-import BrandQuickList from '@/components/Brands/BrandInfo/BrandQuickList';
-
-import '@/scss/Brands/BrandQuickList.scss';
-// import '@/scss/Brands/BrandMap.scss';
-
-interface Manufacturer {
-  _id: string;
-  brand: string;
-  slug: string;
-  logo: string;
-  country: string[];
-}
+import "@/scss/Brands/BrandQuickList.scss";
 
 export default function Brands() {
-  const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const API_BASE_URL = import.meta.env.VITE_CONTENT_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
-
-  useEffect(() => {
-    console.log('🚀 Fetching from:', `${API_BASE_URL}/manufacturers`);
-    fetch(`${API_BASE_URL}/api/manufacturers`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('✅ Manufacturers loaded in Brands.tsx:', data);
-        setManufacturers(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('❌ Error loading manufacturers:', err);
-        setError(true);
-        setLoading(false);
-      });
-  }, [API_BASE_URL]);
+  const { brands, loading, error } = useBrands();
 
   return (
     <div className="brands">
@@ -61,10 +26,8 @@ export default function Brands() {
             </div>
           </div>
         ) : (
-          <BrandQuickList manufacturers={manufacturers} />
+          <BrandQuickList manufacturers={brands} />
         )}
-
-        {/* <MapDisplay manufacturers={manufacturers} /> */}
 
         <BackToTop />
       </PageTab>

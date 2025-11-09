@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Car } from "@/components/Cars/CarList/CarFilters/types/CarTypes";
+import { Car } from "@/types/Cars/CarTypes";
 
 export function useCarFilterLogic(cars: Car[], selectedCountry: string) {
   const brandsByCountryMap = useMemo(() => {

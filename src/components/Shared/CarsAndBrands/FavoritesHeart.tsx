@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FavoritesMap, loadFavorites, toggleFavorite } from "@/components/UserDataSync/FavoritesStorage";
+import { FavoritesMap, loadFavorites, toggleFavorite } from "@/utils/UserDataSync/FavoritesStorage";
 
 type Props = { carKey: string; compact?: boolean };
 

@@ -1,4 +1,3 @@
-// components/Cars/CarList/CarFilters/interfaces/DropdownsProps.ts
 export interface DropdownsProps {
   onStarsChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onClassChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

@@ -1,5 +1,3 @@
-// src/components/Cars/CarDetails/OtherComponents/DataStatusCard.tsx
-
 type CarStatus = {
   status: "complete" | "in progress" | "missing" | "unknown";
   message?: string;

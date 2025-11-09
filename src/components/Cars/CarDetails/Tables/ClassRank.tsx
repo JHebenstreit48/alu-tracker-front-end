@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { Car } from '@/components/Cars/CarDetails/Miscellaneous/Interfaces';
+import { Car } from '@/interfaces/CarDetails';
 import StarRankSelector from '@/components/Cars/CarDetails/OtherComponents/StarRankSelector';
 import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
-} from '@/components/Cars/CarDetails/Miscellaneous/StorageUtils';
-import { useAutoSyncDependency } from '@/components/UserDataSync/hooks/useAutoSync';
+} from '@/utils/shared/StorageUtils';
+import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 
 interface ClassRankProps {
   car: Car;

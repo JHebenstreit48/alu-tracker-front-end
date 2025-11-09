@@ -1,4 +1,4 @@
-import usePreferredUnit, { UnitPref } from "@/components/Cars/CarDetails/hooks/usePreferredUnit";
+import usePreferredUnit, { UnitPref } from "@/hooks/CarDetails/usePreferredUnit";
 import "@/scss/Cars/CarDetails/UnitToggle.scss";
 
 interface Props {

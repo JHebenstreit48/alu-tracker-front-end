@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import {
   getCarTrackingData,
   setCarTrackingData,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
-import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
+} from "@/utils/shared/StorageUtils";
+import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
 
 interface StarRatingProps {
   count: number; // Max stars this car can have

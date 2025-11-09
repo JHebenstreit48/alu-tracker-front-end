@@ -1,5 +1,5 @@
 // src/components/Cars/CarDetails/OtherComponents/Comments/Panel.tsx
-import { useAuth } from "@/components/SignupLogin/hooks/useAuth";
+import { useAuth } from "@/hooks/SignupLogin/useAuth";
 import "@/scss/Cars/CarDetails/CarComments.scss";
 
 import CommentForm from "@/components/Cars/CarDetails/OtherComponents/Comments/CommentForm";

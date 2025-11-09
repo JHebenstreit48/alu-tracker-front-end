@@ -1,1 +1,1 @@
-export * from "@/components/Cars/CarList/CarFilters/Utilities/useFilteredCars";
+export * from "@/components/Cars/Cars/CarFilters/Utilities/useFilteredCars";

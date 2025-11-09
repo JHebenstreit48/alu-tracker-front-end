@@ -1,64 +1,38 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import "@/scss/Brands/BrandInfo.scss";
 
-interface Manufacturer {
-  _id: string;
-  brand: string;
-  slug: string;
-  description: string;
-  logo: string;
-  country: string[];
-  established: number;
-  headquarters?: string;
-  primaryMarket?: string;
-  location: { lat: number; lng: number };
-  resources?: { text: string; url: string }[];
-}
+import { useBrandBySlug } from "@/hooks/Brands/useBrandsBySlug";
 
 export default function BrandInfo() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [manufacturer, setManufacturer] = useState<Manufacturer | null>(null);
-  const [error, setError] = useState(false);
-
-  const API_BASE_URL = import.meta.env.VITE_CONTENT_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
-
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/api/manufacturers`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then((data: Manufacturer[]) => {
-        const found = data.find((item) => item.slug === slug);
-        if (found) {
-          setManufacturer(found);
-        } else {
-          setError(true);
-        }
-      })
-      .catch(() => setError(true));
-  }, [slug, API_BASE_URL]);
+  const { brand, loading, error } = useBrandBySlug(slug);
 
   const handleGoBack = () => navigate("/brands");
 
-  if (error) {
-    return <div className="error-message">Brand not found or failed to load.</div>;
-  }
-
-  if (!manufacturer) {
+  if (loading) {
     return <div className="loading-message">Loading brand details...</div>;
   }
 
-  // ✅ Corrected logo URL construction
-  const logoUrl = manufacturer.logo.startsWith("http")
-  ? manufacturer.logo
-  : import.meta.env.DEV
-    ? `https://alutracker-api.onrender.com${manufacturer.logo}`
-    : `${manufacturer.logo}`;
+  if (error || !brand) {
+    return (
+      <div className="error-message">
+        Brand not found or failed to load.
+        <button className="backBtn" onClick={handleGoBack}>Back</button>
+      </div>
+    );
+  }
 
-console.log("✅ Logo URL being used:", logoUrl);
+  // For now: keep same logo behavior you had (Render/static compatible)
+  const apiBase =
+    import.meta.env.VITE_CONTENT_API_BASE_URL ??
+    "https://alutracker-api.onrender.com";
+
+  const logoUrl = brand.logo.startsWith("http")
+    ? brand.logo
+    : import.meta.env.DEV
+    ? `${apiBase}${brand.logo}`
+    : brand.logo;
 
   return (
     <div className="brand-info-page">
@@ -66,35 +40,43 @@ console.log("✅ Logo URL being used:", logoUrl);
         Back
       </button>
 
-      <h1 className="brand-name">{manufacturer.brand}</h1>
+      <h1 className="brand-name">{brand.brand}</h1>
 
-      {manufacturer.logo && (
+      {brand.logo && (
         <img
           src={logoUrl}
-          alt={`${manufacturer.brand} logo`}
+          alt={`${brand.brand} logo`}
           className="brand-logo"
           loading="lazy"
         />
       )}
 
-      <p className="brand-description">{manufacturer.description}</p>
+      <p className="brand-description">{brand.description}</p>
 
       <ul className="brand-details">
-        <li><strong>Country:</strong> {manufacturer.country.join(", ")}</li>
-        <li><strong>Established:</strong> {manufacturer.established}</li>
-        {manufacturer.headquarters && (
-          <li><strong>Headquarters:</strong> {manufacturer.headquarters}</li>
+        <li>
+          <strong>Country:</strong> {brand.country.join(", ")}
+        </li>
+        <li>
+          <strong>Established:</strong> {brand.established}
+        </li>
+        {brand.headquarters && (
+          <li>
+            <strong>Headquarters:</strong> {brand.headquarters}
+          </li>
         )}
-        {manufacturer.primaryMarket && (
-          <li><strong>Primary Market:</strong> {manufacturer.primaryMarket}</li>
+        {brand.primaryMarket && (
+          <li>
+            <strong>Primary Market:</strong> {brand.primaryMarket}
+          </li>
         )}
       </ul>
 
-      {manufacturer.resources && manufacturer.resources.length > 0 && (
+      {brand.resources && brand.resources.length > 0 && (
         <div className="brand-resources">
           <h3>Resources</h3>
           <ul>
-            {manufacturer.resources.map((res, idx) => (
+            {brand.resources.map((res, idx) => (
               <li key={idx}>
                 <a href={res.url} target="_blank" rel="noopener noreferrer">
                   {res.text}
