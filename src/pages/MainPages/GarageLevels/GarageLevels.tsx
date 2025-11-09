@@ -1,42 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from '@/components/Shared/HeaderFooter/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 import GarageLevelsDropDown from '@/components/GarageLevels/Dropdown';
 import GLTrackerToggle from '@/components/GarageLevels/GLTrackerToggle';
 import GarageLevelTracker from '@/components/GarageLevels/Tracker';
 import BackToTop from '@/components/Shared/Navigation/BackToTopButton';
-
-import { GarageLevelsInterface } from '@/components/GarageLevels/interface';
+import { useGarageLevels } from '@/hooks/GarageLevels/useGarageLevels';
 
 import '@/scss/GarageLevels/GarageLevelTracker.scss';
 import '@/scss/GarageLevels/GarageLevels.scss';
 
-// ✅ Pull from environment just like on Cars page
-const API_BASE_URL = import.meta.env.VITE_CONTENT_API_BASE_URL ?? 'https://alutracker-api.onrender.com';
-
 export default function GarageLevelsPage() {
-  const [garageLevels, setGarageLevels] = useState<GarageLevelsInterface[]>([]);
-  const [isTrackerMode, setIsTrackerMode] = useState(() => {
-    return localStorage.getItem('garageLevelTrackerMode') === 'true';
-  });
-
-  useEffect(() => {
-    const fetchGarageLevels = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/garage-levels`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data: GarageLevelsInterface[] = await res.json();
-
-        // ✅ Sort by GarageLevelKey before saving
-        const sorted = data.sort((a, b) => a.GarageLevelKey - b.GarageLevelKey);
-        setGarageLevels(sorted);
-      } catch (err) {
-        console.error('❌ Failed to fetch garage level data:', err);
-      }
-    };
-
-    fetchGarageLevels();
-  }, []);
+  const { levels, loading, error } = useGarageLevels();
+  const [isTrackerMode, setIsTrackerMode] = useState(
+    () => localStorage.getItem('garageLevelTrackerMode') === 'true'
+  );
 
   return (
     <div>
@@ -46,8 +24,16 @@ export default function GarageLevelsPage() {
           className="garageLevelsHeader"
         />
         <GLTrackerToggle onToggle={setIsTrackerMode} />
-        {isTrackerMode && <GarageLevelTracker levels={garageLevels} />}
-        <GarageLevelsDropDown levels={garageLevels} />
+
+        {loading && <p>Loading garage levels…</p>}
+        {error && <p className="error">{error}</p>}
+
+        {!loading && !error && (
+          <>
+            {isTrackerMode && <GarageLevelTracker levels={levels} />}
+            <GarageLevelsDropDown levels={levels} />
+          </>
+        )}
 
         <BackToTop />
       </PageTab>

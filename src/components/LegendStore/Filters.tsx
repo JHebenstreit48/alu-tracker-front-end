@@ -1,96 +1,16 @@
-import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import type { LegendStoreFilters } from "@/interfaces/LegendStore";
 
-const Filters: React.FC<{
-  onFiltersChange: Dispatch<
-    SetStateAction<{
-      selectedClass: string;
-      selectedCarRarity: string | null;
-      searchTerm: string;
-      selectedCumulativeLevel: number | null;
-      selectedIndividualLevel: number | null;
-      selectedStarRank: number | null;
-    }>
-  >;
-}> = ({ onFiltersChange }) => {
-  const [selectedClass, setSelectedClass] = useState(() =>
-    localStorage.getItem("selectedClass") || "All Levels"
-  );
-  const [selectedCarRarity, setSelectedCarRarity] = useState<string | null>(() =>
-    localStorage.getItem("selectedCarRarity") || null
-  );
-  const [searchTerm, setSearchTerm] = useState(() =>
-    localStorage.getItem("searchTerm") || ""
-  );
-  const [selectedCumulativeLevel, setSelectedCumulativeLevel] = useState<number | null>(() =>
-    localStorage.getItem("selectedCumulativeLevel")
-      ? Number(localStorage.getItem("selectedCumulativeLevel"))
-      : null
-  );
-  const [selectedIndividualLevel, setSelectedIndividualLevel] = useState<number | null>(() =>
-    localStorage.getItem("selectedIndividualLevel")
-      ? Number(localStorage.getItem("selectedIndividualLevel"))
-      : null
-  );
-  const [selectedStarRank, setSelectedStarRank] = useState<number | null>(() =>
-    localStorage.getItem("selectedStarRank")
-      ? Number(localStorage.getItem("selectedStarRank"))
-      : null
-  );
+interface Props {
+  filters: LegendStoreFilters;
+  onChange: (next: LegendStoreFilters) => void;
+  onReset: () => void;
+}
 
-  useEffect(() => {
-    onFiltersChange({
-      selectedClass,
-      selectedCarRarity,
-      searchTerm,
-      selectedCumulativeLevel,
-      selectedIndividualLevel,
-      selectedStarRank,
-    });
-  }, [
-    selectedClass,
-    selectedCarRarity,
-    searchTerm,
-    selectedCumulativeLevel,
-    selectedIndividualLevel,
-    selectedStarRank,
-    onFiltersChange,
-  ]);
+export default function Filters({ filters, onChange, onReset }: Props) {
+  const update = (patch: Partial<LegendStoreFilters>) =>
+    onChange({ ...filters, ...patch });
 
-  useEffect(() => {
-    localStorage.setItem("selectedClass", selectedClass);
-  }, [selectedClass]);
-
-  useEffect(() => {
-    localStorage.setItem("selectedCarRarity", selectedCarRarity || "");
-  }, [selectedCarRarity]);
-
-  useEffect(() => {
-    localStorage.setItem("searchTerm", searchTerm);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    if (selectedCumulativeLevel !== null) {
-      localStorage.setItem("selectedCumulativeLevel", String(selectedCumulativeLevel));
-    } else {
-      localStorage.removeItem("selectedCumulativeLevel");
-    }
-  }, [selectedCumulativeLevel]);
-
-  useEffect(() => {
-    if (selectedIndividualLevel !== null) {
-      localStorage.setItem("selectedIndividualLevel", String(selectedIndividualLevel));
-    } else {
-      localStorage.removeItem("selectedIndividualLevel");
-    }
-  }, [selectedIndividualLevel]);
-
-  useEffect(() => {
-    if (selectedStarRank !== null) {
-      localStorage.setItem("selectedStarRank", String(selectedStarRank));
-    } else {
-      localStorage.removeItem("selectedStarRank");
-    }
-  }, [selectedStarRank]);
+  const levels = Array.from({ length: 60 }, (_, i) => i + 1);
 
   return (
     <div className="legendStoreControls">
@@ -100,17 +20,19 @@ const Filters: React.FC<{
         Cumulative Garage Level:
         <select
           className="dropdownSelector"
-          value={selectedCumulativeLevel !== null ? selectedCumulativeLevel : ""}
+          value={filters.selectedCumulativeLevel ?? ""}
           onChange={(e) =>
-            setSelectedCumulativeLevel(
-              e.target.value ? parseInt(e.target.value, 10) : null
-            )
+            update({
+              selectedCumulativeLevel: e.target.value
+                ? parseInt(e.target.value, 10)
+                : null,
+            })
           }
         >
           <option value="">All Levels</option>
-          {Array.from({ length: 60 }, (_, i) => i + 1).map((level) => (
-            <option key={level} value={level}>
-              Level {level}
+          {levels.map((lvl) => (
+            <option key={lvl} value={lvl}>
+              Level {lvl}
             </option>
           ))}
         </select>
@@ -120,17 +42,19 @@ const Filters: React.FC<{
         Individual Garage Level:
         <select
           className="dropdownSelector"
-          value={selectedIndividualLevel !== null ? selectedIndividualLevel : ""}
+          value={filters.selectedIndividualLevel ?? ""}
           onChange={(e) =>
-            setSelectedIndividualLevel(
-              e.target.value ? parseInt(e.target.value, 10) : null
-            )
+            update({
+              selectedIndividualLevel: e.target.value
+                ? parseInt(e.target.value, 10)
+                : null,
+            })
           }
         >
           <option value="">All Levels</option>
-          {Array.from({ length: 60 }, (_, i) => i + 1).map((level) => (
-            <option key={level} value={level}>
-              Level {level}
+          {levels.map((lvl) => (
+            <option key={lvl} value={lvl}>
+              Level {lvl}
             </option>
           ))}
         </select>
@@ -140,17 +64,19 @@ const Filters: React.FC<{
         Star Rank:
         <select
           className="dropdownSelector"
-          value={selectedStarRank !== null ? selectedStarRank : ""}
+          value={filters.selectedStarRank ?? ""}
           onChange={(e) =>
-            setSelectedStarRank(
-              e.target.value ? parseInt(e.target.value, 10) : null
-            )
+            update({
+              selectedStarRank: e.target.value
+                ? parseInt(e.target.value, 10)
+                : null,
+            })
           }
         >
           <option value="">All Ranks</option>
           {[3, 4, 5, 6].map((rank) => (
             <option key={rank} value={rank}>
-              {`${rank} Stars`}
+              {rank} Stars
             </option>
           ))}
         </select>
@@ -160,13 +86,23 @@ const Filters: React.FC<{
         Rarity:
         <select
           className="dropdownSelector"
-          value={selectedCarRarity !== null ? selectedCarRarity : ""}
-          onChange={(e) => setSelectedCarRarity(e.target.value || null)}
+          value={filters.selectedCarRarity ?? ""}
+          onChange={(e) =>
+            update({
+              selectedCarRarity: e.target.value || null,
+            })
+          }
         >
           <option value="">All Rarities</option>
-          <option value="Uncommon" className="optionUncommon">Uncommon</option>
-          <option value="Rare" className="optionRare">Rare</option>
-          <option value="Epic" className="optionEpic">Epic</option>
+          <option value="Uncommon" className="optionUncommon">
+            Uncommon
+          </option>
+          <option value="Rare" className="optionRare">
+            Rare
+          </option>
+          <option value="Epic" className="optionEpic">
+            Epic
+          </option>
         </select>
       </label>
 
@@ -174,8 +110,10 @@ const Filters: React.FC<{
         Class:
         <select
           className="dropdownSelector"
-          value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
+          value={filters.selectedClass}
+          onChange={(e) =>
+            update({ selectedClass: e.target.value || "All Levels" })
+          }
         >
           <option value="All Levels">All Levels</option>
           <option value="D">Class D</option>
@@ -192,27 +130,16 @@ const Filters: React.FC<{
           id="searchInput"
           type="text"
           placeholder="Search by brand or model"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={filters.searchTerm}
+          onChange={(e) =>
+            update({ searchTerm: e.target.value })
+          }
         />
       </label>
 
-      <button
-        className="resetButton"
-        onClick={() => {
-          localStorage.clear();
-          setSelectedClass("All Levels");
-          setSelectedCarRarity(null);
-          setSearchTerm("");
-          setSelectedCumulativeLevel(null);
-          setSelectedIndividualLevel(null);
-          setSelectedStarRank(null);
-        }}
-      >
+      <button className="resetButton" onClick={onReset}>
         Reset Filters
       </button>
     </div>
   );
-};
-
-export default Filters;
+}
