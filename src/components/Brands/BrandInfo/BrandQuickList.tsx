@@ -1,26 +1,23 @@
-import { Link } from 'react-router-dom';
-import '@/scss/Brands/BrandQuickList.scss';
+import { Link } from "react-router-dom";
+import "@/scss/Brands/BrandQuickList.scss";
+import type { Brand } from "@/types/Brands";
 
 interface BrandQuickListProps {
-  manufacturers: {
-    _id: string;
-    brand: string;
-    slug: string;
-    country: string[]; // ✅ Now an array
-  }[];
+  manufacturers: Brand[];
 }
 
 export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
-  console.log('🧪 BrandQuickList received manufacturers:', manufacturers);
-
   if (!manufacturers || manufacturers.length === 0) {
     return <div className="error-message">No manufacturers found.</div>;
   }
 
-  // Group manufacturers by Country first
+  // Group by country
   const groupedByCountry = manufacturers.reduce(
-    (acc: Record<string, { _id: string; brand: string; slug: string }[]>, manufacturer) => {
-      const countries = manufacturer.country.length > 0 ? manufacturer.country : ['Unknown'];
+    (acc: Record<string, Brand[]>, manufacturer) => {
+      const countries =
+        manufacturer.country && manufacturer.country.length > 0
+          ? manufacturer.country
+          : ["Unknown"];
 
       countries.forEach((country) => {
         if (!acc[country]) {
@@ -34,7 +31,6 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
     {}
   );
 
-  // Sort countries alphabetically
   const sortedCountries = Object.keys(groupedByCountry).sort();
 
   return (
@@ -42,9 +38,9 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
       {sortedCountries.map((country) => {
         const countryManufacturers = groupedByCountry[country];
 
-        // Group manufacturers in each country by first letter
+        // Group within each country by first letter of brand
         const groupedByLetter = countryManufacturers.reduce(
-          (acc: Record<string, { _id: string; brand: string; slug: string }[]>, manufacturer) => {
+          (acc: Record<string, Brand[]>, manufacturer) => {
             const firstLetter = manufacturer.brand.charAt(0).toUpperCase();
             if (!acc[firstLetter]) {
               acc[firstLetter] = [];
@@ -58,32 +54,29 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
         const sortedLetters = Object.keys(groupedByLetter).sort();
 
         return (
-          <div
-            key={country}
-            className="country-section"
-          >
-            <hr></hr>
+          <div key={country} className="country-section">
+            <hr />
             <h2 className="country-header">{country}</h2>
-            <hr></hr>
+            <hr />
 
             {sortedLetters.map((letter) => (
-              <div
-                key={letter}
-                className="brand-letter-section"
-              >
-                <h3>{letter}</h3> {/* ✅ First letter header */}
+              <div key={letter} className="brand-letter-section">
+                <h3>{letter}</h3>
                 <ul>
                   {groupedByLetter[letter]
                     .sort((a, b) => a.brand.localeCompare(b.brand))
                     .map((manufacturer) => (
-                      <li key={manufacturer._id}>
-                        <Link to={`/brands/${manufacturer.slug}`}>{manufacturer.brand}</Link>
+                      <li key={manufacturer.slug}>
+                        <Link to={`/brands/${manufacturer.slug}`}>
+                          {manufacturer.brand}
+                        </Link>
                       </li>
                     ))}
                 </ul>
               </div>
             ))}
-            <hr></hr>
+
+            <hr />
           </div>
         );
       })}
