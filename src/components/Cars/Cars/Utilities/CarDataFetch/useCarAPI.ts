@@ -4,13 +4,10 @@ import { Car } from "@/components/Cars/Cars/CarFilters/types/CarTypes";
 const API_BASE_URL =
   import.meta.env.VITE_CARS_API_BASE_URL ?? "https://alutracker-api.onrender.com";
 
-const IMG_CDN_BASE =
-  import.meta.env.VITE_IMG_CDN_BASE ?? "https://alu-tracker-image-vault.onrender.com";
-
 const absolutize = (p?: string): string | undefined => {
   if (!p) return p;
   if (/^https?:\/\//i.test(p)) return p; // already absolute
-  return `${IMG_CDN_BASE}${p.startsWith("/") ? "" : "/"}${p}`;
+  return `${API_BASE_URL}${p.startsWith("/") ? "" : "/"}${p}`;
 };
 
 type CarsResponse = {

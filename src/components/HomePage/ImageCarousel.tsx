@@ -6,7 +6,7 @@ import { Slide } from '@/components/HomePage/Carousel/Slide';
 
 // 🔁 POINT AT IMAGE CDN (Render Static Site), not the API
 const IMG_CDN_BASE: string =
-  import.meta.env.VITE_IMG_CDN_BASE ?? 'https://alu-tracker-image-vault.onrender.com';
+  import.meta.env.VITE_CARS_API_BASE_URL ?? '';
 
 type Props = {
   project: ImageCarouselType[];
