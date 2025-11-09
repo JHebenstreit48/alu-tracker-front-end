@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import StarRank from "@/components/Shared/Stars/StarRank";
-import { generateCarKey } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+import { generateCarKey } from "@/utils/CarDetails/StorageUtils";
 import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import OwnedGoldHighlighter from "@/components/Cars/Cars/ClassTables/OwnedGoldHighlighter";
 import { FavoriteHeart } from "@/components/Shared/CarsAndBrands";

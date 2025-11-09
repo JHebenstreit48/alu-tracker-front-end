@@ -4,8 +4,8 @@ import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
-import type { FullCar, CarStatus } from "@/components/Cars/CarDetails/types";
+} from "@/utils/CarDetails/StorageUtils";
+import type { FullCar, CarStatus } from "@/types/CarDetails";
 
 export function useCarData(
   slug: string | undefined,

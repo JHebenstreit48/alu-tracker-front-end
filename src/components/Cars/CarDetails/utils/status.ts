@@ -1,4 +1,4 @@
-import type { ApiStatusDoc, CarStatus } from "@/components/Cars/CarDetails/types";
+import type { ApiStatusDoc, CarStatus } from "@/types/CarDetails";
 
 export function toCarStatus(value: string): CarStatus["status"] | null {
   switch (value) {

@@ -1,2 +1,2 @@
-export * from "@/components/Cars/CarList/CarFilters/interfaces";
-export * from "@/components/Cars/CarList/CarFilters/Utilities";
+export * from "@/components/Cars/Cars/CarFilters/interfaces";
+export * from "@/components/Cars/Cars/CarFilters/Utilities";

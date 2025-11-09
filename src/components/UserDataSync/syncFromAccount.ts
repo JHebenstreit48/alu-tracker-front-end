@@ -4,7 +4,7 @@ import {
   generateCarKey,
   CarTrackingData,
   getCarTrackingData,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+} from "@/utils/CarDetails/StorageUtils";
 
 type CarStarsMap = Record<string, number>;
 

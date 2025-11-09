@@ -1,4 +1,4 @@
-import { getAllCarTrackingData } from '@/components/Cars/CarDetails/Miscellaneous/StorageUtils';
+import { getAllCarTrackingData } from '@/utils/CarDetails/StorageUtils';
 
 const AUTH_API_URL =
   import.meta.env.VITE_AUTH_API_URL ?? 'https://alu-tracker-user-data.onrender.com';

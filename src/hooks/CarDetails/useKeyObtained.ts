@@ -3,8 +3,8 @@ import {
   generateCarKey,
   getCarTrackingData,
   setCarTrackingData,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
-import type { FullCar } from "@/components/Cars/CarDetails/types";
+} from "@/utils/CarDetails/StorageUtils";
+import type { FullCar } from "@/types/CarDetails";
 
 type Setter = (v: boolean) => void;
 

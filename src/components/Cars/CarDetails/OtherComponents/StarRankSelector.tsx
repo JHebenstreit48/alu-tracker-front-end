@@ -3,7 +3,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+} from "@/utils/CarDetails/StorageUtils";
 import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
 
 interface StarRankSelectorProps {

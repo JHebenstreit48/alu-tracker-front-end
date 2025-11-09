@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   getCarTrackingData,
   setCarTrackingData,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+} from "@/utils/CarDetails/StorageUtils";
 import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
 
 interface StarRatingProps {

@@ -1,10 +1,10 @@
 import type {
     Car,
     Blueprints,
-  } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces";
-  import type { StockStats } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces/StarStats/StockStats";
-  import type { GoldMaxStats } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces/StarStats/GoldMaxStats";
-  import type { MaxStarStats } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces/StarStats/MaxStarStats";
+  } from "@/interfaces/CarDetails";
+  import type { StockStats } from "@/interfaces/CarDetails";
+  import type { GoldMaxStats } from "@/interfaces/CarDetails";
+  import type { MaxStarStats } from "@/interfaces/CarDetails";
   
   export type CarStatus = {
     status: "complete" | "in progress" | "missing" | "unknown";

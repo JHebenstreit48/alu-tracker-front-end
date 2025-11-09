@@ -7,4 +7,3 @@ export interface Blueprints {
     BPs_6_Star?: number;
     Total_BPs?: number | null;
   }
-  

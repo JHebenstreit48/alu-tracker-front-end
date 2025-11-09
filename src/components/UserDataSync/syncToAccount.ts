@@ -1,4 +1,4 @@
-import { getAllCarTrackingData } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+import { getAllCarTrackingData } from "@/utils/CarDetails/StorageUtils";
 
 type CarStarsMap = Record<string, number>;
 

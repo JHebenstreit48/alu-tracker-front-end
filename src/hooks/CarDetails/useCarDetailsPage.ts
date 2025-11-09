@@ -5,10 +5,10 @@ import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSy
 import {
   generateCarKey,
   getCarTrackingData,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+} from "@/utils/CarDetails/StorageUtils";
 
 // 👇 ADD THIS
-import { useKeyCarSeeding } from "@/components/Cars/CarDetails/hooks/useKeyCarSeeding";
+import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";
 
 export function useCarDetailsPage(slug: string | undefined) {
   const { trackerMode, unitPreference, goBack } = useCarNavigation(slug);

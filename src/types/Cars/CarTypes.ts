@@ -20,6 +20,3 @@ export interface CarTrackingData {
   importParts?: number;
   KeyCar?: boolean;
 }
-
-  
-  

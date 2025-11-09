@@ -1,5 +1,5 @@
-import { Car, CarTrackingData } from "@/components/Cars/CarList/CarFilters/types/CarTypes";
-import { normalizeString, generateCarKey } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+import { Car, CarTrackingData } from "@/types/Cars/CarTypes";
+import { normalizeString, generateCarKey } from "@/utils/CarDetails/StorageUtils";
 
 interface FilterConfig {
   cars: Car[];

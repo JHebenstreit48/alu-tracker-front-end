@@ -8,12 +8,12 @@ import {
   CarTrackerToggle,
 } from "@/components/Cars/CarDetails/Sections";
 
-import { useCarDetailsPage } from "@/components/Cars/CarDetails/hooks/useCarDetailsPage";
+import { useCarDetailsPage } from "@/hooks/CarDetails/useCarDetailsPage";
 import { useTrackerMode } from "@/components/Tracking/useTrackerMode";
-import { useKeyCarSeeding } from "@/components/Cars/CarDetails/hooks/useKeyCarSeeding";
-import useKeyObtained from "@/components/Cars/CarDetails/hooks/useKeyObtained";
+import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";
+import useKeyObtained from "@/hooks/CarDetails/useKeyObtained";
 import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
-import usePreferredUnit from "@/components/Cars/CarDetails/hooks/usePreferredUnit";
+import usePreferredUnit from "@/hooks/CarDetails/usePreferredUnit";
 import UnitToggle from "@/components/Cars/CarDetails/OtherComponents/UnitToggle";
 
 import "@/scss/Cars/CarDetails/CarDetail.scss";

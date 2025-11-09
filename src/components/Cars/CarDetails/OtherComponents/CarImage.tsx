@@ -1,4 +1,4 @@
-import { Car } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces";
+import { Car } from "@/interfaces/CarDetails";
 
 // Prefer the static Image Vault for car photos
 const IMG_CDN_BASE =

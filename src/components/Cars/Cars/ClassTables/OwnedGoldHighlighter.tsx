@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { getAllCarTrackingData } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+import { getAllCarTrackingData } from "@/utils/CarDetails/StorageUtils";
 
 type Props = {
   carKey: string;

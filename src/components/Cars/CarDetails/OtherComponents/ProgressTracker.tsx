@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Car } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces";
+import { Car } from "@/interfaces/CarDetails";
 import {
   getCarTrackingData,
   generateCarKey,
-} from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
-import { setCarTrackingDataWithSync } from "@/components/Cars/CarDetails/Miscellaneous/SyncStorageUtils";
+} from "@/utils/CarDetails/StorageUtils";
+import { setCarTrackingDataWithSync } from "@/utils/CarDetails/SyncStorageUtils";
 import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
 
 interface Props {

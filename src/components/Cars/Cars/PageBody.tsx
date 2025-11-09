@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '@/scss/Cars/CarsPage/index.scss';
 
-import { Car } from '@/components/Cars/Cars/CarFilters/types/CarTypes';
+import { Car } from '@/types/Cars/CarTypes';
 
 interface CarDataProps {
   loading: boolean;

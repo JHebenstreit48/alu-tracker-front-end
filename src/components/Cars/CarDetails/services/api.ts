@@ -1,4 +1,4 @@
-import type { FullCar, CarStatus, ApiStatusDoc } from "@/components/Cars/CarDetails/types";
+import type { FullCar, CarStatus, ApiStatusDoc } from "@/types/CarDetails";
 import { mapApiStatus } from "@/components/Cars/CarDetails/utils/status";
 
 const API_BASE_URL =

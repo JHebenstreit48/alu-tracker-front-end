@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { Car } from "@/components/Cars/Cars/CarFilters/types/CarTypes";
+import { Car } from "@/types/Cars/CarTypes";
 
 const API_BASE_URL =
   import.meta.env.VITE_CARS_API_BASE_URL ?? "https://alutracker-api.onrender.com";
