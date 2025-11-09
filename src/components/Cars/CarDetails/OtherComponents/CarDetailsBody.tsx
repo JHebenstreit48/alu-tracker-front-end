@@ -9,10 +9,10 @@ import {
 } from "@/components/Cars/CarDetails/Sections";
 
 import { useCarDetailsPage } from "@/hooks/CarDetails/useCarDetailsPage";
-import { useTrackerMode } from "@/components/Tracking/useTrackerMode";
+import { useTrackerMode } from "@/hooks/shared/useTrackerMode";
 import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";
 import useKeyObtained from "@/hooks/CarDetails/useKeyObtained";
-import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
+import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
 import usePreferredUnit from "@/hooks/CarDetails/usePreferredUnit";
 import UnitToggle from "@/components/Cars/CarDetails/OtherComponents/UnitToggle";
 

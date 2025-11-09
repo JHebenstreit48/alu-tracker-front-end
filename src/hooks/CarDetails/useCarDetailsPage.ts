@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useCarData } from "./useCarData";
 import { useCarNavigation } from "./useCarNavigation";
-import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
+import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
 import {
   generateCarKey,
   getCarTrackingData,

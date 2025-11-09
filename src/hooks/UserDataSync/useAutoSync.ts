@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { syncToAccount } from "@/components/UserDataSync/syncToAccount";
+import { syncToAccount } from "@/utils/UserDataSync/syncToAccount";
 
 // Type-safe debounce function
 function debounce<T extends (...args: Parameters<T>) => void>(fn: T, delay: number): (...args: Parameters<T>) => void {

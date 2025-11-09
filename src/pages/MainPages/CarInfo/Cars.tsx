@@ -8,8 +8,8 @@ import {
   useCarFilters,
   useCarHandlers,
   useCarPagination,
-} from "@/components/Cars/Cars/Utilities/CarDataFetch";
-import { useTrackerMode } from "@/components/Tracking/useTrackerMode";
+} from "@/hooks/Cars";
+import { useTrackerMode } from "@/hooks/shared/useTrackerMode";
 
 import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
 

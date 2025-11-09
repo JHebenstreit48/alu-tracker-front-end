@@ -4,7 +4,7 @@ import Footer from "@/components/Shared/HeaderFooter/Footer";
 import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { syncFromAccount } from "@/components/UserDataSync/syncFromAccount";
+import { syncFromAccount } from "@/utils/UserDataSync/syncFromAccount";
 
 import { wakeServices } from "@/lib/wake/wakeServices";
 import type { WakeUpdateInfo } from "@/lib/wake/wakeServices";

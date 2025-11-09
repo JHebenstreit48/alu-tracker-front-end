@@ -1,4 +1,3 @@
-// syncFromAccount.ts
 import {
   setCarTrackingData,
   generateCarKey,

@@ -3,7 +3,7 @@ import { ImageCarouselType } from "@/components/HomePage/ImagesForCarousel";
 import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import { useCarousel } from "@/components/HomePage/Carousel/useCarousel";
 import { Slide } from "@/components/HomePage/Carousel/Slide";
-import { getCarImageUrl } from "@/utils/imageUrl";
+import { getCarImageUrl } from "@/utils/shared/imageUrl";
 
 type Props = {
   project: ImageCarouselType[];

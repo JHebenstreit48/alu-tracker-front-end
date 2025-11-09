@@ -4,7 +4,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
 } from "@/utils/shared/StorageUtils";
-import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
+import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
 
 interface StarRatingProps {
   count: number; // Max stars this car can have

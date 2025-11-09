@@ -1,5 +1,5 @@
 import { setCarTrackingData, CarTrackingData } from "@/utils/shared/StorageUtils";
-import { syncToAccount } from "@/components/UserDataSync/syncToAccount";
+import { syncToAccount } from "@/utils/UserDataSync/syncToAccount";
 
 function getAuthToken(): string | null {
   return localStorage.getItem("token"); // Or use AuthContext for live session

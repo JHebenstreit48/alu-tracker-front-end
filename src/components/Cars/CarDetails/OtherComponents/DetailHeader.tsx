@@ -1,16 +1,15 @@
 import CarDataStatusCard from "@/components/Cars/CarDetails/OtherComponents/DataStatusCard";
+import type { CarStatus } from "@/types/CarDetails";
 
 type Props = {
   onBack: () => void;
   updatedAt?: string;
-  status: {
-    status: "complete" | "in progress" | "missing" | "unknown";
-    message?: string;
-    lastChecked?: string | null;
-  } | null;
+  status: CarStatus | null;
 };
 
 export default function DetailHeader({ onBack, updatedAt, status }: Props) {
+  const effectiveUpdatedAt = status?.lastChecked ?? updatedAt;
+
   return (
     <div className="cdetail-top">
       <button className="backBtn" onClick={onBack}>
@@ -18,7 +17,11 @@ export default function DetailHeader({ onBack, updatedAt, status }: Props) {
       </button>
 
       <div className="cdetail-status">
-        <CarDataStatusCard updatedAt={updatedAt} status={status} inline />
+        <CarDataStatusCard
+          updatedAt={effectiveUpdatedAt}
+          status={status}
+          inline
+        />
       </div>
     </div>
   );

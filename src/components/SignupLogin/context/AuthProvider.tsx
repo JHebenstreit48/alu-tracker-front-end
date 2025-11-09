@@ -1,6 +1,6 @@
 import { useState, useEffect, ReactNode } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { syncFromAccount } from "@/components/UserDataSync/syncFromAccount";
+import { syncFromAccount } from "@/utils/UserDataSync/syncFromAccount";
 import { fetchMe } from "@/components/SignupLogin/api/authAPI";
 
 interface Props { children: ReactNode }

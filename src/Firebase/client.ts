@@ -6,6 +6,7 @@ const firebaseConfig = {
   apiKey: import.meta.env.VITE_TRACKER_FB_API_KEY,
   authDomain: import.meta.env.VITE_TRACKER_FB_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_TRACKER_FB_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_TRACKER_FB_STORAGE_BUCKET,
   appId: import.meta.env.VITE_TRACKER_FB_APP_ID,
 };
 
