@@ -4,7 +4,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
-} from "@/utils/CarDetails/StorageUtils";
+} from "@/utils/shared/StorageUtils";
 import type { FullCar, CarStatus } from "@/types/CarDetails";
 
 export function useCarData(

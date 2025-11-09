@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { normalizeString } from "@/utils/CarDetails/StorageUtils";
+import { normalizeString } from "@/utils/shared/StorageUtils";
 import type { CarsLocationState } from "@/types/CarDetails";
 
 export function useCarNavigation(slug: string | undefined) {

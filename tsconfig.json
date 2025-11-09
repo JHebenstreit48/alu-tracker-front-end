@@ -16,11 +16,8 @@
     },
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types"]  // ✅ leave src/types out
   },
-  "include": [
-    "./vite-env.d.ts", // Ensure this is included
-    "./src/**/*"
-  ],
+  "include": ["./vite-env.d.ts", "./src/**/*"],
   "exclude": ["node_modules"]
 }

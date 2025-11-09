@@ -11,7 +11,7 @@ import {
 } from "@/components/Cars/Cars/Utilities/CarDataFetch";
 import { useTrackerMode } from "@/components/Tracking/useTrackerMode";
 
-import { getAllCarTrackingData } from "@/utils/CarDetails/StorageUtils";
+import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
 
 export default function Cars() {
   const {

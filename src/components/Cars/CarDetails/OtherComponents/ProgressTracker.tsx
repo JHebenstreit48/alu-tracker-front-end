@@ -3,7 +3,7 @@ import { Car } from "@/interfaces/CarDetails";
 import {
   getCarTrackingData,
   generateCarKey,
-} from "@/utils/CarDetails/StorageUtils";
+} from "@/utils/shared/StorageUtils";
 import { setCarTrackingDataWithSync } from "@/utils/CarDetails/SyncStorageUtils";
 import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
 

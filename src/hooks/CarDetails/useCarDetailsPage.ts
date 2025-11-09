@@ -5,7 +5,7 @@ import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSy
 import {
   generateCarKey,
   getCarTrackingData,
-} from "@/utils/CarDetails/StorageUtils";
+} from "@/utils/shared/StorageUtils";
 
 // 👇 ADD THIS
 import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";

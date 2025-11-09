@@ -1,4 +1,4 @@
-import { setCarTrackingData, CarTrackingData } from "@/utils/CarDetails/StorageUtils";
+import { setCarTrackingData, CarTrackingData } from "@/utils/shared/StorageUtils";
 import { syncToAccount } from "@/components/UserDataSync/syncToAccount";
 
 function getAuthToken(): string | null {

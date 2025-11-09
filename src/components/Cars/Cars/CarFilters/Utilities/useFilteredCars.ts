@@ -1,5 +1,5 @@
 import { Car, CarTrackingData } from "@/types/Cars/CarTypes";
-import { normalizeString, generateCarKey } from "@/utils/CarDetails/StorageUtils";
+import { normalizeString, generateCarKey } from "@/utils/shared/StorageUtils";
 
 interface FilterConfig {
   cars: Car[];

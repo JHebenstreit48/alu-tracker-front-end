@@ -2,7 +2,7 @@ import { Car } from "@/interfaces/CarDetails";
 import {
   setKeyObtainedState,   // <- keep
   generateCarKey,        // <- keep
-} from "@/utils/CarDetails/StorageUtils";
+} from "@/utils/shared/StorageUtils";
 import { useAutoSyncDependency } from "@/components/UserDataSync/hooks/useAutoSync";
 
 interface KeyInfoProps {
