@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { DISABLE_COMMENTS } from "@/components/Cars/CarDetails/OtherComponents/Comments/flags";
+import { DISABLE_COMMENTS } from "./flags";
 import {
   getComments,
   postComment,
@@ -9,7 +9,7 @@ import {
   apiErrorMessage,
   isCommentsOk,
   isCreateOk,
-  isOk
+  isOk,
 } from "@/utils/Comments/api";
 import type {
   CommentItem,
@@ -18,8 +18,8 @@ import type {
   Filter,
   CommentType,
   PanelProps,
-  CreateCommentData
-} from "@/interfaces/Comments/types";
+  CreateCommentData,
+} from "@/interfaces/Comments";
 
 function msgOf(e: unknown) {
   return e instanceof Error ? e.message : "Unexpected error";
@@ -43,11 +43,15 @@ export function useComments(
       setLoading(false);
       return;
     }
+
     setLoading(true);
     setError(null);
+
     try {
       const { r, j } = await getComments(normalizedKey);
-      if (!r.ok || !isCommentsOk(j)) throw new Error("Failed to load comments.");
+      if (!r.ok || !isCommentsOk(j)) {
+        throw new Error("Failed to load comments.");
+      }
       const data = (j as ApiOk<CommentsListData>).data;
       setComments(data.comments);
     } catch (e) {
@@ -62,7 +66,10 @@ export function useComments(
   }, [fetchList]);
 
   const filtered = useMemo(
-    () => (filter === "all" ? comments : comments.filter((c) => c.type === filter)),
+    () =>
+      filter === "all"
+        ? comments
+        : comments.filter((c) => c.type === filter),
     [comments, filter]
   );
 
@@ -84,26 +91,36 @@ export function useComments(
       model,
       type,
       body: body.trim(),
-      authorName: token ? (username ?? undefined) : (authorName || undefined),
-      authorEmail: token ? undefined : (authorEmail || undefined),
-      hp
+      authorName: token ? (username ?? undefined) : authorName || undefined,
+      authorEmail: token ? undefined : authorEmail || undefined,
+      hp,
     };
 
     const { r, j } = await postComment(payload, headers);
-    if (!r.ok || !isCreateOk(j)) throw new Error(apiErrorMessage(j) ?? "Failed to submit comment.");
+    if (!r.ok || !isCreateOk(j)) {
+      throw new Error(apiErrorMessage(j) ?? "Failed to submit comment.");
+    }
 
     const data = (j as ApiOk<CreateCommentData>).data;
 
-    // refresh so the new comment shows immediately
     await fetchList();
 
     return { ok: true, id: data.id, editKey: data.editKey };
   }
 
-  async function admin(method: "PATCH" | "DELETE", id: string, adminKey: string, action?: "visible" | "hide") {
+  async function admin(
+    method: "PATCH" | "DELETE",
+    id: string,
+    adminKey: string,
+    action?: "visible" | "hide"
+  ) {
     if (DISABLE_COMMENTS) return;
+
     const { r, j } = await adminCall(method, id, adminKey, action);
-    if (!r.ok || !isOk(j)) throw new Error("Admin action failed");
+    if (!r.ok || !isOk(j)) {
+      throw new Error("Admin action failed");
+    }
+
     await fetchList();
   }
 
@@ -112,14 +129,21 @@ export function useComments(
     if (!key) throw new Error("Missing edit key for this comment.");
 
     const prev = comments;
-    setComments(prev.map((c) => (c._id === id ? { ...c, body: newBody } : c)));
+    setComments(
+      prev.map((c) => (c._id === id ? { ...c, body: newBody } : c))
+    );
+
     try {
       if (DISABLE_COMMENTS) return;
       const { r, j } = await selfEdit(id, newBody, key);
-      if (!r.ok) throw new Error(apiErrorMessage(j) ?? `Failed to save (${r.status})`);
+      if (!r.ok) {
+        throw new Error(apiErrorMessage(j) ?? `Failed to save (${r.status})`);
+      }
     } catch (e) {
       setComments(prev);
-      throw (e instanceof Error ? e : new Error("Failed to save changes."));
+      throw e instanceof Error
+        ? e
+        : new Error("Failed to save changes.");
     }
   }
 
@@ -129,29 +153,38 @@ export function useComments(
 
     const prev = comments;
     setComments(prev.filter((c) => c._id !== id));
+
     try {
       if (DISABLE_COMMENTS) {
         localStorage.removeItem(`comment_editkey_${id}`);
         return;
       }
+
       const { r, j } = await selfDelete(id, key);
-      if (!r.ok) throw new Error(apiErrorMessage(j) ?? `Failed to delete (${r.status})`);
+      if (!r.ok) {
+        throw new Error(apiErrorMessage(j) ?? `Failed to delete (${r.status})`);
+      }
+
       localStorage.removeItem(`comment_editkey_${id}`);
     } catch (e) {
       setComments(prev);
-      throw (e instanceof Error ? e : new Error("Failed to delete comment."));
+      throw e instanceof Error
+        ? e
+        : new Error("Failed to delete comment.");
     }
   }
 
   return {
     loading,
     error,
+    comments,
     filtered,
+    filter,
     setFilter,
     submit,
     admin,
     saveSelfLocal,
     deleteSelfLocal,
-    refresh: fetchList
+    refresh: fetchList,
   };
 }

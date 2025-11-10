@@ -1,33 +1,52 @@
-export type CommentType = 'missing-data' | 'correction' | 'general';
-export type Filter = 'all' | CommentType;
+export type CommentType = "missing-data" | "correction" | "general";
+export type CommentStatus = "visible" | "pending" | "hidden";
+export type Filter = "all" | CommentType;
 
-export type CommentCardItem = {
+export interface Comment {
   _id: string;
-  type: CommentType;
-  body: string;
-  authorName?: string;
-  createdAt: string;
-};
-
-export type CommentItem = CommentCardItem & {
   normalizedKey: string;
   brand?: string;
   model?: string;
-  status: 'visible' | 'pending' | 'hidden';
-  updatedAt: string;
-};
+  type: CommentType;
+  body: string;
+  authorName?: string;
+  status: CommentStatus;
+  createdAt: string;    // ISO
+  updatedAt?: string;   // ISO
+}
 
-export type ErrorPayload = { code: string; message: string; details?: unknown };
-export type CommentsListData = { comments: CommentItem[] };
+export type CommentItem = Comment;
 
-export type ApiOk<T> = { ok: true; data: T };
-export type ApiErr = { ok: false; error: ErrorPayload };
+export interface CommentsListData {
+  comments: CommentItem[];
+}
+
+export interface ErrorPayload {
+  code: string;
+  message: string;
+  details?: unknown;
+}
+
+export interface ApiOk<T> {
+  ok: true;
+  data: T;
+}
+
+export interface ApiErr {
+  ok: false;
+  error: ErrorPayload;
+}
+
 export type ApiResponse<T> = ApiOk<T> | ApiErr;
 
-export type CreateCommentData = {
+export interface CreateCommentData {
   id: string;
-  status?: 'visible' | 'pending' | 'hidden';
+  status?: CommentStatus;
   editKey?: string;
-};
+}
 
-export type PanelProps = { normalizedKey: string; brand?: string; model?: string };
+export interface PanelProps {
+  normalizedKey: string;
+  brand?: string;
+  model?: string;
+}

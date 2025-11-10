@@ -24,9 +24,6 @@ export default function App() {
     const id = setTimeout(() => {
       const endpoints: Record<string, string | string[]> = {
         [import.meta.env.VITE_AUTH_API_URL as string]: ["/api/health", "/api/test"],
-        [import.meta.env.VITE_CARS_API_BASE_URL as string]: ["/api/health", "/api/test"],
-        [import.meta.env.VITE_COMMENTS_API_BASE_URL as string]: ["/api/health", "/api/test"],
-        [import.meta.env.VITE_CONTENT_API_BASE_URL as string]: ["/api/health", "/api/test"],
       };
 
       // start all false; flip true as each wakes
