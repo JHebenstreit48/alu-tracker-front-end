@@ -18,7 +18,7 @@ const BlueprintsTable: React.FC<Props> = ({ car }) => {
     );
   }
 
-  // Explicitly typecast Object.entries() to [string, unknown][]
+  // Extract relevant blueprint fields
   const blueprintEntries = (Object.entries(car) as [string, unknown][])
     .map(([key, value]): [string, BlueprintValue] => {
       const actualValue: BlueprintValue = Array.isArray(value)
@@ -40,12 +40,19 @@ const BlueprintsTable: React.FC<Props> = ({ car }) => {
     );
   }
 
-  const totalBlueprints = blueprintEntries.reduce((sum, [, value]) => {
+  // 🔢 Sort by the numeric part in the key so rows are 1⭐, 2⭐, 3⭐, etc.
+  const sortedEntries = [...blueprintEntries].sort(([keyA], [keyB]) => {
+    const a = parseInt(keyA.match(/\d+/)?.[0] || "0", 10);
+    const b = parseInt(keyB.match(/\d+/)?.[0] || "0", 10);
+    return a - b;
+  });
+
+  const totalBlueprints = sortedEntries.reduce((sum, [, value]) => {
     if (typeof value === "number") return sum + value;
     if (typeof value === "string" && !isNaN(Number(value))) {
       return sum + Number(value);
     }
-    return sum; // skip "unknown" or "?" strings
+    return sum; // skip "unknown" / "?" strings
   }, 0);
 
   return (
@@ -58,7 +65,7 @@ const BlueprintsTable: React.FC<Props> = ({ car }) => {
         </tr>
       </thead>
       <tbody>
-        {blueprintEntries.map(([key, value]) => {
+        {sortedEntries.map(([key, value]) => {
           const starCount = parseInt(key.match(/\d+/)?.[0] || "0", 10);
 
           return (
