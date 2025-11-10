@@ -17,15 +17,12 @@ export const buildCarImagePath = (brand: string, file: string): string => {
 export const getCarImageUrl = (rel?: string): string => {
   if (!rel) return "";
 
-  // Already absolute? Just return.
   if (/^https?:\/\//i.test(rel)) {
     return rel;
   }
 
-  // Normalize leading slash
   const clean = rel.startsWith("/") ? rel.slice(1) : rel;
 
-  // No bucket configured: use relative path (public/).
   if (!bucket) {
     if (import.meta.env.DEV) {
       console.warn(
@@ -36,10 +33,10 @@ export const getCarImageUrl = (rel?: string): string => {
     return `/${clean}`;
   }
 
-  // Map to Firebase Storage public URL
   return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(
     clean
   )}?alt=media`;
 };
 
+// Alias for generic use (icons, logos, etc.)
 export const getImageUrl = getCarImageUrl;

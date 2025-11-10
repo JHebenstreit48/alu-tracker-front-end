@@ -4,25 +4,11 @@ import type {
   CreateCommentData,
 } from "@/interfaces/Comments";
 
-// Resolve base URL for comments/feedback API.
-// No localhost fallback. You MUST configure this.
-export const COMMENTS_BASE = (() => {
-  const envBase =
-    import.meta.env.VITE_COMMENTS_API_BASE_URL ??
-    import.meta.env.VITE_PLATFORM_API_BASE_URL;
-
-  // If not set, fail loudly so you notice.
-  if (!envBase) {
-    console.error(
-      "[Comments] Missing VITE_COMMENTS_API_BASE_URL or VITE_PLATFORM_API_BASE_URL"
-    );
-    throw new Error(
-      "COMMENTS_BASE not configured. Set VITE_COMMENTS_API_BASE_URL or VITE_PLATFORM_API_BASE_URL."
-    );
-  }
-
-  return envBase.replace(/\/+$/, "");
-})();
+// Comments API base:
+// - Uses VITE_CARS_BACKEND if set
+// - Otherwise falls back to same-origin (""), so fetch("/api/comments/...").
+const rawBase = import.meta.env.VITE_CARS_BACKEND ?? "";
+export const COMMENTS_BASE = rawBase.replace(/\/+$/, "");
 
 const join = (base: string, path: string): string => {
   const b = base.replace(/\/+$/, "");
@@ -48,8 +34,6 @@ export function apiErrorMessage(payload: unknown): string | null {
   const msg = (error as { message?: unknown }).message;
   return typeof msg === "string" ? msg : null;
 }
-
-/* ---------- Type guards ---------- */
 
 function isCommentsListData(v: unknown): v is CommentsListData {
   if (!isRec(v)) return false;
