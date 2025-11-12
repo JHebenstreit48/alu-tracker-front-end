@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/SignupLogin/useAuth";
-import CommentForm from "./CommentForm";
-import CommentsList from "./CommentsList";
-import { useComments } from "./useComments";
+import CommentForm from "@/components/Cars/CarDetails/OtherComponents/Comments/CommentForm";
+import CommentsList from "@/components/Cars/CarDetails/OtherComponents/Comments/CommentsList";
+import { useComments } from "@/hooks/Comments/useComments";
 import type { PanelProps } from "@/interfaces/Comments";
 
 export default function Panel(props: PanelProps) {

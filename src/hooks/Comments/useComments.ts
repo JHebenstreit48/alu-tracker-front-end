@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { DISABLE_COMMENTS } from "./flags";
+import { DISABLE_COMMENTS } from "@/utils/Comments/flags";
 import {
   getComments,
   postComment,
