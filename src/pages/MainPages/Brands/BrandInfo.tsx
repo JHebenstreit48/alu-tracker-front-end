@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "@/scss/Brands/BrandInfo.scss";
 
 import { useBrandBySlug } from "@/hooks/Brands/useBrandsBySlug";
+import { getImageUrl } from "@/utils/shared/imageUrl";
 
 export default function BrandInfo() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,21 +19,18 @@ export default function BrandInfo() {
     return (
       <div className="error-message">
         Brand not found or failed to load.
-        <button className="backBtn" onClick={handleGoBack}>Back</button>
+        <button className="backBtn" onClick={handleGoBack}>
+          Back
+        </button>
       </div>
     );
   }
 
-  // For now: keep same logo behavior you had (Render/static compatible)
-  const apiBase =
-    import.meta.env.VITE_CONTENT_API_BASE_URL ??
-    "https://alutracker-api.onrender.com";
-
-  const logoUrl = brand.logo.startsWith("http")
-    ? brand.logo
-    : import.meta.env.DEV
-    ? `${apiBase}${brand.logo}`
-    : brand.logo;
+  // Logos now live in Firebase Storage (or absolute URLs).
+  // brand.logo should be something like:
+  //   - "images/logos/A/apollo_automobili.png"  (your bucket path)
+  //   - OR an https URL
+  const logoUrl = brand.logo ? getImageUrl(brand.logo) : "";
 
   return (
     <div className="brand-info-page">
@@ -42,7 +40,7 @@ export default function BrandInfo() {
 
       <h1 className="brand-name">{brand.brand}</h1>
 
-      {brand.logo && (
+      {logoUrl && (
         <img
           src={logoUrl}
           alt={`${brand.brand} logo`}

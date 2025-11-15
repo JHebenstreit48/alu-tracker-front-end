@@ -24,9 +24,6 @@ export type WakeOpts = {
 
 const ENV_BASES = [
   import.meta.env.VITE_AUTH_API_URL,
-  import.meta.env.VITE_CARS_API_BASE_URL,
-  import.meta.env.VITE_COMMENTS_API_BASE_URL,
-  import.meta.env.VITE_CONTENT_API_BASE_URL,
 ].filter(Boolean) as string[];
 
 const DEBUG_WAKE =
