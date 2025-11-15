@@ -19,44 +19,67 @@ export default function App() {
   const { token } = useContext(AuthContext);
   const [showFooter, setShowFooter] = useState(false);
 
-  // Fire-and-forget wake after first paint; stream live booleans to the console.
+  // Wake the auth service (for now, the only one we care about).
   useEffect(() => {
+    const authBase = import.meta.env.VITE_AUTH_API_URL;
+
+    // If it's not set, don't try to wake anything.
+    if (!authBase) {
+      if (import.meta.env.DEV) {
+        console.warn("[Wake] VITE_AUTH_API_URL is not set; skipping wake.");
+      }
+      return;
+    }
+
     const id = setTimeout(() => {
+      const base = authBase.replace(/\/+$/, "");
+
       const endpoints: Record<string, string | string[]> = {
-        [import.meta.env.VITE_AUTH_API_URL as string]: ["/api/health", "/api/test"],
+        [base]: ["/api/health", "/api/test"],
       };
 
-      // start all false; flip true as each wakes
       const status: Record<string, boolean> = Object.fromEntries(
-        Object.keys(endpoints).map((base) => [base, false])
+        Object.keys(endpoints).map((b) => [b, false])
       );
 
       console.group("🟡 Wake monitor");
-      console.table(Object.entries(status).map(([service, awake]) => ({ service, awake })));
+      console.table(
+        Object.entries(status).map(([service, awake]) => ({ service, awake }))
+      );
 
       void wakeServices({
         endpoints,
         retries: 4,
         timeoutMs: 7000,
         backoffMs: 1500,
-        onUpdate: (base: string, info: WakeUpdateInfo) => {
+        onUpdate: (b: string, info: WakeUpdateInfo) => {
           if (!info.done) return;
-          status[base] = !!info.ok;
+          status[b] = !!info.ok;
           const bits = [
             info.ok ? "✅ awake" : "❌ failed",
             info.status ? `[${info.status}]` : "",
             info.pathTried ?? "",
             `(tries: ${info.attempt})`,
           ].filter(Boolean);
-          console.log(`${base} — ${bits.join(" ")}`);
-          console.table(Object.entries(status).map(([service, awake]) => ({ service, awake })));
+          console.log(`${b} — ${bits.join(" ")}`);
+          console.table(
+            Object.entries(status).map(([service, awake]) => ({
+              service,
+              awake,
+            }))
+          );
         },
       }).then((finals) => {
         console.log("— final results —");
-        console.table(Object.entries(finals).map(([service, awake]) => ({ service, awake })));
+        console.table(
+          Object.entries(finals).map(([service, awake]) => ({
+            service,
+            awake,
+          }))
+        );
         console.groupEnd();
       });
-    }, 300); // tiny delay avoids stampede at t=0
+    }, 300);
 
     return () => clearTimeout(id);
   }, []);
@@ -76,7 +99,9 @@ export default function App() {
 
   // First-run sync if user is logged in but local store is empty
   useEffect(() => {
-    const hasLocalData = Object.keys(localStorage).some((k) => k.startsWith("car-tracker-"));
+    const hasLocalData = Object.keys(localStorage).some((k) =>
+      k.startsWith("car-tracker-")
+    );
     if (token && !hasLocalData) {
       console.log("[AutoSync] No local tracker found. Syncing from account…");
       void syncFromAccount(token);

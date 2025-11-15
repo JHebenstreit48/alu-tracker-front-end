@@ -86,11 +86,18 @@ export default function CarTracker() {
 
   // fetch cars (cache-busted) and prefer live array length for total
   useEffect(() => {
-    const url = `${
-      import.meta.env.VITE_CARS_API_BASE_URL ?? 'https://alutracker-api.onrender.com'
-    }/api/cars?limit=2000&offset=0&t=${Date.now()}`;
-
-    fetch(url, { cache: 'no-store' })
+    const base = import.meta.env.VITE_CARS_API_BASE_URL;
+  
+    if (!base) {
+      console.warn(
+        "[CarTracker] VITE_CARS_API_BASE_URL is not set; skipping remote car fetch."
+      );
+      return;
+    }
+  
+    const url = `${base.replace(/\/+$/, "")}/api/cars?limit=2000&offset=0&t=${Date.now()}`;
+  
+    fetch(url, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         const cars = (Array.isArray(data?.cars) ? data.cars : []) as Car[];
@@ -99,7 +106,10 @@ export default function CarTracker() {
         recomputeFromLocal(cars);
       })
       .catch((err) => {
-        console.error('Failed to fetch total car count or key car info:', err);
+        console.error(
+          "Failed to fetch total car count or key car info:",
+          err
+        );
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

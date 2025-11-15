@@ -8,13 +8,6 @@ export default defineConfig({
     'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL || '')
   },
   server: {
-    proxy: {
-      '/api': {
-        target: 'https://alutracker-api.onrender.com', // Backend URL
-        changeOrigin: true,
-        secure: false
-      },
-    },
   },
   resolve: {
     alias: {
