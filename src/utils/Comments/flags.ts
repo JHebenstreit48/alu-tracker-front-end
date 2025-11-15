@@ -1,4 +1,3 @@
-// Kill switch: ?nocomments=1 or ?nofeedback=1 (also honored in #hash)
 export const DISABLE_COMMENTS =
   typeof window !== "undefined" &&
   (() => {

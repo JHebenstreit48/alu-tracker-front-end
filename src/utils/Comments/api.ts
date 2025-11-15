@@ -5,9 +5,9 @@ import type {
 } from "@/interfaces/Comments";
 
 // Comments API base:
-// - Uses VITE_CARS_BACKEND if set
+// - Uses VITE_COMMENTS_API_BASE_URL if set
 // - Otherwise falls back to same-origin (""), so fetch("/api/comments/...").
-const rawBase = import.meta.env.VITE_CARS_BACKEND ?? "";
+const rawBase = import.meta.env.VITE_COMMENTS_API_BASE_URL ?? "";
 export const COMMENTS_BASE = rawBase.replace(/\/+$/, "");
 
 const join = (base: string, path: string): string => {
