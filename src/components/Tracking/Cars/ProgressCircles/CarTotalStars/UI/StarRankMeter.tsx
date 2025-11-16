@@ -1,7 +1,7 @@
 import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const backendBaseUrl = import.meta.env.VITE_CARS_API_BASE_URL;
+import { getImageUrl } from "@/utils/shared/imageUrl";
 
 interface StarRankMeterProps {
   rank: number;        // 1 to 6
@@ -9,9 +9,14 @@ interface StarRankMeterProps {
   totalOwned: number;  // Total cars owned
 }
 
+// Relative path to the star icon in /public
+const STAR_ICON_REL_PATH = "/images/icons/star.png";
+
 export default function StarRankMeter({ rank, count, totalOwned }: StarRankMeterProps) {
   const percent = totalOwned > 0 ? (count / totalOwned) * 100 : 0;
   const starsArray = Array.from({ length: rank });
+
+  const starIconUrl = getImageUrl(STAR_ICON_REL_PATH);
 
   return (
     <div className="starRankCircleWrapper">
@@ -28,7 +33,7 @@ export default function StarRankMeter({ rank, count, totalOwned }: StarRankMeter
           {starsArray.map((_, idx) => (
             <img
               key={idx}
-              src={`${backendBaseUrl}/images/icons/star.png`}
+              src={starIconUrl}
               alt="Star"
               className="starIcon"
             />
