@@ -25,6 +25,8 @@ import '@/scss/Cars/CarTracker/Components/KeysOwned.scss';
 import '@/scss/Cars/CarTracker/Components/GoldMaxed.scss';
 import '@/scss/Cars/CarTracker/Components/StarRank.scss';
 
+import { carsAdapter } from '@/lib/Firebase/carsAdapter';
+
 interface TrackedCar extends CarTrackingData {
   carId: string;
 }
@@ -84,32 +86,21 @@ export default function CarTracker() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // fetch cars (cache-busted) and prefer live array length for total
+  // fetch cars via adapter (Firebase or REST, depending on VITE_CARS_BACKEND)
   useEffect(() => {
-    const base = import.meta.env.VITE_CARS_API_BASE_URL;
-  
-    if (!base) {
-      console.warn(
-        "[CarTracker] VITE_CARS_API_BASE_URL is not set; skipping remote car fetch."
-      );
-      return;
-    }
-  
-    const url = `${base.replace(/\/+$/, "")}/api/cars?limit=2000&offset=0&t=${Date.now()}`;
-  
-    fetch(url, { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        const cars = (Array.isArray(data?.cars) ? data.cars : []) as Car[];
-        setAllCars(cars);
-        setTotalCars(Math.max(cars.length, Number(data?.total ?? 0)));
-        recomputeFromLocal(cars);
+    carsAdapter
+      .list()
+      .then((cars: unknown) => {
+        // At runtime this will be CarDoc[] (from Firebase) or whatever the adapter returns.
+        const arr = Array.isArray(cars) ? cars : [];
+        const safeCars = arr as unknown as Car[];
+
+        setAllCars(safeCars);
+        setTotalCars(safeCars.length || 0);
+        recomputeFromLocal(safeCars);
       })
-      .catch((err) => {
-        console.error(
-          "Failed to fetch total car count or key car info:",
-          err
-        );
+      .catch((err: unknown) => {
+        console.error('Failed to fetch car list for tracker:', err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -226,7 +217,6 @@ export default function CarTracker() {
           <h2 className="garageLevelsTitle">Garage Level Progress</h2>
           <hr className="sectionRule" />
           <p className="comingSoonText">Coming Soon...</p>
-          {/* future content... */}
         </div>
       </PageTab>
     </div>

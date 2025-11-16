@@ -1,7 +1,8 @@
 export type FavoritesMap = Record<string, true>;
 const FAVORITES_KEY = "carFavorites";
 
-const API_BASE = String(import.meta.env.VITE_AUTH_API_URL || "").replace(/\/+$/, "");
+// User data (progress/favorites) now lives on the user API (Cloud Function)
+const API_BASE = String(import.meta.env.VITE_USER_API_URL || "").replace(/\/+$/, "");
 const url = (p: string) => `${API_BASE}${p}`;
 
 // Normalize to the canonical format you use across the app (underscores, lowercase, no dots)
@@ -9,8 +10,8 @@ const normalizeKey = (k: string) =>
   k
     .trim()
     .toLowerCase()
-    .replace(/\./g, "")   // strip dots (your generator does this)
-    .replace(/-/g, "_")   // convert hyphens -> underscores
+    .replace(/\./g, "") // strip dots (your generator does this)
+    .replace(/-/g, "_") // convert hyphens -> underscores
     .replace(/__+/g, "_"); // collapse doubles
 
 const listToMap = (keys: string[]): FavoritesMap => {
@@ -30,7 +31,9 @@ function readLocal(): FavoritesMap {
       localStorage.setItem(FAVORITES_KEY, JSON.stringify(migrated));
     }
     return migrated;
-  } catch { return {}; }
+  } catch {
+    return {};
+  }
 }
 
 function writeLocal(map: FavoritesMap): void {
@@ -50,6 +53,7 @@ function getToken(): string | null {
 }
 
 async function getServerList(token: string): Promise<string[]> {
+  if (!API_BASE) return [];
   const r = await fetch(url("/api/users/favorites"), {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -59,13 +63,21 @@ async function getServerList(token: string): Promise<string[]> {
 }
 
 async function putServerList(token: string, keys: string[]): Promise<void> {
+  if (!API_BASE) return;
   const payload = keys.map(normalizeKey).sort();
   const r = await fetch(url("/api/users/favorites"), {
     method: "PUT",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(payload),
   });
-  if (!r.ok) throw new Error(`PUT /favorites ${r.status} ${await r.text().catch(()=> "")}`);
+  if (!r.ok) {
+    throw new Error(
+      `PUT /favorites ${r.status} ${await r.text().catch(() => "")}`
+    );
+  }
 }
 
 export async function loadFavorites(): Promise<FavoritesMap> {
@@ -109,7 +121,8 @@ export async function toggleFavorite(carKey: string): Promise<FavoritesMap> {
   const map = await loadFavorites();
   const key = normalizeKey(carKey);
   const next = { ...map };
-  if (next[key]) delete next[key]; else next[key] = true;
+  if (next[key]) delete next[key];
+  else next[key] = true;
   await saveFavorites(next);
   return next;
 }

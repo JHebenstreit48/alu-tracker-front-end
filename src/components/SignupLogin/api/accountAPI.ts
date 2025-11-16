@@ -1,4 +1,4 @@
-const API_BASE_URL = `${import.meta.env.VITE_AUTH_API_URL}/api`;
+const API_BASE_URL = `${import.meta.env.VITE_USER_API_URL}/api`;
 
 const json = async (res: Response) => {
   const data = await res.json().catch(() => ({}));

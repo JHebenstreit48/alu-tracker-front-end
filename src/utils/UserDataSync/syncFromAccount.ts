@@ -14,7 +14,9 @@ interface ServerProgress {
   keyCarsOwned?: string[];
   xp?: number;
 }
-interface ProgressResponse { progress?: ServerProgress }
+interface ProgressResponse {
+  progress?: ServerProgress;
+}
 
 export interface PullResult {
   success: boolean;
@@ -28,7 +30,11 @@ function isProgressResponse(u: unknown): u is ProgressResponse {
   return isObject(u) && "progress" in u;
 }
 function safeParseJSON(text: string): unknown {
-  try { return text ? JSON.parse(text) : {}; } catch { return {}; }
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    return {};
+  }
 }
 
 // "Brand Model" → storage key
@@ -38,6 +44,7 @@ function labelToKey(label: string): string {
 }
 
 const KEY_PREFIX = "car-tracker-";
+const USER_API_BASE = (import.meta.env.VITE_USER_API_URL || "").replace(/\/+$/, "");
 
 export async function syncFromAccount(
   token: string,
@@ -47,8 +54,12 @@ export async function syncFromAccount(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
+  if (!USER_API_BASE) {
+    return { success: false, message: "User API base URL is not configured." };
+  }
+
   try {
-    const url = `${import.meta.env.VITE_AUTH_API_URL}/api/users/get-progress`;
+    const url = `${USER_API_BASE}/api/users/get-progress`;
     const res = await fetch(url, {
       method: "GET",
       credentials: "include",
@@ -108,8 +119,8 @@ export async function syncFromAccount(
 
     // Write exact server truth
     const ownedSet = new Set<string>(ownedCars);
-    const goldSet  = new Set<string>(goldMaxedCars);
-    const keySet   = new Set<string>(keyCarsOwned);
+    const goldSet = new Set<string>(goldMaxedCars);
+    const keySet = new Set<string>(keyCarsOwned);
 
     for (const label of allLabels) {
       const key = labelToKey(label);
