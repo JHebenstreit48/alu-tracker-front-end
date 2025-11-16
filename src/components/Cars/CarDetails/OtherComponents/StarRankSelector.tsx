@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import {
   getCarTrackingData,
-  setCarTrackingData,
   generateCarKey,
 } from "@/utils/shared/StorageUtils";
-import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
+import { setCarTrackingDataWithSync } from "@/utils/CarDetails/SyncStorageUtils";
 
 interface StarRankSelectorProps {
   maxStars: number;
@@ -44,30 +43,34 @@ const StarRankSelector: React.FC<StarRankSelectorProps> = ({
 
     // One-time seeding for key cars in tracker mode when no stars exist yet.
     if (trackerMode && isKeyCar) {
-      setCarTrackingData(carKey, { ...data, stars: 1 }); // persist seed so it survives refresh
+      const next = { ...data, stars: 1 };
       setInternalStars(1);
+      void setCarTrackingDataWithSync(carKey, next); // persist + sync
     } else {
       setInternalStars(0);
     }
   }, [carKey, selected, trackerMode, isKeyCar]);
 
-  // Debounced autosync (server when logged-in, local only when anon) for uncontrolled usage.
-  useAutoSyncDependency(carKey && selected === undefined ? [internalStars] : []);
-
-  const handleClick = (value: number) => {
+  const handleClick = (starValue: number) => {
     if (readOnly) return;
 
-    // Clamp to [0, maxStars] just in case
-    const next = Math.max(0, Math.min(maxStars, value));
+    const current = selected ?? internalStars;
+
+    // Clicking the same star again clears back to 0
+    let nextValue = starValue === current ? 0 : starValue;
+    nextValue = Math.max(0, Math.min(maxStars, nextValue));
 
     if (onSelect) {
       // Controlled mode: delegate up
-      onSelect(next);
+      onSelect(nextValue);
     } else {
-      // Uncontrolled: update local state and persist
-      setInternalStars(next);
+      // Uncontrolled: update local state and persist + sync
+      setInternalStars(nextValue);
+
       if (carKey) {
-        setCarTrackingData(carKey, { stars: next });
+        const existing = getCarTrackingData(carKey);
+        const next = { ...existing, stars: nextValue };
+        void setCarTrackingDataWithSync(carKey, next);
       }
     }
   };

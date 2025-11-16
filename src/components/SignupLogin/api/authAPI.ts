@@ -8,8 +8,17 @@ export type LoginOk = {
   userId: string;
   twoFactorEnabled?: boolean;
 };
-export type LoginNeeds2FA = { success: true; requires2fa: true; userId: string };
-export type LoginFail = { success: false; message: string };
+
+export type LoginNeeds2FA = {
+  success: true;
+  requires2fa: true;
+  userId: string;
+};
+
+export type LoginFail = {
+  success: false;
+  message: string;
+};
 
 export type RegisterResp =
   | { success: true; token: string; username: string; userId: string }
@@ -33,19 +42,22 @@ export const loginUser = async (
   password: string
 ): Promise<LoginOk | LoginNeeds2FA | LoginFail> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/users/login`, {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+
     const data = await res.json();
 
     if (!res.ok) {
       return { success: false, message: data.message || "Login failed" };
     }
+
     if (data?.requires2fa) {
       return { success: true, requires2fa: true, userId: data.userId };
     }
+
     return {
       success: true,
       token: data.token,
@@ -65,16 +77,18 @@ export const registerUser = async (
   password: string
 ): Promise<RegisterResp> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/users/register`, {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
     });
+
     const data = await res.json();
 
     if (!res.ok) {
       return { success: false, message: data.message || "Signup failed" };
     }
+
     return {
       success: true,
       token: data.token,
@@ -89,7 +103,7 @@ export const registerUser = async (
 
 /* ---------- API: Me ---------- */
 export const fetchMe = async (token: string): Promise<FetchMeResult> => {
-  const res = await fetch(`${API_BASE_URL}/users/me`, {
+  const res = await fetch(`${API_BASE_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -99,5 +113,6 @@ export const fetchMe = async (token: string): Promise<FetchMeResult> => {
   } catch {
     data = undefined;
   }
+
   return { ok: res.ok, data };
 };

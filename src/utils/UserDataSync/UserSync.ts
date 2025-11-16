@@ -10,7 +10,8 @@ export const syncAllTrackedCarsToAccount = async () => {
   }
 
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("authToken");
+  const token =
+    localStorage.getItem("token") || localStorage.getItem("authToken");
 
   if (!userId || !token) {
     console.warn("❌ No user ID or auth token found, skipping sync.");
@@ -19,7 +20,6 @@ export const syncAllTrackedCarsToAccount = async () => {
 
   const trackingData = getAllCarTrackingData();
 
-  // Organize tracking data for each category
   const carStars: Record<string, number> = {};
   const ownedCars: string[] = [];
   const goldMaxedCars: string[] = [];
@@ -46,7 +46,6 @@ export const syncAllTrackedCarsToAccount = async () => {
     ownedCars,
     goldMaxedCars,
     keyCarsOwned,
-    // xp: 0, // still omitted unless you explicitly decide to include it here
   };
 
   const endpoint = `${USER_API_URL}/api/users/save-progress`;
