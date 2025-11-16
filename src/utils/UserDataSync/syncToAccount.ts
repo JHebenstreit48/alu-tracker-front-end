@@ -10,8 +10,14 @@ interface ProgressPayload {
   xp: number;
 }
 
-interface SyncOk { success: true; skipped?: true }
-interface SyncErr { success: false; message: string }
+interface SyncOk {
+  success: true;
+  skipped?: true;
+}
+interface SyncErr {
+  success: false;
+  message: string;
+}
 export type SyncResult = SyncOk | SyncErr;
 
 export interface PushOptions {
@@ -35,10 +41,19 @@ function isErrorBody(u: unknown): u is { message?: string; error?: string } {
 }
 const uniq = <T,>(arr: T[]): T[] => Array.from(new Set(arr));
 
-export async function syncToAccount(token: string, opts: PushOptions = {}): Promise<SyncResult> {
+const USER_API_BASE = (import.meta.env.VITE_USER_API_URL || "").replace(/\/+$/, "");
+
+export async function syncToAccount(
+  token: string,
+  opts: PushOptions = {}
+): Promise<SyncResult> {
   const timeoutMs = typeof opts.timeoutMs === "number" ? opts.timeoutMs : 15000;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  if (!USER_API_BASE) {
+    return { success: false, message: "User API base URL is not configured." };
+  }
 
   try {
     const allTracked = getAllCarTrackingData();
@@ -57,8 +72,8 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
         const stars = Math.min(6, Math.max(1, data.stars));
         carStars[label] = stars;
       }
-      if (data.owned)       ownedCars.push(label);
-      if (data.goldMaxed)   goldMaxedCars.push(label);
+      if (data.owned) ownedCars.push(label);
+      if (data.goldMaxed) goldMaxedCars.push(label);
       if (data.keyObtained) keyCarsOwned.push(label);
     }
 
@@ -85,19 +100,16 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
       return { success: true, skipped: true as const };
     }
 
-    const res = await fetch(
-      `${import.meta.env.VITE_AUTH_API_URL}/api/users/save-progress`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      }
-    );
+    const res = await fetch(`${USER_API_BASE}/api/users/save-progress`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
 
     if (!res.ok) {
       const contentType = res.headers.get("content-type") ?? "";

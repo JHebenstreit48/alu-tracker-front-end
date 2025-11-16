@@ -1,14 +1,19 @@
-import { getAllCarTrackingData } from '@/utils/shared/StorageUtils';
+import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
 
-const AUTH_API_URL =
-  import.meta.env.VITE_AUTH_API_URL ?? 'https://alu-tracker-user-data.onrender.com';
+const USER_API_URL = (import.meta.env.VITE_USER_API_URL || "").replace(/\/+$/, "");
 
-export const syncAllTrackedCarsToMongo = async () => {
-  const userId = localStorage.getItem('userId');
-  const token = localStorage.getItem('authToken');
+export const syncAllTrackedCarsToAccount = async () => {
+  // If the backend base URL isn't configured, don't attempt a sync.
+  if (!USER_API_URL) {
+    console.warn("[UserSync] VITE_USER_API_URL is not set; skipping sync.");
+    return;
+  }
+
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("authToken");
 
   if (!userId || !token) {
-    console.warn('❌ No user ID or auth token found, skipping sync.');
+    console.warn("❌ No user ID or auth token found, skipping sync.");
     return;
   }
 
@@ -21,7 +26,7 @@ export const syncAllTrackedCarsToMongo = async () => {
   const keyCarsOwned: string[] = [];
 
   for (const [carId, data] of Object.entries(trackingData)) {
-    if (typeof data.stars === 'number') {
+    if (typeof data.stars === "number") {
       carStars[carId] = data.stars;
     }
     if (data.owned) {
@@ -41,29 +46,31 @@ export const syncAllTrackedCarsToMongo = async () => {
     ownedCars,
     goldMaxedCars,
     keyCarsOwned,
-    // xp: 0, // omit unless needed
+    // xp: 0, // still omitted unless you explicitly decide to include it here
   };
 
-  console.log('🚀 Sending sync request to:', `${AUTH_API_URL}/api/users/save-progress`);
-  console.log('📦 Payload:', payload);
+  const endpoint = `${USER_API_URL}/api/users/save-progress`;
+
+  console.log("🚀 Sending sync request to:", endpoint);
+  console.log("📦 Payload:", payload);
 
   try {
-    const res = await fetch(`${AUTH_API_URL}/api/users/save-progress`, {
-      method: 'POST',
+    const res = await fetch(endpoint, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
-      const errorText = await res.text();
+      const errorText = await res.text().catch(() => "");
       throw new Error(`Sync failed: ${res.status} - ${errorText}`);
     }
 
-    console.log('✅ Tracker data synced successfully');
+    console.log("✅ Tracker data synced successfully");
   } catch (err) {
-    console.error('❌ Failed to sync tracking data to MongoDB:', err);
+    console.error("❌ Failed to sync tracking data to backend:", err);
   }
 };
