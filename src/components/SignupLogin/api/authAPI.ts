@@ -1,4 +1,4 @@
-const API_BASE_URL = `${import.meta.env.VITE_USER_API_URL}/api`;
+const API_BASE_URL = String(import.meta.env.VITE_USER_API_URL || "").replace(/\/+$/, "");
 
 /* ---------- Types ---------- */
 export type LoginOk = {
@@ -8,17 +8,8 @@ export type LoginOk = {
   userId: string;
   twoFactorEnabled?: boolean;
 };
-
-export type LoginNeeds2FA = {
-  success: true;
-  requires2fa: true;
-  userId: string;
-};
-
-export type LoginFail = {
-  success: false;
-  message: string;
-};
+export type LoginNeeds2FA = { success: true; requires2fa: true; userId: string };
+export type LoginFail = { success: false; message: string };
 
 export type RegisterResp =
   | { success: true; token: string; username: string; userId: string }
@@ -42,22 +33,19 @@ export const loginUser = async (
   password: string
 ): Promise<LoginOk | LoginNeeds2FA | LoginFail> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+    const res = await fetch(`${API_BASE_URL}/api/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-
     const data = await res.json();
 
     if (!res.ok) {
       return { success: false, message: data.message || "Login failed" };
     }
-
     if (data?.requires2fa) {
       return { success: true, requires2fa: true, userId: data.userId };
     }
-
     return {
       success: true,
       token: data.token,
@@ -77,18 +65,16 @@ export const registerUser = async (
   password: string
 ): Promise<RegisterResp> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+    const res = await fetch(`${API_BASE_URL}/api/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
     });
-
     const data = await res.json();
 
     if (!res.ok) {
       return { success: false, message: data.message || "Signup failed" };
     }
-
     return {
       success: true,
       token: data.token,
@@ -103,7 +89,7 @@ export const registerUser = async (
 
 /* ---------- API: Me ---------- */
 export const fetchMe = async (token: string): Promise<FetchMeResult> => {
-  const res = await fetch(`${API_BASE_URL}/auth/me`, {
+  const res = await fetch(`${API_BASE_URL}/api/users/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -113,6 +99,5 @@ export const fetchMe = async (token: string): Promise<FetchMeResult> => {
   } catch {
     data = undefined;
   }
-
   return { ok: res.ok, data };
 };
