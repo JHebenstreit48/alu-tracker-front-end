@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { fetchCarDetail, fetchCarStatus } from "@/components/CarDetails/services/api";
+import { fetchCarDetail, fetchCarStatus } from "@/api/carDetails";
 import {
   getCarTrackingData,
   setCarTrackingData,
   generateCarKey,
 } from "@/utils/shared/StorageUtils";
-import type { FullCar, CarStatus } from "@/types/CarDetails";
+import type { FullCar } from "@/types/shared/car";
+import type { CarStatus } from "@/types/shared/status";
 
 export function useCarData(
   slug: string | undefined,
