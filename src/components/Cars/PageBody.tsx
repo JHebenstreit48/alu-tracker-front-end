@@ -2,50 +2,17 @@ import ClassTables from '@/components/Cars/ClassTables/ClassTables';
 import CarFilters from '@/components/Cars/CarFilters/CarFilters';
 import Header from '@/components/Shared/HeaderFooter/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
+// ❌ remove this:
+// import PaginationControls from '@/components/Cars/Pagination/PaginationControls';
 import { useNavigate } from 'react-router-dom';
 
 import '@/scss/Cars/CarsPage/index.scss';
-
-import { Car } from '@/types/shared/car';
-
-interface CarDataProps {
-  loading: boolean;
-  trackerMode: boolean;
-
-  // Filters
-  filterProps: {
-    searchTerm: string;
-    selectedStars: number | null;
-    selectedBrand: string;
-    selectedCountry: string;
-    selectedClass: string;
-    selectedRarity: string | null;
-    showOwned: boolean;
-    showKeyCars: boolean;
-    availableBrands: string[];
-    availableCountries: string[];
-    onSearch: (term: string) => void;
-    onStarsChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onClassChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onRarityChange: (rarity: string | null) => void;
-    onBrandChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onCountryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onToggleOwned: () => void;
-    onToggleKeyCars: () => void;
-    onReset: () => void;
-  };
-
-  cars: Car[];
-  selectedClass: string;
-
-  carsPerPage: number;
-  handlePageSizeChange: (size: number) => void;
-  totalFiltered: number;
-}
+import type { CarDataProps } from '@/interfaces/Cars/carDataProps';
 
 export default function CarData({
   loading,
   trackerMode,
+  error,
   filterProps,
   cars,
   selectedClass,
@@ -55,20 +22,24 @@ export default function CarData({
 }: CarDataProps) {
   const navigate = useNavigate();
 
+  if (error) {
+    return (
+      <div className="cars">
+        <PageTab title="Cars">
+          <Header text="Cars" className="carsHeader" />
+          <div className="error-message">{error}</div>
+        </PageTab>
+      </div>
+    );
+  }
+
   return (
     <div className="cars">
       <PageTab title="Cars">
-        <Header
-          text="Cars"
-          className="carsHeader"
-        />
+        <Header text="Cars" className="carsHeader" />
 
         <div className="filtersAndTrackerLink">
-          <CarFilters
-            {...filterProps}
-            availableStars={[3, 4, 5, 6]}
-          />
-
+          <CarFilters {...filterProps} availableStars={[3, 4, 5, 6]} />
           <div className="trackerSummaryLink">
             <button
               className="trackerSummary"
@@ -80,7 +51,8 @@ export default function CarData({
         </div>
 
         <p className="carCount">
-          Showing {cars.length} of {totalFiltered} car{totalFiltered !== 1 ? 's' : ''}
+          Showing {cars.length} of {totalFiltered} car
+          {totalFiltered !== 1 ? 's' : ''}
         </p>
 
         <ClassTables
@@ -92,7 +64,7 @@ export default function CarData({
 
         <div className="pageSizeControl">
           <span className="paginationLabel">Cars per page:</span>
-          {[25, 50, 100, 200, 300].map((size) => (
+          {[25, 50, 100, 150, 200, 250, 300, 305].map((size) => (
             <button
               key={size}
               onClick={() => handlePageSizeChange(size)}

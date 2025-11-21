@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Header from "@/components/Shared/HeaderFooter/Header";
-import PageTab from "@/components/Shared/Navigation/PageTab";
 import CarData from "@/components/Cars/PageBody";
 
 import {
@@ -10,7 +8,6 @@ import {
   useCarPagination,
 } from "@/hooks/Cars";
 import { useTrackerMode } from "@/hooks/shared/useTrackerMode";
-
 import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
 
 export default function Cars() {
@@ -21,7 +18,6 @@ export default function Cars() {
     selectedCountry,
     selectedClass,
     selectedRarity,
-    carsPerPage,
     handleSearch,
     handleStarFilter,
     handleClassChange,
@@ -31,13 +27,14 @@ export default function Cars() {
     handleResetFilters,
   } = useCarHandlers();
 
-  // removed unitPreference state
-
-  const [showOwned, setShowOwned] = useState(localStorage.getItem("showOwned") === "true");
-  const [showKeyCars, setShowKeyCars] = useState(localStorage.getItem("showKeyCars") === "true");
+  const [showOwned, setShowOwned] = useState(
+    localStorage.getItem("showOwned") === "true"
+  );
+  const [showKeyCars, setShowKeyCars] = useState(
+    localStorage.getItem("showKeyCars") === "true"
+  );
 
   const { trackerMode } = useTrackerMode();
-
   const tracking = getAllCarTrackingData();
   const { cars, loading, error } = useCarAPI(selectedClass);
 
@@ -54,7 +51,13 @@ export default function Cars() {
     showKeyCars,
   });
 
-  const { paginatedCars, totalFiltered, handlePageSizeChange } = useCarPagination(filteredCars);
+  const {
+    paginatedCars,
+    totalFiltered,
+    carsPerPage,
+    handlePageSizeChange,
+    
+  } = useCarPagination(filteredCars);
 
   const toggleOwned = () => {
     const next = !showOwned;
@@ -68,21 +71,11 @@ export default function Cars() {
     localStorage.setItem("showKeyCars", String(next));
   };
 
-  if (error) {
-    return (
-      <div className="cars">
-        <PageTab title="Cars">
-          <Header text="Cars" />
-          <div className="error-message">{error}</div>
-        </PageTab>
-      </div>
-    );
-  }
-
   return (
     <CarData
       loading={loading}
       trackerMode={trackerMode}
+      error={error}
       filterProps={{
         searchTerm,
         selectedStars,
