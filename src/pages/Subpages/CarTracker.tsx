@@ -6,7 +6,7 @@ import {
   CarTrackingData,
   generateCarKey,
 } from '@/utils/shared/StorageUtils';
-import { Car } from '@/interfaces/CarDetails';
+import { Car } from '@/types/shared/car';
 
 import SyncButton from '@/components/UserDataSync/components/SyncButton';
 

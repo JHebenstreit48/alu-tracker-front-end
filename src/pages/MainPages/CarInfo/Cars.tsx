@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Shared/HeaderFooter/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
-import CarData from "@/components/Cars/Cars/PageBody";
+import CarData from "@/components/Cars/PageBody";
 
 import {
   useCarAPI,

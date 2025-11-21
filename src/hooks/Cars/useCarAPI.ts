@@ -8,7 +8,7 @@ import {
   type QueryConstraint,
 } from "firebase/firestore";
 import { dbTracker } from "@/Firebase/client";
-import type { Car } from "@/types/Cars/CarTypes"; // adjust path if needed
+import type { Car } from "@/types/shared/car"; // adjust path if needed
 import { getCarImageUrl } from "@/utils/shared/imageUrl"; // adjust to your actual helper path
 
 type FirestoreCar = Car & {

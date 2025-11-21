@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Car, CarTrackingData } from "@/types/Cars/CarTypes";
-import { useFilteredCars } from "@/components/Cars/Cars/CarFilters/Utilities/useFilteredCars";
+import { Car } from "@/types/shared/car";
+import { CarTracking } from "@/types/shared/tracking"
+import { useFilteredCars } from "@/components/Cars/CarFilters/Utilities/useFilteredCars";
 
 interface UseCarFiltersProps {
   cars: Car[];
-  tracking: Record<string, CarTrackingData>;
+  tracking: Record<string, CarTracking>;
   searchTerm: string;
   selectedStars: number | null;
   selectedBrand: string;

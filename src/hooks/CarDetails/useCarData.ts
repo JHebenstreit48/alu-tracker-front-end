@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCarDetail, fetchCarStatus } from "@/components/Cars/CarDetails/services/api";
+import { fetchCarDetail, fetchCarStatus } from "@/components/CarDetails/services/api";
 import {
   getCarTrackingData,
   setCarTrackingData,
