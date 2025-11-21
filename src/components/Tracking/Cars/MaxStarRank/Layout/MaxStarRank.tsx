@@ -1,10 +1,10 @@
 import MaxStarTables from "@/components/Tracking/Cars/MaxStarRank/UI/MaxStarTables";
-import { Car } from "@/components/Cars/CarDetails/Miscellaneous/Interfaces/Car";
-import { CarTrackingData } from "@/components/Cars/CarDetails/Miscellaneous/StorageUtils";
+import { Car } from "@/types/shared/car";
+import { CarTracking } from "@/types/shared/tracking";
 
 interface Props {
   allCars: Car[];
-  trackedCars: (Car & CarTrackingData)[];
+  trackedCars: (Car & CarTracking)[];
   totalCars: number;
 }
 

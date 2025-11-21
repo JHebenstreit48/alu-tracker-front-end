@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Car } from "@/types/Cars/CarTypes";
+import { Car } from "@/types/shared/car";
 
 export function useCarPagination(filteredCars: Car[]) {
   const [carsPerPage, setCarsPerPage] = useState(() => {
