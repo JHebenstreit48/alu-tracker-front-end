@@ -1,9 +1,9 @@
 import {
   setCarTrackingData,
   generateCarKey,
-  CarTrackingData,
   getCarTrackingData,
 } from "@/utils/shared/StorageUtils";
+import type { CarTracking } from "@/types/shared/tracking";
 
 type CarStarsMap = Record<string, number>;
 
@@ -127,7 +127,7 @@ export async function syncFromAccount(
       const current = getCarTrackingData(key);
       const starsFromServer = carStars[label] ?? 0;
 
-      const next: CarTrackingData = {
+      const next: CarTracking = {
         ...current,
         owned: ownedSet.has(label),
         goldMaxed: goldSet.has(label),
