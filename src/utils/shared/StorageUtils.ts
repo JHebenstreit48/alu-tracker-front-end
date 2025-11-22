@@ -1,12 +1,4 @@
-export interface CarTrackingData {
-  owned?: boolean;
-  stars?: number;
-  goldMaxed?: boolean;
-  keyObtained?: boolean;
-  upgradeStage?: number;
-  importParts?: number;
-  KeyCar?: boolean;
-}
+import type { CarTracking } from "@/types/shared/tracking";
 
 const keyPrefix = "car-tracker-";
 
@@ -25,7 +17,7 @@ export function generateCarKey(brand: string, model: string): string {
   return normalizeString(`${brand}_${model}`);
 }
 
-export function getCarTrackingData(carKey: string): CarTrackingData {
+export function getCarTrackingData(carKey: string): CarTracking {
   try {
     const data = localStorage.getItem(`${keyPrefix}${carKey}`);
     return data ? JSON.parse(data) : {};
@@ -36,15 +28,15 @@ export function getCarTrackingData(carKey: string): CarTrackingData {
 
 export function setCarTrackingData(
   carKey: string,
-  update: Partial<CarTrackingData>
+  update: Partial<CarTracking>
 ) {
   const existing = getCarTrackingData(carKey);
   const merged = { ...existing, ...update };
   localStorage.setItem(`${keyPrefix}${carKey}`, JSON.stringify(merged));
 }
 
-export function getAllCarTrackingData(): Record<string, CarTrackingData> {
-  const all: Record<string, CarTrackingData> = {};
+export function getAllCarTrackingData(): Record<string, CarTracking> {
+  const all: Record<string, CarTracking> = {};
   for (const key in localStorage) {
     if (key.startsWith(keyPrefix)) {
       try {
