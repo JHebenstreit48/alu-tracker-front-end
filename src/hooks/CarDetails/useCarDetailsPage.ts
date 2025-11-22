@@ -7,7 +7,6 @@ import {
   getCarTrackingData,
 } from "@/utils/shared/StorageUtils";
 
-// 👇 ADD THIS
 import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";
 
 export function useCarDetailsPage(slug: string | undefined) {

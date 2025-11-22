@@ -1,4 +1,4 @@
-import type { CarStatus } from "@/types/CarDetails";
+import type { CarStatus } from "@/types/shared/status";
 
 type Props = {
   updatedAt?: string;          // ISO string (UTC)

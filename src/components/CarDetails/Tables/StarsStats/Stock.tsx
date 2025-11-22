@@ -1,4 +1,4 @@
-import { StockStats as StockStatsData } from "@/interfaces/CarDetails/StarStats/StockStats";
+import { StockStats as StockStatsData } from "@/types/CarDetails";
 
 interface StockStatsProps {
   car: StockStatsData;

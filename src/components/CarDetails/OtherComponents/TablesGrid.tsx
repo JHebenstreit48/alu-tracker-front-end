@@ -4,7 +4,7 @@ import StockStatsTable from "@/components/CarDetails/Tables/StarsStats/Stock";
 import MaxStarTable from "@/components/CarDetails/Tables/StarsStats/Max";
 import GoldMaxStatsTable from "@/components/CarDetails/Tables/StarsStats/Gold";
 import KeyInfo from "@/components/CarDetails/Tables/KeyInfo";
-import type { FullCar } from "@/types/CarDetails";
+import type { FullCar } from "@/types/shared/car";
 
 type Props = {
   car: FullCar;

@@ -10,7 +10,6 @@ import {
 
 import { useCarDetailsPage } from '@/hooks/CarDetails/useCarDetailsPage';
 import { useTrackerMode } from '@/hooks/shared/useTrackerMode';
-import { useKeyCarSeeding } from '@/hooks/CarDetails/useKeyCarSeeding';
 import useKeyObtained from '@/hooks/CarDetails/useKeyObtained';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
@@ -31,7 +30,7 @@ export default function CarDetailsBody({ slug }: Props) {
   const { trackerMode, toggleTrackerMode } = useTrackerMode();
   const { unit, setUnit } = usePreferredUnit();
 
-  useKeyCarSeeding(car, trackerMode);
+  // 🔹 Seeding is already handled inside useCarDetailsPage
   const handleKeyObtainedChange = useKeyObtained(car, setKeyObtained);
   useAutoSyncDependency([keyObtained, trackerMode, car?.Brand, car?.Model]);
 

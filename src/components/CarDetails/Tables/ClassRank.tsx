@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Car } from '@/interfaces/CarDetails';
+import { Car } from '@/types/shared/car';
 import StarRankSelector from '@/components/CarDetails/OtherComponents/StarRankSelector';
 import {
   getCarTrackingData,

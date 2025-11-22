@@ -1,4 +1,4 @@
-import { GoldMaxStats } from "@/interfaces/CarDetails/StarStats/GoldMaxStats";
+import { GoldMaxStats } from "@/types/CarDetails";
 
 // Accept a broader car shape, not just GoldMaxStats
 interface GoldMaxStatsProps {

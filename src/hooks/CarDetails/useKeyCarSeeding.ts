@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { generateCarKey, getCarTrackingData, setCarTrackingData } from "@/utils/shared/StorageUtils";
-import type { FullCar } from "@/types/CarDetails";
+import type { FullCar } from "@/types/shared/car";
 
 export function useKeyCarSeeding(car: FullCar | null, trackerMode: boolean) {
   useEffect(() => {
