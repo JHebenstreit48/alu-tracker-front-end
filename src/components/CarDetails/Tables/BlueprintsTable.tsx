@@ -1,4 +1,5 @@
-import { Car, Blueprints } from "@/interfaces/CarDetails";
+import { Car } from "@/types/shared/car";
+import { Blueprints } from "@/types/CarDetails";
 import StarRank from "@/components/Shared/Stars/StarRank";
 
 interface Props {

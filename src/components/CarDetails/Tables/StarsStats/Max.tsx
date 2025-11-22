@@ -1,5 +1,5 @@
-import { Car } from "@/interfaces/CarDetails/Car";
-import { MaxStarStats as MaxStarStatsIF } from "@/interfaces/CarDetails/StarStats/MaxStarStats";
+import { Car } from "@/types/shared/car";
+import { MaxStarStats as MaxStarStatsIF } from "@/types/CarDetails";
 import { makeSpeedConverter, hasStats } from "@/components/CarDetails/Tables/StarsStats/utils/format";
 import { getStatsFromCar, StarNumber } from "@/components/CarDetails/Tables/StarsStats/utils/getStarStats";
 import StarHeader from "@/components/CarDetails/Tables/StarsStats/components/StarHeader";

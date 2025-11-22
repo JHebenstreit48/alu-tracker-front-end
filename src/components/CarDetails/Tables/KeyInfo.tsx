@@ -1,4 +1,4 @@
-import { Car } from "@/interfaces/CarDetails";
+import { Car } from "@/types/shared/car";
 import {
   setKeyObtainedState,   // <- keep
   generateCarKey,        // <- keep

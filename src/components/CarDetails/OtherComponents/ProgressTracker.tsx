@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Car } from "@/interfaces/CarDetails";
+import { Car } from "@/types/shared/car";
 import {
   getCarTrackingData,
   generateCarKey,

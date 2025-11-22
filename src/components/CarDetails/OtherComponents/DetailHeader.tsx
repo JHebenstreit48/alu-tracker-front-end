@@ -1,5 +1,5 @@
 import CarDataStatusCard from "@/components/CarDetails/OtherComponents/DataStatusCard";
-import type { CarStatus } from "@/types/CarDetails";
+import type { CarStatus } from "@/types/shared/status";
 
 type Props = {
   onBack: () => void;

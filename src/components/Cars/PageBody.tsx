@@ -2,8 +2,7 @@ import ClassTables from '@/components/Cars/ClassTables/ClassTables';
 import CarFilters from '@/components/Cars/CarFilters/CarFilters';
 import Header from '@/components/Shared/HeaderFooter/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
-// ❌ remove this:
-// import PaginationControls from '@/components/Cars/Pagination/PaginationControls';
+
 import { useNavigate } from 'react-router-dom';
 
 import '@/scss/Cars/CarsPage/index.scss';

@@ -4,7 +4,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
 } from "@/utils/shared/StorageUtils";
-import type { FullCar } from "@/types/CarDetails";
+import type { FullCar } from "@/types/shared/car";
 
 type Setter = (v: boolean) => void;
 
