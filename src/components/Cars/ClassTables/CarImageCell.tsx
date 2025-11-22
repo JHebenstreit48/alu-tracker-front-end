@@ -1,31 +1,48 @@
 import StarRank from "@/components/Shared/Stars/StarRank";
-import { useCarListTracking } from "@/hooks/Cars/useCarListTracking";
 import type { Car } from "@/types/shared/car";
+import type { CarTracking } from "@/types/shared/tracking";
 
 interface CarImageCellProps {
   car: Car;
   carKey: string;
+  trackingEnabled: boolean;
+  tracking?: CarTracking;
 }
 
-export function CarImageCell({ car, carKey }: CarImageCellProps) {
-  const { trackingEnabled, getTrackingForKey } = useCarListTracking();
-  const tracking = getTrackingForKey(carKey);
-  const isOwned = trackingEnabled && !!tracking?.owned;
+function isOwned(entry?: CarTracking): boolean {
+  if (!entry) return false;
 
+  return (
+    Boolean(entry.owned) ||
+    Boolean(entry.isOwned) ||
+    Boolean(entry.hasCar) ||
+    Boolean(entry.hasOwned)
+  );
+}
+
+export function CarImageCell({
+  car,
+  carKey,
+  trackingEnabled,
+  tracking,
+}: CarImageCellProps) {
   const imageSrc = car.Image ?? null;
   const altText = `${car.Brand} ${car.Model}`;
 
   if (car.ImageStatus === "Removed") {
     return <span className="noImage">🚫 Removed from Game</span>;
   }
+
   if (car.ImageStatus === "Coming Soon") {
     return <span className="noImage">🚧 Image Coming Soon</span>;
   }
+
   if (!imageSrc) {
     return <span className="noImage">❓ Unknown</span>;
   }
 
-  const imgClass = `carPic${trackingEnabled && !isOwned ? " carPic--locked" : ""}`;
+  const owned = trackingEnabled && isOwned(tracking);
+  const imgClass = `carPic${trackingEnabled && !owned ? " carPic--locked" : ""}`;
 
   return (
     <>

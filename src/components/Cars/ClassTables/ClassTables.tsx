@@ -1,17 +1,11 @@
 import { Link } from "react-router-dom";
-import StarRank from "@/components/Shared/Stars/StarRank";
 import { generateCarKey } from "@/utils/shared/StorageUtils";
 import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import OwnedGoldHighlighter from "@/components/Cars/ClassTables/OwnedGoldHighlighter";
 import { FavoriteHeart } from "@/components/Shared/CarsAndBrands";
-import type { Car } from "@/types/shared/car";
-
-interface ClassTablesProps {
-  cars: Car[];
-  selectedClass: string;
-  loading: boolean;
-  trackerMode?: boolean;
-}
+import { CarImageCell } from "@/components/Cars/ClassTables/CarImageCell";
+import { useCarListTracking } from "@/hooks/Cars/useCarListTracking";
+import type { ClassTablesProps } from "@/types/Cars/ClassTables";
 
 export default function ClassTables({
   cars,
@@ -21,6 +15,8 @@ export default function ClassTables({
 }: ClassTablesProps) {
   const headerText =
     selectedClass === "All Classes" ? "All Classes" : selectedClass;
+
+  const { trackingEnabled, getTrackingForKey } = useCarListTracking();
 
   return (
     <div>
@@ -46,8 +42,7 @@ export default function ClassTables({
           ) : (
             cars.map((car) => {
               const carKey = generateCarKey(car.Brand, car.Model);
-              const imageSrc = car.Image ?? null;
-              const altText = `${car.Brand} ${car.Model}`;
+              const tracking = getTrackingForKey(carKey);
 
               return (
                 <tr className="tableData" key={carKey}>
@@ -62,33 +57,12 @@ export default function ClassTables({
 
                   <td className="carImage">
                     <div className="imageWrapper">
-                      {car.ImageStatus === "Removed" ? (
-                        <span className="noImage">🚫 Removed from Game</span>
-                      ) : car.ImageStatus === "Coming Soon" ? (
-                        <span className="noImage">🚧 Image Coming Soon</span>
-                      ) : imageSrc ? (
-                        <>
-                          <img
-                            className="carPic"
-                            src={imageSrc}
-                            alt={altText}
-                            onError={(e) => {
-                              const img = e.currentTarget as HTMLImageElement;
-                              // No fallback: hide the broken image and show a message instead
-                              img.style.display = "none";
-                              if (img.parentElement) {
-                                img.parentElement.innerHTML =
-                                  '<span class="noImage">❌ File Not Found</span>';
-                              }
-                            }}
-                          />
-                          <div className="starOverlay">
-                            <StarRank count={car.Stars} />
-                          </div>
-                        </>
-                      ) : (
-                        <span className="noImage">❓ Unknown</span>
-                      )}
+                      <CarImageCell
+                        car={car}
+                        carKey={carKey}
+                        trackingEnabled={trackingEnabled}
+                        tracking={tracking}
+                      />
                     </div>
                   </td>
                 </tr>

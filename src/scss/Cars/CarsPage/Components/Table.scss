@@ -222,51 +222,63 @@ td {
 /* =============================
    Image Column
    ============================= */
-.carImage {
-  text-align: center;
-  padding: 0;
-  margin: 0;
-  position: relative;
-
-  @include maxw($cellphone-portrait) {
-    margin-top: 0;
-    border-top: 1px solid $td-border-color;
-  }
-
-  .carPic {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    padding: 0;
-    margin: 0 auto;
-
-    @include maxw($cellphone-portrait) {
-      height: auto;
-      max-height: 11rem;
-      max-width: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .starOverlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0.28rem 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 2;
+   .carImage {
     text-align: center;
-    font-size: 0.3rem;
-
+    padding: 0;
+    margin: 0;
+    position: relative;
+  
     @include maxw($cellphone-portrait) {
-      padding: 0.05rem;
-      margin: 0;
-      height: 1.5rem;
+      margin-top: 0;
+      border-top: 1px solid $td-border-color;
     }
-  }
-}
+  
+    .carPic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      padding: 0;
+      margin: 0 auto;
+  
+      @include maxw($cellphone-portrait) {
+        height: auto;
+        max-height: 11rem;
+        max-width: 100%;
+        object-fit: cover;
+      }
+    }
+  
+    /* 🔹 Grayed-out variant when car is not owned */
+    .carPic--locked {
+      filter: grayscale(100%);
+      opacity: 0.45;
+    }
+  
+    .starOverlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.28rem 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 2;
+      text-align: center;
+      font-size: 0.3rem;
+  
+      @include maxw($cellphone-portrait) {
+        padding: 0.05rem;
+        margin: 0;
+        height: 1.5rem;
+      }
+    }
+  
+    /* 🔹 On the Cars page overlay, unfilled stars should be solid black */
+    .StarRating .starIcon.grayed {
+      filter: grayscale(100%) brightness(0); // yellow → black
+      opacity: 1;                            // full strength, not faded
+    }
+   }
 
 /* =============================
    Placeholder & Fallback Text
