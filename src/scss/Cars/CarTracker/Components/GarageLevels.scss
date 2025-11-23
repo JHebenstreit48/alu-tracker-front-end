@@ -1,0 +1,105 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* ==============================
+   Garage Level Rings (Tracker page)
+============================== */
+
+.garageLevelsSummaryRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .progressGroup {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: center;
+  }
+}
+
+.glRingWrapper {
+  width: $progress-ring-size;
+  height: $progress-ring-size;
+
+  .CircularProgressbar {
+    font-weight: bold;
+    margin: 0 auto;
+
+    .CircularProgressbar-trail {
+      stroke: $progress-ring-trail !important;
+    }
+
+    .CircularProgressbar-text {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+/* Colors per ring */
+.glRingWrapperCurrent {
+  .CircularProgressbar-path {
+    stroke: $color-accent-blue !important;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 8px rgba($color-accent-blue, 0.7));
+  }
+  .CircularProgressbar-text {
+    fill: $color-accent-blue !important;
+  }
+}
+
+.glRingWrapperXp {
+  .CircularProgressbar-path {
+    stroke: $ring-color-green !important;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 8px rgba($ring-color-green, 0.7));
+  }
+  .CircularProgressbar-text {
+    fill: $ring-color-green !important;
+  }
+}
+
+.glRingWrapperOverall {
+  .CircularProgressbar-path {
+    stroke: $color-gold-glow !important;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 8px rgba($color-gold-glow, 0.7));
+  }
+  .CircularProgressbar-text {
+    fill: $color-gold-glow !important;
+  }
+}
+
+/* Text labels under rings */
+
+.glText {
+  font-size: 1.05rem;
+  text-align: center;
+  margin: 0.5rem 0 0 0;
+
+  @include maxw($cellphone-portrait) {
+    margin: 0.6rem auto 0;
+    padding-inline: 0.6rem;
+    max-width: 32ch;
+    line-height: 1.35;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+}
+
+.glTextCurrentLevel {
+  color: $color-accent-blue;
+}
+
+.glTextXp {
+  color: $ring-color-green;
+}
+
+.glTextOverall {
+  color: $color-gold-glow;
+}

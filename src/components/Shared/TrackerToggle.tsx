@@ -1,4 +1,4 @@
-import "@/scss/Cars/CarsPage/index.scss";
+import "@/scss/Shared/TrackerToggle.scss";
 
 interface Props {
   isEnabled: boolean;

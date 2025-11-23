@@ -14,6 +14,17 @@ $caption-gradient: linear-gradient(
 );
 
 /* ==============================
+   Page-level layout / overrides
+============================== */
+.garageLevelsPage {
+  // Override shared tracker toggle only on this page
+  .glTrackerToggle {
+    margin: 2rem 0 0 1rem;
+    justify-content: flex-start; // tweak to center/right if you prefer
+  }
+}
+
+/* ==============================
    Dropdown (multi-column)
 ============================== */
 .gl-container {
@@ -49,17 +60,28 @@ $caption-gradient: linear-gradient(
     min-width: 9.5rem;
     border-radius: 10px;
     border: 1px solid rgba($color-gold-glow, 0.35);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.24)), #0f0f10;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.06),
+        rgba(0, 0, 0, 0.24)
+      ),
+      #0f0f10;
     color: #f3f3f3;
     font-weight: 700;
     letter-spacing: 0.02em;
     text-shadow: 0 1px 0 #000;
-    box-shadow: 0 0 0 2px rgba($color-accent-blue, 0.18) inset, 0 10px 26px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 0 0 2px rgba($color-accent-blue, 0.18) inset,
+      0 10px 26px rgba(0, 0, 0, 0.55);
     cursor: pointer;
-    transition: box-shadow 0.18s ease, transform 0.06s ease, border-color 0.18s ease;
+    transition: box-shadow 0.18s ease, transform 0.06s ease,
+      border-color 0.18s ease;
 
-    &:hover { border-color: rgba($color-gold-glow, 0.6); }
-    &:active { transform: translateY(1px); }
+    &:hover {
+      border-color: rgba($color-gold-glow, 0.6);
+    }
+    &:active {
+      transform: translateY(1px);
+    }
 
     @include maxw($cellphone-portrait) {
       min-width: 8.5rem;
@@ -79,15 +101,26 @@ $caption-gradient: linear-gradient(
     overflow: visible;
 
     background:
-      radial-gradient(160% 120% at 10% -10%, rgba(88, 34, 180, 0.12), transparent 55%),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.2)),
+      radial-gradient(
+        160% 120% at 10% -10%,
+        rgba(88, 34, 180, 0.12),
+        transparent 55%
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04),
+        rgba(0, 0, 0, 0.2)
+      ),
       rgba(24, 26, 30, 0.94);
     border: 1px solid rgba(#fff, 0.1);
-    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba($color-accent-blue, 0.12) inset;
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba($color-accent-blue, 0.12) inset;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 
-    &.is-open { display: block; }
+    &.is-open {
+      display: block;
+    }
 
     .gl-grid {
       display: grid;
@@ -97,9 +130,13 @@ $caption-gradient: linear-gradient(
       overflow-y: auto;
       scrollbar-width: none;
       padding-inline: 0.1rem;
-      &::-webkit-scrollbar { display: none; }
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
-      @include small-laptop { grid-template-columns: repeat(12, 1fr); }
+      @include small-laptop {
+        grid-template-columns: repeat(12, 1fr);
+      }
       @include maxw($cellphone-portrait) {
         grid-template-columns: repeat(6, 1fr);
         max-height: 12rem;
@@ -117,7 +154,8 @@ $caption-gradient: linear-gradient(
         appearance: none;
         border-radius: 999px;
         padding: 0.42rem 0.5rem;
-        font: 800 0.98rem/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        font: 800 0.98rem/1 system-ui, -apple-system, Segoe UI, Roboto,
+          sans-serif;
         letter-spacing: 0.01em;
         color: #eef1f7;
         background: transparent;
@@ -125,19 +163,28 @@ $caption-gradient: linear-gradient(
         box-shadow: 0 1px 0 rgba(#000, 0.35);
         cursor: pointer;
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
-        transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.2s ease, transform 0.08s ease;
+        transition: background-color 0.18s ease,
+          border-color 0.18s ease, box-shadow 0.2s ease,
+          transform 0.08s ease;
 
         &:hover,
         &:focus-visible {
           outline: none;
           background:
-            linear-gradient(to bottom, rgba(135, 70, 210, 0.12), rgba(135, 70, 210, 0.06)),
+            linear-gradient(
+              to bottom,
+              rgba(135, 70, 210, 0.12),
+              rgba(135, 70, 210, 0.06)
+            ),
             rgba(30, 32, 36, 0.18);
           border-color: rgba(135, 70, 210, 0.58);
-          box-shadow: 0 1px 0 rgba(#000, 0.45), 0 0 12px 2px rgba(135, 70, 210, 0.26);
+          box-shadow: 0 1px 0 rgba(#000, 0.45),
+            0 0 12px 2px rgba(135, 70, 210, 0.26);
         }
 
-        &:active { transform: translateY(1px); }
+        &:active {
+          transform: translateY(1px);
+        }
       }
     }
   }
@@ -188,23 +235,31 @@ $caption-gradient: linear-gradient(
 
     width: 100%;
     max-width: min(90rem, 96vw); /* TWEAK HERE for bar width */
-    padding: 1rem 1.4rem;         /* TWEAK HERE for bar height */
+    padding: 1rem 1.4rem; /* TWEAK HERE for bar height */
     font-size: 20px;
 
     color: $color-gold-glow;
     background:
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.16)),
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04),
+        rgba(0, 0, 0, 0.16)
+      ),
       rgba(16, 16, 18, 0.55);
     border: 1px solid rgba($color-accent-blue, 0.35);
     border-radius: 12px;
-    box-shadow: 0 0 10px 2px rgba($color-accent-blue, 0.22), inset 0 1px 0 rgba(#fff, 0.08);
+    box-shadow: 0 0 10px 2px rgba($color-accent-blue, 0.22),
+      inset 0 1px 0 rgba(#fff, 0.08);
 
     @include maxw($cellphone-portrait) {
       font-size: 16px;
       width: 20.5rem;
     }
 
-    .xpRequirement { font-weight: 700; color: $color-gold-glow; }
+    .xpRequirement {
+      font-weight: 700;
+      color: $color-gold-glow;
+    }
   }
 }
 
@@ -213,23 +268,21 @@ $caption-gradient: linear-gradient(
 ============================== */
 .CarImagesContainer {
   margin: 0rem auto 2rem;
-  max-width: min(1300px, 96vw);                 /* TWEAK HERE: gallery width */
+  max-width: min(1300px, 96vw); /* TWEAK HERE: gallery width */
   display: grid;
-  grid-template-columns: repeat(2, minmax(32rem, 1fr)); /* TWEAK HERE: card width */
+  grid-template-columns: repeat(2, minmax(32rem, 1fr)); /* card width */
   gap: 2.5rem 0rem;
   justify-content: center;
   justify-items: center;
 
-  /* card wrapper width must match the minmax above */
   > div {
     width: 100%;
-    max-width: 32rem;                           /* TWEAK HERE to match */
+    max-width: 32rem; /* match card width */
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
-  /* single item & odd-count centering */
   > div:only-child,
   > div:last-child:nth-child(odd) {
     grid-column: 1 / -1;
@@ -240,7 +293,9 @@ $caption-gradient: linear-gradient(
     max-width: 88vw;
     grid-template-columns: 1fr;
     gap: 1.4rem;
-    > div { max-width: 26rem; }
+    > div {
+      max-width: 26rem;
+    }
   }
 
   .CarImages {
@@ -258,27 +313,29 @@ $caption-gradient: linear-gradient(
     margin-top: 0.7rem;
     padding: 0.6rem 1.2rem;
     width: 100%;
-    max-width: 32rem;                            /* TWEAK HERE to match card */
+    max-width: 32rem;
     text-align: center;
     color: #edf1f7;
     font-size: clamp(15px, 1.05rem, 18px);
     font-weight: 600;
-    letter-spacing: .01em;
+    letter-spacing: 0.01em;
 
     border-radius: 999px;
-    background:
-      linear-gradient(180deg, rgba(135, 70, 210, 0.2), rgba($color-accent-blue, 0.18));
+    background: linear-gradient(
+      180deg,
+      rgba(135, 70, 210, 0.2),
+      rgba($color-accent-blue, 0.18)
+    );
     border: 1px solid rgba(#fff, 0.12);
     box-shadow:
       0 6px 18px rgba(0, 0, 0, 0.35),
       0 0 12px rgba($color-accent-blue, 0.18),
       inset 0 1px 0 rgba(#fff, 0.08);
     backdrop-filter: blur(6px);
-    text-shadow: 0 1px 0 rgba(0,0,0,.35);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
 
     @include maxw($cellphone-portrait) {
-      max-width: 20rem;                          /* TWEAK HERE to match card */
-
+      max-width: 20rem;
     }
   }
 }
