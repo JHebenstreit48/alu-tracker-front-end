@@ -1,38 +1,37 @@
 import { useMemo } from 'react';
 import type { Car } from '@/types/shared/car';
-import type { StarRankOwnershipDatum } from '@/types/Tracking/starRankStats';
 import { getAllCarTrackingData, generateCarKey } from '@/utils/shared/StorageUtils';
-
-const MAX_STAR_RANK = 6;
+import type { StarRankOwnershipDatum } from '@/types/Tracking/starRankStats';
 
 export function useStarRankOwnershipStats(allCars: Car[]): StarRankOwnershipDatum[] {
   return useMemo(() => {
-    const trackingMap = getAllCarTrackingData();
-    const results: StarRankOwnershipDatum[] = [];
+    // Only valid *max* ranks in the game data
+    const ranks: number[] = [3, 4, 5, 6];
 
-    for (let rank = 1; rank <= MAX_STAR_RANK; rank++) {
-      let totalForRank = 0;
-      let ownedForRank = 0;
+    const allTracked = getAllCarTrackingData();
 
-      for (const car of allCars) {
-        if (car.Stars < rank) continue;
-        totalForRank++;
+    return ranks.map((rank) => {
+      // All cars whose *max* star rank is this rank
+      const carsOfThisRank = allCars.filter((c) => c.Stars === rank);
 
+      // How many of those you actually own
+      const ownedOfThisRank = carsOfThisRank.filter((car) => {
         const key = generateCarKey(car.Brand, car.Model);
-        const tracking = trackingMap[key];
-
-        if (tracking?.owned && tracking.stars === rank) {
-          ownedForRank++;
-        }
-      }
-
-      results.push({
-        starRank: rank,
-        owned: ownedForRank,
-        unowned: Math.max(totalForRank - ownedForRank, 0),
+        const tracking = allTracked[key] as { owned?: boolean } | undefined;
+        return !!tracking?.owned;
       });
-    }
 
-    return results;
+      const total = carsOfThisRank.length;
+      const owned = ownedOfThisRank.length;
+      const unowned = Math.max(total - owned, 0);
+
+      const datum: StarRankOwnershipDatum = {
+        starRank: rank,   // still just a number as in your existing type
+        owned,
+        unowned,
+      };
+
+      return datum;
+    });
   }, [allCars]);
 }
