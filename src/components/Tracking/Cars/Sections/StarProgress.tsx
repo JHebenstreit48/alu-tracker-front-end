@@ -22,7 +22,8 @@ export default function StarProgress({
   starCounts,
   enrichedTrackedCars,
 }: Props) {
-  const barData = useStarRankOwnershipStats(allCars);
+  // ✅ pass BOTH arguments: allCars + enrichedTrackedCars
+  const barData = useStarRankOwnershipStats(allCars, enrichedTrackedCars);
 
   return (
     <>
@@ -32,7 +33,10 @@ export default function StarProgress({
 
       <div className="circleAndTableRow">
         <div className="circleColumn">
-          <StarRankCircles starCounts={starCounts} totalOwned={ownedCount} />
+          <StarRankCircles
+            starCounts={starCounts}
+            totalOwned={ownedCount}
+          />
         </div>
 
         <div className="tableColumn">

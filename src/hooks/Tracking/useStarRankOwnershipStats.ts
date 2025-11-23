@@ -1,37 +1,40 @@
 import { useMemo } from 'react';
 import type { Car } from '@/types/shared/car';
-import { getAllCarTrackingData, generateCarKey } from '@/utils/shared/StorageUtils';
+import type { CarTracking } from '@/types/shared/tracking';
 import type { StarRankOwnershipDatum } from '@/types/Tracking/starRankStats';
 
-export function useStarRankOwnershipStats(allCars: Car[]): StarRankOwnershipDatum[] {
-  return useMemo(() => {
-    // Only valid *max* ranks in the game data
-    const ranks: number[] = [3, 4, 5, 6];
+type StarRank = 3 | 4 | 5 | 6;
 
-    const allTracked = getAllCarTrackingData();
+/**
+ * Builds data for the "Ownership by Current Star Rank" bar chart,
+ * but grouped by **max star rank** (3★, 4★, 5★, 6★) to match the four tables.
+ *
+ * - `owned`   = number of cars you own whose max rank is this value
+ * - `unowned` = total cars of this max rank minus owned
+ */
+export function useStarRankOwnershipStats(
+  allCars: Car[],
+  enrichedTrackedCars: (Car & CarTracking)[]
+): StarRankOwnershipDatum[] {
+  return useMemo(() => {
+    const ranks: StarRank[] = [3, 4, 5, 6];
 
     return ranks.map((rank) => {
-      // All cars whose *max* star rank is this rank
-      const carsOfThisRank = allCars.filter((c) => c.Stars === rank);
+      // total cars in game that max out at this rank
+      const totalOfThisRank = allCars.filter((c) => c.Stars === rank).length;
 
-      // How many of those you actually own
-      const ownedOfThisRank = carsOfThisRank.filter((car) => {
-        const key = generateCarKey(car.Brand, car.Model);
-        const tracking = allTracked[key] as { owned?: boolean } | undefined;
-        return !!tracking?.owned;
-      });
+      // of those, how many do you own?
+      const ownedOfThisRank = enrichedTrackedCars.filter(
+        (c) => c.Stars === rank && c.owned
+      ).length;
 
-      const total = carsOfThisRank.length;
-      const owned = ownedOfThisRank.length;
-      const unowned = Math.max(total - owned, 0);
+      const unowned = Math.max(totalOfThisRank - ownedOfThisRank, 0);
 
-      const datum: StarRankOwnershipDatum = {
-        starRank: rank,   // still just a number as in your existing type
-        owned,
+      return {
+        starRank: rank,
+        owned: ownedOfThisRank,
         unowned,
       };
-
-      return datum;
     });
-  }, [allCars]);
+  }, [allCars, enrichedTrackedCars]);
 }
