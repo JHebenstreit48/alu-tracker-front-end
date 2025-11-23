@@ -10,7 +10,7 @@ import Cars from "@/pages/MainPages/CarInfo/Cars";
 import CarDetails from "@/pages/Subpages/CarDetails";
 import GarageLevels from "@/pages/MainPages/GarageLevels/GarageLevels";
 import LegendStorePrices from "@/pages/MainPages/LegendStore/LegendStore";
-import CarTrackerPage from "@/pages/Subpages/CarTracker";
+import CarTracker from "@/pages/Subpages/CarTracker";
 
 import Feedback from "@/pages/MainPages/Feedback/Feedback"; // ← NEW
 import Account from "@/pages/Subpages/Account";            // ← NEW
@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
       { path: "/brands/:slug", element: <BrandInfo /> },
       { path: "/cars", element: <Cars /> },
       { path: "/cars/:slug", element: <CarDetails /> },
-      { path: "/car-tracker/", element: <CarTrackerPage /> },
+      { path: "/car-tracker/", element: <CarTracker /> },
       { path: "/garagelevels", element: <GarageLevels /> },
       { path: "/legendstoreprices", element: <LegendStorePrices /> },
       { path: "/feedback", element: <Feedback /> }, // ← NEW

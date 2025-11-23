@@ -17,7 +17,6 @@ import UnitToggle from '@/components/CarDetails/OtherComponents/UnitToggle';
 
 import '@/scss/Cars/CarDetails/CarDetail.scss';
 import '@/scss/Cars/CarDetails/CarStatus.scss';
-import '@/scss/Cars/CarDetails/TrackerToggle.scss';
 import '@/scss/Cars/CarDetails/UnitToggle.scss';
 import '@/scss/Cars/CarDetails/CarComments.scss';
 

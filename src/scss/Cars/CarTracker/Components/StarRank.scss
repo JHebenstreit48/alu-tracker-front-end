@@ -2,12 +2,14 @@
 @use '@scss/Globals/index' as *;
 
 /* ==============================
-   Layout Structure — Row 2: Stars + Max Tables
+   Layout Structure — Row 2:
+   Star Circles + Max Tables + Chart
 ============================== */
 .circleAndTableRow {
   display: flex;
   align-items: flex-start;
-  gap: 8rem;
+  justify-content: center; // center the whole row
+  gap: 4rem; // tighter for 3 columns
   width: 100%;
 
   /* phones portrait: stack & center */
@@ -15,6 +17,26 @@
     flex-direction: column;
     align-items: center;
     gap: 1.25rem;
+  }
+
+  .circleColumn {
+    flex: 0 0 auto;
+  }
+
+  .tableColumn {
+    flex: 0 0 auto;
+  }
+
+  .chartColumn {
+    flex: 1 1 24rem;
+    max-width: 30rem;
+    display: flex;
+    align-items: center;
+    margin-top: 3rem; // move chart down so it lines up better vertically
+
+    @include maxw($cellphone-portrait) {
+      margin-top: 1.5rem; // a bit less on small screens
+    }
   }
 }
 
@@ -26,23 +48,22 @@
 
   @include maxw($cellphone-portrait) {
     width: 100%;
-    justify-content: center; /* center the grid wrapper on phones */
+    justify-content: center;
   }
 }
 
 .starRankGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); // 2 columns
-  grid-template-rows: repeat(3, auto); // 3 rows
-  margin: 2.75rem 4rem 0 9rem; // desktop offsets (keep)
+  grid-template-rows: repeat(3, auto);   // 3 rows
+  margin: 2.75rem 4rem 0 9rem;           // desktop offsets
 
-  /* PHONE FIX: remove big left margin, center items, tighten gaps */
   @include maxw($cellphone-portrait) {
-    margin: 0.75rem 0 0 0; /* kill the desktop margins */
+    margin: 0.75rem 0 0 0;
     grid-template-columns: repeat(2, minmax(120px, 1fr));
     column-gap: 0.75rem;
     row-gap: 0.75rem;
-    justify-items: center; /* center each circle cell */
+    justify-items: center;
   }
 }
 
@@ -57,7 +78,6 @@
   align-items: center;
   justify-content: center;
 
-  /* optional: very small phones could scale down a touch */
   @include maxw(360px) {
     width: 140px;
     height: 140px;
@@ -74,6 +94,7 @@
   gap: 4px;
   margin-bottom: 4px;
 }
+
 .starIcon {
   width: 20px;
   height: 20px;
@@ -91,13 +112,13 @@
 ============================== */
 .maxStarGridWrapper {
   display: flex;
-  justify-content: center; /* center whole grid on desktop */
+  justify-content: center;
   width: 100%;
   padding-left: 0;
   margin-top: 2rem;
 
   @include maxw($cellphone-portrait) {
-    justify-content: center; /* (explicit) */
+    justify-content: center;
     margin-top: 1rem;
     width: 21rem;
   }
@@ -105,13 +126,12 @@
 
 .maxStarGrid {
   display: grid;
-  grid-template-columns: repeat(2, 15rem); /* desktop: 2×2 fixed width */
-  row-gap: 1rem; /* tighter vertical spacing */
+  grid-template-columns: repeat(2, 15rem);
+  row-gap: 1rem;
   column-gap: 1.25rem;
-  justify-content: center; /* center the two columns */
+  justify-content: center;
   align-content: start;
 
-  /* phones: single centered column; no overflow */
   @include maxw($cellphone-portrait) {
     grid-template-columns: minmax(260px, 92vw);
     justify-content: center;
@@ -131,18 +151,21 @@
   font-size: 0.9rem;
   overflow: hidden;
 }
+
 .maxStarTable th,
 .maxStarTable td {
   padding: 6px 10px;
   text-align: left;
   line-height: 1.2;
 }
+
 .maxStarTable th {
   background-color: $table-header-bg;
   font-weight: bold;
   text-align: center;
   padding: 9px 11px;
 }
+
 .maxStarTable td {
   height: 2rem;
 }
@@ -165,8 +188,31 @@
   width: 100%;
   padding: 2px 0;
 }
+
 .inlineStar {
   width: 20px;
   height: 20px;
   margin: 0 2px;
+}
+
+/* ==============================
+   Bar Chart — Ownership by Star Rank
+============================== */
+.starRankOwnershipChart {
+  width: 100%;
+  text-align: center;
+  margin-top: 3rem;
+
+  .sectionSubtitle {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-gold-glow;
+    font-family: var(--display-font, 'Cinzel'), serif;
+  }
+
+  .chartContainer {
+    width: 100%;
+    height: 300px; // chart height controlled purely via CSS
+  }
 }
