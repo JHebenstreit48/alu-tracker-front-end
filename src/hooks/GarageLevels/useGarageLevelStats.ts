@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useGarageLevels } from '@/hooks/GarageLevels/useGarageLevels';
-import type { GarageLevelsInterface } from '@/interfaces/GarageLevels';
+// src/hooks/GarageLevels/useGarageLevelStats.ts
 
-const MAX_LEVEL = 60;
+import { useMemo } from 'react';
+import { useGarageLevels } from '@/hooks/GarageLevels/useGarageLevels';
+
+export const MAX_LEVEL = 60;
 
 export interface GarageLevelStats {
   loading: boolean;
@@ -11,110 +12,107 @@ export interface GarageLevelStats {
   currentXp: number;
   nextLevel: number | null;
   xpToNext: number;
-  xpWithinLevelPercent: number;
-  levelPercent: number;
-  overallPercent: number;
+  xpWithinLevelPercent: number; // 0–100 within the *current* level
+  levelPercent: number;         // 0–100 based purely on level vs MAX_LEVEL
+  overallPercent: number;       // 0–100 based on XP vs XP for MAX_LEVEL
 }
 
-function parseXp(raw: string | null): number {
+function readLocalLevel(): number {
+  if (typeof window === 'undefined') return 1;
+  const raw = window.localStorage.getItem('currentGarageLevel');
+  const n = raw ? Number(raw) : NaN;
+  return Number.isFinite(n) ? n : 1;
+}
+
+function readLocalXp(): number {
+  if (typeof window === 'undefined') return 0;
+  const raw = window.localStorage.getItem('currentXp');
   if (!raw) return 0;
   const cleaned = raw.replace(/,/g, '');
   const n = Number(cleaned);
-  return Number.isFinite(n) && n >= 0 ? n : 0;
+  return Number.isFinite(n) ? n : 0;
 }
 
 export function useGarageLevelStats(): GarageLevelStats {
   const { levels, loading, error } = useGarageLevels();
 
-  const [localLevel, setLocalLevel] = useState<number>(() => {
-    const raw = localStorage.getItem('currentGarageLevel');
-    const n = raw ? Number(raw) : 1;
-    return Number.isFinite(n) && n > 0 ? n : 1;
-  });
-
-  const [localXp, setLocalXp] = useState<number>(() => {
-    const raw = localStorage.getItem('currentXp');
-    return parseXp(raw);
-  });
-
-  // Listen for changes from the GarageLevels page (or other tabs)
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'currentGarageLevel' && e.newValue != null) {
-        const n = Number(e.newValue);
-        if (Number.isFinite(n)) setLocalLevel(n);
-      }
-      if (e.key === 'currentXp' && e.newValue != null) {
-        setLocalXp(parseXp(e.newValue));
-      }
-    };
-
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
-
   return useMemo(() => {
-    const currentLevel = Math.min(Math.max(localLevel || 1, 1), MAX_LEVEL);
-    const currentXp = localXp;
-
-    // If we don't have levels yet, still return a sane object
-    if (!levels || levels.length === 0) {
+    // loading / empty safeguard
+    if (loading || levels.length === 0) {
       return {
         loading,
-        error: error ?? null,
-        currentLevel,
-        currentXp,
-        nextLevel: null,
+        error,
+        currentLevel: 1,
+        currentXp: 0,
+        nextLevel: 2,
         xpToNext: 0,
         xpWithinLevelPercent: 0,
-        levelPercent: (currentLevel / MAX_LEVEL) * 100,
-        overallPercent: (currentLevel / MAX_LEVEL) * 100,
+        levelPercent: 0,
+        overallPercent: 0,
       };
     }
 
-    const sorted = [...levels].sort(
-      (a: GarageLevelsInterface, b: GarageLevelsInterface) =>
-        a.GarageLevelKey - b.GarageLevelKey,
+    const localLevel = readLocalLevel();
+    const localXp = readLocalXp();
+
+    // Clamp level between 1 and MAX_LEVEL
+    const currentLevel = Math.min(Math.max(localLevel || 1, 1), MAX_LEVEL);
+
+    // XP threshold for max level
+    const maxLevelEntry = levels.find((l) => l.GarageLevelKey === MAX_LEVEL);
+    const maxXpThreshold = maxLevelEntry?.xp ?? 0;
+
+    // Clamp XP between 0 and max threshold (if we know it)
+    const currentXp =
+      maxXpThreshold > 0
+        ? Math.min(Math.max(localXp, 0), maxXpThreshold)
+        : Math.max(localXp, 0);
+
+    // Entries for current + next levels
+    const currentEntry = levels.find((l) => l.GarageLevelKey === currentLevel);
+    const nextEntry = levels.find((l) => l.GarageLevelKey === currentLevel + 1);
+
+    const currentThreshold = currentEntry?.xp ?? 0;
+
+    // If at MAX_LEVEL, treat nextThreshold == currentThreshold
+    const nextThreshold =
+      currentLevel >= MAX_LEVEL
+        ? currentThreshold
+        : nextEntry?.xp ?? currentThreshold;
+
+    // XP remaining to next level (0 at or beyond max)
+    const xpToNext =
+      currentLevel >= MAX_LEVEL
+        ? 0
+        : Math.max(nextThreshold - currentXp, 0);
+
+    // Progress within current level (0–100 between thresholds N and N+1)
+    const levelRange = Math.max(nextThreshold - currentThreshold, 1);
+    const xpWithinLevelRaw = Math.max(
+      Math.min(currentXp, nextThreshold) - currentThreshold,
+      0
     );
+    const xpWithinLevelPercent = (xpWithinLevelRaw / levelRange) * 100;
 
-    const currentLevelData =
-      sorted.find((l) => l.GarageLevelKey === currentLevel) ?? sorted[0];
+    // Level-based progress purely by level index
+    const levelPercent = (currentLevel / MAX_LEVEL) * 100;
 
-    const nextLevelData =
-      sorted.find((l) => l.GarageLevelKey === currentLevel + 1) ?? null;
-
-    const currentLevelFloorXp = currentLevelData?.xp ?? 0;
-    const nextLevelXp = nextLevelData?.xp ?? currentLevelFloorXp;
-
-    let xpToNext = 0;
-    let withinPercent = 0;
-
-    if (nextLevelXp > currentLevelFloorXp) {
-      const span = nextLevelXp - currentLevelFloorXp;
-      const clampedXp = Math.min(
-        Math.max(currentXp, currentLevelFloorXp),
-        nextLevelXp,
-      );
-      withinPercent = ((clampedXp - currentLevelFloorXp) / span) * 100;
-      xpToNext = Math.max(nextLevelXp - currentXp, 0);
-    }
-
-    const maxXp = sorted[sorted.length - 1]?.xp ?? 0;
+    // Overall progress by XP vs XP required for max level
     const overallPercent =
-      maxXp > 0
-        ? Math.min((currentXp / maxXp) * 100, 100)
-        : (currentLevel / MAX_LEVEL) * 100;
+      maxXpThreshold > 0
+        ? Math.min((currentXp / maxXpThreshold) * 100, 100)
+        : levelPercent;
 
     return {
-      loading,
-      error: error ?? null,
+      loading: false,
+      error,
       currentLevel,
       currentXp,
-      nextLevel: nextLevelData ? nextLevelData.GarageLevelKey : null,
+      nextLevel: currentLevel >= MAX_LEVEL ? null : currentLevel + 1,
       xpToNext,
-      xpWithinLevelPercent: withinPercent,
-      levelPercent: (currentLevel / MAX_LEVEL) * 100,
+      xpWithinLevelPercent,
+      levelPercent,
       overallPercent,
     };
-  }, [localLevel, localXp, levels, loading, error]);
+  }, [levels, loading, error]);
 }
