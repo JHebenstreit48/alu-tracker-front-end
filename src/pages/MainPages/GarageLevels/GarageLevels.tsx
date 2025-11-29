@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Header from '@/components/Shared/HeaderFooter/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 import GarageLevelsDropDown from '@/components/GarageLevels/Dropdown';
-import TrackerToggle from '@/components/Shared/TrackerToggle';
+import TrackerToggle from '@/components/Tracking/shared/TrackerToggle';
 import GarageLevelTracker from '@/components/GarageLevels/Tracker';
 import BackToTop from '@/components/Shared/Navigation/BackToTopButton';
 import { useGarageLevels } from '@/hooks/GarageLevels/useGarageLevels';

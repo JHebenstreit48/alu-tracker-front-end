@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/routes/index";
-import { AuthProvider } from "@/components/SignupLogin/context/AuthProvider";
+import { AuthProvider } from "@/context/Auth/authProvider";
 
 const rootElement = document.getElementById("root");
 

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { AuthContext } from "@/context/Auth/authContext";
 import AuthModal from "@/components/SignupLogin/Modals/AuthModal";
 import "@/scss/SignupLogin/AuthButtons.scss";
 

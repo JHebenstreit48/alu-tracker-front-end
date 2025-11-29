@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { AuthContext } from "@/context/Auth/authContext";
 import { syncToAccount } from "@/utils/UserDataSync/syncToAccount";
 import { syncFromAccount } from "@/utils/UserDataSync/syncFromAccount";
 
