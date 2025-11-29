@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { forgotPassword, forgotUsername } from "@/components/SignupLogin/api/accountAPI";
+import { forgotPassword, forgotUsername } from "@/api/accountAPI";
 
 export default function SecurityActions() {
   const [email, setEmail] = useState("");

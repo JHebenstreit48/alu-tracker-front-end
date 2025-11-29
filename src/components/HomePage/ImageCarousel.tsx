@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ImageCarouselType } from "@/components/HomePage/ImagesForCarousel";
+import { ImageCarouselType } from "@/data/ImagesForCarousel";
 import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
-import { useCarousel } from "@/components/HomePage/Carousel/useCarousel";
-import { Slide } from "@/components/HomePage/Carousel/Slide";
+import { useCarousel } from "@/hooks/Home/useCarousel";
+import { Slide } from "@/components/HomePage/Slide";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
 
 type Props = {

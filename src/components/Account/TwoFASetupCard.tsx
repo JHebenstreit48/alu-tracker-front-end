@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { fetchMe, type MePayload } from "@/components/SignupLogin/api/authAPI";
-import { mfaInit, mfaConfirm, mfaDisable } from "@/components/SignupLogin/api/accountAPI";
+import { fetchMe, type MePayload } from "@/api/authAPI";
+import { mfaInit, mfaConfirm, mfaDisable } from "@/api/accountAPI";
 
 export default function TwoFASetupCard(): JSX.Element {
   const { token } = useContext(AuthContext);

@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { loginUser, registerUser } from "@/components/SignupLogin/api/authAPI";
-import { mfaLogin } from "@/components/SignupLogin/api/accountAPI";
+import { loginUser, registerUser } from "@/api/authAPI";
+import { mfaLogin } from "@/api/accountAPI";
 import "@/scss/SignupLogin/LoginSignupModal.scss";
 
 type Mode = "login" | "signup";

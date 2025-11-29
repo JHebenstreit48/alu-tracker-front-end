@@ -1,6 +1,6 @@
 import { Car } from "@/types/shared/car";
 import { MaxStarStats as MaxStarStatsIF } from "@/types/CarDetails";
-import type { StatSnapshot } from "@/components/CarDetails/Tables/StarsStats/utils/format";
+import type { StatSnapshot } from "@/utils/CarDetails/format";
 
 export type StarNumber = 1 | 2 | 3 | 4 | 5 | 6;
 

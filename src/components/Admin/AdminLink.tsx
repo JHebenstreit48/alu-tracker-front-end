@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { fetchMe, type MePayload } from "@/components/SignupLogin/api/authAPI";
+import { fetchMe, type MePayload } from "@/api/authAPI";
 import { Link } from "react-router-dom";
 
 export default function AdminLink(): JSX.Element | null {

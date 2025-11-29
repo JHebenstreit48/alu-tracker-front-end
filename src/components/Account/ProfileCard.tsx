@@ -1,7 +1,7 @@
 // src/components/Account/ProfileCard.tsx
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
-import { fetchMe, type MePayload } from "@/components/SignupLogin/api/authAPI";
+import { fetchMe, type MePayload } from "@/api/authAPI";
 
 function isError(x: unknown): x is Error {
   return typeof x === "object" && x !== null && "message" in x;
