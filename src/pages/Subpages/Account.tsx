@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import Header from "@/components/Shared/HeaderFooter/Header";
-import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { AuthContext } from "@/context/Auth/authContext";
 import ProfileCard from "@/components/Account/ProfileCard";
 import TwoFASetupCard from "@/components/Account/TwoFASetupCard";
 import SecurityActions from "@/components/Account/SecurityActions";

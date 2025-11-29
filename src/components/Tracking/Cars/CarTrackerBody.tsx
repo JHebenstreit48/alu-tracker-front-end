@@ -1,5 +1,5 @@
 import Header from '@/components/Shared/HeaderFooter/Header';
-import SyncButton from '@/components/UserDataSync/components/SyncButton';
+import SyncButton from '@/components/UserDataSync/SyncButton';
 import { useCarTrackerData } from '@/hooks/Tracking/useCarTrackerData';
 
 import CollectionProgress from '@/components/Tracking/Cars/Sections/CollectionProgress';

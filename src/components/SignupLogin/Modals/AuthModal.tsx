@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { AuthContext } from "@/context/Auth/authContext";
 import { loginUser, registerUser } from "@/api/authAPI";
 import { mfaLogin } from "@/api/accountAPI";
 import "@/scss/SignupLogin/LoginSignupModal.scss";
