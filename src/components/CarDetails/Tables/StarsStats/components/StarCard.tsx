@@ -1,5 +1,5 @@
-import type { StatSnapshot } from "@/components/CarDetails/Tables/StarsStats/utils/format";
-import { fmt } from "@/components/CarDetails/Tables/StarsStats/utils/format";
+import type { StatSnapshot } from "@/utils/CarDetails/format";
+import { fmt } from "@/utils/CarDetails/format";
 
 export default function StarCard({
   star,

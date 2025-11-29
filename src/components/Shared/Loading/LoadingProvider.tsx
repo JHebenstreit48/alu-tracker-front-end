@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { LoadingContext } from "@/components/Shared/Loading/LoadingContext";
+import { LoadingContext } from "@/context/Loading/LoadingContext";
 
 export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
