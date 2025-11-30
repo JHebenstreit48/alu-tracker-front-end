@@ -1,45 +1,27 @@
-import { useGarageLevels } from '@/hooks/GarageLevels/useGarageLevels';
-
-export interface GarageLevelStats {
-  loading: boolean;
-  error?: string;
-  currentLevel: number;
-  currentXp: number;
-  nextLevel: number | null;
-  xpToNext: number;
-  xpWithinLevelPercent: number; // 0–100, progress inside current level
-  levelPercent: number;         // 0–100, currentLevel / maxLevel
-  overallPercent: number;       // 0–100, overall progress toward max
-}
+import { useGarageLevels } from "@/hooks/GarageLevels/useGarageLevels";
+import { useUserGarageLevelSync } from "@/hooks/GarageLevels/useUserGarageLevelSync";
+import type { GarageLevelStats } from "@/types/GarageLevels/garageLevels";
 
 const MAX_LEVEL = 60;
-const LEVEL_KEY = 'currentGarageLevel';
-const XP_KEY = 'currentXp';
-
-function safeNumber(raw: string | null, fallback = 0): number {
-  if (!raw) return fallback;
-  const cleaned = raw.replace(/,/g, '');
-  const n = Number(cleaned);
-  return Number.isFinite(n) ? n : fallback;
-}
 
 export function useGarageLevelStats(): GarageLevelStats {
-  const { levels, loading, error } = useGarageLevels();
+  const { levels, loading: levelsLoading, error } = useGarageLevels();
+  const {
+    currentGarageLevel,
+    currentGLXp,
+    loading: glLoading,
+  } = useUserGarageLevelSync();
 
-  // ---- read localStorage (same keys as GarageLevelTracker) ----
-  let storedLevel = 1;
-  let storedXp = 0;
-
-  if (typeof window !== 'undefined') {
-    storedLevel = safeNumber(localStorage.getItem(LEVEL_KEY), 1);
-    storedXp = safeNumber(localStorage.getItem(XP_KEY), 0);
-  }
+  const loading = levelsLoading || glLoading;
 
   // Clamp level into a sane range
-  const currentLevel = Math.min(Math.max(storedLevel || 1, 1), MAX_LEVEL);
-  const currentXp = Math.max(storedXp, 0);
+  const currentLevel = Math.min(
+    Math.max(currentGarageLevel || 1, 1),
+    MAX_LEVEL
+  );
+  const currentXp = Math.max(currentGLXp || 0, 0);
 
-  // ---- find XP requirement for THIS level (same logic as Tracker.tsx) ----
+  // ---- find XP requirement for THIS level (same logic as before) ----
   const nextLevelDoc = levels.find(
     (lvl) => lvl.GarageLevelKey === currentLevel + 1
   );
@@ -72,7 +54,7 @@ export function useGarageLevelStats(): GarageLevelStats {
       : (currentLevel - 1) + levelFraction;
 
   const overallPercent =
-    ((normalized / (MAX_LEVEL - 1)) * 100) > 100
+    (normalized / (MAX_LEVEL - 1)) * 100 > 100
       ? 100
       : (normalized / (MAX_LEVEL - 1)) * 100;
 
