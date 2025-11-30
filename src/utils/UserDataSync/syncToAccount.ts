@@ -1,37 +1,17 @@
 import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
+import type {
+  ProgressPayload,
+  PushOptions,
+  SyncResult,
+} from "@/types/Tracking/userDataSync";
 
-type CarStarsMap = Record<string, number>;
+const USER_API_BASE = (import.meta.env.VITE_USER_API_URL || "").replace(
+  /\/+$/,
+  ""
+);
 
-interface ProgressPayload {
-  carStars: CarStarsMap;
-  ownedCars: string[];
-  goldMaxedCars: string[];
-  keyCarsOwned: string[];
-  xp: number;
-}
+const uniq = <T,>(arr: T[]): T[] => Array.from(new Set(arr));
 
-interface SyncOk {
-  success: true;
-  skipped?: true;
-}
-interface SyncErr {
-  success: false;
-  message: string;
-}
-export type SyncResult = SyncOk | SyncErr;
-
-export interface PushOptions {
-  /**
-   * Map of normalized keys (e.g. "acura_2017_nsx") → canonical label
-   * (e.g. "Acura 2017 NSX"). If not provided, we fallback to
-   * turning underscores into spaces.
-   */
-  labelByKey?: ReadonlyMap<string, string>;
-  /** Abort if the request takes longer than this many ms (default 15000). */
-  timeoutMs?: number;
-}
-
-// "acura_2017_nsx" → "acura 2017 nsx" (fallback if labelByKey not provided)
 function fallbackLabelFromKey(normalizedKey: string): string {
   return normalizedKey.replace(/_/g, " ").trim();
 }
@@ -39,9 +19,28 @@ function fallbackLabelFromKey(normalizedKey: string): string {
 function isErrorBody(u: unknown): u is { message?: string; error?: string } {
   return typeof u === "object" && u !== null && ("message" in u || "error" in u);
 }
-const uniq = <T,>(arr: T[]): T[] => Array.from(new Set(arr));
 
-const USER_API_BASE = (import.meta.env.VITE_USER_API_URL || "").replace(/\/+$/, "");
+function readGarageLevelSnapshot() {
+  // Prefer new keys, fall back to legacy "garageXP" for backward compatibility
+  const xpRaw =
+    localStorage.getItem("currentXp") ??
+    localStorage.getItem("garageXP") ??
+    "0";
+  const xp = Number.isFinite(Number(xpRaw)) ? parseInt(xpRaw, 10) : 0;
+
+  const levelRaw = localStorage.getItem("currentGarageLevel") ?? "1";
+  const currentGarageLevel = Number.isFinite(Number(levelRaw))
+    ? parseInt(levelRaw, 10)
+    : 1;
+
+  const garageLevelTrackerMode =
+    localStorage.getItem("garageLevelTrackerMode") ?? "default";
+
+  // Mirror xp into currentGLXp so old + new code agree
+  const currentGLXp = xp;
+
+  return { xp, currentGarageLevel, currentGLXp, garageLevelTrackerMode };
+}
 
 export async function syncToAccount(
   token: string,
@@ -77,15 +76,20 @@ export async function syncToAccount(
       if (data.keyObtained) keyCarsOwned.push(label);
     }
 
-    const xpValue = localStorage.getItem("garageXP");
-    const xp = Number.isFinite(Number(xpValue)) ? parseInt(xpValue ?? "0", 10) : 0;
+    const gl = readGarageLevelSnapshot();
 
     const payload: ProgressPayload = {
       carStars,
       ownedCars: uniq(ownedCars),
       goldMaxedCars: uniq(goldMaxedCars),
       keyCarsOwned: uniq(keyCarsOwned),
-      xp,
+
+      xp: gl.xp,
+
+      // New fields – backend is ready for these
+      currentGarageLevel: gl.currentGarageLevel,
+      currentGLXp: gl.currentGLXp,
+      garageLevelTrackerMode: gl.garageLevelTrackerMode,
     };
 
     const isEmpty =
@@ -93,7 +97,7 @@ export async function syncToAccount(
       payload.ownedCars.length === 0 &&
       payload.goldMaxedCars.length === 0 &&
       payload.keyCarsOwned.length === 0 &&
-      xp === 0;
+      gl.xp === 0;
 
     if (isEmpty) {
       console.warn("⏭️ Skip sync: empty snapshot (protected)");
@@ -114,6 +118,7 @@ export async function syncToAccount(
     if (!res.ok) {
       const contentType = res.headers.get("content-type") ?? "";
       let msg = `HTTP ${res.status}`;
+
       if (contentType.includes("application/json")) {
         const bodyUnknown: unknown = await res.json();
         if (isErrorBody(bodyUnknown)) {
@@ -123,6 +128,7 @@ export async function syncToAccount(
         const text = await res.text();
         msg = text || msg;
       }
+
       return { success: false, message: msg };
     }
 
