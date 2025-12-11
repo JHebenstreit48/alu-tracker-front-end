@@ -12,9 +12,8 @@ $purple-glow: #7a05be;
 ============================== */
 .Hamburger {
   display: none; /* desktop default */
-  position: absolute;
-  top: 0.8rem;
-  left: 0rem;
+  position: absolute; /* will be anchored by .Header__nav on mobile */
+  left: 0;
   background: none;
   color: $gold-accent;
   font-size: 2rem;
@@ -25,13 +24,13 @@ $purple-glow: #7a05be;
     outline: 2px solid $gold-accent;
     outline-offset: 2px;
   }
-}
 
-/* Show on phone widths */
-@include maxw($cellphone-portrait) {
-  .Hamburger {
+  /* Show on phone widths, centered vertically in header bar */
+  @include maxw($cellphone-portrait) {
     display: block;
-    position: fixed;
+    left: 0.6rem;
+    top: 46%;
+    transform: translateY(-50%);
   }
 }
 
@@ -41,10 +40,6 @@ $purple-glow: #7a05be;
     display: none !important;
   }
 }
-
-/* If you also want it visible on landscape phones, optionally:
-@include phone-landscape-wide { .Hamburger { display: block; position: fixed; } }
-*/
 
 /* ==============================
    Wrapper
@@ -56,11 +51,9 @@ $purple-glow: #7a05be;
   background: transparent;
   padding-block: 0.5rem;
   z-index: 100;
-}
 
-/* Mobile drawer: solid bg so content doesn’t bleed through */
-@include maxw($cellphone-portrait) {
-  .NavigationWrapper {
+  /* Mobile drawer: solid bg so content doesn’t bleed through */
+  @include maxw($cellphone-portrait) {
     position: fixed;
     top: clamp(3.5rem, 9vw, 6rem);
     left: 0;
@@ -164,7 +157,6 @@ $purple-glow: #7a05be;
     transition: transform 180ms ease, height 120ms ease;
   }
 
-  /* Hover: subtle lift + show underline. No blue box. */
   &:hover {
     opacity: 0.95;
     transform: translateY(-1px);
@@ -173,7 +165,6 @@ $purple-glow: #7a05be;
     transform: scaleX(1);
   }
 
-  /* Focus (keyboard): accessible, non-boxy glow + thicker underline */
   &:focus {
     outline: none;
   }

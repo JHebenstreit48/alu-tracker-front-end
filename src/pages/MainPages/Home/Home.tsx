@@ -3,15 +3,17 @@ import PageTab from "@/components/Shared/Navigation/PageTab";
 import ImageCarousel from "@/components/HomePage/ImageCarousel";
 import Carousel from "@/data/ImagesForCarousel";
 import GameInfo from "@components/HomePage/GameInfo";
-import '@/scss/PageAndHome/Home.scss';
+import "@/scss/PageAndHome/Home.scss";
 
 export default function Home() {
   return (
     <div>
       <PageTab title="Home">
-        <Header text="Asphalt Legends Tracker" className="homeHeader"/>
-        <GameInfo />
-        <ImageCarousel project={Carousel} />
+        <Header text="Home" className="homeHeader" />
+        <main className="PageBody">
+          <GameInfo />
+          <ImageCarousel project={Carousel} />
+        </main>
       </PageTab>
     </div>
   );
