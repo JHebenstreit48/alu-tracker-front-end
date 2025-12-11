@@ -10,15 +10,6 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
 $box-shadow-dark: 0 2px 5px #5b1479 !default;
 
 .Header {
-  --title-min: 1.35rem;
-  --title-fluid: 4.8vw;
-  --title-max: 3rem;
-  --title-lines: 2;
-  --title-track: 0.01em;
-
-  --side-col: clamp(72px, 17vw, 112px);     /* desktop/tablet */
-  --burger-col: clamp(44px, 10vw, 64px);    /* phone */
-
   position: sticky;
   top: 0;
   left: 0;
@@ -28,149 +19,127 @@ $box-shadow-dark: 0 2px 5px #5b1479 !default;
   background-image: $header-gradient;
   box-shadow: $box-shadow-dark;
 
+  @include maxw($cellphone-portrait) {
+    box-shadow: $box-shadow-dark;
+  }
+
+  /* top bar contents */
   .Header__inner {
-    position: relative;
-    display: grid;
-    grid-template-columns: var(--side-col) 1fr var(--side-col);
+    max-width: container(max);
+    margin-inline: auto;
+    display: flex;
     align-items: center;
-    min-height: clamp(4.75rem, 8.5vw, 7.75rem);
-    padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+    justify-content: space-between;
+    gap: clamp(0.75rem, 2vw, 2rem);
+    padding-inline: clamp(0.75rem, 2vw, 1.75rem);
+    padding-block: clamp(0.4rem, 0.9vw, 0.65rem);
+    min-height: clamp(3.25rem, 6vw, 4rem);
 
     @include maxw($cellphone-portrait) {
-      grid-template-columns: var(--burger-col) 1fr auto; /* burger | title | auth */
-      column-gap: 0.5rem;
+      padding-inline: 0.6rem;
+      gap: 0.5rem;
+      position: relative; /* anchor for hamburger, title, auth */
+    }
+  }
+
+  /* LEFT: site title (link to home) */
+  .Header__site {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    @include maxw($cellphone-portrait) {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      justify-content: center;
+    }
+  }
+
+  .SiteTitle {
+    font-family: var(--display-font, 'Cinzel'), serif;
+    font-size: clamp(0.9rem, 1.6vw, 1.25rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: $gold-text;
+    text-decoration: none;
+    white-space: nowrap;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba($gold-accent, 0.3);
+
+    @include maxw($cellphone-portrait) {
+      display: block;
+      font-size: 0.8rem;
+      max-width: 9.5rem;
+      line-height: 1.2;
+      white-space: normal; // allow wrapping
+      text-align: center;  // center text on multiple lines
+      margin-inline: auto;
+    }
+  }
+
+  .SiteTitle:hover,
+  .SiteTitle:focus-visible {
+    text-decoration: none;
+    text-shadow: 0 0 6px rgba($gold-accent, 0.7), 0 0 14px rgba($gold-accent, 0.4);
+  }
+
+  /* CENTER: navigation area */
+  .Header__nav {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+
+    /* on mobile, this becomes the positioning context for the hamburger */
+    @include maxw($cellphone-portrait) {
+      position: relative;
     }
 
-    .PageHeader {
-      grid-column: 2;
-      justify-self: center;
-      margin: 0;
-      text-align: center;
-      line-height: 1.12;
-      max-width: 100%;
-      padding-inline: 0.2rem;
-
-      font-family: var(--display-font, "Cinzel"), serif;
-      letter-spacing: var(--title-track, 0.01em);
-
-      font-size: var(
-        --fit-size,
-        clamp(var(--title-min), var(--title-fluid), var(--title-max))
-      );
-
-      white-space: normal;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      hyphens: auto;
-
-      line-clamp: var(--title-lines);
-      -webkit-line-clamp: var(--title-lines);
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      @include maxw($cellphone-portrait) { letter-spacing: 0.015em; }
+    /* desktop: let nav wrapper sit inline, no extra bg */
+    @include minw($cellphone-portrait + 1px) {
+      .NavigationWrapper {
+        position: static;
+        width: auto;
+        padding-block: 0;
+        background: transparent;
+      }
     }
+  }
 
-    .Header__auth {
-      grid-column: 3;
-      justify-self: end;
-      display: flex;
-      flex-direction: column;
+  /* RIGHT: auth buttons */
+  .Header__auth {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+
+    @include maxw($cellphone-portrait) {
+      gap: 0.3rem;
+      position: absolute;
+      right: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%); /* vertically center Sign In */
       align-items: flex-end;
-      gap: 0.35rem;
-      @include maxw($cellphone-portrait) { gap: 0.3rem; }
     }
   }
 
+  /* Legacy row no longer used */
   .Header__navRow {
-    position: relative;
-    background-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.12) 0%,
-      rgba(0, 0, 0, 0.38) 100%
-    );
-    box-shadow:
-      inset 0 6px 10px rgba(0, 0, 0, 0.22),
-      inset 0 -4px 8px rgba(0, 0, 0, 0.30);
-    padding-top: 0.35rem;
-    padding-bottom: 0.15rem;
-
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 1.5px;
-      background: linear-gradient(
-        90deg,
-        rgba($gold-accent, 0) 0%,
-        rgba($gold-accent, .28) 12%,
-        rgba($gold-accent, .85) 50%,
-        rgba($gold-accent, .28) 88%,
-        rgba($gold-accent, 0) 100%
-      );
-      box-shadow:
-        0 0 6px rgba($gold-accent, .28),
-        0 0 1px rgba($gold-accent, .6) inset;
-      pointer-events: none;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        rgba($gold-accent, 0) 0%,
-        rgba($gold-accent, .14) 50%,
-        rgba($gold-accent, 0) 100%
-      );
-      opacity: .55;
-      pointer-events: none;
-    }
+    display: none;
   }
 
-  /* ===== per-page presets ===== */
-  &.homeHeader {
-    --title-max: 3.4rem; --title-fluid: 5.2vw; --title-min: 1.55rem; --title-lines: 2;
-    @include maxw($cellphone-portrait) {
-      --title-max: 1.55rem; --title-fluid: 4.2vw; --title-min: 1.05rem; --title-lines: 3;
-    }
+  /* PageHeader -> screen-reader only.
+     Visible titles are in page body (e.g. Car Filters, Car Collection, etc). */
+  .PageHeader {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
-
-  &.brandsHeader,
-  &.legendStoreHeader {
-    --title-max: 3.1rem; --title-fluid: 4.9vw; --title-min: 1.45rem;
-    @include maxw($cellphone-portrait) {
-      --title-max: 2.05rem; --title-fluid: 5.6vw; --title-min: 1.3rem;
-    }
-  }
-
-  &.carsHeader,
-  &.garageLevelsHeader {
-    --title-max: 3.2rem; --title-fluid: 5vw; --title-min: 1.5rem;
-    @include maxw($cellphone-portrait) {
-      --title-max: 2.1rem; --title-fluid: 5.8vw; --title-min: 1.32rem;
-    }
-  }
-
-  /* >>> CarDetails: more aggressive on phones <<< */
-  &.carDetailsHeader {
-    --title-max: 2.35rem; --title-fluid: 3.5vw; --title-min: 1.0rem; --title-lines: 3;
-
-    @include maxw($cellphone-portrait) {
-      /* Smaller ceiling + up to 4 lines; long names fit without touching buttons */
-      --title-max: 0.88rem;
-      --title-fluid: 2.6vw;
-      --title-min: 0.70rem;
-      --title-lines: 4;
-      --title-track: 0.012em;
-    }
-  }
-}
-
-@include maxw(560px) {
-  .btn-lg::after { bottom: -4px; }
 }

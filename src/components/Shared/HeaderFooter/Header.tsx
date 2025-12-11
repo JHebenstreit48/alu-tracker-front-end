@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useRef } from "react";
+import { Link } from "react-router-dom";
 import Navigation from "@/components/Shared/Navigation/Navigation";
 import AuthButtons from "@/components/SignupLogin/UI/AuthButtons";
 
 interface HeaderProps {
+  /** Page title – e.g. "Brands", "Cars", "Alfa Romeo Giulia GTAm" */
   text: string;
   className?: string;
+  /** Optional override for the small site name link on the left */
+  siteName?: string;
 }
 
 /**
@@ -12,7 +16,7 @@ interface HeaderProps {
  * It gently reduces a CSS custom property (--fit-size) until the text fits
  * within its column, without touching other pages.
  */
-export default function Header({ text, className }: HeaderProps) {
+export default function Header({ text, className, siteName }: HeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
 
@@ -32,7 +36,7 @@ export default function Header({ text, className }: HeaderProps) {
       // Clear previous override first so CSS clamps can apply
       titleEl.style.setProperty("--fit-size", "");
 
-      // Available width proxy (title is in its own grid column)
+      // Available width proxy (used previously; still safe to keep)
       const targetW = titleEl.clientWidth || headerEl.clientWidth;
 
       const fitsNow =
@@ -43,7 +47,7 @@ export default function Header({ text, className }: HeaderProps) {
 
       const cs = window.getComputedStyle(titleEl);
       let size = parseFloat(cs.fontSize || "16");
-      const floorPx = 10; // extra safety; main min/max live in SCSS variables
+      const floorPx = 10;
       let attempts = 10;
 
       while (attempts-- > 0) {
@@ -59,15 +63,12 @@ export default function Header({ text, className }: HeaderProps) {
       }
     };
 
-    // Run once immediately
     fit();
 
-    // Re-run on layout changes
     const ro = new ResizeObserver(() => fit());
     ro.observe(headerEl);
     ro.observe(titleEl);
 
-    // Also re-run shortly after mount or when text changes
     const timeoutId = window.setTimeout(fit, 0);
 
     return () => {
@@ -76,22 +77,44 @@ export default function Header({ text, className }: HeaderProps) {
     };
   }, [isCarDetails, text]);
 
-  return (
-    <header className={`Header ${className || ""}`} role="banner" ref={headerRef}>
-      <div className="Header__inner">
-        {/* center column */}
-        <h1 className="PageHeader" title={text} ref={titleRef}>
-          {text}
-        </h1>
+  const resolvedSiteName = siteName ?? "Asphalt Legends Tracker";
 
-        {/* right column */}
+  return (
+    <header
+      className={`Header ${className || ""}`}
+      role="banner"
+      ref={headerRef}
+    >
+      <div className="Header__inner">
+        {/* LEFT: site name → home */}
+        <div className="Header__site">
+          <Link
+            to="/"
+            className="SiteTitle"
+            aria-label="Go to home page"
+          >
+            {resolvedSiteName}
+          </Link>
+        </div>
+
+        {/* CENTER: main navigation (brands/cars/garage/legend store) */}
+        <div className="Header__nav">
+          <Navigation />
+        </div>
+
+        {/* RIGHT: auth */}
         <div className="Header__auth">
           <AuthButtons />
         </div>
-      </div>
 
-      <div className="Header__navRow" role="presentation">
-        <Navigation />
+        {/* Hidden page title for a11y; visible title lives in page body */}
+        <h1
+          className="PageHeader"
+          title={text}
+          ref={titleRef}
+        >
+          {text}
+        </h1>
       </div>
     </header>
   );
