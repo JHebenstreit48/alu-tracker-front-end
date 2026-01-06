@@ -113,7 +113,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
 
         <tr>
           <td>Obtainable Via</td>
-          <td>{car.ObtainableVia}</td>
+          <td>{car.ObtainableVia?.length ? car.ObtainableVia.join(', ') : '—'}</td>
         </tr>
 
         {trackerMode && (
