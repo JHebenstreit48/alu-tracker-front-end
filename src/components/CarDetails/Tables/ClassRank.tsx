@@ -70,6 +70,15 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
   // ✅ Sync if logged in
   useAutoSyncDependency(trackerMode ? [selectedStarRank, owned, goldMaxed] : []);
 
+  // ✅ ObtainableVia display (supports string[] OR string OR empty/missing)
+  const obtainableViaDisplay = Array.isArray(car.ObtainableVia)
+    ? car.ObtainableVia.length
+      ? car.ObtainableVia.join(', ')
+      : '—'
+    : typeof car.ObtainableVia === 'string' && car.ObtainableVia.trim()
+    ? car.ObtainableVia.trim()
+    : '—';
+
   return (
     <table className="carInfoTable">
       <thead>
@@ -91,7 +100,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
             <StarRankSelector
               maxStars={car.Stars}
               selected={
-                trackerMode ? (selectedStarRank > 0 ? selectedStarRank : undefined) : car.Stars // <-- Always show max stars if not in tracker mode
+                trackerMode ? (selectedStarRank > 0 ? selectedStarRank : undefined) : car.Stars
               }
               onSelect={trackerMode ? handleStarSelect : undefined}
               brand={car.Brand}
@@ -113,7 +122,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
 
         <tr>
           <td>Obtainable Via</td>
-          <td>{car.ObtainableVia?.length ? car.ObtainableVia.join(', ') : '—'}</td>
+          <td>{obtainableViaDisplay}</td>
         </tr>
 
         {trackerMode && (
