@@ -2,7 +2,7 @@ import Map, { NavigationControl } from "react-map-gl";
 import type { Map as MapboxMap } from "mapbox-gl";
 import mapboxgl from "mapbox-gl";
 import { useRef, useEffect, useState } from "react";
-import MapPin from "@/ManufacturersMap/Map/MapPin";
+import MapPin from "@/components/Brands/Map/MapPin";
 import "@/scss/Brands/BrandMap.scss";
 
 interface Manufacturer {
