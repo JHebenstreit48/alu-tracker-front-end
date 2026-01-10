@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "@scss/Globals" as *;
+@use 'sass:color';
+@use '@scss/Globals' as *;
 
 /* Wraps the centered card and the off-to-the-right button */
 .filtersAndTrackerLink {
@@ -7,7 +7,9 @@
   width: max-content;
   margin: 1.5rem auto 0;
 
-  .carFilters { margin: 0 auto; }
+  .carFilters {
+    margin: 0 auto;
+  }
 
   /* Put the button out of normal flow so it can't shift the centered card */
   .trackerSummaryLink {
@@ -18,11 +20,11 @@
     width: auto;
     white-space: nowrap;
 
-    /* pull it back in as the viewport narrows */
-    @media (max-width: 1360px) { --btn-offset: clamp(-34rem, -24vw, -18rem); }
-    @media (max-width: 1200px) { --btn-offset: clamp(-26rem, -20vw, -14rem); }
-    @media (max-width: 1080px) { --btn-offset: clamp(-20rem, -16vw, -10rem); }
-    @media (max-width: 980px)  { --btn-offset: clamp(-14rem, -12vw,  -7rem);  }
+    @include maxw($large-laptop-max) {
+      left: 62rem;
+      right: 0; // anchor to the right side of .filtersAndTrackerLink
+      top: 0;
+    }
 
     /* phones: drop under the card and center */
     @include maxw($cellphone-portrait) {
@@ -36,43 +38,32 @@
 
 /* Button look, same theme as the card but lighter label */
 .trackerSummary {
-  background:
-    radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, .08), transparent 60%),
-    linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,.55)),
-    #0d0016;
+  background: radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.55)), #0d0016;
 
-  color: rgb(21, 201, 232);   /* keep the cyan you like */
-  border: 1px solid rgba($color-gold-glow, .35);
+  color: rgb(21, 201, 232);
+  border: 1px solid rgba($color-gold-glow, 0.35);
   border-radius: 14px;
-  box-shadow:
-    0 0 0 1px rgba($color-gold-glow, .22) inset,
-    0 8px 18px rgba(0,0,0,.6),
-    0 0 16px rgba($color-gold-glow, .18);
+  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.22) inset, 0 8px 18px rgba(0, 0, 0, 0.6),
+    0 0 16px rgba($color-gold-glow, 0.18);
 
-  padding: .5rem 1.05rem;
-  font-size: .975rem;
-  font-weight: 500;           /* ← lighter than before */
-  letter-spacing: .2px;       /* subtle polish */
+  padding: 0.5rem 1.05rem;
+  font-size: 0.975rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   line-height: 1;
   cursor: pointer;
-  transition: transform .06s ease, box-shadow .18s ease, background-color .2s ease;
+  transition: transform 0.06s ease, box-shadow 0.18s ease, background-color 0.2s ease;
 
   &:hover {
-    background:
-      radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, .1), transparent 60%),
-      linear-gradient(to bottom, rgba(255,255,255,.08), rgba(0,0,0,.60)),
-      #0f0f10;
+    background: radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.1), transparent 60%),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.6)), #0f0f10;
     color: $color-white;
-    box-shadow:
-      0 0 0 1px rgba($color-gold-glow, .28) inset,
-      0 10px 22px rgba(0,0,0,.65),
-      0 0 18px rgba($color-gold-glow, .24);
+    box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.28) inset, 0 10px 22px rgba(0, 0, 0, 0.65),
+      0 0 18px rgba($color-gold-glow, 0.24);
   }
 
-  &:active { transform: translateY(1px); }
-
-  @include maxw(390px) {
-    padding: .48rem .9rem;
-    font-size: .94rem;
+  &:active {
+    transform: translateY(1px);
   }
 }
