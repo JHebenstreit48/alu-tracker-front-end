@@ -1,9 +1,7 @@
 import ClassRank from "@/components/CarDetails/Tables/ClassRank";
 import BlueprintsTable from "@/components/CarDetails/Tables/BlueprintsTable";
-import StockStatsTable from "@/components/CarDetails/Tables/StarsStats/Stock";
-import MaxStarTable from "@/components/CarDetails/Tables/StarsStats/Max";
-import GoldMaxStatsTable from "@/components/CarDetails/Tables/StarsStats/Gold";
 import KeyInfo from "@/components/CarDetails/Tables/KeyInfo";
+import StatsTables from "@/components/CarDetails/Tables/StarsStats/StatsTables";
 import type { FullCar } from "@/types/shared/car";
 
 type Props = {
@@ -32,22 +30,19 @@ export default function TablesGrid({
 
       <div className="carDetailsTables">
         <div className="tableCard">
-          <ClassRank car={car} trackerMode={trackerMode} forceOwned={car.KeyCar && keyObtained} />
+          <ClassRank
+            car={car}
+            trackerMode={trackerMode}
+            forceOwned={car.KeyCar && keyObtained}
+          />
         </div>
 
         <div className="tableCard">
           <BlueprintsTable car={car} trackerMode={trackerMode} />
         </div>
 
-        <div className="tableCard">
-          <StockStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        </div>
-
-        <MaxStarTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-
-        <div className="tableCard">
-          <GoldMaxStatsTable car={car} unitPreference={unitPreference} trackerMode={trackerMode} />
-        </div>
+        {/* Stats tables: Stock + 1★..N★ + Gold (auto-skips missing) */}
+        <StatsTables car={car} unitPreference={unitPreference} />
       </div>
     </>
   );

@@ -1,16 +1,9 @@
-import {
-  setCarTrackingData,
-  CarTrackingData,
-} from "@/utils/shared/StorageUtils";
+import { setCarTrackingData } from "@/utils/shared/StorageUtils";
+import type { CarTracking } from "@/types/shared/tracking";
 import { syncToAccount } from "@/utils/UserDataSync/syncToAccount";
 
 function getAuthToken(): string | null {
-  // Prefer new key, but fall back to old naming if it still exists
-  return (
-    localStorage.getItem("token") ||
-    localStorage.getItem("authToken") ||
-    null
-  );
+  return localStorage.getItem("token") || localStorage.getItem("authToken") || null;
 }
 
 /**
@@ -18,7 +11,7 @@ function getAuthToken(): string | null {
  */
 export async function setCarTrackingDataWithSync(
   carKey: string,
-  update: Partial<CarTrackingData>
+  update: Partial<CarTracking>
 ): Promise<void> {
   // Always store in localStorage
   setCarTrackingData(carKey, update);
