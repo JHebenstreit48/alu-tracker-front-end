@@ -43,11 +43,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
     const star = i as StarNumber;
     const stats = getStatsFromCar(car as FullCar & MaxStarStats, star);
     if (hasStats(stats)) {
-      cards.push({
-        key: `star-${star}`,
-        title: <StarHeader star={star} />,
-        stats,
-      });
+      cards.push({ key: `star-${star}`, title: <StarHeader star={star} />, stats });
     }
   }
 
@@ -65,6 +61,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
           stats={c.stats}
           unitPreference={unitPreference}
           density="compact"
+          className="statsTableCard"
         />
       ))}
     </>

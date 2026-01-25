@@ -40,11 +40,10 @@ $car-info-font-size: 1.2rem;
     justify-content: space-between;
     gap: 1rem;
 
-    margin: 0.5rem 2rem 0.4rem 2rem; // match the detail header inset
+    margin: 0.5rem 2rem 0.4rem 2rem;
     padding-bottom: 0.35rem;
     border-bottom: 1px solid color.change($car-image-shadow-color, $alpha: 0.45);
 
-    /* PHONE-ONLY: stack vertically */
     @include maxw($cellphone-portrait) {
       flex-direction: column;
       align-items: stretch;
@@ -107,9 +106,7 @@ $car-info-font-size: 1.2rem;
       border: none;
       cursor: pointer;
 
-      &:hover {
-        background-color: $back-btn-hover-bg-color;
-      }
+      &:hover { background-color: $back-btn-hover-bg-color; }
     }
 
     .cdetail-status {
@@ -125,9 +122,7 @@ $car-info-font-size: 1.2rem;
       gap: 0.5rem;
       margin: 0.6rem 1rem 0.75rem 1rem;
 
-      .cdetail-status {
-        justify-content: flex-start;
-      }
+      .cdetail-status { justify-content: flex-start; }
     }
   }
 
@@ -196,12 +191,6 @@ $car-info-font-size: 1.2rem;
         margin: 0 auto;
       }
 
-      .testClass {
-        height: 3rem;
-        padding: 0.5;
-        margin: 0;
-      }
-
       td {
         color: gold;
         padding: 2px;
@@ -211,27 +200,20 @@ $car-info-font-size: 1.2rem;
         margin: 0 auto;
       }
 
-      input[type="checkbox"] {
-        transform: scale(1.2);
-        margin-right: 0.5rem;
-      }
-
-      label {
-        color: white;
-        font-size: 1.2rem;
-      }
+      input[type="checkbox"] { transform: scale(1.2); margin-right: 0.5rem; }
+      label { color: white; font-size: 1.2rem; }
     }
   }
 
-  /* =============================
-     Car Detail Tables (desktop base)
-     ============================= */
+  /* =========================================================
+     TOP INFO CARDS ONLY (ClassRank + Blueprints)
+     ========================================================= */
   .carDetailsTables {
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;    /* centers last odd card automatically */
+    justify-content: center;
     align-items: flex-start;
-    gap: 3rem;                  /* ✅ uniform spacing */
+    gap: 3rem;
     margin-top: 0;
     padding: 0;
 
@@ -262,10 +244,6 @@ $car-info-font-size: 1.2rem;
     }
   }
 
-  /* ❌ Remove the uneven spacing hack (gap handles it now)
-     .tableCard:not(:nth-child(2n)) { margin-right: 5rem; }
-  */
-
   .carInfoTable {
     width: 100%;
     border-spacing: 0;
@@ -273,24 +251,11 @@ $car-info-font-size: 1.2rem;
     table-layout: fixed;
     flex-grow: 1;
 
-    @include maxw($cellphone-portrait) {
-      margin: 38px auto 3px auto;
-    }
-
-    td,
-    th {
+    td, th {
       padding: 10px 16px;
       text-align: center;
       vertical-align: middle;
       height: auto;
-    }
-
-    @include maxw($cellphone-portrait) {
-      td,
-      th {
-        padding: 6px 8px;
-        font-size: 0.98rem;
-      }
     }
   }
 
@@ -302,51 +267,67 @@ $car-info-font-size: 1.2rem;
     padding: 15px 80px 20px 80px !important;
     font-size: $table-header-font-size !important;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* =========================================================
+     STATS ONLY (separate wrapper)
+     ========================================================= */
+  .statsGrid {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center; /* centers last odd card */
+    align-items: flex-start;
+    gap: 3rem;
+    margin: 2rem 0 0;
+    padding: 0;
 
     @include maxw($cellphone-portrait) {
-      font-size: 1.25rem !important;
-      padding: 12px 18px !important;
+      gap: 0.75rem;
     }
   }
 
-  /* =============================
-     Stats Tables (stats only)
-     Requires:
-       table:  .carInfoTable--stats
-       header: .tableHeader2--stats
-     ============================= */
-
-  /* Make Stock/Gold match star cards without changing width */
+  /* Stats cards should match size across Stock/Stars/Gold */
   .statsTableCard {
+    width: $info-table-width;  /* same outer width as cards */
     min-height: 36rem;         /* match .tableCard */
     justify-content: flex-start;
   }
 
-  /* Bigger text, tighter rows */
-  .statsTableCard .carInfoTable--stats td,
-  .statsTableCard .carInfoTable--stats th {
-    padding: 10px 14px;
-    line-height: 1.2;
-    font-size: 1.2rem;
-  }
-
-  /* Fix the huge 80px header padding ONLY for stats */
-  .statsTableCard .tableHeader2--stats {
-    height: auto;
-    padding: 12px 18px !important;
-    font-size: 1.55rem !important;
-    line-height: 1.1;
+  /* Tighten the “dead space” between label/value in stats ONLY */
+  .statsTableCard .carInfoTable--stats {
+    table-layout: auto;        /* override fixed from .carInfoTable */
+    width: 34rem;              /* shrink inner table */
+    max-width: 100%;
+    margin: 0 auto;
   }
 
   .statsTableCard .carInfoTable--stats td:first-child {
+    width: 12rem;              /* tweak 10–14rem */
+    white-space: nowrap;
     text-align: left;
     padding-left: 16px;
   }
 
   .statsTableCard .carInfoTable--stats td:last-child {
+    width: 1%;
+    white-space: nowrap;
     text-align: right;
     padding-right: 16px;
     font-variant-numeric: tabular-nums;
+  }
+
+  .statsTableCard .carInfoTable--stats td,
+  .statsTableCard .carInfoTable--stats th {
+    padding: 10px 10px;        /* tighter horizontal padding */
+    line-height: 1.2;
+    font-size: 1.2rem;
+  }
+
+  .statsTableCard .tableHeader2--stats {
+    height: auto;
+    padding: 12px 18px !important;
+    font-size: 1.55rem !important;
+    line-height: 1.1;
   }
 
   /* =============================
@@ -374,17 +355,10 @@ $car-info-font-size: 1.2rem;
     color: white;
   }
 
-  .blueprintsTable td {
-    text-align: center;
-    vertical-align: middle;
-  }
+  .blueprintsTable td { text-align: center; vertical-align: middle; }
 
-  .blueprintStarCell {
-    width: 40%;
-  }
-  .blueprintValueCell {
-    width: 10%;
-  }
+  .blueprintStarCell { width: 40%; }
+  .blueprintValueCell { width: 10%; }
 
   .starIconWrapper {
     display: flex;
@@ -402,9 +376,7 @@ $car-info-font-size: 1.2rem;
   /* =============================
      Max Rank and Car Info Text
      ============================= */
-  .maxRank {
-    font-size: $max-rank-font-size;
-  }
+  .maxRank { font-size: $max-rank-font-size; }
 
   .carInfo {
     font-size: $car-info-font-size;

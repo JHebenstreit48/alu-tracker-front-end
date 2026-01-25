@@ -28,6 +28,7 @@ export default function TablesGrid({
         onKeyObtainedChange={onKeyObtainedChange}
       />
 
+      {/* Top two cards only */}
       <div className="carDetailsTables">
         <div className="tableCard">
           <ClassRank
@@ -40,8 +41,10 @@ export default function TablesGrid({
         <div className="tableCard">
           <BlueprintsTable car={car} trackerMode={trackerMode} />
         </div>
+      </div>
 
-        {/* Stats tables: Stock + 1★..N★ + Gold (auto-skips missing) */}
+      {/* Stats only */}
+      <div className="statsGrid">
         <StatsTables car={car} unitPreference={unitPreference} />
       </div>
     </>
