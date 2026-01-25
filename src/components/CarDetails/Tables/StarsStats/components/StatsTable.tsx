@@ -6,7 +6,7 @@ type Props = {
   stats: StatSnapshot;
   unitPreference: "metric" | "imperial";
   density?: "compact" | "regular";
-  className?: string; // one hook to style all stats cards later
+  className?: string; // hook for styling stats cards only
 };
 
 export default function StatsTable({
@@ -20,10 +20,10 @@ export default function StatsTable({
 
   return (
     <div className={`tableCard tableCard--${density} ${className}`.trim()}>
-      <table className={`carInfoTable carInfoTable--${density}`}>
+      <table className={`carInfoTable carInfoTable--stats carInfoTable--${density}`.trim()}>
         <thead>
           <tr>
-            <th className="tableHeader2" colSpan={2}>
+            <th className="tableHeader2 tableHeader2--stats" colSpan={2}>
               {title}
             </th>
           </tr>

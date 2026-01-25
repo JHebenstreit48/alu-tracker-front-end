@@ -35,11 +35,9 @@ function goldSnapshot(car: Partial<GoldMaxStats>): StatSnapshot {
 export default function StatsTables({ car, unitPreference }: Props) {
   const cards: Array<{ key: string; title: React.ReactNode; stats: StatSnapshot }> = [];
 
-  // Stock
-  const stock = stockSnapshot(car as Partial<StockStats>);
+  const stock = stockSnapshot(car);
   if (hasStats(stock)) cards.push({ key: "stock", title: "Stock", stats: stock });
 
-  // 1★..N★ max (skip missing snapshots; handles 3★ gap naturally)
   const maxStars = Math.min(Math.max(car.Stars ?? 0, 0), 6);
   for (let i = 1; i <= maxStars; i++) {
     const star = i as StarNumber;
@@ -53,8 +51,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
     }
   }
 
-  // Gold Max
-  const gold = goldSnapshot(car as Partial<GoldMaxStats>);
+  const gold = goldSnapshot(car);
   if (hasStats(gold)) cards.push({ key: "gold", title: "Gold Max", stats: gold });
 
   if (cards.length === 0) return null;

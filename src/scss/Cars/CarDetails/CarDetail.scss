@@ -1,33 +1,20 @@
 @use "sass:color";
-@use "@scss/Globals/index" as *; // ← tokens + mixins (maxw, etc)
+@use "@scss/Globals/index" as *;
+@use "@scss/Globals/spacing/carDetails" as *;
 
 /* =============================
    Variables
    ============================= */
 $car-detail-text-color: #333;
-
 $back-btn-bg-color: #333;
 $back-btn-hover-bg-color: #555;
-$back-btn-padding: 10px 1.5rem;
-
 $car-name-font-size: 2.8rem;
-$car-name-margin-bottom: 15px;
-
-$car-image-width: 60rem;
-$car-image-margin: 2rem auto 0 auto;
 $car-image-border-color: rgb(0, 0, 0);
 $car-image-shadow-color: rgb(223, 190, 7);
-
-$table-grid-columns: 1fr 1fr;
-$info-table-width: 45rem;
-
 $color-black: black;
 $color-accent-blue: rgb(21, 201, 232);
 $table-header-font-size: 1.8rem;
-
-$blueprints-width: 50rem;
 $blueprints-font-size: 1.4rem;
-
 $max-rank-font-size: 1.6rem;
 $car-info-font-size: 1.2rem;
 
@@ -66,7 +53,7 @@ $car-info-font-size: 1.2rem;
     }
   }
 
-   /* =============================
+  /* =============================
      Car name between toggles
      ============================= */
   .CarDetailTitle {
@@ -74,7 +61,7 @@ $car-info-font-size: 1.2rem;
     margin: 0;
     text-align: center;
 
-    font-family: var(--display-font, 'Cinzel'), serif;
+    font-family: var(--display-font, "Cinzel"), serif;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -95,7 +82,7 @@ $car-info-font-size: 1.2rem;
   @include maxw($cellphone-portrait) {
     .CarDetailTitle {
       font-size: clamp(1.05rem, 4.5vw, 1.6rem);
-      text-align: center; // <- keep centered on mobile too
+      text-align: center;
     }
   }
 
@@ -108,8 +95,8 @@ $car-info-font-size: 1.2rem;
     justify-content: space-between;
     gap: 1rem;
     margin: 0.6rem 2rem 0.75rem 2rem;
-    padding-bottom: 0;          // no extra line space
-    border-bottom: none;        // ← remove previous border
+    padding-bottom: 0;
+    border-bottom: none;
 
     .backBtn {
       margin: 0;
@@ -120,7 +107,9 @@ $car-info-font-size: 1.2rem;
       border: none;
       cursor: pointer;
 
-      &:hover { background-color: $back-btn-hover-bg-color; }
+      &:hover {
+        background-color: $back-btn-hover-bg-color;
+      }
     }
 
     .cdetail-status {
@@ -136,7 +125,9 @@ $car-info-font-size: 1.2rem;
       gap: 0.5rem;
       margin: 0.6rem 1rem 0.75rem 1rem;
 
-      .cdetail-status { justify-content: flex-start; }
+      .cdetail-status {
+        justify-content: flex-start;
+      }
     }
   }
 
@@ -174,8 +165,8 @@ $car-info-font-size: 1.2rem;
      Key Info Table
      ============================= */
   .keyInfoTableContainer {
-    margin: 0.8rem auto 2rem auto;
-    width: $car-image-width;
+    margin: 0.3rem auto 2rem auto;
+    width: $key-car-info-table-width;
 
     @include maxw($cellphone-portrait) {
       width: 22rem;
@@ -191,9 +182,8 @@ $car-info-font-size: 1.2rem;
       box-shadow: 0 0 7px 4px rgb(223, 190, 7);
       margin: 0 auto;
 
-      /* PHONE-ONLY: reduce vertical white space around this table */
       @include maxw($cellphone-portrait) {
-        margin: 38px auto 3px auto;  // ← your DevTools value
+        margin: 38px auto 3px auto;
       }
 
       th {
@@ -206,7 +196,11 @@ $car-info-font-size: 1.2rem;
         margin: 0 auto;
       }
 
-      .testClass { height: 3rem; padding: 0.5; margin: 0; }
+      .testClass {
+        height: 3rem;
+        padding: 0.5;
+        margin: 0;
+      }
 
       td {
         color: gold;
@@ -222,7 +216,10 @@ $car-info-font-size: 1.2rem;
         margin-right: 0.5rem;
       }
 
-      label { color: white; font-size: 1.2rem; }
+      label {
+        color: white;
+        font-size: 1.2rem;
+      }
     }
   }
 
@@ -232,25 +229,20 @@ $car-info-font-size: 1.2rem;
   .carDetailsTables {
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
+    justify-content: center;    /* centers last odd card automatically */
     align-items: flex-start;
-    gap: 1rem 5rem;     /* desktop spacing stays */
+    gap: 3rem;                  /* ✅ uniform spacing */
     margin-top: 0;
     padding: 0;
 
-    /* PHONE-ONLY overrides nested here */
     @include maxw($cellphone-portrait) {
-      gap: 0rem; /* tighter than desktop */
+      gap: 0rem;
 
-      /* kill the desktop spacer between odd cards */
-      .tableCard:not(:nth-child(2n)) { margin-right: 0; }
-
-      /* ensure every child (incl. unwrapped MaxStarTable) sizes like a card */
       > * {
         box-sizing: border-box;
-        width: auto;                /* override fixed 45rem on cards */
-        min-height: unset;          /* avoid tall blank space */
-        flex: 0 1 clamp(22rem, 40vw, 24rem); /* keeps 2-up on phones */
+        width: auto;
+        min-height: unset;
+        flex: 0 1 clamp(22rem, 40vw, 24rem);
       }
     }
   }
@@ -264,16 +256,15 @@ $car-info-font-size: 1.2rem;
     flex-direction: column;
     justify-content: space-between;
 
-    /* PHONE-ONLY: remove tall minimum so short tables don’t look spaced out */
     @include maxw($cellphone-portrait) {
-      width: auto;       /* use flex-basis from parent override */
-      min-height: unset; /* content-height */
+      width: auto;
+      min-height: unset;
     }
   }
 
-  .tableCard:not(:nth-child(2n)) {
-    margin-right: 5rem;  /* desktop only; phone override above cancels it */
-  }
+  /* ❌ Remove the uneven spacing hack (gap handles it now)
+     .tableCard:not(:nth-child(2n)) { margin-right: 5rem; }
+  */
 
   .carInfoTable {
     width: 100%;
@@ -282,9 +273,8 @@ $car-info-font-size: 1.2rem;
     table-layout: fixed;
     flex-grow: 1;
 
-    /* PHONE-ONLY: reduce vertical white space around each table */
     @include maxw($cellphone-portrait) {
-      margin: 38px auto 3px auto;  // ← your DevTools value
+      margin: 38px auto 3px auto;
     }
 
     td,
@@ -295,9 +285,12 @@ $car-info-font-size: 1.2rem;
       height: auto;
     }
 
-    /* PHONE-ONLY: compact cells a touch */
     @include maxw($cellphone-portrait) {
-      td, th { padding: 6px 8px; font-size: 0.98rem; }
+      td,
+      th {
+        padding: 6px 8px;
+        font-size: 0.98rem;
+      }
     }
   }
 
@@ -317,6 +310,46 @@ $car-info-font-size: 1.2rem;
   }
 
   /* =============================
+     Stats Tables (stats only)
+     Requires:
+       table:  .carInfoTable--stats
+       header: .tableHeader2--stats
+     ============================= */
+
+  /* Make Stock/Gold match star cards without changing width */
+  .statsTableCard {
+    min-height: 36rem;         /* match .tableCard */
+    justify-content: flex-start;
+  }
+
+  /* Bigger text, tighter rows */
+  .statsTableCard .carInfoTable--stats td,
+  .statsTableCard .carInfoTable--stats th {
+    padding: 10px 14px;
+    line-height: 1.2;
+    font-size: 1.2rem;
+  }
+
+  /* Fix the huge 80px header padding ONLY for stats */
+  .statsTableCard .tableHeader2--stats {
+    height: auto;
+    padding: 12px 18px !important;
+    font-size: 1.55rem !important;
+    line-height: 1.1;
+  }
+
+  .statsTableCard .carInfoTable--stats td:first-child {
+    text-align: left;
+    padding-left: 16px;
+  }
+
+  .statsTableCard .carInfoTable--stats td:last-child {
+    text-align: right;
+    padding-right: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* =============================
      Stars in Tables
      ============================= */
   .starIcon {
@@ -325,7 +358,8 @@ $car-info-font-size: 1.2rem;
     margin: 2px;
 
     @include maxw($cellphone-portrait) {
-      width: 18px; height: 18px;
+      width: 18px;
+      height: 18px;
     }
   }
 
@@ -340,10 +374,17 @@ $car-info-font-size: 1.2rem;
     color: white;
   }
 
-  .blueprintsTable td { text-align: center; vertical-align: middle; }
+  .blueprintsTable td {
+    text-align: center;
+    vertical-align: middle;
+  }
 
-  .blueprintStarCell { width: 40%; }
-  .blueprintValueCell { width: 10%; }
+  .blueprintStarCell {
+    width: 40%;
+  }
+  .blueprintValueCell {
+    width: 10%;
+  }
 
   .starIconWrapper {
     display: flex;
@@ -361,7 +402,9 @@ $car-info-font-size: 1.2rem;
   /* =============================
      Max Rank and Car Info Text
      ============================= */
-  .maxRank { font-size: $max-rank-font-size; }
+  .maxRank {
+    font-size: $max-rank-font-size;
+  }
 
   .carInfo {
     font-size: $car-info-font-size;
@@ -378,6 +421,11 @@ $car-info-font-size: 1.2rem;
   height: 2px;
   width: 100%;
   margin: 1.5rem 0 1rem;
-  background: linear-gradient(90deg, rgba(223,190,7,0), rgba(223,190,7,.8), rgba(223,190,7,0));
-  box-shadow: 0 0 8px rgba(223,190,7,0.45);
+  background: linear-gradient(
+    90deg,
+    rgba(223, 190, 7, 0),
+    rgba(223, 190, 7, 0.8),
+    rgba(223, 190, 7, 0)
+  );
+  box-shadow: 0 0 8px rgba(223, 190, 7, 0.45);
 }
