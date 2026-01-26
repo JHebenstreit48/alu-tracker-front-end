@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import Header from "@/components/Shared/HeaderFooter/Header";
 import FeedbackAdminPanel from "@/components/Shared/Feedback/FeedbackAdminPanel";
@@ -14,7 +14,8 @@ type ApiErr = { ok: false; error: ErrorPayload };
 type ApiResponse = ApiOkOnly | ApiErr;
 
 // never allow empty base in production
-const API_BASE = (import.meta.env.VITE_COMMENTS_API_BASE_URL ||
+const API_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ||
   (import.meta.env.DEV ? "http://127.0.0.1:3004" : "")
 ).replace(/\/+$/, "");
 
@@ -77,6 +78,11 @@ export default function Feedback() {
     return new URLSearchParams(window.location.search).get("admin") === "1";
   }, []);
 
+  // ✅ stable callback to prevent re-fetch loop
+  const handleSynced = useCallback(() => {
+    setLocalItems((prev) => (prev.length ? [] : prev));
+  }, []);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || submitting) return;
@@ -89,13 +95,15 @@ export default function Feedback() {
         message: message.trim(),
         email: email || undefined,
         pageUrl: includeUrl ? window.location.href : undefined,
-        hp
+        hp,
       };
+
       const r = await fetch(join(API_BASE, "api/feedback"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
+
       const j: unknown = await r.json();
 
       if (!r.ok || !isApiResponse(j) || j.ok !== true) {
@@ -120,8 +128,9 @@ export default function Feedback() {
         email: payload.email,
         pageUrl: payload.pageUrl,
         status: "new",
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
+
       setLocalItems((prev) => [optimistic, ...prev]);
 
       // Trigger server refetch
@@ -146,12 +155,13 @@ export default function Feedback() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: ".75rem"
+                marginBottom: ".75rem",
               }}
             >
               <h2 className="comments-title" style={{ margin: 0 }}>
                 {mode === "recent" ? "Recent Feedback" : "All Feedback"}
               </h2>
+
               <div role="tablist" aria-label="Feedback view" style={{ display: "flex", gap: ".5rem" }}>
                 <button
                   type="button"
@@ -161,6 +171,7 @@ export default function Feedback() {
                 >
                   Recent
                 </button>
+
                 <button
                   type="button"
                   className={`chip ${mode === "all" ? "active" : ""}`}
@@ -178,7 +189,7 @@ export default function Feedback() {
               refreshKey={refreshKey}
               localItems={localItems}
               showTitle={false}
-              onSynced={() => setLocalItems([])}  // <-- clear optimistic items once server list is in
+              onSynced={handleSynced}
             />
           </section>
 
@@ -229,6 +240,7 @@ export default function Feedback() {
                     autoComplete="email"
                   />
                 </div>
+
                 <div className="col checkbox">
                   <label htmlFor="fb-include-url">
                     <input
