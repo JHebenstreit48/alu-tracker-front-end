@@ -278,7 +278,7 @@ $car-info-font-size: 1.2rem;
     justify-content: center; /* centers last odd card */
     align-items: flex-start;
     gap: 3rem;
-    margin: 2rem 0 0;
+    margin: 0.75rem 0 0; /* tightened gap */
     padding: 0;
 
     @include maxw($cellphone-portrait) {
@@ -293,39 +293,42 @@ $car-info-font-size: 1.2rem;
     justify-content: flex-start;
   }
 
-  /* Tighten the “dead space” between label/value in stats ONLY */
-  .statsTableCard .carInfoTable--stats {
-    table-layout: auto;        /* override fixed from .carInfoTable */
-    width: 34rem;              /* shrink inner table */
-    max-width: 100%;
-    margin: 0 auto;
+  /* --- PATCH: Stats table column behavior MUST remain 50/50 and consistent --- */
+  .statsTableCard .carInfoTable {
+    width: 100%;
+    table-layout: fixed; /* keep even columns */
   }
 
-  .statsTableCard .carInfoTable--stats td:first-child {
-    width: 12rem;              /* tweak 10–14rem */
+  .statsTableCard .carInfoTable td {
+    width: 50%;
     white-space: nowrap;
-    text-align: left;
+  }
+
+  .statsTableCard .carInfoTable td:first-child {
+    text-align: center;
     padding-left: 16px;
   }
 
-  .statsTableCard .carInfoTable--stats td:last-child {
-    width: 1%;
-    white-space: nowrap;
-    text-align: right;
+  .statsTableCard .carInfoTable td:last-child {
+    text-align: center;
     padding-right: 16px;
     font-variant-numeric: tabular-nums;
   }
 
-  .statsTableCard .carInfoTable--stats td,
-  .statsTableCard .carInfoTable--stats th {
-    padding: 10px 10px;        /* tighter horizontal padding */
+  /* --- PATCH: compact spacing inside stats (optional, but safe) --- */
+  .statsTableCard .carInfoTable td,
+  .statsTableCard .carInfoTable th {
+    padding: 10px 10px;
     line-height: 1.2;
     font-size: 1.2rem;
   }
 
-  .statsTableCard .tableHeader2--stats {
-    height: auto;
-    padding: 12px 18px !important;
+  /* --- PATCH: normalize header height across ALL stats cards (Stock/Stars/Gold) --- */
+  .statsTableCard .tableHeader2 {
+    height: 101.5px !important;     /* match the star header height from devtools */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    vertical-align: middle !important;
     font-size: 1.55rem !important;
     line-height: 1.1;
   }

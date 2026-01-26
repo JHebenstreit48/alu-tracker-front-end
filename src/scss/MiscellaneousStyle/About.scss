@@ -1,0 +1,159 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* ------------------------------------
+   Local tokens (derived from Globals)
+   ------------------------------------ */
+$gold: $color-gold-glow;
+$frame: $table-border-color;
+$panel-bg-top: #1a0e20;
+$panel-bg-bot: #0a0610;
+
+/* Shared halo used across pages */
+@mixin gold-halo($radius: 16px, $width: 2px) {
+  border-radius: $radius;
+  border: $width solid $frame;
+  box-shadow:
+    0 0 0 1px rgba($gold, 0.32) inset,
+    0 0 10px 3px rgba($gold, 0.58);
+}
+
+/* ====================================
+   About Page Shell
+   ==================================== */
+.aboutPage {
+  /* keep it aligned with Home page framing */
+  max-inline-size: 90rem;
+  margin: 3rem auto 5rem auto;
+  padding: clamp(1rem, 2.2vw, 2rem);
+  text-align: center;
+  background: linear-gradient(180deg, $panel-bg-top 0%, $panel-bg-bot 100%);
+  color: $color-white;
+
+  @include gold-halo(16px, 2px);
+
+  /* nicer “readable column” inside */
+  > * {
+    max-inline-size: 78rem;
+    margin-inline: auto;
+  }
+
+  @include maxw($tablet-portrait) {
+    margin-top: 10rem;
+    padding: 1.25rem;
+  }
+
+  @include maxw($cellphone-portrait) {
+    margin: 2rem auto 3rem;
+    padding: 1rem;
+    width: 20rem;
+
+    > * {
+      max-inline-size: 20rem;
+      text-align: center;
+    }
+  }
+}
+
+/* Optional: if you want the About header to match page style slightly */
+.aboutHeader {
+  /* leaving this minimal because your Header component likely handles most styling */
+  letter-spacing: 0.06em;
+}
+
+/* ====================================
+   Sections
+   ==================================== */
+.aboutSection {
+  /* separation between blocks */
+  & + & {
+    margin-block-start: clamp(1.1rem, 2vw, 1.8rem);
+    padding-block-start: clamp(1.1rem, 2vw, 1.8rem);
+    border-top: 1px solid rgba($gold, 0.12);
+    max-inline-size: 32rem;
+  margin-inline: auto;
+  }
+
+  h2 {
+    margin: 0 0 0.65rem 0;
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    line-height: 1.25;
+    color: $color-white;
+    text-shadow: 0 0 10px rgba($gold, 0.18);
+  }
+
+  p {
+    margin: 0;
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    line-height: 1.65;
+    letter-spacing: 0.1px;
+
+    /* spacing between paragraphs inside a section */
+    & + p {
+      margin-block-start: 0.85rem;
+    }
+  }
+
+  strong {
+    color: color.scale($gold, $lightness: 10%);
+    text-shadow: 0 0 10px rgba($gold, 0.2);
+  }
+
+  ul {
+    margin: 0.75rem auto 0;
+    padding: 0;
+    list-style: none;
+
+    /* control list width in ONE place */
+    width: min(40rem, 100%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  ul li {
+    /* bullet + text become ONE centered unit */
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.75rem;
+
+    width: 100%;
+    margin: 0;
+
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    line-height: 1.65;
+    text-align: left; /* important: wraps cleanly */
+  }
+
+  ul li::before {
+    content: "•";
+    flex: 0 0 auto;
+    line-height: 1.65;
+
+    color: color.scale($gold, $lightness: 5%);
+    text-shadow: 0 0 10px rgba($gold, 0.18);
+  }
+
+  /* mobile: keep lists readable even when wrapper centers */
+  @include maxw($cellphone-portrait) {
+    ul {
+      padding-left: 1.1rem;
+      margin-left: auto;
+      margin-right: auto;
+      max-inline-size: 18rem;
+    }
+  }
+}
+
+/* ====================================
+   Disclaimer (optional)
+   ==================================== */
+.aboutSection.disclaimer {
+  p {
+    font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+    opacity: 0.92;
+  }
+}
