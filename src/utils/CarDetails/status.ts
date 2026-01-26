@@ -2,7 +2,7 @@ import type {
   ApiStatusDoc,
   CarStatus,
   FirestoreTimestampJson,
-} from "@/types/CarDetails";
+} from "@/types/shared/status";
 
 function isFirestoreTimestampJson(
   value: unknown

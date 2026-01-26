@@ -1,26 +1,30 @@
 import type { StatSnapshot } from "@/utils/CarDetails/format";
-import { fmt } from "@/utils/CarDetails/format";
+import { fmt, makeSpeedConverter } from "@/utils/CarDetails/format";
 
-export default function StarCard({
-  star,
-  header,
-  stats,
-  toSpeed,
-  children,
-}: {
-  star: number;
-  header: React.ReactNode;
+type Props = {
+  title: React.ReactNode;
   stats: StatSnapshot;
-  toSpeed: (v: unknown) => string;
-  children?: React.ReactNode;
-}) {
+  unitPreference: "metric" | "imperial";
+  density?: "compact" | "regular";
+  className?: string; // one hook to style all stats cards later
+};
+
+export default function StatsTable({
+  title,
+  stats,
+  unitPreference,
+  density = "compact",
+  className = "statsTableCard",
+}: Props) {
+  const toSpeed = makeSpeedConverter(unitPreference);
+
   return (
-    <div className="tableCard" data-star={star}>
-      <table className="carInfoTable">
+    <div className={`tableCard tableCard--${density} ${className}`.trim()}>
+      <table className={`carInfoTable carInfoTable--${density}`}>
         <thead>
           <tr>
             <th className="tableHeader2" colSpan={2}>
-              {header}
+              {title}
             </th>
           </tr>
         </thead>
@@ -30,7 +34,6 @@ export default function StarCard({
           <tr><td>Acceleration</td><td>{fmt(stats.acceleration)}</td></tr>
           <tr><td>Handling</td><td>{fmt(stats.handling)}</td></tr>
           <tr><td>Nitro</td><td>{fmt(stats.nitro)}</td></tr>
-          {children}
         </tbody>
       </table>
     </div>
