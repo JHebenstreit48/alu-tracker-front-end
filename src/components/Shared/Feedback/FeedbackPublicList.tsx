@@ -17,7 +17,8 @@ type Props = {
 };
 
 // never allow empty base in production
-const API_BASE = (import.meta.env.VITE_COMMENTS_API_BASE_URL ||
+const API_BASE = (
+  import.meta.env.VITE_COMMENTS_API_BASE_URL ||
   (import.meta.env.DEV ? "http://127.0.0.1:3004" : "")
 ).replace(/\/+$/, "");
 
@@ -70,7 +71,17 @@ export default function FeedbackPublicList({
     let alive = true;
 
     (async () => {
-      if (DISABLE_FEEDBACK) return;
+      // If kill switch is present, do NOT leave the UI in "Loading..."
+      if (DISABLE_FEEDBACK) {
+        if (alive) {
+          setLoading(false);
+          setErr(null);
+          setNoPublicEndpoint(false);
+          setItems([]);
+        }
+        return;
+      }
+
       setLoading(true);
       setErr(null);
       setNoPublicEndpoint(false);
@@ -100,13 +111,17 @@ export default function FeedbackPublicList({
             if (alive) {
               setNoPublicEndpoint(true);
               setItems([]);
+              setErr(null);
+              setLoading(false);
             }
             return;
           }
         }
 
         const j: unknown = await r.json().catch(() => ({}));
-        if (!r.ok || !isOkList(j)) throw new Error(`Failed to load feedback (${r.status})`);
+        if (!r.ok || !isOkList(j)) {
+          throw new Error(`Failed to load feedback (${r.status})`);
+        }
 
         // newest first (server may already do this)
         const serverItems = [...j.data.items].sort(
@@ -119,7 +134,9 @@ export default function FeedbackPublicList({
           onSynced?.();
         }
       } catch (e) {
-        if (alive) setErr(e instanceof Error ? e.message : "Failed to load feedback.");
+        if (alive) {
+          setErr(e instanceof Error ? e.message : "Failed to load feedback.");
+        }
       } finally {
         if (alive) setLoading(false);
       }
@@ -146,7 +163,9 @@ export default function FeedbackPublicList({
 
       {loading && <div className="info">Loading…</div>}
       {err && <div className="error">{err}</div>}
-      {showNoPublicMsg && <div className="info">Public feedback listing isn’t available yet.</div>}
+      {showNoPublicMsg && (
+        <div className="info">Public feedback listing isn’t available yet.</div>
+      )}
       {!loading && !err && !showNoPublicMsg && merged.length === 0 && (
         <div className="info">No feedback yet.</div>
       )}
