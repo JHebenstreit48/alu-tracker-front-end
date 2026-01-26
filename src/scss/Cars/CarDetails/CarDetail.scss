@@ -291,6 +291,10 @@ $car-info-font-size: 1.2rem;
     width: $info-table-width;  /* same outer width as cards */
     min-height: 36rem;         /* match .tableCard */
     justify-content: flex-start;
+
+    @include maxw($cellphone-portrait) {
+    width: 22rem;
+  }
   }
 
   /* --- PATCH: Stats table column behavior MUST remain 50/50 and consistent --- */
