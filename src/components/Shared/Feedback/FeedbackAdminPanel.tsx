@@ -2,10 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import FeedbackCard, { FeedbackItem, FeedbackStatus } from "@/components/Shared/Feedback/FeedbackCard";
 
 // never allow empty base in production
-const API_BASE = (
-  import.meta.env.VITE_COMMENTS_API_BASE_URL ??
-  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "https://alu-tracker-comments-api.onrender.com")
+const API_BASE = (import.meta.env.VITE_COMMENTS_API_BASE_URL ||
+  (import.meta.env.DEV ? "http://127.0.0.1:3004" : "")
 ).replace(/\/+$/, "");
+
+if (!API_BASE && !import.meta.env.DEV) {
+  throw new Error("Missing VITE_COMMENTS_API_BASE_URL");
+}
 
 // tiny safe join helper
 function join(base: string, path: string) {
