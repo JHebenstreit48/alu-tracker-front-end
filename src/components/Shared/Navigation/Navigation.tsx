@@ -26,30 +26,12 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    // Home removed – site name handles it now
-    {
-      label: 'Brands',
-      location: '/brands',
-      go: () => navigate('/brands'),
-    },
-    {
-      label: 'Cars',
-      location: '/cars',
-      go: () => navigate('/cars'),
-    },
-    {
-      label: 'Garage Levels',
-      location: '/garagelevels',
-      go: () => navigate('/garagelevels'),
-    },
-    {
-      label: 'Legend Store',
-      location: '/legendstoreprices',
-      go: () => navigate('/legendstoreprices'),
-    },
+    { label: 'Brands', location: '/brands', go: () => navigate('/brands') },
+    { label: 'Cars', location: '/cars', go: () => navigate('/cars') },
+    { label: 'Garage Levels', location: '/garagelevels', go: () => navigate('/garagelevels') },
+    { label: 'Legend Store', location: '/legendstoreprices', go: () => navigate('/legendstoreprices') },
   ];
 
-  // Active on exact root or any sub-route (e.g., /cars/slug keeps Cars active)
   const isActive = (loc: string) =>
     loc === '/' ? currentPath === '/' : currentPath === loc || currentPath.startsWith(loc + '/');
 
@@ -66,20 +48,10 @@ export default function Navigation() {
         ☰
       </button>
 
-      <nav
-        className={`NavigationWrapper ${isOpen ? 'open' : ''}`}
-        aria-label="Primary"
-      >
-        <ul
-          id="main-nav"
-          className="nav-css"
-          role="menubar"
-        >
+      <nav className={`NavigationWrapper ${isOpen ? 'open' : ''}`} aria-label="Primary">
+        <ul id="main-nav" className="nav-css">
           {links.map((link) => (
-            <li
-              key={link.label}
-              role="none"
-            >
+            <li key={link.label}>
               <NavigationButtons
                 label={link.label}
                 onClick={link.go}
