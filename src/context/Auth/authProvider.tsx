@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactNode } from "react";
 import { AuthContext } from "@/context/Auth/authContext";
 import { syncFromAccount } from "@/utils/UserDataSync/syncFromAccount";
+import { hydrateGarageLevelsFromAccount } from "@/utils/UserDataSync/hydrateGarageLevelsFromAccount";
 import { fetchMe } from "@/api/authAPI";
 
 interface Props { children: ReactNode }
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: Props) => {
       if (!ok) return hardLogout(); // 401/expired → out
       if (data?.username) setUsername(data.username);
       await syncFromAccount(tok); // merge, no wipes
+      await hydrateGarageLevelsFromAccount(tok); // ✅ add garage level hydration
     } finally {
       setSyncReady(true);
     }
