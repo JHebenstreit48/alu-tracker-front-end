@@ -1,4 +1,4 @@
-import StarRankMeter from "@/components/Tracking/Cars/ProgressCircles/CarTotalStars/UI/StarRankMeter";
+import StarRankMeter from "@/components/Tracking/Cars/ProgressCircles/CarStars/UI/StarRankMeter";
 
 interface StarRankCirclesProps {
   starCounts: Record<number, number>;  // {1: X, 2: Y, ..., 6: Z}
@@ -7,7 +7,8 @@ interface StarRankCirclesProps {
 
 export default function StarRankCircles({ starCounts, totalOwned }: StarRankCirclesProps) {
   return (
-    <div className="starRankGridWrapper">
+    <div className="currentStarRankGridWrapper">
+      <h3 className="starRankModuleTitle">Current Star Levels</h3>
       <div className="starRankGrid">
         {Array.from({ length: 6 }, (_, i) => {
           const rank = i + 1;

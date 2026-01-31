@@ -1,6 +1,6 @@
-import MaxStarTables from "@/components/Tracking/Cars/MaxStarRank/UI/MaxStarTables";
-import { Car } from "@/types/shared/car";
-import { CarTracking } from "@/types/shared/tracking";
+import MaxStarTables from '@/components/Tracking/Cars/MaxStarRank/UI/MaxStarTables';
+import { Car } from '@/types/shared/car';
+import { CarTracking } from '@/types/shared/tracking';
 
 interface Props {
   allCars: Car[];
@@ -8,45 +8,36 @@ interface Props {
   totalCars: number;
 }
 
-export default function MaxStarRank({
-  allCars,
-  trackedCars,
-  totalCars,
-}: Props) {
+export default function MaxStarRank({ allCars, trackedCars, totalCars }: Props) {
   return (
-    <div className="maxStarGridWrapper">
-      <div className="maxStarGrid">
-        {[3, 4, 5, 6].map((rank) => {
-          // All cars in game that max out at this star rank
-          const totalOfThisRank = allCars.filter((car) => car.Stars === rank);
+    <div className="maxStarSection">
+      <h3 className="maxStarGridTitle">Star Tier Progress</h3>
 
-          // Tracked cars of this rank (user has at least some data saved)
-          const trackedOfThisRank = trackedCars.filter((car) => car.Stars === rank);
+      <div className="maxStarGridWrapper">
+        <div className="maxStarGrid">
+          {[3, 4, 5, 6].map((rank) => {
+            const totalOfThisRank = allCars.filter((car) => car.Stars === rank);
+            const trackedOfThisRank = trackedCars.filter((car) => car.Stars === rank);
+            const owned = trackedOfThisRank.filter((car) => car.owned).length;
+            const maxed = trackedOfThisRank.filter((car) => car.owned && car.stars === rank).length;
 
-          // Of those tracked, how many are marked owned
-          const owned = trackedOfThisRank.filter((car) => car.owned).length;
+            const inProgress = owned - maxed;
 
-          // How many of the owned cars are at their maximum star count
-          const maxed = trackedOfThisRank.filter(
-            (car) => car.owned && car.stars === rank
-          ).length;
+            return (
+              <MaxStarTables
+                key={rank}
+                rank={rank as 3 | 4 | 5 | 6}
+                owned={owned}
+                inProgress={inProgress}
+                maxed={maxed}
+                totalInGame={totalOfThisRank.length}
+                percentMaxed={owned > 0 ? (maxed / owned) * 100 : 0}
+              />
+            );
+          })}
 
-          const inProgress = owned - maxed;
-
-          return (
-            <MaxStarTables
-              key={rank}
-              rank={rank as 3 | 4 | 5 | 6}
-              owned={owned}
-              inProgress={inProgress}
-              maxed={maxed}
-              totalInGame={totalOfThisRank.length}
-              percentMaxed={owned > 0 ? (maxed / owned) * 100 : 0}
-            />
-          );
-        })}
-
-        <p className="totalCarNotice">Total Cars in Game: {totalCars}</p>
+          <p className="totalCarNotice">Total Cars in Game: {totalCars}</p>
+        </div>
       </div>
     </div>
   );

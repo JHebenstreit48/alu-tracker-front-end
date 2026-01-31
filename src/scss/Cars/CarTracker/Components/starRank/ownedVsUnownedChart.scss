@@ -1,0 +1,28 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+.starRankOwnershipChart {
+  width: 100%;
+  max-width: 50rem;
+  text-align: center;
+  margin-top: 1rem;
+
+  .sectionSubtitle {
+    margin: 0 0 0rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-gold-glow;
+    font-family: var(--display-font, 'Cinzel'), serif;
+  }
+
+  .ownedVsUnownedSubtitle {
+    margin: 0 0 0.5rem 0;
+    color: $color-accent-blue;
+    font-size: 0.8rem;
+  }
+
+  .chartContainer {
+    width: 90%;
+    height: 18rem;
+  }
+}

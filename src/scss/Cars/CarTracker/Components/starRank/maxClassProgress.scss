@@ -1,0 +1,107 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+.maxClassSection {
+  position: relative; /* makes absolute title work */
+}
+
+/* Title floats independently — does NOT push grid down */
+.maxClassGridTitle {
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  top: 0.1rem;
+
+  margin: 0;
+  text-align: center;
+
+  font-size: 1rem;
+  font-weight: 600;
+  color: $color-gold-glow;
+  font-family: var(--display-font, 'Cinzel'), serif;
+  line-height: 1.1;
+
+  pointer-events: none;
+
+  @include maxw($cellphone-portrait) {
+    position: static;
+    pointer-events: auto;
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+/* ==============================
+   Middle Tables — Max Class Tables Grid
+============================== */
+.maxClassGridWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  /* room for the absolute title above */
+  margin: 3rem 0 0 0rem;
+
+  @include maxw($cellphone-portrait) {
+    margin: 1rem;
+    width: 21rem;
+  }
+
+  .maxClassGrid {
+    display: grid;
+
+    /* desktop: 5 classes in a single row (D C B A S) */
+    grid-template-columns: repeat(5, 13.3rem);
+
+    row-gap: 0;
+    column-gap: 2rem;
+
+    justify-content: center;
+    align-content: start;
+
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: minmax(260px, 92vw);
+      justify-content: center;
+      row-gap: 0.9rem;
+    }
+  }
+
+  /* Tables */
+  .maxClassTable {
+    width: 100%;
+    margin: 0 0 2.5rem 0;
+    border-collapse: collapse;
+    background-color: $table-bg;
+    border: 1px solid $table-outline-border;
+    border-radius: 8px;
+    color: $color-white;
+    font-size: 0.9rem;
+    overflow: hidden;
+  }
+
+  .maxClassTable th,
+  .maxClassTable td {
+    padding: 6px 10px;
+    text-align: left;
+    line-height: 1.2;
+  }
+
+  .maxClassTable th {
+    background-color: $table-header-bg;
+    font-weight: bold;
+    text-align: center;
+    padding: 9px 11px;
+  }
+
+  .maxClassTable td {
+    height: 2rem;
+  }
+
+  .totalClassNotice {
+    grid-column: 1 / -1;
+    color: $color-gold-glow;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+  }
+}

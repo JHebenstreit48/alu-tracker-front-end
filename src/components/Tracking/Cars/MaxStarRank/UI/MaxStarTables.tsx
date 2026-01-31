@@ -51,7 +51,7 @@ export default function MaxStarTables({
             <td>{owned}</td>
           </tr>
           <tr>
-            <td>In Progress</td>
+            <td>Not Max Rank</td>
             <td>{inProgress}</td>
           </tr>
           <tr>
