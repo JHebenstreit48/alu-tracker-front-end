@@ -1,5 +1,5 @@
 import ClassRank from "@/components/CarDetails/Tables/ClassRank";
-import BlueprintsTable from "@/components/CarDetails/Tables/BlueprintsTable";
+import BlueprintsTable from "@/components/CarDetails/Tables/Blueprints/BlueprintsTable";
 import KeyInfo from "@/components/CarDetails/Tables/KeyInfo";
 import StatsTables from "@/components/CarDetails/Tables/StarsStats/StatsTables";
 import type { FullCar } from "@/types/shared/car";

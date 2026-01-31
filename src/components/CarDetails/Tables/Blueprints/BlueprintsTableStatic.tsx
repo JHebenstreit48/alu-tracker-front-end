@@ -1,16 +1,13 @@
+import React from "react";
+
 import { Car } from "@/types/shared/car";
 import { Blueprints } from "@/types/CarDetails";
 import StarRank from "@/components/Shared/Stars/StarRank";
 
-interface Props {
-  car: Car & Blueprints;
-  trackerMode?: boolean;
-}
-
 // Values can be number, string, or null after unwrapping
 type BlueprintValue = number | string | null;
 
-const BlueprintsTable: React.FC<Props> = ({ car }) => {
+const BlueprintsTableStatic: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
   if (car.Model.includes("Security")) {
     return (
       <div className="noBlueprintData">
@@ -91,4 +88,4 @@ const BlueprintsTable: React.FC<Props> = ({ car }) => {
   );
 };
 
-export default BlueprintsTable;
+export default BlueprintsTableStatic;
