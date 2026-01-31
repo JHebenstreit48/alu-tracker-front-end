@@ -41,8 +41,9 @@ export default function StarRankOwnershipChart({ data }: Props) {
   return (
     <div className="starRankOwnershipChart">
       <h3 className="sectionSubtitle">
-        Owned vs Unowned by Max Star Rank
+        Owned vs Unowned Cars by Star Rank
       </h3>
+      <h4 className="ownedVsUnownedSubtitle">(Ownership regardless of upgrade progress)</h4>
       <div className="chartContainer">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart

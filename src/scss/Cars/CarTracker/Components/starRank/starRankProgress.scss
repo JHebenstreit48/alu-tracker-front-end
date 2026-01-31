@@ -1,0 +1,126 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* ==============================
+   Star Tier Progress — Section Wrapper
+============================== */
+.maxStarSection {
+  position: relative; /* ✅ makes absolute title work */
+  width: 100%;
+}
+
+/* Title floats independently — does NOT push grid down */
+.maxStarGridTitle {
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  /* adjust this freely without moving tables */
+  top: 0.1rem;
+
+  margin: 0;
+  text-align: center;
+
+  font-size: 1rem;
+  font-weight: 600;
+  color: $color-gold-glow;
+  font-family: var(--display-font, 'Cinzel'), serif;
+  line-height: 1.1;
+
+  pointer-events: none;
+
+  @include maxw($cellphone-portrait) {
+    position: static;       /* on mobile it sits normally */
+    pointer-events: auto;
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+.maxStarGridWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-left: 0;
+
+  /* ✅ give room for the absolute title above */
+  margin: 3.5rem 0 0 2.5rem;
+
+  @include maxw($cellphone-portrait) {
+    margin: 1rem;
+    width: 21rem;
+  }
+
+  .maxStarGrid {
+    display: grid;
+
+    /* desktop: 4 columns in a single row */
+    grid-template-columns: repeat(4, 15rem);
+
+    /* keep it tight */
+    row-gap: 0;
+    column-gap: 2rem;
+
+    justify-content: center;
+    align-content: start;
+
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: minmax(260px, 92vw);
+      justify-content: center;
+      row-gap: 0.9rem;
+    }
+  }
+
+  /* Tables */
+  .maxStarTable {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background-color: $table-bg;
+    border: 1px solid $table-outline-border;
+    border-radius: 8px;
+    color: $color-white;
+    font-size: 0.9rem;
+    overflow: hidden;
+  }
+
+  .maxStarTable th,
+  .maxStarTable td {
+    padding: 6px 10px;
+    text-align: left;
+    line-height: 1.2;
+  }
+
+  .maxStarTable th {
+    background-color: $table-header-bg;
+    font-weight: bold;
+    text-align: center;
+    padding: 9px 11px;
+  }
+
+  .maxStarTable td {
+    height: 2rem;
+  }
+
+  .totalCarNotice {
+    grid-column: 1 / -1;
+    color: $color-gold-glow;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  /* Inline Stars */
+  .starRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2px 0;
+  }
+
+  .inlineStar {
+    width: 20px;
+    height: 20px;
+    margin: 0 2px;
+  }
+}

@@ -1,0 +1,54 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+/* shared row base */
+.starProgressRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Row 1: circles + star tables */
+.topRow {
+  @include maxw($tablet-portrait) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Row 2: chart + class tables */
+.bottomRow {
+  flex-wrap: nowrap;         /* ✅ keep 2 columns on desktop */
+  align-items: flex-start;
+
+  .chartColumn {
+    flex: 0 0 31rem;         /* ✅ matches your chart max-width */
+    max-width: 38rem;
+    min-width: 26rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .classColumn {
+    flex: 1 1 auto;
+    min-width: 0;            /* ✅ critical: allows flex child to shrink */
+    display: flex;
+    justify-content: center;
+  }
+
+  /* stack on tablet / small screens */
+  @include maxw($tablet-portrait) {
+    flex-direction: column;
+    align-items: center;
+
+    .chartColumn,
+    .classColumn {
+      flex: 1 1 100%;
+      max-width: 42rem;
+      min-width: 0;
+      justify-content: center;
+    }
+  }
+}
