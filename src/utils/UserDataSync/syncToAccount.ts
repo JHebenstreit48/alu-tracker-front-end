@@ -29,6 +29,11 @@ function readGarageLevelSnapshot() {
   return { xp, currentGarageLevel, currentGLXp, garageLevelTrackerMode };
 }
 
+type BlueprintSyncEntry = {
+  ownedByStar: Record<number, number>;
+  updatedAt: number; // unix ms
+};
+
 export async function syncToAccount(token: string, opts: PushOptions = {}): Promise<SyncResult> {
   const timeoutMs = typeof opts.timeoutMs === 'number' ? opts.timeoutMs : 15000;
   const controller = new AbortController();
@@ -46,8 +51,8 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
     const goldMaxedCars: string[] = [];
     const keyCarsOwned: string[] = [];
 
-    // ✅ ADD: blueprint payload accumulator
-    const blueprintsByCar: Record<string, Record<number, number>> = {};
+    // ✅ Blueprint payload accumulator (backend expects object w/ updatedAt)
+    const blueprintsByCar: Record<string, BlueprintSyncEntry> = {};
 
     for (const [normalizedKey, data] of Object.entries(allTracked)) {
       const label =
@@ -62,10 +67,13 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
       if (data.goldMaxed) goldMaxedCars.push(label);
       if (data.keyObtained) keyCarsOwned.push(label);
 
-      // ✅ ADD: include blueprint tracking if present
-      const ownedByStar = data.blueprints?.ownedByStar;
+      // ✅ Include blueprint tracking if present
+      const ownedByStar = data.blueprints?.ownedByStar as Record<number, number> | undefined;
       if (ownedByStar && Object.keys(ownedByStar).length > 0) {
-        blueprintsByCar[label] = ownedByStar;
+        blueprintsByCar[label] = {
+          ownedByStar,
+          updatedAt: Date.now(),
+        };
       }
     }
 
@@ -84,7 +92,7 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
       currentGLXp: gl.currentGLXp,
       garageLevelTrackerMode: gl.garageLevelTrackerMode,
 
-      // ✅ ADD: only send if non-empty
+      // ✅ Only send if non-empty
       blueprintsByCar: Object.keys(blueprintsByCar).length > 0 ? blueprintsByCar : undefined,
     };
 
@@ -94,10 +102,11 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
       payload.goldMaxedCars.length === 0 &&
       payload.keyCarsOwned.length === 0 &&
       gl.xp === 0;
-    // ✅ NOTE: intentionally NOT changing the existing empty-snapshot behavior.
-    // If you want blueprints alone to trigger sync, we can add it later,
-    // but that would be a behavior change. So we leave it as-is.
 
+    // ✅ NOTE: intentionally NOT changing the existing empty-snapshot behavior.
+    // This means: if you ONLY have blueprints (no stars/owned/etc), sync may skip.
+    // With the hook change in useBlueprintTracker, stars will often exist anyway.
+    // If you want blueprint-only to sync, tell me and we’ll adjust this safely.
     if (isEmpty) {
       console.warn('⏭️ Skip sync: empty snapshot (protected)');
       return { success: true, skipped: true as const };

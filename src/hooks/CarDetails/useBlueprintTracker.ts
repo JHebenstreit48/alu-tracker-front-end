@@ -5,6 +5,7 @@ import {
   setCarTrackingData,
 } from '@/utils/shared/StorageUtils';
 import type { BlueprintsRow } from '@/types/CarDetails/Blueprints';
+import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 
 export function useBlueprintTracker(params: {
   brand: string;
@@ -17,6 +18,7 @@ export function useBlueprintTracker(params: {
   const maxStars = rows[rows.length - 1]?.star ?? 0;
   const carKey = useMemo(() => generateCarKey(brand, model), [brand, model]);
 
+  // Initial snapshot (boot only)
   const snapshot = useMemo(() => getCarTrackingData(carKey), [carKey]);
   const currentStars = typeof snapshot.stars === 'number' ? snapshot.stars : 0;
   const goldMaxed = !!snapshot.goldMaxed;
@@ -25,6 +27,7 @@ export function useBlueprintTracker(params: {
     (snapshot.blueprints?.ownedByStar ?? {}) as Record<number, number>
   );
 
+  // Sync when navigating between cars
   useEffect(() => {
     const fresh = getCarTrackingData(carKey);
     setOwnedByStar((fresh.blueprints?.ownedByStar ?? {}) as Record<number, number>);
@@ -32,14 +35,22 @@ export function useBlueprintTracker(params: {
 
   const done = goldMaxed || currentStars >= maxStars;
 
-  // ✅ Correct editable row logic
+  /**
+   * ✅ Correct editable row logic
+   * - Done => no input
+   * - 0 stars => input on 1⭐ (unlocking)
+   * - otherwise => input on next star (currentStars + 1)
+   */
   const targetStar = done
     ? -1
     : currentStars === 0
       ? 1
       : Math.min(currentStars + 1, maxStars);
 
-  // ✅ Auto-complete stars already achieved
+  /**
+   * ✅ Auto-complete stars already achieved
+   * If the car is already at N stars, rows <= N are satisfied.
+   */
   useEffect(() => {
     if (currentStars <= 0) return;
 
@@ -71,7 +82,9 @@ export function useBlueprintTracker(params: {
     });
   }, [currentStars, rows, carKey]);
 
-  // ✅ Auto-complete all when done (fallback / safety)
+  /**
+   * ✅ Auto-complete all when done
+   */
   useEffect(() => {
     if (!done) return;
 
@@ -119,6 +132,20 @@ export function useBlueprintTracker(params: {
   );
 
   const starsLeft = Math.max(0, maxStars - currentStars);
+
+  /**
+   * ✅ THIS is what makes Firebase start showing blueprint data:
+   * autosync triggers when blueprint content changes.
+   */
+  const bpDepsKey = useMemo(() => {
+    const entries = Object.entries(ownedByStar)
+      .map(([k, v]) => [Number(k), Number(v) || 0] as const)
+      .sort((a, b) => a[0] - b[0]);
+
+    return `${carKey}|bp:${entries.map(([k, v]) => `${k}:${v}`).join(',')}`;
+  }, [carKey, ownedByStar]);
+
+  useAutoSyncDependency([bpDepsKey]);
 
   return {
     maxStars,
