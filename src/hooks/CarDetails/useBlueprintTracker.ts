@@ -15,12 +15,9 @@ export function useBlueprintTracker(params: {
   const { brand, model, rows } = params;
 
   const maxStars = rows[rows.length - 1]?.star ?? 0;
-
   const carKey = useMemo(() => generateCarKey(brand, model), [brand, model]);
 
-  // Initial snapshot (boot only)
   const snapshot = useMemo(() => getCarTrackingData(carKey), [carKey]);
-
   const currentStars = typeof snapshot.stars === 'number' ? snapshot.stars : 0;
   const goldMaxed = !!snapshot.goldMaxed;
 
@@ -28,7 +25,6 @@ export function useBlueprintTracker(params: {
     (snapshot.blueprints?.ownedByStar ?? {}) as Record<number, number>
   );
 
-  // Sync when navigating between cars
   useEffect(() => {
     const fresh = getCarTrackingData(carKey);
     setOwnedByStar((fresh.blueprints?.ownedByStar ?? {}) as Record<number, number>);
@@ -36,28 +32,50 @@ export function useBlueprintTracker(params: {
 
   const done = goldMaxed || currentStars >= maxStars;
 
-  /**
-   * Editable star rule:
-   * - Editable = currentStars
-   * - If currentStars === 0 → editable = 1
-   * - If done → no editable row
-   */
+  // ✅ Correct editable row logic
   const targetStar = done
     ? -1
-    : Math.min(Math.max(currentStars === 0 ? 1 : currentStars, 1), maxStars);
+    : currentStars === 0
+      ? 1
+      : Math.min(currentStars + 1, maxStars);
 
-  /**
-   * ✅ NEW: Auto-fulfill blueprint ownership for completed cars
-   * Only runs if:
-   * - Car is done
-   * - User has NOT manually tracked blueprints yet
-   */
+  // ✅ Auto-complete stars already achieved
+  useEffect(() => {
+    if (currentStars <= 0) return;
+
+    setOwnedByStar((prev) => {
+      const next = { ...prev };
+      let changed = false;
+
+      rows.forEach((r) => {
+        if (r.star <= currentStars && typeof r.value === 'number') {
+          if (next[r.star] !== r.value) {
+            next[r.star] = r.value;
+            changed = true;
+          }
+        }
+      });
+
+      if (!changed) return prev;
+
+      const current = getCarTrackingData(carKey);
+      setCarTrackingData(carKey, {
+        ...current,
+        blueprints: {
+          ...(current.blueprints ?? {}),
+          ownedByStar: next,
+        },
+      });
+
+      return next;
+    });
+  }, [currentStars, rows, carKey]);
+
+  // ✅ Auto-complete all when done (fallback / safety)
   useEffect(() => {
     if (!done) return;
-    if (Object.keys(ownedByStar).length > 0) return;
 
     const fulfilled: Record<number, number> = {};
-
     rows.forEach((r) => {
       if (typeof r.value === 'number') {
         fulfilled[r.star] = r.value;
@@ -74,7 +92,7 @@ export function useBlueprintTracker(params: {
         ownedByStar: fulfilled,
       },
     });
-  }, [done, rows, carKey, ownedByStar]);
+  }, [done, rows, carKey]);
 
   const updateOwnedForStar = (star: number, value: number) => {
     const safeValue = Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
