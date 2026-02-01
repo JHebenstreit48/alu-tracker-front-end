@@ -1,12 +1,12 @@
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import PageTab from "@/components/Shared/Navigation/PageTab";
-import Header from "@/components/Shared/HeaderFooter/Header";
-import { AuthContext } from "@/context/Auth/authContext";
-import ProfileCard from "@/components/Account/ProfileCard";
-import TwoFASetupCard from "@/components/Account/TwoFASetupCard";
-import SecurityActions from "@/components/Account/SecurityActions";
-import "@/scss/MiscellaneousStyle/Account.scss";
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PageTab from '@/components/Shared/Navigation/PageTab';
+import Header from '@/components/Shared/HeaderFooter/Header';
+import { AuthContext } from '@/context/Auth/authContext';
+import ProfileCard from '@/components/Account/ProfileCard';
+import TwoFASetupCard from '@/components/Account/MFA/TwoFASetupCard';
+import SecurityActions from '@/components/Account/SecurityActions';
+import '@/scss/MiscellaneousStyle/Account.scss';
 
 export default function Account(): JSX.Element {
   const { token, username } = useContext(AuthContext);
@@ -15,7 +15,6 @@ export default function Account(): JSX.Element {
   if (!token) {
     return (
       <PageTab title="Account">
-        {/* Global site header for navigation/access to auth controls */}
         <Header text="Account" className="accountHeader" />
 
         <div className="AccountPage">
@@ -30,9 +29,7 @@ export default function Account(): JSX.Element {
             </button>
           </div>
 
-          <div className="AccountGate">
-            Your session ended. Please sign in again.
-          </div>
+          <div className="AccountGate">Your session ended. Please sign in again.</div>
         </div>
       </PageTab>
     );
@@ -40,7 +37,6 @@ export default function Account(): JSX.Element {
 
   return (
     <PageTab title="Account">
-      {/* Same global Header used on Home—keeps nav consistent */}
       <Header text="Account" className="accountHeader" />
 
       <div className="AccountPage">
@@ -65,9 +61,15 @@ export default function Account(): JSX.Element {
         </header>
 
         <main className="AccountGrid">
-          <section className="AccountSection"><ProfileCard /></section>
-          <section className="AccountSection"><TwoFASetupCard /></section>
-          <section className="AccountSection"><SecurityActions /></section>
+          <section className="AccountSection">
+            <ProfileCard />
+          </section>
+          <section className="AccountSection">
+            <TwoFASetupCard />
+          </section>
+          <section className="AccountSection">
+            <SecurityActions />
+          </section>
         </main>
       </div>
     </PageTab>
