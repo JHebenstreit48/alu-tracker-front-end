@@ -55,15 +55,43 @@ export async function mfaConfirm(token: string, code: string) {
     },
     body: JSON.stringify({ code }),
   });
-  return json(res); // { twoFactorEnabled:true, recoveryCodes? }
+
+  // No runtime change; this just lets TS know recoveryCodes may exist.
+  return json(res) as Promise<{ twoFactorEnabled: boolean; recoveryCodes?: string[] }>;
 }
 
-export async function mfaDisable(token: string) {
+/**
+ * Backwards-compatible:
+ * - existing callers can keep calling mfaDisable(token)
+ * - new callers can call mfaDisable(token, proof)
+ */
+export async function mfaDisable(token: string, proof?: string) {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const v = (proof || "").trim();
+
+  // Old behavior preserved (no body). This may 400 if backend requires proof.
+  if (!v) {
+    const res = await fetch(`${API_BASE_URL}/auth/mfa/disable`, {
+      method: "POST",
+      headers,
+    });
+    return json(res);
+  }
+
+  // New behavior: send proof in body (totp or recovery)
+  const isTotp = /^\d{6,8}$/.test(v);
+  const payload = isTotp ? { code: v } : { recoveryCode: v };
+
   const res = await fetch(`${API_BASE_URL}/auth/mfa/disable`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   });
-  return json(res); // { twoFactorEnabled:false }
+
+  return json(res);
 }
 
 export async function mfaLogin(userId: string, code: string) {
@@ -72,5 +100,10 @@ export async function mfaLogin(userId: string, code: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, code }),
   });
-  return json(res) as Promise<{ token: string; username: string; userId: string; twoFactorEnabled?: boolean }>;
+  return json(res) as Promise<{
+    token: string;
+    username: string;
+    userId: string;
+    twoFactorEnabled?: boolean;
+  }>;
 }
