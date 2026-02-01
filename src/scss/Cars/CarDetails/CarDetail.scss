@@ -1,12 +1,2 @@
-@use "sass:color";
 @use "@scss/Globals/index" as *;
-
-/* =============================
-   Variables
-   ============================= */
-$car-detail-text-color: #333;
-$back-btn-bg-color: #333;
-$back-btn-hover-bg-color: #555;
-
-$car-image-border-color: rgb(0, 0, 0);
-$car-image-shadow-color: rgb(223, 190, 7);
+@use "@scss/carDetails/index";

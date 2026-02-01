@@ -1,0 +1,39 @@
+@use '@scss/Globals/index' as *;
+
+.carDetail {
+/* =============================
+     Blueprint Table
+     ============================= */
+  .blueprintTotalLabel {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 1.4rem;
+    color: white;
+  }
+
+  .blueprintsTable td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .blueprintStarCell {
+    width: 40%;
+  }
+  .blueprintValueCell {
+    width: 10%;
+  }
+
+  .starIconWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .noBlueprintData {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #ccc;
+    padding: 1rem 0;
+  }
+}

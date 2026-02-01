@@ -4,46 +4,46 @@
 /* =============================
      Car name between toggles
      ============================= */
-.CarDetailTitle {
-  flex: 1 1 auto;
-  margin: 0;
-  text-align: center;
-
-  font-family: var(--display-font, 'Cinzel'), serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-
-  color: $color-gold-glow;
-  text-shadow:
-    0 0 6px rgba(0, 0, 0, 0.9),
-    0 0 10px rgba($car-image-shadow-color, 0.45);
-
-  font-size: clamp(1.1rem, 2.5vw, 1.9rem);
-  line-height: 1.2;
-
-  padding: 0 0.75rem;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-
-  @include maxw($cellphone-portrait) {
-    font-size: clamp(1.05rem, 4.5vw, 1.6rem);
+.carDetail {
+  .CarDetailTitle {
+    flex: 1 1 auto;
+    margin: 0;
     text-align: center;
-}
-}
 
+    font-family: var(--display-font, 'Cinzel'), serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 
-.cdetail-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin: 0.6rem 2rem 0.75rem 2rem;
-  padding-bottom: 0;
-  border-bottom: none;
-}
+    color: $color-gold-glow;
+    text-shadow:
+      0 0 6px rgba(0, 0, 0, 0.9),
+      0 0 10px rgba($car-image-shadow-color, 0.45);
 
-/* =============================
+    font-size: clamp(1.1rem, 2.5vw, 1.9rem);
+    line-height: 1.2;
+
+    padding: 0 0.75rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    @include maxw($cellphone-portrait) {
+      font-size: clamp(1.05rem, 4.5vw, 1.6rem);
+      text-align: center;
+    }
+  }
+
+  .cdetail-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.6rem 2rem 0.75rem 2rem;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  /* =============================
      Car Name
      ============================= */
   .carName {
@@ -72,3 +72,4 @@
       margin: 2rem auto 0 auto;
     }
   }
+}

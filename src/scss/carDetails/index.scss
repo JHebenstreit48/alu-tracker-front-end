@@ -1,8 +1,8 @@
-@forward "@scss/carDetails/main";
-@forward "@scss/carDetails/nameAndImage";
-@forward "@scss/carDetails/basicInfo";
-@forward "@scss/carDetails/keyInfo";
-@forward "@scss/carDetails/comments";
+@forward "./main";
+@forward "./nameAndImage";
+@forward "./keyInfo";
+@forward "./comments";
+@forward "./basicInfo";
 
-@forward "@scss/carDetails/toolsRow/index";
-@forward "@scss/carDetails/stats/index";
+@forward "./tables/index";
+@forward "./toolsRow/index";
