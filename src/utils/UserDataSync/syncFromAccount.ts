@@ -7,8 +7,14 @@ import type { CarTracking } from '@/types/shared/tracking';
 
 type CarStarsMap = Record<string, number>;
 
-// ✅ ADD: blueprint map type
-type BlueprintsByCarMap = Record<string, Record<number, number>>;
+// ✅ Blueprint entry matches backend shape
+type BlueprintSyncEntry = {
+  ownedByStar: Record<number, number>;
+  updatedAt: number;
+};
+
+// ✅ Blueprint map type
+type BlueprintsByCarMap = Record<string, BlueprintSyncEntry>;
 
 interface ServerProgress {
   carStars?: CarStarsMap;
@@ -17,9 +23,10 @@ interface ServerProgress {
   keyCarsOwned?: string[];
   xp?: number;
 
-  // ✅ ADD: blueprint tracking from server
+  // ✅ blueprint tracking from server
   blueprintsByCar?: BlueprintsByCarMap;
 }
+
 interface ProgressResponse {
   progress?: ServerProgress;
 }
@@ -32,9 +39,11 @@ export interface PullResult {
 function isObject(u: unknown): u is Record<string, unknown> {
   return typeof u === 'object' && u !== null;
 }
+
 function isProgressResponse(u: unknown): u is ProgressResponse {
   return isObject(u) && 'progress' in u;
 }
+
 function safeParseJSON(text: string): unknown {
   try {
     return text ? JSON.parse(text) : {};
@@ -93,12 +102,13 @@ export async function syncFromAccount(
     }
 
     const p = dataUnknown.progress;
+
     const carStars: CarStarsMap = p.carStars ?? {};
     const ownedCars: string[] = p.ownedCars ?? [];
     const goldMaxedCars: string[] = p.goldMaxedCars ?? [];
     const keyCarsOwned: string[] = p.keyCarsOwned ?? [];
 
-    // ✅ ADD: blueprint data
+    // ✅ blueprint data
     const blueprintsByCar: BlueprintsByCarMap = p.blueprintsByCar ?? {};
 
     // Build all server labels → keys
@@ -108,7 +118,7 @@ export async function syncFromAccount(
       ...goldMaxedCars,
       ...keyCarsOwned,
 
-      // ✅ ADD: include blueprint labels so they don't get pruned
+      // ✅ include blueprint labels so they don't get pruned
       ...Object.keys(blueprintsByCar),
     ]);
 
@@ -140,8 +150,9 @@ export async function syncFromAccount(
       const current = getCarTrackingData(key);
       const starsFromServer = carStars[label] ?? 0;
 
-      // ✅ ADD: server blueprint snapshot for this label (if any)
-      const bpOwnedByStar = blueprintsByCar[label];
+      // ✅ blueprint snapshot (if any)
+      const bpEntry = blueprintsByCar[label];
+      const bpOwnedByStar = bpEntry?.ownedByStar;
 
       const next: CarTracking = {
         ...current,
@@ -150,7 +161,6 @@ export async function syncFromAccount(
         keyObtained: keySet.has(label),
         stars: starsFromServer > 0 ? starsFromServer : undefined,
 
-        // ✅ ADD: merge blueprint tracking if present
         ...(bpOwnedByStar
           ? {
               blueprints: {
