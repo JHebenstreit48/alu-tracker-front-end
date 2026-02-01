@@ -1,0 +1,25 @@
+@use "sass:color";
+@use "@scss/Globals/colors/core" as *;
+
+/* Text colors on a BLACK dropdown list */
+$rarity-text-uncommon: #01bcfa !default;
+$rarity-text-rare: #6f08aa !default;
+$rarity-text-epic: #ffae00 !default;
+$rarity-text-neutral: #cfd6ff !default;
+
+@mixin rarity-option-on-black($text-color) {
+  background-color: $color-black;
+  color: $text-color;
+
+  &:hover,
+  &:focus,
+  &:checked {
+    background-color: color.scale($color-black, $lightness: 8%);
+    color: color.scale($text-color, $lightness: 10%);
+  }
+}
+
+@mixin rarity-select-outline($text-color) {
+  outline: none;
+  box-shadow: inset 0 0 0 2px $text-color;
+}

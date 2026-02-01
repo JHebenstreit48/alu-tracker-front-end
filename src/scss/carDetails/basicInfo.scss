@@ -1,0 +1,43 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+
+.tableCard {
+    width: $info-table-width;
+    min-height: 36rem;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @include maxw($cellphone-portrait) {
+      width: auto;
+      min-height: unset;
+    }
+  }
+
+  .carInfoTable {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    flex-grow: 1;
+
+    td, th {
+      padding: 10px 16px;
+      text-align: center;
+      vertical-align: middle;
+      height: auto;
+    }
+  }
+
+  .tableHeader2 {
+    color: $color-white;
+    background-color: $color-black;
+    text-align: center;
+    height: 50px;
+    padding: 15px 80px 20px 80px !important;
+    font-size: $table-header-font-size-car-details !important;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
