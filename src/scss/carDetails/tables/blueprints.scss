@@ -1,33 +1,100 @@
-@use '@scss/Globals/index' as *;
+@use "@scss/Globals/index" as *;
 
 .carDetail {
-/* =============================
+  /* =============================
      Blueprint Table
      ============================= */
-  .blueprintTotalLabel {
-    text-align: center;
-    font-weight: bold;
-    padding: 10px;
-    font-size: 1.4rem;
-    color: white;
+
+  /* Shared (static + tracker) */
+  .blueprintsTable {
+    table-layout: fixed;
+
+    td {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th,
+    td {
+      overflow: hidden; /* prevents spillover (input/text) */
+    }
+
+    /* Tracker secondary header row */
+    thead .trackerHeaderRow th {
+      background-color: rgba(0, 0, 0, 0.75);
+      color: $color-accent-blue;
+
+      font-weight: 500; /* cleaner */
+      text-transform: uppercase;
+      font-size: 1.05rem;
+
+      border-top: 1px solid rgba(255, 0, 255, 0.55);
+      border-bottom: 1px solid rgba(255, 0, 255, 0.55);
+
+      /* vertical dividers between header cells */
+      border-left: 1px solid rgba(255, 0, 255, 0.7);
+    }
+
+    thead .trackerHeaderRow th:last-child {
+      border-right: 1px solid rgba(255, 0, 255, 0.7);
+    }
   }
 
-  .blueprintsTable td {
-    text-align: center;
-    vertical-align: middle;
-  }
-
+  /* Column sizing (mainly for tracker mode: 4 columns) */
   .blueprintStarCell {
-    width: 40%;
+    width: 34%;
   }
+
   .blueprintValueCell {
-    width: 10%;
+    width: 18%;
+  }
+
+  .blueprintOwnedCell {
+    width: 26%;
+  }
+
+  .blueprintInputCell {
+    width: 22%;
+    text-align: center;
+  }
+
+  /* Tracker input */
+  .blueprintInputCell input {
+    width: 3.25rem; /* good for 0–99 */
+    max-width: 100%;
+    box-sizing: border-box;
+
+    padding: 0.25rem 0.35rem;
+    border-radius: 6px;
+
+    background: rgba(0, 0, 0, 0.75);
+    color: $color-white;
+
+    border: 1px solid rgba(223, 190, 7, 0.55);
+    outline: none;
+
+    font-size: 1rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .blueprintInputCell input:focus {
+    border-color: rgba(223, 190, 7, 0.95);
+    box-shadow: 0 0 8px rgba(223, 190, 7, 0.35);
   }
 
   .starIconWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .blueprintTotalLabel {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 1.4rem;
+    color: white;
   }
 
   .noBlueprintData {

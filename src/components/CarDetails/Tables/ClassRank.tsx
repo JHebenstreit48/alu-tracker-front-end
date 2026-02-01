@@ -76,8 +76,8 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
       ? car.ObtainableVia.join(', ')
       : '—'
     : typeof car.ObtainableVia === 'string' && car.ObtainableVia.trim()
-    ? car.ObtainableVia.trim()
-    : '—';
+      ? car.ObtainableVia.trim()
+      : '—';
 
   return (
     <table className="carInfoTable">
