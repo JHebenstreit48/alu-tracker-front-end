@@ -55,7 +55,7 @@ table {
   background-color: $color-black;
   text-align: center;
   padding: $table-header-padding;
-  font-size: $table-header-font-size;
+  font-size: $table-header-font-size-cars;
   border-top: 1px solid rgba(204, 19, 255, 0.308);
   border-left: 1px solid $td-border-color;
 
@@ -82,7 +82,7 @@ table {
   background-color: rgb(15, 10, 32);
   text-align: center;
   padding: $table-header-padding;
-  font-size: $table-header-font-size;
+  font-size: $table-header-font-size-cars;
   border-top: 1px solid rgba(204, 19, 255, 0.308);
   border-left: 1px solid $td-border-color;
 

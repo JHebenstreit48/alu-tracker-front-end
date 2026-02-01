@@ -1,0 +1,66 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use "@scss/Globals/spacing/carDetails" as *;
+
+.carDetail {
+  grid-template-columns: $table-grid-columns;
+  color: $car-detail-text-color;
+
+  .loading-message {
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+.backBtn {
+  margin: 0;
+  border-radius: 8px;
+  background-color: $back-btn-bg-color;
+  color: $color-gold-glow;
+  padding: $back-btn-padding;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $back-btn-hover-bg-color;
+  }
+}
+
+/* =========================================================
+     TOP INFO CARDS ONLY (ClassRank + Blueprints)
+     ========================================================= */
+.carDetailsTables {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-top: 0;
+  padding: 0;
+
+  @include maxw($cellphone-portrait) {
+    gap: 0rem;
+      box-sizing: border-box;
+      width: auto;
+      min-height: unset;
+      flex: 0 1 clamp(22rem, 40vw, 24rem);
+    }
+  }
+
+  /* =============================
+   Divider
+   ============================= */
+  .content-divider {
+    border: none;
+    height: 2px;
+    width: 100%;
+    margin: 1.5rem 0 1rem;
+    background: linear-gradient(
+      90deg,
+      rgba(223, 190, 7, 0),
+      rgba(223, 190, 7, 0.8),
+      rgba(223, 190, 7, 0)
+    );
+    box-shadow: 0 0 8px rgba(223, 190, 7, 0.45);
+  }
+}

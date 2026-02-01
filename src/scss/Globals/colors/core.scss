@@ -1,0 +1,14 @@
+$color-black: #000 !default;
+$color-white: #fff !default;
+
+$gray-333: #333 !default;
+$gray-555: #555 !default;
+
+$color-accent-blue: rgb(21, 201, 232) !default;
+
+// GOLD (universal)
+$gold-accent: rgb(223, 190, 7) !default;
+$gold-text: rgb(255, 196, 0) !default;
+
+// Back-compat alias
+$color-gold-glow: $gold-accent !default;

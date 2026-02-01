@@ -1,0 +1,30 @@
+@use '@scss/Globals/index' as *;
+
+.carDetail {
+  /* =============================
+     Stars in Tables
+     ============================= */
+  .starIcon {
+    width: 22px;
+    height: 22px;
+    margin: 2px;
+
+    @include maxw($cellphone-portrait) {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  /* =============================
+     Max Rank and Car Info Text
+     ============================= */
+  .maxRank {
+    font-size: $max-rank-font-size;
+  }
+
+  .carInfo {
+    font-size: $car-info-font-size;
+    margin: 10px 0;
+    color: $color-white;
+  }
+}

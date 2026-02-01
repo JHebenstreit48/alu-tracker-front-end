@@ -1,0 +1,14 @@
+@use './core' as *;
+
+$ring-color-green: #00ff22;
+$ring-color-gold: $gold-accent;
+$ring-color-blue: #00ccff;
+
+$control-box-shadow-color: $color-gold-glow;
+$control-bg-color: $color-black;
+$control-border-color: $color-black;
+
+$progress-ring-trail: #2c2c2c;
+$table-bg: #1e1e1e;
+$table-header-bg: #2a2a2a;
+$table-outline-border: #444;

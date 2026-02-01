@@ -1,0 +1,26 @@
+$table-margin: 60px auto 80px auto;
+$table-width: 59%;
+$table-header-padding: 12px 21px;
+$td-padding: 1rem;
+
+/* Make filters card narrower and responsive */
+$filter-width: clamp(28rem, 48vw, 40rem);  // was 46rem
+
+/* Tighten the interior spacing so the card is shorter */
+$filter-padding: clamp(.75rem, 1.2vw, 1.25rem);  // was 3rem
+$filter-gap: .85rem;                             // was 2rem
+
+$input-height: 2.2rem;
+$tracker-btn-padding: 0.7rem;
+$class-select-padding: 10px 0;
+$class-select-width: 11rem;
+$class-select-margin: 1rem auto 2rem auto;
+$unit-selection-gap: 10px;
+$unit-selection-margin: 2rem auto 2rem auto;
+$unit-select-padding: 12px 0;
+$unit-select-width: 16rem;
+$info-tooltip-width: 3rem;
+$summary-gap: 2rem;
+$summary-padding: 3rem;
+$reset-filters-width: 8.5rem;
+$reset-filters-padding: 15px 0;

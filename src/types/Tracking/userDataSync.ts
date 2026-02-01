@@ -1,5 +1,7 @@
 export type CarStarsMap = Record<string, number>;
 
+export type BlueprintsByCarMap = Record<string, Record<number, number>>;
+
 export interface ProgressPayload {
   carStars: CarStarsMap;
   ownedCars: string[];
@@ -13,6 +15,11 @@ export interface ProgressPayload {
   currentGarageLevel?: number;
   currentGLXp?: number;
   garageLevelTrackerMode?: string;
+
+  // ✅ ADD: optional blueprint tracking (label → ownedByStar)
+  // Example:
+  // blueprintsByCar: { "Acura 2017 NSX": { 1: 50, 2: 12, 3: 15, 4: 8 } }
+  blueprintsByCar?: BlueprintsByCarMap;
 }
 
 export interface SyncOk {

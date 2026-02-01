@@ -1,0 +1,17 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+.cdetail-status {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+
+  @include maxw($cellphone-portrait) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin: 0.6rem 1rem 0.75rem 1rem;
+    justify-content: flex-start;
+  }
+}

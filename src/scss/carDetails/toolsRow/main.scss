@@ -1,0 +1,20 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+.toolsRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    margin: 0.5rem 2rem 0.4rem 2rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid color.change($car-image-shadow-color, $alpha: 0.45);
+
+    @include maxw($cellphone-portrait) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+      margin: 0.5rem 1rem 0.4rem 1rem;
+    }
+  }
