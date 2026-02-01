@@ -1,19 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import { Car } from "@/types/shared/car";
-import { Blueprints } from "@/types/CarDetails";
-import StarRank from "@/components/Shared/Stars/StarRank";
+import { Car } from '@/types/shared/car';
+import { Blueprints } from '@/types/CarDetails';
+import StarRank from '@/components/Shared/Stars/StarRank';
 
 // Values can be number, string, or null after unwrapping
 type BlueprintValue = number | string | null;
 
 const BlueprintsTableStatic: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
-  if (car.Model.includes("Security")) {
-    return (
-      <div className="noBlueprintData">
-        No blueprint data available for security cars.
-      </div>
-    );
+  if (car.Model.includes('Security')) {
+    return <div className="noBlueprintData">No blueprint data available for security cars.</div>;
   }
 
   // Extract relevant blueprint fields
@@ -26,45 +22,46 @@ const BlueprintsTableStatic: React.FC<{ car: Car & Blueprints }> = ({ car }) => 
     })
     .filter(([key, value]) => {
       return (
-        key.startsWith("BPs_") &&
+        key.startsWith('BPs_') &&
         value !== null &&
-        (typeof value === "number" || typeof value === "string")
+        (typeof value === 'number' || typeof value === 'string')
       );
     });
 
   if (blueprintEntries.length === 0) {
-    return (
-      <div className="noBlueprintData">No blueprint data available.</div>
-    );
+    return <div className="noBlueprintData">No blueprint data available.</div>;
   }
 
   // 🔢 Sort by the numeric part in the key so rows are 1⭐, 2⭐, 3⭐, etc.
   const sortedEntries = [...blueprintEntries].sort(([keyA], [keyB]) => {
-    const a = parseInt(keyA.match(/\d+/)?.[0] || "0", 10);
-    const b = parseInt(keyB.match(/\d+/)?.[0] || "0", 10);
+    const a = parseInt(keyA.match(/\d+/)?.[0] || '0', 10);
+    const b = parseInt(keyB.match(/\d+/)?.[0] || '0', 10);
     return a - b;
   });
 
   const totalBlueprints = sortedEntries.reduce((sum, [, value]) => {
-    if (typeof value === "number") return sum + value;
-    if (typeof value === "string" && !isNaN(Number(value))) {
+    if (typeof value === 'number') return sum + value;
+    if (typeof value === 'string' && !isNaN(Number(value))) {
       return sum + Number(value);
     }
     return sum; // skip "unknown" / "?" strings
   }, 0);
 
   return (
-    <table className="carInfoTable">
+    <table className="carInfoTable blueprintsTable">
       <thead>
         <tr>
-          <th className="tableHeader2" colSpan={2}>
+          <th
+            className="tableHeader2"
+            colSpan={2}
+          >
             Blueprints
           </th>
         </tr>
       </thead>
       <tbody>
         {sortedEntries.map(([key, value]) => {
-          const starCount = parseInt(key.match(/\d+/)?.[0] || "0", 10);
+          const starCount = parseInt(key.match(/\d+/)?.[0] || '0', 10);
 
           return (
             <tr key={key}>
@@ -79,7 +76,10 @@ const BlueprintsTableStatic: React.FC<{ car: Car & Blueprints }> = ({ car }) => 
         })}
 
         <tr>
-          <td colSpan={2} className="blueprintTotalLabel">
+          <td
+            colSpan={2}
+            className="blueprintTotalLabel"
+          >
             Total Blueprints: {totalBlueprints}
           </td>
         </tr>

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 import {
   generateCarKey,
   getCarTrackingData,
   setCarTrackingData,
-} from "@/utils/shared/StorageUtils";
-import type { BlueprintsRow } from "@/types/CarDetails/Blueprints";
+} from '@/utils/shared/StorageUtils';
+import type { BlueprintsRow } from '@/types/CarDetails/Blueprints';
 
 export function useBlueprintTracker(params: {
   brand: string;
@@ -16,20 +16,19 @@ export function useBlueprintTracker(params: {
 
   const maxStars = rows[rows.length - 1]?.star ?? 0;
 
-  const carKey = useMemo(
-    () => generateCarKey(brand, model),
-    [brand, model]
-  );
+  const carKey = useMemo(() => generateCarKey(brand, model), [brand, model]);
 
+  // NOTE: snapshot is only used for initial boot values
   const snapshot = useMemo(() => getCarTrackingData(carKey), [carKey]);
 
-  const currentStars = typeof snapshot.stars === "number" ? snapshot.stars : 0;
+  const currentStars = typeof snapshot.stars === 'number' ? snapshot.stars : 0;
   const goldMaxed = !!snapshot.goldMaxed;
 
   const [ownedByStar, setOwnedByStar] = useState<Record<number, number>>(
     (snapshot.blueprints?.ownedByStar ?? {}) as Record<number, number>
   );
 
+  // Keep ownedByStar synced if user navigates / key changes
   useEffect(() => {
     const fresh = getCarTrackingData(carKey);
     setOwnedByStar((fresh.blueprints?.ownedByStar ?? {}) as Record<number, number>);
@@ -37,12 +36,17 @@ export function useBlueprintTracker(params: {
 
   const done = goldMaxed || currentStars >= maxStars;
 
-  // ✅ Special-case ONLY: key cars at 1★ show input on 1★ row
+  /**
+   * NEW RULE:
+   * - Editable row = currentStars
+   * - If currentStars === 0, editable row should be 1 (so users can start unlocking)
+   * - If done, hide input
+   *
+   * We keep the name `targetStar` so you don't have to refactor other files yet.
+   */
   const targetStar = done
     ? -1
-    : isKeyCar && currentStars === 1
-      ? 1
-      : Math.min(currentStars + 1, maxStars);
+    : Math.min(Math.max(currentStars === 0 ? 1 : currentStars, 1), maxStars);
 
   const updateOwnedForStar = (star: number, value: number) => {
     const safeValue = Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
@@ -52,6 +56,7 @@ export function useBlueprintTracker(params: {
 
       const current = getCarTrackingData(carKey);
       setCarTrackingData(carKey, {
+        ...current,
         blueprints: {
           ...(current.blueprints ?? {}),
           ownedByStar: next,
@@ -62,10 +67,7 @@ export function useBlueprintTracker(params: {
     });
   };
 
-  const totalOwned = Object.values(ownedByStar).reduce(
-    (a, b) => a + (Number(b) || 0),
-    0
-  );
+  const totalOwned = Object.values(ownedByStar).reduce((a, b) => a + (Number(b) || 0), 0);
 
   const starsLeft = Math.max(0, maxStars - currentStars);
 
