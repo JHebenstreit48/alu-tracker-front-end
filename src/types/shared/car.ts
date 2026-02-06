@@ -1,10 +1,10 @@
-import type { Blueprints, StockStats, GoldMaxStats, MaxStarStats } from '@/types/CarDetails';
-import type { CarStatus } from '@/types/shared/status';
+import type { Blueprints, StockStats, GoldMaxStats, MaxStarStats } from "@/types/CarDetails";
+import type { CarStatus } from "@/types/shared/status";
 
 export interface Car {
   Id: number;
   Image?: string;
-  ImageStatus?: 'Coming Soon' | 'Available' | 'Removed';
+  ImageStatus?: "Coming Soon" | "Available" | "Removed";
   Brand: string;
   Model: string;
   Country?: string;
@@ -13,6 +13,7 @@ export interface Car {
   Class: string;
   Stars: number;
   KeyCar?: boolean;
+  normalizedKey?: string;
 }
 
 export type FullCar = Car &
@@ -22,6 +23,7 @@ export type FullCar = Car &
   MaxStarStats & {
     updatedAt?: string;
     _status?: CarStatus | null;
+    [key: string]: unknown;
   };
 
 export type CarsLocationState = {
@@ -36,5 +38,4 @@ export type StageSnapshot = {
   acceleration?: number;
   handling?: number;
   nitro?: number;
-  // later: parts/credits/epics...
 };
