@@ -6,31 +6,56 @@ import type { CarStatus, ApiStatusDoc } from "@/types/shared/status";
 import { mapApiStatus } from "@/utils/CarDetails/status";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
 
-/**
- * Fetch a single car by slug (normalizedKey) from Firestore.
- * Slug is expected to match the document ID in `cars` (normalizedKey).
- */
+type AnyObj = Record<string, unknown>;
+
+function pickString(data: AnyObj, legacyKey: string, newKey: string): string {
+  const v = data[legacyKey] ?? data[newKey];
+  return v == null ? "" : String(v);
+}
+
+function pickNumber(data: AnyObj, legacyKey: string, newKey: string): number | undefined {
+  const v = data[legacyKey] ?? data[newKey];
+  return typeof v === "number" ? v : undefined;
+}
+
 export async function fetchCarDetail(slug: string): Promise<FullCar> {
-  if (!slug || slug.length < 3) {
-    throw new Error("Invalid car slug");
-  }
+  if (!slug || slug.length < 3) throw new Error("Invalid car slug");
 
   const ref = doc(dbTracker, "cars", slug);
   const snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    throw new Error("Car not found");
-  }
+  if (!snap.exists()) throw new Error("Car not found");
 
-  const data = snap.data() as FullCar;
+  const data = snap.data() as unknown as AnyObj;
 
-  return {
+  const Brand = pickString(data, "Brand", "brand");
+  const Model = pickString(data, "Model", "model");
+  const Class = pickString(data, "Class", "class");
+
+  const ImageRaw = pickString(data, "Image", "image");
+  const Id = pickNumber(data, "Id", "id") ?? 0;
+
+  const merged: AnyObj = {
     ...data,
-    Image: getCarImageUrl(data.Image),
+
+    // Ensure legacy fields exist for your current UI/types
+    Id,
+    Brand,
+    Model,
+    Class,
+    Image: getCarImageUrl(ImageRaw),
+
+    // Optional mirrors for any new code later
+    id: Id,
+    brand: Brand,
+    model: Model,
+    class: Class,
+    image: ImageRaw,
   };
+
+  return merged as unknown as FullCar;
 }
 
-// Shape of the status doc as stored in Firestore
 type FirestoreStatusDoc = {
   status?: string;
   message?: string;
@@ -38,31 +63,21 @@ type FirestoreStatusDoc = {
   createdAt?: Timestamp | Date | string;
 };
 
-function toIsoString(
-  v?: Timestamp | Date | string
-): string | undefined {
+function toIsoString(v?: Timestamp | Date | string): string | undefined {
   if (!v) return undefined;
   if (typeof v === "string") return v;
   if (v instanceof Date) return v.toISOString();
-  if ("toDate" in v && typeof v.toDate === "function") {
-    return v.toDate().toISOString();
-  }
+  if ("toDate" in v && typeof v.toDate === "function") return v.toDate().toISOString();
   return undefined;
 }
 
-/**
- * Fetch car status from Firestore `car_data_status` collection.
- * Docs are keyed by normalizedKey (same as slug).
- */
 export async function fetchCarStatus(slug: string): Promise<CarStatus | null> {
   if (!slug || slug.length < 3) return null;
 
   const ref = doc(dbTracker, "car_data_status", slug);
   const snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    return null;
-  }
+  if (!snap.exists()) return null;
 
   const raw = snap.data() as FirestoreStatusDoc;
 
