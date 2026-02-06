@@ -4,10 +4,8 @@ import type { StatSnapshot } from "@/utils/CarDetails/format";
 
 export type StarNumber = 1 | 2 | 3 | 4 | 5 | 6;
 
-/**
- * Strongly-typed accessor (no `any`, no index trickery).
- * Switch keeps the compiler happy & avoids template-literal gymnastics.
- */
+const p = (car: any, legacy: string, modern: string) => car?.[legacy] ?? car?.[modern];
+
 export const getStatsFromCar = (
   car: Car & MaxStarStatsIF,
   star: StarNumber
@@ -15,51 +13,51 @@ export const getStatsFromCar = (
   switch (star) {
     case 1:
       return {
-        rank: car.One_Star_Max_Rank,
-        topSpeed: car.One_Star_Max_Top_Speed,
-        acceleration: car.One_Star_Max_Acceleration,
-        handling: car.One_Star_Max_Handling,
-        nitro: car.One_Star_Max_Nitro,
+        rank: p(car, "One_Star_Max_Rank", "oneStarMaxRank"),
+        topSpeed: p(car, "One_Star_Max_Top_Speed", "oneStarMaxTopSpeed"),
+        acceleration: p(car, "One_Star_Max_Acceleration", "oneStarMaxAcceleration"),
+        handling: p(car, "One_Star_Max_Handling", "oneStarMaxHandling"),
+        nitro: p(car, "One_Star_Max_Nitro", "oneStarMaxNitro"),
       };
     case 2:
       return {
-        rank: car.Two_Star_Max_Rank,
-        topSpeed: car.Two_Star_Max_Top_Speed,
-        acceleration: car.Two_Star_Max_Acceleration,
-        handling: car.Two_Star_Max_Handling,
-        nitro: car.Two_Star_Max_Nitro,
+        rank: p(car, "Two_Star_Max_Rank", "twoStarMaxRank"),
+        topSpeed: p(car, "Two_Star_Max_Top_Speed", "twoStarMaxTopSpeed"),
+        acceleration: p(car, "Two_Star_Max_Acceleration", "twoStarMaxAcceleration"),
+        handling: p(car, "Two_Star_Max_Handling", "twoStarMaxHandling"),
+        nitro: p(car, "Two_Star_Max_Nitro", "twoStarMaxNitro"),
       };
     case 3:
       return {
-        rank: car.Three_Star_Max_Rank,
-        topSpeed: car.Three_Star_Max_Top_Speed,
-        acceleration: car.Three_Star_Max_Acceleration,
-        handling: car.Three_Star_Max_Handling,
-        nitro: car.Three_Star_Max_Nitro,
+        rank: p(car, "Three_Star_Max_Rank", "threeStarMaxRank"),
+        topSpeed: p(car, "Three_Star_Max_Top_Speed", "threeStarMaxTopSpeed"),
+        acceleration: p(car, "Three_Star_Max_Acceleration", "threeStarMaxAcceleration"),
+        handling: p(car, "Three_Star_Max_Handling", "threeStarMaxHandling"),
+        nitro: p(car, "Three_Star_Max_Nitro", "threeStarMaxNitro"),
       };
     case 4:
       return {
-        rank: car.Four_Star_Max_Rank,
-        topSpeed: car.Four_Star_Max_Top_Speed,
-        acceleration: car.Four_Star_Max_Acceleration,
-        handling: car.Four_Star_Max_Handling,
-        nitro: car.Four_Star_Max_Nitro,
+        rank: p(car, "Four_Star_Max_Rank", "fourStarMaxRank"),
+        topSpeed: p(car, "Four_Star_Max_Top_Speed", "fourStarMaxTopSpeed"),
+        acceleration: p(car, "Four_Star_Max_Acceleration", "fourStarMaxAcceleration"),
+        handling: p(car, "Four_Star_Max_Handling", "fourStarMaxHandling"),
+        nitro: p(car, "Four_Star_Max_Nitro", "fourStarMaxNitro"),
       };
     case 5:
       return {
-        rank: car.Five_Star_Max_Rank,
-        topSpeed: car.Five_Star_Max_Top_Speed,
-        acceleration: car.Five_Star_Max_Acceleration,
-        handling: car.Five_Star_Max_Handling,
-        nitro: car.Five_Star_Max_Nitro,
+        rank: p(car, "Five_Star_Max_Rank", "fiveStarMaxRank"),
+        topSpeed: p(car, "Five_Star_Max_Top_Speed", "fiveStarMaxTopSpeed"),
+        acceleration: p(car, "Five_Star_Max_Acceleration", "fiveStarMaxAcceleration"),
+        handling: p(car, "Five_Star_Max_Handling", "fiveStarMaxHandling"),
+        nitro: p(car, "Five_Star_Max_Nitro", "fiveStarMaxNitro"),
       };
     case 6:
       return {
-        rank: car.Six_Star_Max_Rank,
-        topSpeed: car.Six_Star_Max_Top_Speed,
-        acceleration: car.Six_Star_Max_Acceleration,
-        handling: car.Six_Star_Max_Handling,
-        nitro: car.Six_Star_Max_Nitro,
+        rank: p(car, "Six_Star_Max_Rank", "sixStarMaxRank"),
+        topSpeed: p(car, "Six_Star_Max_Top_Speed", "sixStarMaxTopSpeed"),
+        acceleration: p(car, "Six_Star_Max_Acceleration", "sixStarMaxAcceleration"),
+        handling: p(car, "Six_Star_Max_Handling", "sixStarMaxHandling"),
+        nitro: p(car, "Six_Star_Max_Nitro", "sixStarMaxNitro"),
       };
   }
 };
