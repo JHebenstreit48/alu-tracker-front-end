@@ -4,7 +4,7 @@ import {
   getCarTrackingData,
   setCarTrackingData,
 } from '@/utils/shared/StorageUtils';
-import type { BlueprintsRow } from '@/types/CarDetails/Blueprints';
+import type { BlueprintsRow } from '@/types/CarDetails/blueprints';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 
 export function useBlueprintTracker(params: {

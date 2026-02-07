@@ -1,4 +1,4 @@
-import type { BlueprintsRow } from "@/types/CarDetails/Blueprints";
+import type { BlueprintsRow } from "@/types/CarDetails/blueprints";
 
 type BlueprintValue = number | string | null;
 
