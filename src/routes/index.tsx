@@ -14,7 +14,8 @@ import CarTracker from '@/pages/Subpages/CarTracker';
 
 import Feedback from '@/pages/MainPages/Feedback/Feedback'; // ← NEW
 import Account from '@/pages/Subpages/Account';
-import About from '@/pages/Subpages/About'; // ← NEW
+import About from '@/pages/Subpages/About';
+import Sources from '@/pages/Subpages/Sources'; // NEW
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: '/about',
         element: <About />,
+      },
+      {
+        path: '/sources',
+        element: <Sources />,
       },
     ],
   },

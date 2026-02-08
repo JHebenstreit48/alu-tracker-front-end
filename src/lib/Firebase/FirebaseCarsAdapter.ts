@@ -72,6 +72,13 @@ const carConverter: FirestoreDataConverter<Car> = {
 
     const keyCar = pickBool(data, "KeyCar", "keyCar");
 
+    // ✅ NEW: optional sources array (for Sources page + per-car attribution)
+    const sourcesRaw = data.sources;
+    const sources =
+      Array.isArray(sourcesRaw) && sourcesRaw.every((x) => typeof x === "string")
+        ? (sourcesRaw as string[])
+        : undefined;
+
     const normalizedKey =
       typeof data.normalizedKey === "string" && data.normalizedKey.trim()
         ? data.normalizedKey.trim()
@@ -89,6 +96,7 @@ const carConverter: FirestoreDataConverter<Car> = {
       obtainableVia,
       keyCar,
       normalizedKey,
+      sources,
     };
   },
 };

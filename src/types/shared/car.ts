@@ -14,6 +14,7 @@ export interface Car {
   stars: number;
   keyCar?: boolean;
   normalizedKey?: string;
+  sources?: string[];
 }
 
 export type FullCar = Car &
