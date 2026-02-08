@@ -16,8 +16,8 @@ export default function MaxStarRank({ allCars, trackedCars, totalCars }: Props) 
       <div className="maxStarGridWrapper">
         <div className="maxStarGrid">
           {[3, 4, 5, 6].map((rank) => {
-            const totalOfThisRank = allCars.filter((car) => car.Stars === rank);
-            const trackedOfThisRank = trackedCars.filter((car) => car.Stars === rank);
+            const totalOfThisRank = allCars.filter((car) => car.stars === rank);
+            const trackedOfThisRank = trackedCars.filter((car) => car.stars === rank);
             const owned = trackedOfThisRank.filter((car) => car.owned).length;
             const maxed = trackedOfThisRank.filter((car) => car.owned && car.stars === rank).length;
 

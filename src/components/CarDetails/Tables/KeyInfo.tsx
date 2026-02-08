@@ -18,12 +18,12 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
   keyObtained = false,
   onKeyObtainedChange,
 }) => {
-  const carKey = generateCarKey(car.Brand, car.Model);
+  const carKey = generateCarKey(car.brand, car.model);
 
   // Autosync still reacts to the controlled prop change
-  useAutoSyncDependency(trackerMode && car.KeyCar ? [keyObtained] : []);
+  useAutoSyncDependency(trackerMode && car.keyCar ? [keyObtained] : []);
 
-  if (!car.KeyCar) return null;
+  if (!car.keyCar) return null;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;

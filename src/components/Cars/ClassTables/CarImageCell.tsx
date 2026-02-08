@@ -26,8 +26,8 @@ export function CarImageCell({
   trackingEnabled,
   tracking,
 }: CarImageCellProps) {
-  const imageSrc = car.Image ?? null;
-  const altText = `${car.Brand} ${car.Model}`;
+  const imageSrc = car.image ?? null;
+  const altText = `${car.brand} ${car.model}`;
 
   if (car.ImageStatus === "Removed") {
     return <span className="noImage">🚫 Removed from Game</span>;
@@ -61,10 +61,10 @@ export function CarImageCell({
       />
       <div className="starOverlay">
         <StarRank
-          count={car.Stars}
+          count={car.stars}
           trackerMode={trackingEnabled}
           trackingKey={carKey}
-          isKeyCar={car.KeyCar}
+          isKeyCar={car.keyCar}
         />
       </div>
     </>

@@ -19,7 +19,7 @@ import type {
   CommentType,
   PanelProps,
   CreateCommentData,
-} from "@/interfaces/Comments";
+} from "@/types/Comments";
 
 function msgOf(e: unknown) {
   return e instanceof Error ? e.message : "Unexpected error";

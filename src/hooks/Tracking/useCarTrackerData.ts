@@ -51,9 +51,9 @@ export function useCarTrackerData(): CarTrackerState {
       ([carId, data]) => ({ carId, ...data })
     );
 
-    const keyCars = carsList.filter((car) => car.KeyCar);
+    const keyCars = carsList.filter((car) => car.keyCar);
     const keyCarKeys = keyCars.map((car) =>
-      generateCarKey(car.Brand, car.Model)
+      generateCarKey(car.brand, car.model)
     );
 
     const allTrackedEntries = Object.entries(allTracked);
@@ -80,7 +80,7 @@ export function useCarTrackerData(): CarTrackerState {
 
     const enrichedTrackedCars: (Car & CarTracking)[] = carsList
       .map((car) => {
-        const key = generateCarKey(car.Brand, car.Model);
+        const key = generateCarKey(car.brand, car.model);
         const trackingData = allTracked[key];
         return trackingData ? { ...car, ...trackingData } : null;
       })

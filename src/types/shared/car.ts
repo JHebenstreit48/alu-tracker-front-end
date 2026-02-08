@@ -2,17 +2,17 @@ import type { Blueprints, StockStats, GoldMaxStats, MaxStarStats } from "@/types
 import type { CarStatus } from "@/types/shared/status";
 
 export interface Car {
-  Id: number;
-  Image?: string;
+  id: number;
+  image?: string;
   ImageStatus?: "Coming Soon" | "Available" | "Removed";
-  Brand: string;
-  Model: string;
-  Country?: string;
-  Rarity: string;
-  ObtainableVia?: string[] | string | null;
-  Class: string;
-  Stars: number;
-  KeyCar?: boolean;
+  brand: string;
+  model: string;
+  country?: string;
+  rarity: string;
+  obtainableVia?: string[] | string | null;
+  class: string;
+  stars: number;
+  keyCar?: boolean;
   normalizedKey?: string;
 }
 

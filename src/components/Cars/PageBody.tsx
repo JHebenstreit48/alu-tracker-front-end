@@ -6,7 +6,7 @@ import PageTab from '@/components/Shared/Navigation/PageTab';
 import { useNavigate } from 'react-router-dom';
 
 import '@/scss/Cars/CarsPage/index.scss';
-import type { CarDataProps } from '@/interfaces/Cars/carDataProps';
+import type { CarDataProps } from '@/types/Cars/filterProps';
 
 export default function CarData({
   loading,

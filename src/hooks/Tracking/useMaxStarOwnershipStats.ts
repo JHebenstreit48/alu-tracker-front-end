@@ -11,11 +11,6 @@ export interface MaxStarOwnershipDatum {
   unowned: number;
 }
 
-/**
- * Ownership by *max* star rank (3★–6★).
- * - Uses car.Stars for the max star bucket (3/4/5/6).
- * - Uses tracking.owned to decide if the user owns that car.
- */
 export function useMaxStarOwnershipStats(
   allCars: Car[],
   trackedCars: (Car & CarTracking)[]
@@ -25,11 +20,11 @@ export function useMaxStarOwnershipStats(
 
     return ranks.map((rank) => {
       // All cars in game that max out at this star rank
-      const carsOfRank = allCars.filter((c) => c.Stars === rank);
+      const carsOfRank = allCars.filter((c) => c.stars === rank);
 
       // Owned cars within that max-star bucket
       const ownedOfRank = trackedCars.filter(
-        (c) => c.Stars === rank && c.owned
+        (c) => c.stars === rank && c.owned
       );
 
       const total = carsOfRank.length;

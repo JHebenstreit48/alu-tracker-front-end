@@ -17,7 +17,7 @@ export default function ProgressTracker({ car }: Props) {
   const [upgradeStage, setUpgradeStage] = useState(0);
   const [importParts, setImportParts] = useState(0);
 
-  const carKey = generateCarKey(car.Brand, car.Model);
+  const carKey = generateCarKey(car.brand, car.model);
 
   useAutoSyncDependency([owned, stars, upgradeStage, importParts]);
 

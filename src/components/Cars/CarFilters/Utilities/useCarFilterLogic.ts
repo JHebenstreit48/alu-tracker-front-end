@@ -5,8 +5,8 @@ export function useCarFilterLogic(cars: Car[], selectedCountry: string) {
   const brandsByCountryMap = useMemo(() => {
     const map: Record<string, Set<string>> = {};
     cars.forEach((car) => {
-      const country = car.Country?.trim();
-      const brand = car.Brand;
+      const country = car.country?.trim();
+      const brand = car.brand;
       if (!country || !brand) return;
       if (!map[country]) map[country] = new Set();
       map[country].add(brand);
@@ -18,11 +18,11 @@ export function useCarFilterLogic(cars: Car[], selectedCountry: string) {
     if (selectedCountry && brandsByCountryMap[selectedCountry]) {
       return Array.from(brandsByCountryMap[selectedCountry]);
     }
-    return [...new Set(cars.map((car) => car.Brand))];
+    return [...new Set(cars.map((car) => car.brand))];
   }, [selectedCountry, brandsByCountryMap, cars]);
 
   const availableCountries = useMemo(() => {
-    return [...new Set(cars.map((car) => car.Country?.trim()).filter(Boolean))];
+    return [...new Set(cars.map((car) => car.country?.trim()).filter(Boolean))];
   }, [cars]);
 
   return {

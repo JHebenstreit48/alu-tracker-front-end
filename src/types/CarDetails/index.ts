@@ -1,4 +1,4 @@
-export type { StockStats } from "@/types/CarDetails/StarStats/StockStats";
-export type { GoldMaxStats } from "@/types/CarDetails/StarStats/GoldMaxStats";
-export type { MaxStarStats } from "@/types/CarDetails/StarStats/MaxStarStats";
+export type { StockStats } from "@/types/CarDetails/Stats/StockStats";
+export type { GoldMaxStats } from "@/types/CarDetails/Stats/GoldMaxStats";
+export type { MaxStarStats } from "@/types/CarDetails/Stats/MaxStarStats";
 export type { Blueprints } from "@/types/CarDetails/blueprints";

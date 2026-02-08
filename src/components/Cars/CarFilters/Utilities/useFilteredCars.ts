@@ -33,20 +33,20 @@ export function useFilteredCars(config: FilterConfig): Car[] {
 
   return cars
     .filter((car) => {
-      const brand = normalizeString(car.Brand);
-      const model = normalizeString(car.Model);
+      const brand = normalizeString(car.brand);
+      const model = normalizeString(car.model);
       return brand.includes(normalizedSearch) || model.includes(normalizedSearch);
     })
-    .filter((car) => (selectedStars ? car.Stars === selectedStars : true))
-    .filter((car) => (selectedBrand ? car.Brand === selectedBrand : true))
-    .filter((car) => (selectedCountry ? car.Country === selectedCountry : true))
-    .filter((car) => (selectedClass !== "All Classes" ? car.Class === selectedClass : true))
-    .filter((car) => (selectedRarity ? car.Rarity === selectedRarity : true))
+    .filter((car) => (selectedStars ? car.stars === selectedStars : true))
+    .filter((car) => (selectedBrand ? car.brand === selectedBrand : true))
+    .filter((car) => (selectedCountry ? car.country === selectedCountry : true))
+    .filter((car) => (selectedClass !== "All Classes" ? car.class === selectedClass : true))
+    .filter((car) => (selectedRarity ? car.rarity === selectedRarity : true))
     .filter((car) => {
-      const key = generateCarKey(car.Brand, car.Model);
+      const key = generateCarKey(car.brand, car.model);
       const trackingData = tracking[key];
       const isOwned = trackingData?.owned === true;
-      const isKeyCar = car.KeyCar === true;
+      const isKeyCar = car.keyCar === true;
 
       if (showOwned && showKeyCars) return isOwned && isKeyCar;
       if (showOwned) return isOwned;

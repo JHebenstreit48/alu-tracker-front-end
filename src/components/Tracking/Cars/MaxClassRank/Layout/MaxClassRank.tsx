@@ -18,14 +18,14 @@ export default function MaxClassRank({ allCars, trackedCars }: Props) {
       <div className="maxClassGridWrapper">
         <div className="maxClassGrid">
           {CLASSES.map((carClass) => {
-            const totalOfThisClass = allCars.filter((car) => car.Class === carClass);
-            const trackedOfThisClass = trackedCars.filter((car) => car.Class === carClass);
+            const totalOfThisClass = allCars.filter((car) => car.class === carClass);
+            const trackedOfThisClass = trackedCars.filter((car) => car.class === carClass);
 
             const owned = trackedOfThisClass.filter((car) => car.owned).length;
 
             // ✅ "Maxed" means reached their max star count (not gold maxed)
             const maxed = trackedOfThisClass.filter(
-              (car) => car.owned && car.stars === car.Stars
+              (car) => car.owned && car.stars === car.stars
             ).length;
 
             const inProgress = owned - maxed;

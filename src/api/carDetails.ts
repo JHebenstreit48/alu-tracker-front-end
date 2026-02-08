@@ -37,22 +37,31 @@ function pickStringArrayOrString(
   return undefined;
 }
 
-// Mirrors a "rank/topSpeed/accel/handling/nitro" stat block between legacy and new keys.
-// Example usage:
-// - ("Gold", "gold") mirrors Gold_Max_Rank <-> goldMaxRank, Gold_Top_Speed <-> goldTopSpeed, etc.
-function mirrorGoldOrStock(data: AnyObj, legacyPrefix: "Gold" | "Stock", newPrefix: "gold" | "stock"): AnyObj {
+// Avoid double-prefixing if stored value is already a full URL
+function resolveImageUrl(raw: string): string {
+  const s = (raw ?? "").trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s) || s.startsWith("data:")) return s;
+  return getCarImageUrl(s);
+}
+
+/**
+ * Mirrors a stat block between legacy and canonical keys.
+ * We return ONLY canonical keys here.
+ */
+function pickGoldOrStock(
+  data: AnyObj,
+  legacyPrefix: "Gold" | "Stock",
+  newPrefix: "gold" | "stock"
+): AnyObj {
   const out: AnyObj = {};
 
-  // Rank (special naming on legacy)
   const legacyRankKey = legacyPrefix === "Gold" ? "Gold_Max_Rank" : "Stock_Rank";
   const newRankKey = legacyPrefix === "Gold" ? "goldMaxRank" : "stockRank";
-  const rank = pickNumber(data, legacyRankKey, newRankKey);
-  if (rank !== undefined) {
-    out[legacyRankKey] = rank;
-    out[newRankKey] = rank;
-  }
 
-  // The rest match pretty cleanly
+  const rank = pickNumber(data, legacyRankKey, newRankKey);
+  if (rank !== undefined) out[newRankKey] = rank;
+
   const map: Array<[string, string]> = [
     [`${legacyPrefix}_Top_Speed`, `${newPrefix}TopSpeed`],
     [`${legacyPrefix}_Acceleration`, `${newPrefix}Acceleration`],
@@ -62,17 +71,15 @@ function mirrorGoldOrStock(data: AnyObj, legacyPrefix: "Gold" | "Stock", newPref
 
   for (const [legacyKey, newKey] of map) {
     const n = pickNumber(data, legacyKey, newKey);
-    if (n !== undefined) {
-      out[legacyKey] = n;
-      out[newKey] = n;
-    }
+    if (n !== undefined) out[newKey] = n;
   }
 
   return out;
 }
 
-function mirrorStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
+function pickStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
   const out: AnyObj = {};
+
   const word =
     star === 1 ? "One" :
     star === 2 ? "Two" :
@@ -80,10 +87,8 @@ function mirrorStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
     star === 4 ? "Four" :
     star === 5 ? "Five" : "Six";
 
-  // legacy keys used by your current UI/types
   const legacyBase = `${word}_Star_Max_`;
 
-  // new keys used by Firestore after your rename
   const newBase =
     star === 1 ? "oneStarMax" :
     star === 2 ? "twoStarMax" :
@@ -102,27 +107,20 @@ function mirrorStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
   for (const [legacySuffix, newSuffix] of fields) {
     const legacyKey = `${legacyBase}${legacySuffix}`;
     const newKey = `${newBase}${newSuffix}`;
-
     const n = pickNumber(data, legacyKey, newKey);
-    if (n !== undefined) {
-      out[legacyKey] = n;
-      out[newKey] = n;
-    }
+    if (n !== undefined) out[newKey] = n;
   }
 
   return out;
 }
 
-function mirrorBlueprints(data: AnyObj): AnyObj {
+function pickBlueprints(data: AnyObj): AnyObj {
   const out: AnyObj = {};
   for (const star of [1, 2, 3, 4, 5, 6] as const) {
     const legacyKey = `BPs_${star}_Star`;
     const newKey = `blueprints${star}Star`;
     const n = pickNumber(data, legacyKey, newKey);
-    if (n !== undefined) {
-      out[legacyKey] = n;
-      out[newKey] = n;
-    }
+    if (n !== undefined) out[newKey] = n;
   }
   return out;
 }
@@ -134,88 +132,67 @@ export async function fetchCarDetail(slug: string): Promise<FullCar> {
   const snap = await getDoc(ref);
   if (!snap.exists()) throw new Error("Car not found");
 
-  const data = snap.data() as unknown as AnyObj;
+  const data = snap.data() as AnyObj;
 
-  // Core identity (you already had these)
-  const Brand = pickString(data, "Brand", "brand");
-  const Model = pickString(data, "Model", "model");
-  const Class = pickString(data, "Class", "class");
-  const ImageRaw = pickString(data, "Image", "image");
-  const Id = pickNumber(data, "Id", "id") ?? 0;
+  const brand = pickString(data, "Brand", "brand").trim();
+  const model = pickString(data, "Model", "model").trim();
+  const klass = pickString(data, "Class", "class").trim();
 
-  // Fields your UI currently reads (legacy)
-  const Stars = pickNumber(data, "Stars", "stars");
-  const Rarity = pickString(data, "Rarity", "rarity");
-  const Country = pickString(data, "Country", "country");
-  const KeyCar = pickBool(data, "KeyCar", "keyCar");
-  const ObtainableVia = pickStringArrayOrString(data, "ObtainableVia", "obtainableVia");
-  const Epics = pickNumber(data, "Epics", "epics");
+  const imageRaw = pickString(data, "Image", "image");
+  const image = resolveImageUrl(imageRaw);
 
-  // extra common renamed fields (nice to keep consistent)
-  const Added = pickString(data, "Added", "added");
-  const Added_With = (data["Added_With"] ?? data["addedWith"]) as unknown;
-  const AddedDate = pickString(data, "Added date", "addedDate");
-  const Tags = pickString(data, "Tags", "tags");
+  const id = pickNumber(data, "Id", "id") ?? 0;
+
+  const stars = pickNumber(data, "Stars", "stars");
+  const rarity = pickString(data, "Rarity", "rarity").trim();
+  const country = pickString(data, "Country", "country").trim();
+  const keyCar = pickBool(data, "KeyCar", "keyCar");
+  const obtainableVia = pickStringArrayOrString(data, "ObtainableVia", "obtainableVia");
+  const epics = pickNumber(data, "Epics", "epics");
+
+  const added = pickString(data, "Added", "added").trim();
+  const addedWith = data["Added_With"] ?? data["addedWith"];
+  const addedDate = pickString(data, "Added date", "addedDate").trim();
+  const tags = pickString(data, "Tags", "tags").trim();
 
   const merged: AnyObj = {
+    // keep original extras for now (safe during migration)
     ...data,
 
-    // ✅ Always provide legacy keys used by current UI/types
-    Id,
-    Brand,
-    Model,
-    Class,
-    Image: getCarImageUrl(ImageRaw),
+    // ✅ canonical identity
+    id,
+    brand,
+    model,
+    class: klass,
+    image,
 
-    ...(Stars !== undefined ? { Stars } : {}),
-    ...(Rarity ? { Rarity } : {}),
-    ...(Country ? { Country } : {}),
-    ...(KeyCar !== undefined ? { KeyCar } : {}),
-    ...(ObtainableVia !== undefined ? { ObtainableVia } : {}),
-    ...(Epics !== undefined ? { Epics } : {}),
+    ...(stars !== undefined ? { stars } : {}),
+    ...(rarity ? { rarity } : {}),
+    ...(country ? { country } : {}),
+    ...(keyCar !== undefined ? { keyCar } : {}),
+    ...(obtainableVia !== undefined ? { obtainableVia } : {}),
+    ...(epics !== undefined ? { epics } : {}),
+    ...(added ? { added } : {}),
+    ...(addedDate ? { addedDate } : {}),
+    ...(tags ? { tags } : {}),
+    ...(addedWith !== undefined ? { addedWith } : {}),
 
-    ...(Added ? { Added } : {}),
-    ...(AddedDate ? { "Added date": AddedDate } : {}),
-    ...(Tags ? { Tags } : {}),
-    ...(Added_With !== undefined ? { Added_With } : {}),
-
-    // ✅ Also provide new keys (so new code can start using them anytime)
-    id: Id,
-    brand: Brand,
-    model: Model,
-    class: Class,
-    image: ImageRaw,
-
-    ...(Stars !== undefined ? { stars: Stars } : {}),
-    ...(Rarity ? { rarity: Rarity } : {}),
-    ...(Country ? { country: Country } : {}),
-    ...(KeyCar !== undefined ? { keyCar: KeyCar } : {}),
-    ...(ObtainableVia !== undefined ? { obtainableVia: ObtainableVia } : {}),
-    ...(Epics !== undefined ? { epics: Epics } : {}),
-
-    ...(Added ? { added: Added } : {}),
-    ...(AddedDate ? { addedDate: AddedDate } : {}),
-    ...(Tags ? { tags: Tags } : {}),
-    ...(Added_With !== undefined ? { addedWith: Added_With } : {}),
-
-    // ✅ Blueprints (critical for your "No blueprint data available" issue)
-    ...mirrorBlueprints(data),
-
-    // ✅ Stock + Gold (for stats tables)
-    ...mirrorGoldOrStock(data, "Stock", "stock"),
-    ...mirrorGoldOrStock(data, "Gold", "gold"),
-
-    // ✅ 1–6 star max stats
-    ...mirrorStarMax(data, 1),
-    ...mirrorStarMax(data, 2),
-    ...mirrorStarMax(data, 3),
-    ...mirrorStarMax(data, 4),
-    ...mirrorStarMax(data, 5),
-    ...mirrorStarMax(data, 6),
+    // ✅ canonical stat blocks only
+    ...pickBlueprints(data),
+    ...pickGoldOrStock(data, "Stock", "stock"),
+    ...pickGoldOrStock(data, "Gold", "gold"),
+    ...pickStarMax(data, 1),
+    ...pickStarMax(data, 2),
+    ...pickStarMax(data, 3),
+    ...pickStarMax(data, 4),
+    ...pickStarMax(data, 5),
+    ...pickStarMax(data, 6),
   };
 
-  return merged as unknown as FullCar;
+  return merged as FullCar;
 }
+
+// -------- status --------
 
 type FirestoreStatusDoc = {
   status?: string;
@@ -228,7 +205,9 @@ function toIsoString(v?: Timestamp | Date | string): string | undefined {
   if (!v) return undefined;
   if (typeof v === "string") return v;
   if (v instanceof Date) return v.toISOString();
-  if ("toDate" in v && typeof v.toDate === "function") return v.toDate().toISOString();
+  if ("toDate" in v && typeof (v as any).toDate === "function") {
+    return (v as any).toDate().toISOString();
+  }
   return undefined;
 }
 

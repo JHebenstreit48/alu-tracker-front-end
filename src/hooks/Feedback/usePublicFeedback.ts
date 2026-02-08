@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import type { PublicFeedbackItem } from "@/interfaces/Feedback";
+import type { PublicFeedbackItem } from "@/types/Feedback";
 import { fetchPublicFeedback } from "@/utils/Feedback/api";
 
 export function usePublicFeedback() {
