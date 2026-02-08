@@ -4,7 +4,7 @@ export type SourceKey =
   | "community_posts"
   | "patch_notes"
   | "in_game_testing"
-  | "official_site";
+  | "asphalt_wiki";
 
 export type SourcesCatalogItem = {
   key: SourceKey;
@@ -30,7 +30,12 @@ export const sourcesCatalog: SourcesCatalogItem[] = [
     description:
       "Publicly shared community spreadsheet(s) used as a starting point for coverage and comparisons.",
     tags: ["cars", "brands"],
-    aliases: ["Reddit users Google Sheets document.", "Google Sheets", "Community spreadsheet"],
+    aliases: [
+      "Reddit users Google Sheets document.",
+      "Google Sheets",
+      "Community spreadsheet",
+      "Community sheet",
+    ],
   },
   {
     key: "community_posts",
@@ -38,16 +43,18 @@ export const sourcesCatalog: SourcesCatalogItem[] = [
     description:
       "Public community discussions and research threads used to identify gaps and confirm edge cases.",
     tags: ["cars", "game-info"],
-    aliases: ["Reddit posts", "Discord discussions", "Community posts"],
+    aliases: ["Reddit posts", "Discord discussions", "Community posts", "Community research"],
   },
-  {
-    key: "patch_notes",
-    label: "Patch notes / update announcements",
-    description:
-      "Used for availability changes, garage level expansions, and historical release context.",
-    tags: ["game-info"],
-    aliases: ["Patch notes", "Update notes"],
-  },
+
+  // {
+  //   key: "patch_notes",
+  //   label: "Patch notes / update announcements (future addition)",
+  //   description:
+  //     "Potential future feature: structured links to update announcements for availability changes, garage level expansions, and historical release context.",
+  //   tags: ["game-info"],
+  //   aliases: ["Patch notes", "Update notes", "Patchnote", "Update announcement"],
+  // },
+
   {
     key: "in_game_testing",
     label: "In-game verification (screenshots & testing)",
@@ -57,12 +64,21 @@ export const sourcesCatalog: SourcesCatalogItem[] = [
     aliases: ["My own research", "My own reseach", "In-game testing", "Screenshots"],
   },
   {
-    key: "official_site",
-    label: "Official Asphalt Legends site",
+    key: "asphalt_wiki",
+    label: "Asphalt Wiki (community reference)",
     description:
-      "Official marketing and platform availability reference.",
-    url: "https://asphaltlegendsunite.com/",
-    tags: ["game-info"],
-    aliases: ["Official site", "Gameloft site"],
+      "Community-maintained wiki used for general game information, car listings, and historical context. Values may be incomplete or outdated, so entries are cross-checked when possible.",
+    url: "https://asphalt.fandom.com/wiki/Asphalt_9:_Legends",
+    tags: ["cars", "brands", "game-info"],
+    aliases: [
+      "Asphalt Wiki",
+      "Asphalt fandom",
+      "Asphalt Fandom",
+      "Fandom wiki",
+      "asphalt.fandom.com",
+      "Asphalt 9 Wiki",
+      "Asphalt Legends Wiki",
+      "Asphalt Legends Unite Wiki",
+    ],
   },
 ];
