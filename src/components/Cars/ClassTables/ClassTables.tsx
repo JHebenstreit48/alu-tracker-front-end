@@ -41,7 +41,7 @@ export default function ClassTables({
             </tr>
           ) : (
             cars.map((car) => {
-              const carKey = generateCarKey(car.Brand, car.Model);
+              const carKey = generateCarKey(car.brand, car.model);
               const tracking = getTrackingForKey(carKey);
 
               return (
@@ -49,7 +49,7 @@ export default function ClassTables({
                   <OwnedGoldHighlighter carKey={carKey}>
                     <div className="carCell">
                       <Link to={`/cars/${carKey}`} state={{ trackerMode }}>
-                        {car.Brand} {car.Model}
+                        {car.brand} {car.model}
                       </Link>
                       <FavoriteHeart carKey={carKey} />
                     </div>

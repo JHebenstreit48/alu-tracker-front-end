@@ -18,7 +18,7 @@ export function useKeyObtained(car: FullCar | null, setKeyObtained: Setter) {
   return useMemo(
     () => (obtained: boolean) => {
       if (!car) return;
-      const k = generateCarKey(car.Brand, car.Model);
+      const k = generateCarKey(car.brand, car.model);
       const prev = getCarTrackingData(k);
 
       const next =

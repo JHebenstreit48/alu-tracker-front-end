@@ -8,7 +8,7 @@ import StarRank from '@/components/Shared/Stars/StarRank';
 type BlueprintValue = number | string | null;
 
 const BlueprintsTableStatic: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
-  if (car.Model.includes('Security')) {
+  if (car.model.includes('Security')) {
     return <div className="noBlueprintData">No blueprint data available for security cars.</div>;
   }
 

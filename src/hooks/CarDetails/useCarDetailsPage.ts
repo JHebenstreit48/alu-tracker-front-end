@@ -18,8 +18,8 @@ export function useCarDetailsPage(slug: string | undefined) {
 
   // Keep UI ↔ storage aligned for keyObtained at load
   useEffect(() => {
-    if (!car || !trackerMode || !car.KeyCar) return;
-    const k = generateCarKey(car.Brand, car.Model);
+    if (!car || !trackerMode || !car.keyCar) return;
+    const k = generateCarKey(car.brand, car.model);
     const stored = getCarTrackingData(k);
     const storedKey = !!stored.keyObtained;
     if (storedKey !== !!keyObtained) setKeyObtained(storedKey);

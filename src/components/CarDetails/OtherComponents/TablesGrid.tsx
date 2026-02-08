@@ -34,7 +34,7 @@ export default function TablesGrid({
           <ClassRank
             car={car}
             trackerMode={trackerMode}
-            forceOwned={car.KeyCar && keyObtained}
+            forceOwned={car.keyCar && keyObtained}
           />
         </div>
 

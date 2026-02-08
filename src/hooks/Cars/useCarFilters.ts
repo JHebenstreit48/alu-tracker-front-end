@@ -45,8 +45,8 @@ export function useCarFilters({
     const map: Record<string, Set<string>> = {};
 
     cars.forEach((car) => {
-      const country = car.Country?.trim();
-      const brand = car.Brand;
+      const country = car.country?.trim();
+      const brand = car.brand;
       if (!country || !brand) return;
 
       if (!map[country]) {
@@ -60,13 +60,13 @@ export function useCarFilters({
   }, [cars]);
 
   const availableCountries = useMemo(() => {
-    return [...new Set(cars.map((car) => (car.Country ?? "").trim()).filter((val) => val !== ""))];
+    return [...new Set(cars.map((car) => (car.country ?? "").trim()).filter((val) => val !== ""))];
   }, [cars]);
 
   const filteredBrands =
     selectedCountry && brandsByCountryMap[selectedCountry]
       ? Array.from(brandsByCountryMap[selectedCountry])
-      : [...new Set(cars.map((car) => car.Brand))];
+      : [...new Set(cars.map((car) => car.brand))];
 
   return {
     filteredCars,

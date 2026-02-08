@@ -17,8 +17,8 @@ type AnyObj = Record<string, unknown>;
 
 type CarWithMeta = {
   car: Car;
-  key: string;        // normalizedKey (or docId fallback)
-  prefer: number;     // higher wins (new format wins)
+  key: string;    // normalizedKey (or docId fallback)
+  prefer: number; // higher wins (new format wins)
 };
 
 function pickString(obj: AnyObj, legacyKey: string, newKey: string): string {
@@ -28,11 +28,29 @@ function pickString(obj: AnyObj, legacyKey: string, newKey: string): string {
 
 function pickNumber(obj: AnyObj, legacyKey: string, newKey: string): number | undefined {
   const v = obj[legacyKey] ?? obj[newKey];
-  return typeof v === "number" ? v : undefined;
+  if (typeof v === "number") return v;
+  if (typeof v === "string" && v.trim() !== "" && !isNaN(Number(v))) return Number(v);
+  return undefined;
+}
+
+function pickBool(obj: AnyObj, legacyKey: string, newKey: string): boolean | undefined {
+  const v = obj[legacyKey] ?? obj[newKey];
+  return typeof v === "boolean" ? v : undefined;
+}
+
+function pickStringArrayOrString(
+  obj: AnyObj,
+  legacyKey: string,
+  newKey: string
+): string[] | string | null | undefined {
+  const v = obj[legacyKey] ?? obj[newKey];
+  if (v === null) return null;
+  if (typeof v === "string") return v;
+  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+  return undefined;
 }
 
 function isNewFormat(raw: AnyObj): boolean {
-  // light heuristic: any of these camelCase keys implies new schema
   return (
     Object.prototype.hasOwnProperty.call(raw, "brand") ||
     Object.prototype.hasOwnProperty.call(raw, "class") ||
@@ -40,63 +58,64 @@ function isNewFormat(raw: AnyObj): boolean {
   );
 }
 
+function resolveImageUrl(raw: string): string | undefined {
+  const s = (raw ?? "").trim();
+  if (!s) return undefined;
+  if (/^https?:\/\//i.test(s) || s.startsWith("data:")) return s;
+  return getCarImageUrl(s);
+}
+
 /**
- * Convert Firestore doc (legacy OR new) into legacy UI shape (Car).
- * Returns null if required identity fields are missing.
+ * Convert Firestore doc (legacy OR new) into canonical Car.
  */
-function toLegacyUiCar(docId: string, raw: AnyObj): CarWithMeta | null {
-  const Brand = pickString(raw, "Brand", "brand").trim();
-  const Model = pickString(raw, "Model", "model").trim();
-  const Class = pickString(raw, "Class", "class").trim();
+function toCar(docId: string, raw: AnyObj): CarWithMeta | null {
+  const brand = pickString(raw, "Brand", "brand").trim();
+  const model = pickString(raw, "Model", "model").trim();
+  const klass = pickString(raw, "Class", "class").trim();
 
-  if (!Brand || !Model || !Class) return null;
+  if (!brand || !model || !klass) return null;
 
-  const ImageRaw = pickString(raw, "Image", "image");
-  const Rarity = pickString(raw, "Rarity", "rarity") || "Unknown";
-  const Stars = pickNumber(raw, "Stars", "stars") ?? 0;
-  const Id = pickNumber(raw, "Id", "id") ?? 0;
+  const imageRaw = pickString(raw, "Image", "image");
+  const rarity = (pickString(raw, "Rarity", "rarity") || "Unknown").trim();
+  const stars = pickNumber(raw, "Stars", "stars") ?? 0;
+  const id = pickNumber(raw, "Id", "id") ?? 0;
 
-  const Country = pickString(raw, "Country", "country") || undefined;
-  const ObtainableVia = (raw.ObtainableVia ?? raw.obtainableVia) as
-    | string[]
-    | string
-    | null
-    | undefined;
+  const country = (pickString(raw, "Country", "country") || "").trim() || undefined;
+  const obtainableVia =
+    pickStringArrayOrString(raw, "ObtainableVia", "obtainableVia") ?? null;
 
-  const KeyCar = (raw.KeyCar ?? raw.keyCar) as boolean | undefined;
+  const keyCar = pickBool(raw, "KeyCar", "keyCar");
 
   const normalizedKey =
     typeof raw.normalizedKey === "string" && raw.normalizedKey.trim()
-      ? raw.normalizedKey
+      ? raw.normalizedKey.trim()
       : docId;
 
   const car: Car = {
-    Id,
-    Brand,
-    Model,
-    Class,
-    Image: ImageRaw ? getCarImageUrl(ImageRaw) : undefined,
-    Rarity,
-    Stars,
-    Country,
-    ObtainableVia: ObtainableVia ?? null,
-    KeyCar,
+    id,
+    brand,
+    model,
+    class: klass,
+    image: resolveImageUrl(imageRaw),
+    rarity,
+    stars,
+    country,
+    obtainableVia,
+    keyCar,
+    normalizedKey,
   };
 
   return {
     car,
     key: normalizedKey,
-    prefer: isNewFormat(raw) ? 2 : 1, // new-format wins ties
+    prefer: isNewFormat(raw) ? 2 : 1,
   };
 }
 
-function consumeSnap(
-  snap: QuerySnapshot<DocumentData>,
-  merged: Map<string, CarWithMeta>
-) {
+function consumeSnap(snap: QuerySnapshot<DocumentData>, merged: Map<string, CarWithMeta>) {
   snap.docs.forEach((d) => {
     const raw = d.data() as AnyObj;
-    const mapped = toLegacyUiCar(d.id, raw);
+    const mapped = toCar(d.id, raw);
     if (!mapped) return;
 
     const prev = merged.get(mapped.key);
@@ -117,8 +136,7 @@ export function useCarAPI(selectedClass: string) {
 
     try {
       const carsCol = collection(dbTracker, "cars");
-      const classFilterActive =
-        selectedClass && selectedClass !== "All Classes";
+      const classFilterActive = selectedClass && selectedClass !== "All Classes";
 
       const cap = 2000;
       const merged = new Map<string, CarWithMeta>();
@@ -148,9 +166,9 @@ export function useCarAPI(selectedClass: string) {
       const list = Array.from(merged.values()).map((x) => x.car);
 
       list.sort((a, b) => {
-        const b1 = (a.Brand || "").localeCompare(b.Brand || "");
-        if (b1 !== 0) return b1;
-        return (a.Model || "").localeCompare(b.Model || "");
+        const byBrand = (a.brand || "").localeCompare(b.brand || "");
+        if (byBrand !== 0) return byBrand;
+        return (a.model || "").localeCompare(b.model || "");
       });
 
       setCars(list);

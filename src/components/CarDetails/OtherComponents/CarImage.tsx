@@ -7,8 +7,8 @@ interface CarImageProps {
 }
 
 const CarImage: React.FC<CarImageProps> = ({ car }) => {
-  const src = car.Image || FALLBACK;
-  const alt = `${car.Brand} ${car.Model}`;
+  const src = car.image || FALLBACK;
+  const alt = `${car.brand} ${car.model}`;
 
   return (
     <div className="carImageContainer">

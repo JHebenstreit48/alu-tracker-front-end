@@ -1,7 +1,7 @@
 import type {
   PublicFeedbackItem,
   PublicFeedbackResponse,
-} from "@/interfaces/Feedback";
+} from "@/types/Feedback";
 
 const API_BASE = (
   import.meta.env.VITE_COMMENTS_API_BASE_URL ?? ""

@@ -15,7 +15,7 @@ interface ClassRankProps {
 }
 
 const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOwned }) => {
-  const carKey = generateCarKey(car.Brand, car.Model);
+  const carKey = generateCarKey(car.brand, car.model);
   const hasUserInteracted = useRef(false);
 
   const [selectedStarRank, setSelectedStarRank] = useState<number>(0);
@@ -38,10 +38,10 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
 
   // ✅ Only mark as owned if user manually selects star (for non-key cars)
   useEffect(() => {
-    if (trackerMode && !car.KeyCar && selectedStarRank > 0 && hasUserInteracted.current && !owned) {
+    if (trackerMode && !car.keyCar && selectedStarRank > 0 && hasUserInteracted.current && !owned) {
       setOwned(true);
     }
-  }, [trackerMode, car.KeyCar, selectedStarRank, owned]);
+  }, [trackerMode, car.keyCar, selectedStarRank, owned]);
 
   // ✅ Manual star selection updates
   const handleStarSelect = (value: number) => {
@@ -71,12 +71,12 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
   useAutoSyncDependency(trackerMode ? [selectedStarRank, owned, goldMaxed] : []);
 
   // ✅ ObtainableVia display (supports string[] OR string OR empty/missing)
-  const obtainableViaDisplay = Array.isArray(car.ObtainableVia)
-    ? car.ObtainableVia.length
-      ? car.ObtainableVia.join(', ')
+  const obtainableViaDisplay = Array.isArray(car.obtainableVia)
+    ? car.obtainableVia.length
+      ? car.obtainableVia.join(', ')
       : '—'
-    : typeof car.ObtainableVia === 'string' && car.ObtainableVia.trim()
-      ? car.ObtainableVia.trim()
+    : typeof car.obtainableVia === 'string' && car.obtainableVia.trim()
+      ? car.obtainableVia.trim()
       : '—';
 
   return (
@@ -87,7 +87,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
             className="tableHeader2"
             colSpan={2}
           >
-            Class {car.Class}
+            Class {car.class}
           </th>
         </tr>
       </thead>
@@ -98,26 +98,26 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
             style={{ textAlign: 'center' }}
           >
             <StarRankSelector
-              maxStars={car.Stars}
+              maxStars={car.stars}
               selected={
-                trackerMode ? (selectedStarRank > 0 ? selectedStarRank : undefined) : car.Stars
+                trackerMode ? (selectedStarRank > 0 ? selectedStarRank : undefined) : car.stars
               }
               onSelect={trackerMode ? handleStarSelect : undefined}
-              brand={car.Brand}
-              model={car.Model}
+              brand={car.brand}
+              model={car.model}
               trackerMode={trackerMode}
-              isKeyCar={car.KeyCar}
+              isKeyCar={car.keyCar}
             />
           </td>
         </tr>
 
         <tr>
-          <td colSpan={2}>{car.Country}</td>
+          <td colSpan={2}>{car.country}</td>
         </tr>
 
         <tr>
           <td>Rarity</td>
-          <td>{car.Rarity}</td>
+          <td>{car.rarity}</td>
         </tr>
 
         <tr>
@@ -146,7 +146,7 @@ const ClassRank: React.FC<ClassRankProps> = ({ car, trackerMode = false, forceOw
                     const isChecked = e.target.checked;
                     setGoldMaxed(isChecked);
                     if (isChecked) {
-                      setSelectedStarRank(car.Stars);
+                      setSelectedStarRank(car.stars);
                     }
                   }}
                 />{' '}

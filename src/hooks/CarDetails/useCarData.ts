@@ -28,16 +28,16 @@ export function useCarData(
         const s = await fetchCarStatus(slug);
         setStatus(s);
 
-        const key = generateCarKey(detail.Brand, detail.Model);
+        const key = generateCarKey(detail.brand, detail.model);
         const stored = getCarTrackingData(key);
 
         // A) Seed stars for key cars in tracker mode
-        if (trackerMode && detail.KeyCar && stored.stars === undefined) {
+        if (trackerMode && detail.keyCar && stored.stars === undefined) {
           setCarTrackingData(key, { ...stored, stars: 1 });
         }
 
         // B) Migrate: if owned but no keyObtained, set both
-        if (detail.KeyCar) {
+        if (detail.keyCar) {
           if (stored?.keyObtained !== undefined) {
             setKeyObtained(stored.keyObtained);
           } else if (stored?.owned) {

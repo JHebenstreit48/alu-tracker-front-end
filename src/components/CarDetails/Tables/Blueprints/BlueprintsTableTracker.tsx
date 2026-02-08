@@ -9,7 +9,7 @@ import { getBlueprintRows, sumNumericBlueprints } from '@/utils/CarDetails/getBl
 import { useBlueprintTracker } from '@/hooks/CarDetails/useBlueprintTracker';
 
 const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
-  if (car.Model.includes('Security')) {
+  if (car.model.includes('Security')) {
     return <div className="noBlueprintData">No blueprint data available for security cars.</div>;
   }
 
@@ -19,11 +19,11 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
     return <div className="noBlueprintData">No blueprint data available.</div>;
   }
 
-  const isKeyCar = !!(car as any).KeyCar;
+  const isKeyCar = !!car.keyCar;
 
   const tracker = useBlueprintTracker({
-    brand: car.Brand,
-    model: car.Model,
+    brand: car.brand,
+    model: car.model,
     isKeyCar,
     rows,
   });

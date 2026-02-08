@@ -21,11 +21,11 @@ export function useStarRankOwnershipStats(
 
     return ranks.map((rank) => {
       // total cars in game that max out at this rank
-      const totalOfThisRank = allCars.filter((c) => c.Stars === rank).length;
+      const totalOfThisRank = allCars.filter((c) => c.stars === rank).length;
 
       // of those, how many do you own?
       const ownedOfThisRank = enrichedTrackedCars.filter(
-        (c) => c.Stars === rank && c.owned
+        (c) => c.stars === rank && c.owned
       ).length;
 
       const unowned = Math.max(totalOfThisRank - ownedOfThisRank, 0);

@@ -32,13 +32,13 @@ export default function CarDetailsBody({ slug }: Props) {
   const { unit, setUnit } = usePreferredUnit();
 
   const handleKeyObtainedChange = useKeyObtained(car, setKeyObtained);
-  useAutoSyncDependency([keyObtained, trackerMode, car?.Brand, car?.Model]);
+  useAutoSyncDependency([keyObtained, trackerMode, car?.brand, car?.model]);
 
   // Visible title in the page body
-  const carTitle = car ? `${car.Brand} ${car.Model}` : 'Car Details';
+  const carTitle = car ? `${car.brand} ${car.model}` : 'Car Details';
 
   // Browser tab text (PageTab controls <title>)
-  const pageTabTitle = car ? `${car.Brand} ${car.Model}` : 'Car Details';
+  const pageTabTitle = car ? `${car.brand} ${car.model}` : 'Car Details';
 
   return (
     <div className="carDetail">
@@ -100,8 +100,8 @@ export default function CarDetailsBody({ slug }: Props) {
             <hr className="content-divider" />
             <CommentsPanel
               normalizedKey={slug}
-              brand={car.Brand}
-              model={car.Model}
+              brand={car.brand}
+              model={car.model}
             />
           </>
         ) : (

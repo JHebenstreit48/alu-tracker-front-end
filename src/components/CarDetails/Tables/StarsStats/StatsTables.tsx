@@ -14,21 +14,21 @@ type Props = {
 
 function stockSnapshot(car: Partial<StockStats>): StatSnapshot {
   return {
-    rank: car.Stock_Rank,
-    topSpeed: car.Stock_Top_Speed,
-    acceleration: car.Stock_Acceleration,
-    handling: car.Stock_Handling,
-    nitro: car.Stock_Nitro,
+    rank: car.stockRank,
+    topSpeed: car.stockTopSpeed,
+    acceleration: car.stockAcceleration,
+    handling: car.stockHandling,
+    nitro: car.stockNitro,
   };
 }
 
 function goldSnapshot(car: Partial<GoldMaxStats>): StatSnapshot {
   return {
-    rank: car.Gold_Max_Rank,
-    topSpeed: car.Gold_Top_Speed,
-    acceleration: car.Gold_Acceleration,
-    handling: car.Gold_Handling,
-    nitro: car.Gold_Nitro,
+    rank: car.goldMaxRank,
+    topSpeed: car.goldTopSpeed,
+    acceleration: car.goldAcceleration,
+    handling: car.goldHandling,
+    nitro: car.goldNitro,
   };
 }
 
@@ -38,7 +38,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
   const stock = stockSnapshot(car);
   if (hasStats(stock)) cards.push({ key: "stock", title: "Stock", stats: stock });
 
-  const maxStars = Math.min(Math.max(car.Stars ?? 0, 0), 6);
+  const maxStars = Math.min(Math.max(car.stars ?? 0, 0), 6);
   for (let i = 1; i <= maxStars; i++) {
     const star = i as StarNumber;
     const stats = getStatsFromCar(car as FullCar & MaxStarStats, star);
