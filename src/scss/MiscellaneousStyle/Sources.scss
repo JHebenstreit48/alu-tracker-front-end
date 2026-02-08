@@ -1,0 +1,256 @@
+@use "sass:color";
+@use "@scss/Globals/index" as *;
+
+/* ------------------------------------
+   Local tokens (match About.scss vibe)
+   ------------------------------------ */
+$gold: $color-gold-glow;
+$frame: $table-border-color;
+$panel-bg-top: #1a0e20;
+$panel-bg-bot: #0a0610;
+
+/* Shared halo (same as About) */
+@mixin gold-halo($radius: 16px, $width: 2px) {
+  border-radius: $radius;
+  border: $width solid $frame;
+  box-shadow:
+    0 0 0 1px rgba($gold, 0.32) inset,
+    0 0 10px 3px rgba($gold, 0.58);
+}
+
+/* ====================================
+   Sources Page Shell
+   ==================================== */
+.SourcesPage {
+  max-inline-size: 90rem;
+  margin: 3rem auto 5rem auto;
+  padding: clamp(1rem, 2.2vw, 2rem);
+
+  text-align: center;
+  background: linear-gradient(180deg, $panel-bg-top 0%, $panel-bg-bot 100%);
+  color: $color-white;
+
+  @include gold-halo(16px, 2px);
+
+  > * {
+    max-inline-size: 78rem;
+    margin-inline: auto;
+  }
+
+  @include maxw($tablet-portrait) {
+    margin-top: 10rem;
+    padding: 1.25rem;
+  }
+
+  @include maxw($cellphone-portrait) {
+    margin: 2rem auto 3rem;
+    padding: 1rem;
+    width: 20rem;
+
+    > * {
+      max-inline-size: 20rem;
+      text-align: center;
+    }
+  }
+
+  /* ====================================
+     Header
+     ==================================== */
+  &__header {
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0 0 0.6rem;
+    text-shadow: 0 0 10px rgba($gold, 0.18);
+    letter-spacing: 0.03em;
+  }
+
+  &__subtitle {
+    opacity: 0.92;
+    max-width: 72ch;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+  }
+
+  /* ====================================
+     Sections
+     ==================================== */
+  &__section {
+    margin-top: 2.25rem;
+
+    /* same divider treatment as About sections */
+    & + & {
+      margin-block-start: clamp(1.1rem, 2vw, 1.8rem);
+      padding-block-start: clamp(1.1rem, 2vw, 1.8rem);
+      border-top: 1px solid rgba($gold, 0.12);
+    }
+  }
+
+  &__sectionTitle {
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    margin: 0 0 1rem;
+    text-shadow: 0 0 10px rgba($gold, 0.18);
+  }
+
+  &__notice {
+    margin: 0.75rem auto 0;
+    max-width: 70ch;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.32);
+    box-shadow: 0 0 0 1px rgba($gold, 0.12) inset;
+    opacity: 0.95;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* ====================================
+     Methodology Cards
+     ==================================== */
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__card {
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow:
+      0 0 0 1px rgba($gold, 0.10) inset,
+      0 10px 26px rgba(0, 0, 0, 0.35);
+
+    text-align: left;
+  }
+
+  &__cardTitle {
+    margin: 0 0 0.45rem;
+    font-size: 1.05rem;
+    color: $color-white;
+    text-shadow: 0 0 10px rgba($gold, 0.12);
+  }
+
+  &__cardText {
+    margin: 0.45rem 0 0;
+    opacity: 0.92;
+    line-height: 1.55;
+    font-size: clamp(1rem, 1.25vw, 1.1rem);
+  }
+
+  /* ====================================
+     Main Sources List (ul)
+     ==================================== */
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+
+    width: min(54rem, 100%);
+    margin-inline: auto;
+  }
+
+  &__listItem {
+    padding: 0.95rem 1.1rem;
+    border-radius: 14px;
+
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow:
+      0 0 0 1px rgba($gold, 0.10) inset,
+      0 10px 26px rgba(0, 0, 0, 0.35);
+
+    text-align: left;
+  }
+
+  &__listHeading {
+    font-weight: 650;
+    margin-bottom: 0.25rem;
+  }
+
+  &__listHeading::before {
+    content: "•";
+    display: inline-block;
+    margin-right: 0.6rem;
+    color: color.scale($gold, $lightness: 5%);
+    text-shadow: 0 0 10px rgba($gold, 0.18);
+  }
+
+  &__listText {
+    opacity: 0.92;
+    line-height: 1.5;
+  }
+
+  &__link {
+    color: color.scale($gold, $lightness: 8%);
+    text-decoration: none;
+    border-bottom: 1px solid rgba($gold, 0.28);
+
+    &:hover,
+    &:focus-visible {
+      border-bottom-color: rgba($gold, 0.55);
+      outline: none;
+    }
+  }
+
+  /* ====================================
+     Dataset-detected Pills
+     ==================================== */
+  &__pillList {
+    list-style: none;
+    padding: 0;
+    margin: 1rem auto 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+
+    width: min(60rem, 100%);
+  }
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+
+    padding: 0.55rem 0.75rem;
+    border-radius: 999px;
+
+    background: rgba(0, 0, 0, 0.32);
+    box-shadow: 0 0 0 1px rgba($gold, 0.12) inset;
+
+    text-align: left;
+  }
+
+  &__pillLabel {
+    opacity: 0.95;
+    font-size: 0.95rem;
+  }
+
+  &__pillCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 1.9rem;
+    height: 1.55rem;
+    padding: 0 0.45rem;
+
+    border-radius: 999px;
+    background: rgba($gold, 0.14);
+    box-shadow: 0 0 0 1px rgba($gold, 0.10) inset;
+
+    font-size: 0.85rem;
+    opacity: 0.98;
+  }
+}

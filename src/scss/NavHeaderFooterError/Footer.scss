@@ -9,6 +9,7 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
   display: flex;
   flex-direction: column;
 }
+
 .AppMain {
   flex: 1;
   padding-bottom: 0.5rem;
@@ -21,85 +22,91 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
   z-index: 1000;
 
   display: flex;
-  flex-direction: row;                 // ✅ desktop: row
-  justify-content: space-between;      // ✅ left + right zones
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
 
-  padding: 0.9rem 1rem;
+  // Slightly tighter + consistent spacing
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+
   background-image: $header-gradient;
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -8px 24px rgba(0, 0, 0, 0.35);
+
   text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
 
-  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.06) inset;
-
-  &__links {
+  &__links,
+  &__meta {
+    min-width: 0;
     display: flex;
-    justify-content: flex-start;       // ✅ left aligned
     align-items: center;
-    gap: 0.75rem;
     flex-wrap: wrap;
     row-gap: 0.35rem;
-    min-width: 0;                      // ✅ prevents weird overflow behavior
+  }
+
+  &__links {
+    justify-content: flex-start;
+    gap: 0.75rem;
   }
 
   &__meta {
-    display: flex;
-    justify-content: flex-end;         // ✅ right aligned
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    row-gap: 0.25rem;
-    opacity: 0.9;
-    text-align: right;                 // ✅ makes the text read naturally on the right
-    min-width: 0;
+    justify-content: flex-end;
+    gap: 0.45rem;
+    text-align: right;
+    opacity: 0.92;
+  }
+
+  &__dot,
+  &__sep {
+    color: color.change($gold-text, $alpha: 0.7);
+    font-size: 0.95rem;
+    user-select: none;
   }
 
   &__fineprint {
     font-size: 0.9rem;
     color: color.change($gold-text, $alpha: 0.85);
-    white-space: nowrap;               // ✅ prevents “© 2026…” splitting awkwardly
+    line-height: 1.1;
   }
 
-  &__sep {
-    color: color.change($gold-text, $alpha: 0.65);
-    font-size: 0.95rem;
-  }
-
-  &__dot {
-    color: color.change($gold-text, $alpha: 0.8);
-    font-size: 1rem;
+  // Use this only on the © chunk so the right side can wrap naturally
+  &__fineprint--nowrap {
+    white-space: nowrap;
   }
 
   &__link {
     color: $gold-text;
     text-decoration: none;
+
+    font-size: 1.02rem;
+    letter-spacing: 0.2px;
+
     border-bottom: 1px solid transparent;
-    transition: border-color 120ms ease, opacity 120ms ease;
-    font-size: 1.05rem;
+    transition: border-color 140ms ease, opacity 140ms ease, transform 140ms ease;
 
     &:hover,
     &:focus-visible {
       border-color: color.change($gold-text, $alpha: 0.6);
-      opacity: 0.95;
+      opacity: 0.96;
       outline: none;
+      transform: translateY(-0.5px);
     }
 
     &--active {
       color: #fff;
       border-color: $gold-text;
     }
-
-    &--external {
-      font-size: 1.05rem;
-    }
   }
 
-  // ✅ Mobile: stack + center (nested, your style)
+  // Mobile: stack + centered; keep your nesting style
   @include maxw($cellphone-portrait) {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.35rem;
+    gap: 0.4rem;
+
+    padding: 0.8rem 0.9rem;
 
     &__links {
       justify-content: center;
@@ -110,8 +117,8 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
       text-align: center;
     }
 
-    &__fineprint {
-      white-space: normal; // allow wrapping on small screens
+    &__fineprint--nowrap {
+      white-space: normal; // allow wrap on small screens
     }
   }
 }
