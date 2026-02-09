@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
 
-  // ✅ add
   const [userId, setUserId] = useState<string | null>(null);
   const [roles, setRoles] = useState<string[]>([]);
 
@@ -51,22 +50,35 @@ export const AuthProvider = ({ children }: Props) => {
       const { ok, data } = await fetchMe(tok);
       if (!ok) return hardLogout(); // 401/expired → out
 
-      if (data?.username) setUsername(data.username);
+      // Keep username synced if server returns it
+      if (data?.username) {
+        setUsername(data.username);
+        localStorage.setItem("username", data.username);
+      }
 
-      // ✅ NEW: keep roles/userId in sync with server
+      // Keep roles/userId in sync with server
       if (data?.userId) {
         setUserId(data.userId);
         localStorage.setItem("userId", data.userId);
       }
-      const nextRoles = Array.isArray(data?.roles) ? data!.roles : ["user"];
+
+      // ✅ safer: if roles missing OR empty => fallback to ["user"]
+      const nextRoles =
+        Array.isArray(data?.roles) && data.roles.length > 0 ? data.roles : ["user"];
+
       setRoles(nextRoles);
       localStorage.setItem("roles", JSON.stringify(nextRoles));
 
       await syncFromAccount(tok); // merge, no wipes
-      await hydrateGarageLevelsFromAccount(tok); // ✅ add garage level hydration
+      await hydrateGarageLevelsFromAccount(tok);
     } finally {
       setSyncReady(true);
     }
+  };
+
+  const refreshMe = async () => {
+    if (!token) return;
+    await hydrate(token);
   };
 
   const login = (newToken: string, newUsername: string) => {
@@ -83,8 +95,6 @@ export const AuthProvider = ({ children }: Props) => {
   const hardLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-
-    // ✅ clear new fields too (safe)
     localStorage.removeItem("userId");
     localStorage.removeItem("roles");
 
@@ -105,6 +115,7 @@ export const AuthProvider = ({ children }: Props) => {
         syncReady,
         login,
         logout: hardLogout,
+        refreshMe,
       }}
     >
       {children}

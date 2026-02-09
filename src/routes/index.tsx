@@ -14,6 +14,7 @@ import CarTracker from '@/pages/Subpages/CarTracker';
 
 import Feedback from '@/pages/MainPages/Feedback/Feedback'; // ← NEW
 import Account from '@/pages/Subpages/Account';
+import CarDataSubmission from '@/pages/Subpages/CarDataSubmission';
 import About from '@/pages/Subpages/About';
 import Sources from '@/pages/Subpages/Sources'; // NEW
 
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
       {
         path: '/account',
         element: <Account />,
+      },
+      {
+        path: '/car-data-submission',
+        element: <CarDataSubmission />,
       },
       {
         path: '/about',
