@@ -1,27 +1,21 @@
-import { useContext, useMemo, useState } from "react";
-import { AuthContext } from "@/context/Auth/authContext";
-import { bootstrapOwner } from "@/api/adminAPI";
+import { useContext, useState } from 'react';
+import { AuthContext } from '@/context/Auth/authContext';
+import { bootstrapOwner } from '@/api/adminAPI';
 
 type BootstrapResp =
   | { ok: true; userId: string; roles: string[] }
   | { message?: string; ownerUserId?: string; userId?: string; roles?: string[] };
 
 export default function AdminTools(): JSX.Element | null {
-  const { token } = useContext(AuthContext);
+  const { token, roles, refreshMe } = useContext(AuthContext);
 
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
-  // If AuthContext doesn't expose roles yet, we still render safely.
-  const roles = useMemo(() => {
-    const anyCtx = (useContext(AuthContext) as unknown) as { roles?: string[] };
-    return Array.isArray(anyCtx?.roles) ? anyCtx.roles : [];
-  }, []);
-
   if (!token) return null;
 
-  const hasAdminAccess = roles.includes("owner") || roles.includes("admin");
+  const hasAdminAccess = roles.includes('owner') || roles.includes('admin');
 
   const onBootstrap = async () => {
     setBusy(true);
@@ -30,27 +24,28 @@ export default function AdminTools(): JSX.Element | null {
 
     try {
       const { ok, data } = await bootstrapOwner(token);
+      const d = data as BootstrapResp;
 
       if (ok) {
-        const d = data as BootstrapResp;
         const gotRoles = (d as any)?.roles;
         setMsg(
           `Owner bootstrap complete. Roles: ${
-            Array.isArray(gotRoles) ? gotRoles.join(", ") : "updated"
+            Array.isArray(gotRoles) ? gotRoles.join(', ') : 'updated'
           }`
         );
+
+        // ✅ try to reflect roles immediately in UI
+        await refreshMe();
         return;
       }
 
-      const d = data as BootstrapResp;
       const message =
-        (d as any)?.message ||
-        "Bootstrap failed (this usually means it was already bootstrapped).";
+        (d as any)?.message || 'Bootstrap failed (this usually means it was already bootstrapped).';
       const ownerUserId = (d as any)?.ownerUserId;
 
       setErr(ownerUserId ? `${message} Owner userId: ${ownerUserId}` : message);
     } catch (e: any) {
-      setErr(e?.message || "Bootstrap failed");
+      setErr(e?.message || 'Bootstrap failed');
     } finally {
       setBusy(false);
     }
@@ -62,7 +57,7 @@ export default function AdminTools(): JSX.Element | null {
 
       <div className="AdminToolsBody">
         <p className="AdminToolsRoles">
-          Roles: <strong>{roles.length ? roles.join(", ") : "user"}</strong>
+          Roles: <strong>{roles.length ? roles.join(', ') : 'user'}</strong>
         </p>
 
         {hasAdminAccess ? (
@@ -72,7 +67,8 @@ export default function AdminTools(): JSX.Element | null {
         ) : (
           <>
             <p className="AdminToolsHint">
-              Not an admin yet. If you’re the project owner, you can bootstrap the owner role one time.
+              Not an admin yet. If you’re the project owner, you can bootstrap the owner role one
+              time.
             </p>
 
             <button
@@ -81,7 +77,7 @@ export default function AdminTools(): JSX.Element | null {
               onClick={onBootstrap}
               disabled={busy}
             >
-              {busy ? "Bootstrapping..." : "Bootstrap Owner (one-time)"}
+              {busy ? 'Bootstrapping...' : 'Bootstrap Owner (one-time)'}
             </button>
           </>
         )}

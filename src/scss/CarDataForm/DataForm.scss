@@ -1,0 +1,341 @@
+@use "sass:color";
+@use "@scss/Globals/index" as *;
+
+$gold-accent: rgb(255, 196, 0) !default;
+$panel-bg: linear-gradient(180deg, #19121f 0%, #120c18 60%, #0b0910 100%) !default;
+$panel-border: 1px solid rgba($gold-accent, 0.35) !default;
+$panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !default;
+$page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
+
+.CarDataSubmissionPage {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: $page-padding;
+  color: #e9e6ee;
+}
+
+.CarDataSubmissionGate {
+  background: $panel-bg;
+  border: $panel-border;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  box-shadow: $panel-shadow;
+}
+
+.CarDataSubmissionBackRow {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.CarDataSubmissionBackBtn {
+  background: none;
+  border: 1px solid rgba($gold-accent, 0.45);
+  color: $gold-accent;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--display-font, "Cinzel"), serif;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(#7a05be, 0.35);
+    color: #fff;
+    outline: none;
+  }
+
+  &:active {
+    background: rgba(#7a05be, 0.55);
+    box-shadow: 0 0 10px rgba(#7a05be, 0.6);
+  }
+}
+
+.CarDataSubmissionHeader {
+  margin: 1rem 0 0.75rem;
+
+  .CarDataSubmissionTitle {
+    margin: 0;
+    font-family: var(--display-font, "Cinzel"), serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+    color: $gold-accent;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .CarDataSubmissionSubtitle {
+    margin: 0.25rem 0 0;
+    color: #bfb6cc;
+
+    strong {
+      color: #fff;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ---------- Layout ---------- */
+.CarDataForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Stats + Submit span both columns */
+.CarDataFormCard--stats,
+.CarDataFormCard--submit {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Card base ---------- */
+.CarDataFormCard.card {
+  background: $panel-bg;
+  border: $panel-border;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  box-shadow: $panel-shadow;
+
+  h2 {
+    margin: 0 0 0.6rem 0;
+    font-family: var(--display-font, "Cinzel"), serif;
+    color: $gold-accent;
+    font-weight: 700;
+  }
+
+  h3 {
+    margin: 0.25rem 0 0.6rem 0;
+    font-family: var(--display-font, "Cinzel"), serif;
+    color: rgba($gold-accent, 0.9);
+    font-weight: 700;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: #0f0a14;
+    color: #e9e6ee;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 0.62rem 0.75rem;
+    outline: none;
+
+    &::placeholder {
+      color: #9d93a6;
+    }
+
+    &:focus {
+      border-color: rgba($gold-accent, 0.75);
+      box-shadow: 0 0 0 3px rgba($gold-accent, 0.18);
+    }
+  }
+
+  button {
+    font-family: "Cinzel", serif;
+    font-weight: 700;
+    background: linear-gradient(180deg, rgba(#7a05be, 0.95), rgba(#7a05be, 0.75));
+    color: #fff;
+    border: 1px solid rgba(#7a05be, 0.5);
+    border-radius: 10px;
+    padding: 0.58rem 0.9rem;
+    cursor: pointer;
+    line-height: 1;
+
+    &:hover {
+      background: linear-gradient(180deg, #7a05be, rgba(#7a05be, 0.9));
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.CarDataFormLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: #e9e6ee;
+}
+
+.CarDataFormHint {
+  margin: 0.55rem 0 0;
+  color: #bfb6cc;
+  font-size: 0.95rem;
+}
+
+.CarDataFormError {
+  margin: 0.25rem 0;
+  color: #ff4d6d;
+  font-weight: 700;
+}
+
+.CarDataFormRow {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+}
+
+.CarDataFormMsg {
+  margin-top: 0.6rem;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  font-weight: 700;
+}
+
+.CarDataFormMsg--ok {
+  background: rgba(54, 211, 153, 0.12);
+  border: 1px solid rgba(54, 211, 153, 0.35);
+  color: #36d399;
+}
+
+.CarDataFormMsg--err {
+  background: rgba(255, 77, 109, 0.12);
+  border: 1px solid rgba(255, 77, 109, 0.35);
+  color: #ff4d6d;
+}
+
+/* ---------- Pick Cars ---------- */
+.CarPickerControls {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.CarPickerControls .CarDataFormLabel,
+.CarPickerBtns {
+  width: min(520px, 100%);
+}
+
+.CarPickerBtns {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.CarPickerList {
+  margin-top: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(#0f0a14, 0.55);
+  max-height: 360px;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+.CarPickerItem {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(#7a05be, 0.18);
+  }
+
+  input {
+    margin-top: 0.2rem;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.CarPickerMain {
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.CarPickerMeta {
+  color: #bfb6cc;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Car Fields ---------- */
+.CarFieldsGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* centered under Stars + Country */
+.CarFieldsKeyCarCenter {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+
+.CarFieldsKeyCarSelect {
+  width: min(320px, 100%);
+}
+
+/* ---------- Stats 2x2 ---------- */
+.StatsBlocks {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.StatsBlockTitle {
+  text-align: center;
+}
+
+/* inputs inside each block */
+.StatsGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Nitro centered under the first four fields */
+.StatsGrid--nitroCenter .StatsNitro {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+
+.StatsGrid--nitroCenter .StatsNitro .CarDataFormLabel {
+  width: min(420px, 100%);
+}
+
+/* ---------- Small screens ---------- */
+@include maxw($cellphone-portrait) {
+  .CarDataForm {
+    gap: 0.75rem;
+  }
+
+  .CarDataFormCard.card {
+    padding: 0.85rem 0.9rem;
+  }
+}

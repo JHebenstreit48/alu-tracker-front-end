@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import Header from "@/components/Shared/HeaderFooter/Header";
 import { AuthContext } from "@/context/Auth/authContext";
@@ -77,6 +77,25 @@ export default function Account(): JSX.Element {
 
           <section className="AccountSection">
             <AdminTools />
+          </section>
+
+          {/* NEW: link into the submission workflow */}
+          <section className="AccountSection AccountSection--full">
+            <div className="card">
+              <h2>Car Data</h2>
+              <p className="AccountHint">
+                Submit updates for missing/incorrect car data (stats, blueprints, etc.).
+              </p>
+
+              <Link
+                to="/car-data-submission"
+                state={{ from: "/account" }}
+                className="AccountBackBtn"
+                style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}
+              >
+                Open Car Data Submission →
+              </Link>
+            </div>
           </section>
         </main>
       </div>
