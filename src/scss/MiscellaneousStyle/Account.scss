@@ -30,15 +30,15 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
 .AccountBackRow {
   display: flex;
   justify-content: flex-start;
-  margin: .25rem 0 .5rem;
+  margin: 0.25rem 0 0.5rem;
 }
 
 .AccountBackBtn {
   background: none;
-  border: 1px solid rgba($gold-accent, .45);
+  border: 1px solid rgba($gold-accent, 0.45);
   color: $gold-accent;
-  border-radius: .5rem;
-  padding: .25rem .6rem;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.6rem;
   font-family: var(--display-font, "Cinzel"), serif;
   font-weight: 700;
   cursor: pointer;
@@ -46,14 +46,14 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
 
   &:hover,
   &:focus-visible {
-    background: rgba(#7a05be, .35);
+    background: rgba(#7a05be, 0.35);
     color: #fff;
     outline: none;
   }
 
   &:active {
-    background: rgba(#7a05be, .55);
-    box-shadow: 0 0 10px rgba(#7a05be, .6);
+    background: rgba(#7a05be, 0.55);
+    box-shadow: 0 0 10px rgba(#7a05be, 0.6);
   }
 }
 
@@ -108,7 +108,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
 
   h2,
   h3 {
-    margin: 0 0 .5rem 0;
+    margin: 0 0 0.5rem 0;
     font-family: var(--display-font, "Cinzel"), serif;
     color: $gold-accent;
     font-weight: 700;
@@ -118,11 +118,13 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   select,
   textarea {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* ✅ prevents overflow with padding/border */
     background: #0f0a14;
     color: #e9e6ee;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
-    padding: .6rem .7rem;
+    padding: 0.6rem 0.7rem;
     outline: none;
 
     &::placeholder {
@@ -130,28 +132,28 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
     }
 
     &:focus {
-      border-color: rgba($gold-accent, .75);
-      box-shadow: 0 0 0 3px rgba($gold-accent, .18);
+      border-color: rgba($gold-accent, 0.75);
+      box-shadow: 0 0 0 3px rgba($gold-accent, 0.18);
     }
   }
 
   button {
     font-family: "Cinzel", serif;
     font-weight: 700;
-    background: linear-gradient(180deg, rgba(#7a05be, .95), rgba(#7a05be, .75));
+    background: linear-gradient(180deg, rgba(#7a05be, 0.95), rgba(#7a05be, 0.75));
     color: #fff;
-    border: 1px solid rgba(#7a05be, .5);
+    border: 1px solid rgba(#7a05be, 0.5);
     border-radius: 8px;
-    padding: .55rem .8rem;
+    padding: 0.55rem 0.8rem;
     cursor: pointer;
     line-height: 1;
 
     &:hover {
-      background: linear-gradient(180deg, #7a05be, rgba(#7a05be, .9));
+      background: linear-gradient(180deg, #7a05be, rgba(#7a05be, 0.9));
     }
 
     &:disabled {
-      opacity: .7;
+      opacity: 0.7;
       cursor: not-allowed;
     }
   }
@@ -169,14 +171,14 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   /* Nice spacing for stacked elements inside cards */
   .AccountRow {
     display: flex;
-    gap: .6rem;
+    gap: 0.6rem;
     align-items: center;
     flex-wrap: wrap;
   }
 
   .AccountHint {
     color: #bfb6cc;
-    font-size: .95rem;
+    font-size: 0.95rem;
   }
 
   /* Helpful for QR images in 2FA card (won’t affect other pages) */
@@ -187,8 +189,60 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
+/* ===== AdminTools component (scoped) ===== */
+.AdminTools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.AdminToolsTitle {
+  margin: 0;
+}
+
+.AdminToolsBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.AdminToolsRoles {
+  margin: 0;
+}
+
+.AdminToolsHint {
+  margin: 0;
+  color: #bfb6cc;
+}
+
+.AdminToolsBtn {
+  align-self: flex-start;
+}
+
+.AdminToolsMsg {
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  font-weight: 700;
+}
+
+.AdminToolsMsg--ok {
+  background: rgba(54, 211, 153, 0.12);
+  border: 1px solid rgba(54, 211, 153, 0.35);
+  color: #36d399;
+}
+
+.AdminToolsMsg--err {
+  background: rgba(255, 77, 109, 0.12);
+  border: 1px solid rgba(255, 77, 109, 0.35);
+  color: #ff4d6d;
+}
+
 /* ===== Phone-specific tweaks ===== */
 @include maxw($cellphone-portrait) {
-  .AccountGrid { gap: .75rem; }
-  .AccountPage .card { padding: .85rem .9rem; }
+  .AccountGrid {
+    gap: 0.75rem;
+  }
+  .AccountPage .card {
+    padding: 0.85rem 0.9rem;
+  }
 }

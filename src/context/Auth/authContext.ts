@@ -1,9 +1,11 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
 export interface AuthContextType {
   token: string | null;
   username: string | null;
-  syncReady: boolean; // ✅ true only after hydrate-from-server finishes
+  userId: string | null;     // ✅ add
+  roles: string[];           // ✅ add
+  syncReady: boolean;
   login: (token: string, username: string) => void;
   logout: () => void;
 }
@@ -11,6 +13,8 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   token: null,
   username: null,
+  userId: null,
+  roles: [],
   syncReady: false,
   login: () => {},
   logout: () => {},
