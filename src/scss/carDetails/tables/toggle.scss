@@ -1,0 +1,59 @@
+@use "@scss/Globals/index" as *;
+
+.carDetail {
+  /* right-side row above stats tables */
+  .statsToggleRow {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0.35rem 0 0.75rem;
+    padding-right: 0.25rem;
+  }
+
+  .statsModeToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: $color-white;
+    font-size: 1.05rem;
+    user-select: none;
+  }
+
+  .statsModeToggle .label {
+    opacity: 0.75;
+    transition: opacity 140ms ease;
+  }
+
+  .statsModeToggle .label.active {
+    opacity: 1;
+    font-weight: 700;
+  }
+
+  .statsModeToggle .toggle {
+    position: relative;
+    width: 46px;
+    height: 24px;
+    border-radius: 999px;
+
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(223, 190, 7, 0.55);
+    cursor: pointer;
+
+    padding: 0;
+  }
+
+  .statsModeToggle .toggle .knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: rgba(223, 190, 7, 0.95);
+    transition: transform 160ms ease;
+  }
+
+  .statsModeToggle .toggle.isOn .knob {
+    transform: translateX(22px);
+  }
+}
