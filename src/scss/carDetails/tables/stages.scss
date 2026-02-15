@@ -1,0 +1,39 @@
+@use "@scss/Globals/index" as *;
+
+.carDetail {
+  /* Toggle row should not act like a card in the grid */
+  .statsModeToggleRow {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; /* you said left-ish */
+    align-items: center;
+    margin: 0.25rem 0 -0.5rem; /* tuck it closer to the tables */
+    flex: 0 0 100%; /* critical: full row, prevents shifting cards */
+  }
+
+  /* Stage header: never wrap */
+  .stageHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    white-space: nowrap;
+    line-height: 1.1;
+  }
+
+  .stageHeaderStar {
+    font-size: 1.25rem;
+  }
+
+  .stageHeaderLabel {
+    font-size: 1.15rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Protect table headers globally from wrapping */
+  .statsTableCard .tableHeader2 {
+    white-space: nowrap;
+  }
+}

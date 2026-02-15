@@ -45,9 +45,24 @@ function resolveImageUrl(raw: string): string {
   return getCarImageUrl(s);
 }
 
+function asObj(v: unknown): AnyObj | null {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  return v as AnyObj;
+}
+
+function numFromObj(o: AnyObj | null, key: string): number | undefined {
+  if (!o) return undefined;
+  const v = o[key];
+  if (typeof v === "number") return v;
+  if (typeof v === "string" && v.trim() !== "" && !isNaN(Number(v))) return Number(v);
+  return undefined;
+}
+
 /**
  * Mirrors a stat block between legacy and canonical keys.
- * We return ONLY canonical keys here.
+ * We return ONLY canonical flat keys here (stockRank, goldTopSpeed, etc)
+ *
+ * Enhancement: If V2 object exists (data.stock / data.gold), prefer it.
  */
 function pickGoldOrStock(
   data: AnyObj,
@@ -59,24 +74,43 @@ function pickGoldOrStock(
   const legacyRankKey = legacyPrefix === "Gold" ? "Gold_Max_Rank" : "Stock_Rank";
   const newRankKey = legacyPrefix === "Gold" ? "goldMaxRank" : "stockRank";
 
-  const rank = pickNumber(data, legacyRankKey, newRankKey);
-  if (rank !== undefined) out[newRankKey] = rank;
+  // V2 objects: data.gold.rank / data.stock.rank
+  const v2Obj = asObj(data[newPrefix]);
 
-  const map: Array<[string, string]> = [
-    [`${legacyPrefix}_Top_Speed`, `${newPrefix}TopSpeed`],
-    [`${legacyPrefix}_Acceleration`, `${newPrefix}Acceleration`],
-    [`${legacyPrefix}_Handling`, `${newPrefix}Handling`],
-    [`${legacyPrefix}_Nitro`, `${newPrefix}Nitro`],
+  if (legacyPrefix === "Gold") {
+    // legacy uses goldMaxRank but V2 uses gold.rank
+    const rankFromV2 = numFromObj(v2Obj, "rank");
+    const rank = rankFromV2 ?? pickNumber(data, legacyRankKey, newRankKey);
+    if (rank !== undefined) out[newRankKey] = rank;
+  } else {
+    const rankFromV2 = numFromObj(v2Obj, "rank");
+    const rank = rankFromV2 ?? pickNumber(data, legacyRankKey, newRankKey);
+    if (rank !== undefined) out[newRankKey] = rank;
+  }
+
+  const map: Array<[string, string, string]> = [
+    [`${legacyPrefix}_Top_Speed`, `${newPrefix}TopSpeed`, "topSpeed"],
+    [`${legacyPrefix}_Acceleration`, `${newPrefix}Acceleration`, "acceleration"],
+    [`${legacyPrefix}_Handling`, `${newPrefix}Handling`, "handling"],
+    [`${legacyPrefix}_Nitro`, `${newPrefix}Nitro`, "nitro"],
   ];
 
-  for (const [legacyKey, newKey] of map) {
-    const n = pickNumber(data, legacyKey, newKey);
-    if (n !== undefined) out[newKey] = n;
+  for (const [legacyKey, flatKey, v2Key] of map) {
+    const nFromV2 = numFromObj(v2Obj, v2Key);
+    const n = nFromV2 ?? pickNumber(data, legacyKey, flatKey);
+    if (n !== undefined) out[flatKey] = n;
   }
 
   return out;
 }
 
+/**
+ * Star Max:
+ * - Legacy flat keys: oneStarMaxRank, twoStarMaxTopSpeed, etc
+ * - V2 nested object: maxStar.oneStar.rank etc
+ *
+ * We still OUTPUT flat keys to keep UI stable.
+ */
 function pickStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
   const out: AnyObj = {};
 
@@ -96,19 +130,32 @@ function pickStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
     star === 4 ? "fourStarMax" :
     star === 5 ? "fiveStarMax" : "sixStarMax";
 
-  const fields: Array<[string, string]> = [
-    ["Rank", "Rank"],
-    ["Top_Speed", "TopSpeed"],
-    ["Acceleration", "Acceleration"],
-    ["Handling", "Handling"],
-    ["Nitro", "Nitro"],
+  const v2MaxStar = asObj(data.maxStar);
+  const v2StarKey =
+    star === 1 ? "oneStar" :
+    star === 2 ? "twoStar" :
+    star === 3 ? "threeStar" :
+    star === 4 ? "fourStar" :
+    star === 5 ? "fiveStar" : "sixStar";
+
+  const v2StarObj = asObj(v2MaxStar?.[v2StarKey]);
+
+  const fields: Array<[string, string, string]> = [
+    ["Rank", "Rank", "rank"],
+    ["Top_Speed", "TopSpeed", "topSpeed"],
+    ["Acceleration", "Acceleration", "acceleration"],
+    ["Handling", "Handling", "handling"],
+    ["Nitro", "Nitro", "nitro"],
   ];
 
-  for (const [legacySuffix, newSuffix] of fields) {
+  for (const [legacySuffix, flatSuffix, v2Key] of fields) {
     const legacyKey = `${legacyBase}${legacySuffix}`;
-    const newKey = `${newBase}${newSuffix}`;
-    const n = pickNumber(data, legacyKey, newKey);
-    if (n !== undefined) out[newKey] = n;
+    const flatKey = `${newBase}${flatSuffix}`;
+
+    const fromV2 = numFromObj(v2StarObj, v2Key);
+    const n = fromV2 ?? pickNumber(data, legacyKey, flatKey);
+
+    if (n !== undefined) out[flatKey] = n;
   }
 
   return out;
@@ -177,7 +224,7 @@ export async function fetchCarDetail(slug: string): Promise<FullCar> {
     ...(tags ? { tags } : {}),
     ...(addedWith !== undefined ? { addedWith } : {}),
 
-    // ✅ canonical stat blocks only
+    // ✅ canonical stat blocks (flat) — now supports V2 nested sources too
     ...pickBlueprints(data),
     ...pickGoldOrStock(data, "Stock", "stock"),
     ...pickGoldOrStock(data, "Gold", "gold"),
