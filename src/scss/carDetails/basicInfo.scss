@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use '@scss/Globals/index' as *;
+@use "sass:color";
+@use "@scss/Globals/index" as *;
 
 .carDetail {
   .tableCard {
@@ -7,6 +7,7 @@
     min-height: 36rem;
     margin: 0;
     padding: 0;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -24,6 +25,10 @@
     table-layout: fixed;
     flex-grow: 1;
 
+    @include maxw($cellphone-portrait) {
+      width: 22rem;
+    }
+
     td,
     th {
       padding: 10px 16px;
@@ -31,15 +36,30 @@
       vertical-align: middle;
       height: auto;
     }
+
+    /* Tracker checkbox row: make it more compact to reduce height mismatch */
+    tbody tr:last-child label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child input[type="checkbox"] {
+      transform: translateY(1px);
+    }
   }
 
   .tableHeader2 {
     color: $color-white;
     background-color: $color-black;
     text-align: center;
+
     height: 50px;
     padding: 15px 80px 20px 80px !important;
+
     font-size: $table-header-font-size-car-details !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
 }

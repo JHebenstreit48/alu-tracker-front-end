@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
-@use "@scss/Globals/spacing/carDetails" as *;
+@use '@scss/Globals/spacing/carDetails' as *;
 
 .carDetail {
   grid-template-columns: $table-grid-columns;
@@ -12,44 +12,50 @@
     text-align: center;
   }
 
-.backBtn {
-  margin: 0;
-  border-radius: 8px;
-  background-color: $back-btn-bg-color;
-  color: $color-gold-glow;
-  padding: $back-btn-padding;
-  border: none;
-  cursor: pointer;
+  .backBtn {
+    margin: 0;
+    border-radius: 8px;
+    background-color: $back-btn-bg-color;
+    color: $color-gold-glow;
+    padding: $back-btn-padding;
+    border: none;
+    cursor: pointer;
 
-  &:hover {
-    background-color: $back-btn-hover-bg-color;
+    &:hover {
+      background-color: $back-btn-hover-bg-color;
+    }
   }
-}
 
-/* =========================================================
-     TOP INFO CARDS ONLY (ClassRank + Blueprints)
+  /* =========================================================
+     TOP INFO CARDS ONLY (BasicInfo + Blueprints)
      ========================================================= */
-.carDetailsTables {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 3rem;
-  margin-top: 0;
-  padding: 0;
+  .carDetailsTables {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(2, max-content);
+    gap: 3rem;
+    align-items: stretch;
+    margin-top: 0;
+    padding: 0;
 
-  @include maxw($cellphone-portrait) {
-    gap: 0rem;
+    /* Make sure cards can stretch vertically */
+    .tableCard {
+      height: 100%;
+    }
+
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: 1fr;
+      justify-content: center;
+      gap: 0rem;
       box-sizing: border-box;
       width: auto;
       min-height: unset;
-      flex: 0 1 clamp(22rem, 40vw, 24rem);
     }
   }
 
   /* =============================
-   Divider
-   ============================= */
+     Divider
+     ============================= */
   .content-divider {
     border: none;
     height: 2px;

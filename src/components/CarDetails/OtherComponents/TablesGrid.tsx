@@ -1,15 +1,15 @@
-import ClassRank from "@/components/CarDetails/Tables/ClassRank";
-import BlueprintsTable from "@/components/CarDetails/Tables/Blueprints/BlueprintsTable";
-import KeyInfo from "@/components/CarDetails/Tables/KeyInfo";
-import StatsTables from "@/components/CarDetails/Tables/StarsStats/StatsTables";
-import type { FullCar } from "@/types/shared/car";
+import BasicInfo from '@/components/CarDetails/Tables/BasicInfo';
+import BlueprintsTable from '@/components/CarDetails/Tables/Blueprints/BlueprintsTable';
+import KeyInfo from '@/components/CarDetails/Tables/KeyInfo';
+import StatsTables from '@/components/CarDetails/Tables/StarsStats/StatsTables';
+import type { FullCar } from '@/types/shared/car';
 
 type Props = {
   car: FullCar;
   trackerMode: boolean;
   keyObtained: boolean;
   onKeyObtainedChange: (val: boolean) => void;
-  unitPreference: "metric" | "imperial";
+  unitPreference: 'metric' | 'imperial';
 };
 
 export default function TablesGrid({
@@ -31,7 +31,7 @@ export default function TablesGrid({
       {/* Top two cards only */}
       <div className="carDetailsTables">
         <div className="tableCard">
-          <ClassRank
+          <BasicInfo
             car={car}
             trackerMode={trackerMode}
             forceOwned={car.keyCar && keyObtained}
@@ -39,13 +39,19 @@ export default function TablesGrid({
         </div>
 
         <div className="tableCard">
-          <BlueprintsTable car={car} trackerMode={trackerMode} />
+          <BlueprintsTable
+            car={car}
+            trackerMode={trackerMode}
+          />
         </div>
       </div>
 
       {/* Stats only */}
       <div className="statsGrid">
-        <StatsTables car={car} unitPreference={unitPreference} />
+        <StatsTables
+          car={car}
+          unitPreference={unitPreference}
+        />
       </div>
     </>
   );
