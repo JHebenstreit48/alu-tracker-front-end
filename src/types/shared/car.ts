@@ -15,6 +15,7 @@ export interface Car {
   keyCar?: boolean;
   normalizedKey?: string;
   sources?: string[];
+  addedDate?: string;
 }
 
 export type FullCar = Car &

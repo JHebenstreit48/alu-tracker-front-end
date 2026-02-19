@@ -5,7 +5,6 @@ import { Blueprints } from '@/types/CarDetails';
 import StarRank from '@/components/Shared/Stars/StarRank';
 
 import { getBlueprintRows, sumNumericBlueprints } from '@/utils/CarDetails/getBlueprintRows';
-
 import { useBlueprintTracker } from '@/hooks/CarDetails/useBlueprintTracker';
 
 const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
@@ -31,16 +30,33 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
   const totalRequired = sumNumericBlueprints(rows);
   const remaining = Math.max(0, totalRequired - tracker.totalOwned);
 
-  const editableStar = tracker.targetStar; // (0★ -> 1★ fallback already handled in the hook)
+  /**
+   * Non-key cars: editableStar remains tracker.targetStar (unchanged).
+   * Key cars: pick the first star row with required > 0 that is not yet met.
+   * (This naturally skips 1★ when blueprints1Star = 0.)
+   */
+  const editableStar = useMemo(() => {
+    if (!isKeyCar) return tracker.targetStar;
+    if (tracker.done) return tracker.targetStar;
+
+    for (const r of rows) {
+      const required = r.value;
+      const owned = tracker.ownedByStar[r.star] ?? 0;
+
+      if (typeof required === 'number' && required > 0 && owned < required) {
+        return r.star;
+      }
+    }
+
+    // If everything is met (or data is weird), fall back to hook value
+    return tracker.targetStar;
+  }, [isKeyCar, tracker.done, tracker.targetStar, tracker.ownedByStar, rows]);
 
   return (
     <table className="carInfoTable blueprintsTable">
       <thead>
         <tr>
-          <th
-            className="tableHeader2"
-            colSpan={4}
-          >
+          <th className="tableHeader2" colSpan={4}>
             Blueprints
           </th>
         </tr>
@@ -60,6 +76,8 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
           const owned = tracker.ownedByStar[star] ?? 0;
 
           const isEditableRow = !tracker.done && star === editableStar;
+
+          // Lock rows only *after* the computed editable star (works even if 1★ requires 0)
           const isLockedRow = !tracker.done && star > editableStar;
 
           const metRequirement = typeof required === 'number' ? owned >= required : false;
@@ -101,10 +119,7 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
         })}
 
         <tr>
-          <td
-            colSpan={4}
-            className="blueprintTotalLabel"
-          >
+          <td colSpan={4} className="blueprintTotalLabel">
             Stars left: {tracker.starsLeft} &nbsp;|&nbsp; Total owned: {tracker.totalOwned}
             &nbsp;|&nbsp; Remaining: {remaining}
           </td>
