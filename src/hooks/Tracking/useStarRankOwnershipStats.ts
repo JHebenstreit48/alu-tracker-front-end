@@ -1,16 +1,19 @@
-import { useMemo } from 'react';
-import type { Car } from '@/types/shared/car';
-import type { CarTracking } from '@/types/shared/tracking';
-import type { StarRankOwnershipDatum } from '@/types/Tracking/starRankStats';
+import { useMemo } from "react";
+import type { Car } from "@/types/shared/car";
+import type { CarTracking } from "@/types/shared/tracking";
+import type { StarRankOwnershipDatum } from "@/types/Tracking/starRankStats";
 
 type StarRank = 3 | 4 | 5 | 6;
 
+function isOwned(t?: any): boolean {
+  if (!t) return false;
+  return Boolean(t.owned ?? t.isOwned ?? t.hasCar ?? t.hasOwned);
+}
+
 /**
- * Builds data for the "Ownership by Current Star Rank" bar chart,
- * but grouped by **max star rank** (3★, 4★, 5★, 6★) to match the four tables.
- *
- * - `owned`   = number of cars you own whose max rank is this value
- * - `unowned` = total cars of this max rank minus owned
+ * Ownership by MAX star rank (3★, 4★, 5★, 6★)
+ * - Buckets by car.stars from allCars (source of truth)
+ * - Ownership comes from tracking, joined by normalizedKey (fallback id)
  */
 export function useStarRankOwnershipStats(
   allCars: Car[],
@@ -19,15 +22,31 @@ export function useStarRankOwnershipStats(
   return useMemo(() => {
     const ranks: StarRank[] = [3, 4, 5, 6];
 
+    // Build tracking lookup by normalizedKey (stable) + fallback by id
+    const trackingByKey = new Map<string, CarTracking>();
+    const trackingById = new Map<number, CarTracking>();
+
+    for (const t of enrichedTrackedCars) {
+      if (typeof t.normalizedKey === "string" && t.normalizedKey.length > 0) {
+        trackingByKey.set(t.normalizedKey, t);
+      }
+      if (typeof t.id === "number") {
+        trackingById.set(t.id, t);
+      }
+    }
+
+    const getTracking = (car: Car): CarTracking | undefined => {
+      if (car.normalizedKey && trackingByKey.has(car.normalizedKey)) {
+        return trackingByKey.get(car.normalizedKey);
+      }
+      return trackingById.get(car.id);
+    };
+
     return ranks.map((rank) => {
-      // total cars in game that max out at this rank
-      const totalOfThisRank = allCars.filter((c) => c.stars === rank).length;
+      const carsOfRank = allCars.filter((c) => c.stars === rank);
+      const totalOfThisRank = carsOfRank.length;
 
-      // of those, how many do you own?
-      const ownedOfThisRank = enrichedTrackedCars.filter(
-        (c) => c.stars === rank && c.owned
-      ).length;
-
+      const ownedOfThisRank = carsOfRank.filter((c) => isOwned(getTracking(c))).length;
       const unowned = Math.max(totalOfThisRank - ownedOfThisRank, 0);
 
       return {

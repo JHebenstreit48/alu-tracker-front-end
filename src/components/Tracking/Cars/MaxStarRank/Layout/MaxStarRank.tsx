@@ -1,6 +1,6 @@
-import MaxStarTables from '@/components/Tracking/Cars/MaxStarRank/UI/MaxStarTables';
-import { Car } from '@/types/shared/car';
-import { CarTracking } from '@/types/shared/tracking';
+import MaxStarTables from "@/components/Tracking/Cars/MaxStarRank/UI/MaxStarTables";
+import { Car } from "@/types/shared/car";
+import { CarTracking } from "@/types/shared/tracking";
 
 interface Props {
   allCars: Car[];
@@ -8,7 +8,51 @@ interface Props {
   totalCars: number;
 }
 
+function isOwned(t?: any): boolean {
+  if (!t) return false;
+  return Boolean(t.owned ?? t.isOwned ?? t.hasCar ?? t.hasOwned);
+}
+
+function getTrackedStars(t?: any): number | undefined {
+  if (!t) return undefined;
+  const v =
+    (typeof t.stars === "number" ? t.stars : undefined) ??
+    (typeof t.currentStars === "number" ? t.currentStars : undefined) ??
+    (typeof t.starCount === "number" ? t.starCount : undefined);
+  return typeof v === "number" ? v : undefined;
+}
+
+function isMaxStars(car: Car, t?: any): boolean {
+  if (!t) return false;
+
+  const trackedStars = getTrackedStars(t);
+  if (typeof trackedStars === "number") return trackedStars >= car.stars;
+
+  // fallback ONLY if you truly store a boolean for “max stars reached”
+  return Boolean(t.maxed ?? t.isMaxed);
+}
+
 export default function MaxStarRank({ allCars, trackedCars, totalCars }: Props) {
+  // Build lookup by normalizedKey (stable) + fallback by id
+  const trackingByKey = new Map<string, CarTracking>();
+  const trackingById = new Map<number, CarTracking>();
+
+  for (const t of trackedCars) {
+    if (typeof t.normalizedKey === "string" && t.normalizedKey.length > 0) {
+      trackingByKey.set(t.normalizedKey, t);
+    }
+    if (typeof t.id === "number") {
+      trackingById.set(t.id, t);
+    }
+  }
+
+  const getTracking = (car: Car): CarTracking | undefined => {
+    if (car.normalizedKey && trackingByKey.has(car.normalizedKey)) {
+      return trackingByKey.get(car.normalizedKey);
+    }
+    return trackingById.get(car.id);
+  };
+
   return (
     <div className="maxStarSection">
       <h3 className="maxStarGridTitle">Star Tier Progress</h3>
@@ -16,12 +60,14 @@ export default function MaxStarRank({ allCars, trackedCars, totalCars }: Props) 
       <div className="maxStarGridWrapper">
         <div className="maxStarGrid">
           {[3, 4, 5, 6].map((rank) => {
-            const totalOfThisRank = allCars.filter((car) => car.stars === rank);
-            const trackedOfThisRank = trackedCars.filter((car) => car.stars === rank);
-            const owned = trackedOfThisRank.filter((car) => car.owned).length;
-            const maxed = trackedOfThisRank.filter((car) => car.owned && car.stars === rank).length;
+            const carsOfRank = allCars.filter((c) => c.stars === rank);
+            const totalInGame = carsOfRank.length;
 
-            const inProgress = owned - maxed;
+            const ownedCars = carsOfRank.filter((c) => isOwned(getTracking(c)));
+            const owned = ownedCars.length;
+
+            const maxed = ownedCars.filter((c) => isMaxStars(c, getTracking(c))).length;
+            const inProgress = Math.max(0, owned - maxed);
 
             return (
               <MaxStarTables
@@ -30,7 +76,7 @@ export default function MaxStarRank({ allCars, trackedCars, totalCars }: Props) 
                 owned={owned}
                 inProgress={inProgress}
                 maxed={maxed}
-                totalInGame={totalOfThisRank.length}
+                totalInGame={totalInGame}
                 percentMaxed={owned > 0 ? (maxed / owned) * 100 : 0}
               />
             );
