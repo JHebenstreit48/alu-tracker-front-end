@@ -1,0 +1,80 @@
+@use '@scss/Globals/index' as *;
+
+.carDetail {
+  .stageViewDisclaimerRow {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stageViewDisclaimer {
+    width: min(100%, 50rem);
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(223, 190, 7, 0.35);
+    box-shadow: 0 0 7px 3px rgba(223, 190, 7, 0.18);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+
+    @include maxw($cellphone-portrait) {
+      width: min(100%, 20rem);
+      padding: 0.85rem 0.9rem;
+      border-radius: 10px;
+    }
+
+    &__title {
+      color: $color-gold-glow;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      letter-spacing: 0.25px;
+    }
+
+    &__list {
+      margin: 0;
+      padding-left: 1.1rem;
+      color: $color-white;
+      opacity: 0.92;
+      line-height: 1.5;
+      font-size: 0.95rem;
+
+      @include maxw($cellphone-portrait) {
+        font-size: 0.9rem;
+      }
+
+      li + li {
+        margin-top: 0.35rem;
+      }
+    }
+
+    &__link {
+      color: $color-gold-glow;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration-thickness: 2px;
+      }
+    }
+
+    &__future {
+      opacity: 0.8;
+      font-style: italic;
+    }
+
+    &__nowrap {
+      white-space: nowrap;
+    }
+  }
+
+  /* ✅ Cards-only grid wrapper */
+  .statsCardsGrid {
+    display: grid;
+    justify-content: center;
+    gap: 3rem;
+    grid-template-columns: repeat(2, max-content);
+
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: 1fr;
+      gap: 0rem;
+    }
+  }
+}
