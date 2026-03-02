@@ -3,7 +3,7 @@
 
 .carDetail {
   .keyInfoTableContainer {
-    margin: 0.3rem auto 2rem auto;
+    margin: 0.3rem auto 3.5rem auto;
     width: $key-car-info-table-width;
 
     @include maxw($cellphone-portrait) {
@@ -13,7 +13,7 @@
 
     .keyInfoTable {
       width: 100%;
-      height: 0;
+      height: auto;
       border-spacing: 0;
       border-collapse: collapse;
       background-color: #20002c;
@@ -22,6 +22,10 @@
 
       @include maxw($cellphone-portrait) {
         margin: 38px auto 3px auto;
+      }
+
+      .keyInfoCell {
+        background-color: black;
       }
 
       th {

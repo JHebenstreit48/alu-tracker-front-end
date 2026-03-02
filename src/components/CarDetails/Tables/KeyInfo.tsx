@@ -1,8 +1,5 @@
 import { Car } from "@/types/shared/car";
-import {
-  setKeyObtainedState,   // <- keep
-  generateCarKey,        // <- keep
-} from "@/utils/shared/StorageUtils";
+import { setKeyObtainedState, generateCarKey } from "@/utils/shared/StorageUtils";
 import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
 
 interface KeyInfoProps {
@@ -20,36 +17,27 @@ const KeyInfo: React.FC<KeyInfoProps> = ({
 }) => {
   const carKey = generateCarKey(car.brand, car.model);
 
-  // Autosync still reacts to the controlled prop change
   useAutoSyncDependency(trackerMode && car.keyCar ? [keyObtained] : []);
 
   if (!car.keyCar) return null;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
-
-    // Persist with final rules (doesn't touch stars)
     setKeyObtainedState(carKey, isChecked);
-
-    // Let parent update its controlled state
     onKeyObtainedChange?.(isChecked);
   };
 
   return (
     <div className="keyInfoTableContainer">
       <table className="keyInfoTable">
-        <thead>
+        <tbody>
           <tr>
-            <th className="tableHeader2">Special Tags</th>
+            <td className="keyInfoCell">🔑 <strong>Key Car</strong></td>
           </tr>
-        </thead>
-        <tbody className="testClass">
-          <tr>
-            <td className="testClass">🔑 <strong>Key Car</strong></td>
-          </tr>
+
           {trackerMode && (
             <tr>
-              <td className="testClass">
+              <td className="keyObtainedCheckbox">
                 <label>
                   <input
                     type="checkbox"

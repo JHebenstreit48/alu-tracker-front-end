@@ -63,13 +63,16 @@
     justify-content: center;
     align-items: center;
     width: $car-image-width;
-    margin: $car-image-margin;
+
+    /* runtime margin (key vs non-key), fallback to Sass default */
+    margin: var(--car-image-margin, #{$car-image-margin});
+
     border: 3px solid $car-image-border-color;
     box-shadow: 0 0 7px 4px $car-image-shadow-color;
 
     @include maxw($cellphone-portrait) {
       width: 23rem;
-      margin: 2rem auto 0 auto;
+      margin: var(--car-image-margin, #{$car-image-margin});
     }
   }
 }
