@@ -1,6 +1,6 @@
-import type { Car } from "@/types/shared/car"; // or wherever Car lives now
+import type { Car } from "@/types/shared/car";
 
-const FALLBACK = "/images/fallbacks/car-missing.jpg"; // optional, served by your app
+const FALLBACK = "/images/fallbacks/car-missing.jpg";
 
 interface CarImageProps {
   car: Car;
@@ -11,7 +11,7 @@ const CarImage: React.FC<CarImageProps> = ({ car }) => {
   const alt = `${car.brand} ${car.model}`;
 
   return (
-    <div className="carImageContainer">
+    <div className={`carImageContainer ${car.keyCar ? "isKeyCar" : "isNonKeyCar"}`}>
       <img
         src={src}
         alt={alt}
