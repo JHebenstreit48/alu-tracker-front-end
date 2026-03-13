@@ -3,25 +3,70 @@
 
 /* ------------------------------------ Legend Store START ------------------------------------ */
 
-/* Page-scoped tokens kept (you can trim these later if Globals absorb them) */
 $control-bg: #0d0016;
+$glass-bg: rgba(14, 4, 28, 0.82);
+$glass-border: rgba(204, 19, 255, 0.55);
+$glass-divider: rgba(204, 19, 255, 0.2);
+$cyan: rgb(21, 201, 232);
+$purple-glow: rgb(204, 19, 255);
+
+/* ===== Shared glass mixins ===== */
+@mixin glass-panel-outer {
+  border-radius: 16px;
+  border: 1px solid $glass-border;
+  background: $glass-bg;
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.12) inset,
+    0 0 24px rgba($purple-glow, 0.25),
+    0 0 48px rgba($color-gold-glow, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.7);
+}
+
+@mixin glass-panel-inner {
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.01) 50%,
+      rgba(0, 0, 0, 0.15) 100%
+    ),
+    transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@mixin glass-header {
+  text-align: center;
+  font-weight: 800;
+  color: $cyan;
+  letter-spacing: 0.03em;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(14, 4, 28, 0.4));
+  border-bottom: 1px solid $glass-border;
+  text-shadow: 0 0 12px rgba($cyan, 0.5);
+}
 
 /* ===== Filters ===== */
 .legendStoreControls {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    'heading heading'
+    'heading    heading'
     'cumulative individual'
-    'star      rarity'
-    'class     class' /* full row centered */
-    'search    search' /* full row centered */
-    'reset     reset';
-  background: radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.55)), $control-bg;
+    'star       rarity'
+    'search     search'
+    'reset      reset';
+  background:
+    radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.55)),
+    $control-bg;
   border: $filter-border;
   border-radius: 18px;
-  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.25) inset, 0 10px 30px rgba(0, 0, 0, 0.55),
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.25) inset,
+    0 10px 30px rgba(0, 0, 0, 0.55),
     0 0 18px rgba($color-gold-glow, 0.18);
   width: $filter-width;
   margin: 3rem auto 0 auto;
@@ -40,7 +85,6 @@ $control-bg: #0d0016;
       'individual'
       'star'
       'rarity'
-      'class'
       'search'
       'reset';
   }
@@ -60,6 +104,10 @@ $control-bg: #0d0016;
     flex-direction: column;
     gap: 0.5rem;
 
+    @include maxw($cellphone-portrait) {
+      width: 100%;
+    }
+
     select,
     input {
       height: $input-height;
@@ -67,7 +115,8 @@ $control-bg: #0d0016;
       border-radius: 12px;
       text-align: center;
       border: 1px solid rgba(#fff, 0.15);
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.18)),
+      background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.18)),
         #0f0f10;
       color: #eee;
       transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.05s ease;
@@ -75,11 +124,13 @@ $control-bg: #0d0016;
       &:hover {
         border-color: rgba($color-gold-glow, 0.45);
       }
+
       &:focus {
         outline: none;
         border-color: rgba($color-gold-glow, 0.8);
         box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.35), 0 4px 16px rgba(0, 0, 0, 0.45) inset;
       }
+
       &:active {
         transform: translateY(1px);
       }
@@ -91,89 +142,49 @@ $control-bg: #0d0016;
       color: #f5f5f5;
     }
 
-    @include maxw($cellphone-portrait) {
-      width: 100%;
-    }
-  }
+    &:nth-of-type(1) { grid-area: cumulative; }
+    &:nth-of-type(2) { grid-area: individual; }
+    &:nth-of-type(3) { grid-area: star; }
 
-  /* map labels to areas (unchanged JSX) */
-  > label.DropdownLabel:nth-of-type(1) {
-    grid-area: cumulative;
-  }
-  > label.DropdownLabel:nth-of-type(2) {
-    grid-area: individual;
-  }
-  > label.DropdownLabel:nth-of-type(3) {
-    grid-area: star;
-  }
-  > label.DropdownLabel:nth-of-type(4) {
-    grid-area: rarity;
-  }
+    &:nth-of-type(4) {
+      grid-area: rarity;
 
-  /* Class row centered (5th label) */
-  > label.DropdownLabel:nth-of-type(5) {
-    grid-area: class;
-    justify-self: center;
-    width: 100%;
-
-    select {
-      width: clamp(14rem, 55%, 26rem);
-      margin-inline: auto;
-    }
-    @include maxw($cellphone-portrait) {
       select {
-        width: 18rem;
+        option {
+          background-color: $color-black;
+          color: $rarity-text-neutral;
+        }
+
+        .optionUncommon { @include rarity-option-on-black($rarity-text-uncommon); }
+        .optionRare     { @include rarity-option-on-black($rarity-text-rare); }
+        .optionEpic     { @include rarity-option-on-black($rarity-text-epic); }
+
+        &:has(option:checked.optionUncommon) { @include rarity-select-outline($rarity-text-uncommon); }
+        &:has(option:checked.optionRare)     { @include rarity-select-outline($rarity-text-rare); }
+        &:has(option:checked.optionEpic)     { @include rarity-select-outline($rarity-text-epic); }
       }
     }
-  }
 
-  /* Search row centered + same width rules as Cars (6th label) */
-  > label.DropdownLabel:nth-of-type(6) {
-    grid-area: search;
+    &:nth-of-type(5) {
+      grid-area: search;
 
-    #searchInput {
-      /* inherit height from the shared .DropdownLabel input rule (=$input-height) */
-      width: 50%;
-      margin: 0 auto;
+      #searchInput {
+        width: 50%;
+        margin: 0 auto;
 
-      &::placeholder {
-        text-align: center;
+        &::placeholder {
+          text-align: center;
+        }
+
+        &:focus::placeholder {
+          color: rgba(0, 0, 0, 0);
+        }
+
+        @include maxw($cellphone-portrait) {
+          width: 18rem;
+          font-size: 1.2rem;
+        }
       }
-      &:focus::placeholder {
-        color: rgba(0, 0, 0, 0);
-      }
-
-      @include maxw($cellphone-portrait) {
-        width: 18rem;
-        font-size: 1.2rem;
-      }
-    }
-  }
-
-  /* Rarity options — modern black list with colored text */
-  > label.DropdownLabel:nth-of-type(4) select {
-    option {
-      background-color: $color-black;
-      color: $rarity-text-neutral;
-    }
-    .optionUncommon {
-      @include rarity-option-on-black($rarity-text-uncommon);
-    }
-    .optionRare {
-      @include rarity-option-on-black($rarity-text-rare);
-    }
-    .optionEpic {
-      @include rarity-option-on-black($rarity-text-epic);
-    }
-
-    &:has(option:checked.optionUncommon) {
-      @include rarity-select-outline($rarity-text-uncommon);
-    }
-    &:has(option:checked.optionRare) {
-      @include rarity-select-outline($rarity-text-rare);
-    }
-    &:has(option:checked.optionEpic) {
-      @include rarity-select-outline($rarity-text-epic);
     }
   }
 
@@ -186,33 +197,82 @@ $control-bg: #0d0016;
       $reset-btn-bg,
       color.scale($reset-btn-bg, $lightness: -6%)
     );
-    color: white;
+    color: $color-white;
     padding: 0.65rem 2.1rem;
     border-radius: 14px;
     border: 1px solid rgba($color-gold-glow, 0.35);
-    box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.18) inset, 0 8px 18px rgba(0, 0, 0, 0.6);
+    box-shadow:
+      0 0 0 2px rgba($color-gold-glow, 0.18) inset,
+      0 8px 18px rgba(0, 0, 0, 0.6);
     cursor: pointer;
     transition: transform 0.06s ease, box-shadow 0.18s ease, background-color 0.2s ease;
 
     &:hover {
       background-color: $table-border-color;
       color: $color-white;
-      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.26) inset, 0 10px 22px rgba(0, 0, 0, 0.6);
+      box-shadow:
+        0 0 0 2px rgba($color-gold-glow, 0.26) inset,
+        0 10px 22px rgba(0, 0, 0, 0.6);
     }
+
     &:active {
       transform: translateY(1px);
     }
   }
 }
 
-/* ===== Table (kept, just minor polish opportunities remain) ===== */
+/* ===== Mobile view toggle ===== */
+.mobileViewToggle {
+  display: none;
+
+  @include maxw($cellphone-portrait) {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem auto 0;
+    width: 20rem;
+  }
+
+  .toggleBtn {
+    flex: 1;
+    padding: 0.55rem 0;
+    border-radius: 10px;
+    border: 1px solid rgba(#fff, 0.15);
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+      #0f0f10;
+    color: #aaa;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+
+    &.active {
+      border-color: rgba($color-gold-glow, 0.8);
+      color: $color-white;
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.25) inset;
+    }
+
+    &:hover:not(.active) {
+      border-color: rgba($color-gold-glow, 0.4);
+      color: #ddd;
+    }
+  }
+}
+
+/* ===== Desktop table ===== */
 .responsiveTable {
-  text-align: center;
-  border: 3px solid $table-border-color !important;
-  box-shadow: 0 0 10px 6px rgba($color-gold-glow, 0.6);
+  @include glass-panel-inner;
+  border: 1px solid $glass-border !important;
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.12) inset,
+    0 0 24px rgba($purple-glow, 0.25),
+    0 0 48px rgba($color-gold-glow, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.7);
+  background: $glass-bg;
   width: $table-width !important;
-  background-color: black;
   margin: 6rem auto 5rem auto;
+  border-collapse: separate !important;
+  border-spacing: 0;
 
   th,
   td {
@@ -220,95 +280,302 @@ $control-bg: #0d0016;
     text-align: center;
   }
 
-  @include maxw($cellphone-portrait) {
-    width: 20rem !important;
-    margin: 4rem auto;
-    border: 2px solid $table-border-color !important;
+  .classSelectionHeader {
+    @include glass-header;
+    font-size: 2rem;
 
-    thead {
+    th {
+      padding: 15px;
+    }
+  }
+
+  .tableHeaderRow {
+    background: rgba(0, 0, 0, 0.4);
+    color: $color-accent-blue;
+
+    th {
+      padding: 12px 15px;
+      border-right: 1px solid $glass-divider;
+      border-bottom: 1px solid $glass-border;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-shadow: 0 0 8px rgba($cyan, 0.4);
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      &:not(:last-child) td {
+        border-bottom: 1px solid $glass-divider;
+      }
+    }
+
+    td {
+      height: 2rem;
+      font-size: 1rem;
+      border-right: 1px solid $glass-divider;
+      color: #e8e8e8;
+
+      &:first-child {
+        color: $cyan;
+        font-weight: 600;
+        text-shadow: 0 0 8px rgba($cyan, 0.3);
+      }
+
+      &:last-child {
+        border-right: none;
+        color: $color-gold-glow;
+        font-weight: 700;
+        text-shadow: 0 0 8px rgba($color-gold-glow, 0.4);
+      }
+    }
+  }
+
+  .no-results {
+    text-align: center;
+    color: #888;
+    padding: 2rem;
+  }
+}
+
+/* ===== Class section (desktop/mobile split) ===== */
+.classSection {
+  .classSection__desktop {
+    display: block;
+
+    @include maxw($cellphone-portrait) {
       display: none;
     }
+  }
 
-    tbody {
-      tr {
-        display: block;
-        margin-bottom: 0.8rem;
-        border: 1px solid $table-border-color;
-        background-color: rgb(32, 31, 31);
-        border-radius: 10px;
-        padding: 0.4rem 0.6rem;
-      }
-      td {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-size: 15px;
-        padding: 0.45rem 0;
+  .classSection__mobile {
+    display: none;
 
-        > * {
-          max-width: 60%;
-          text-align: right;
-          word-break: break-word;
-        }
+    @include maxw($cellphone-portrait) {
+      display: block;
+      width: 20rem;
+      margin: 3rem auto;
+    }
 
-        &::before {
-          content: attr(data-label) ':';
-          font-weight: 700;
-          margin-right: 0.5rem;
-        }
+    /* Outer — owns the border and glow, never clips */
+    .classSection__mobileOuter {
+      @include glass-panel-outer;
+    }
+
+    /* Inner — owns overflow clip and glass sheen, no border */
+    .classSection__mobileInner {
+      @include glass-panel-inner;
+    }
+
+    .classSection__mobileHeader {
+      @include glass-header;
+      font-size: 1.6rem;
+    }
+
+    /* ── Card view (Option B) ── */
+    .cardViewList {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+
+      .carCard {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid $glass-divider;
+        border-radius: 0;
+        padding: 0.7rem 0.9rem;
+        color: $color-white;
+        transition: background 0.15s ease;
+
         &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.03);
+        }
+
+        &__name {
+          font-size: 0.95rem;
           font-weight: 700;
-          font-variant-numeric: tabular-nums;
+          color: $cyan;
+          border-bottom: 1px solid $glass-divider;
+          padding-bottom: 0.4rem;
+          margin-bottom: 0.5rem;
+          text-shadow: 0 0 8px rgba($cyan, 0.35);
+        }
+
+        &__blueprints {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 4px;
+          margin-bottom: 0.5rem;
+        }
+
+        &__bp {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+        }
+
+        &__bpLabel {
+          font-size: 0.62rem;
+          color: rgba(#fff, 0.38);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        &__bpVal {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #e8e8e8;
+        }
+
+        &__total {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-top: 1px solid $glass-divider;
+          padding-top: 0.45rem;
+
+          span:first-child {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: rgba(#fff, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+          }
+
+          span:last-child {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: $color-gold-glow;
+            text-shadow: 0 0 8px rgba($color-gold-glow, 0.45);
+          }
+        }
+      }
+    }
+
+    /* ── Expandable view (Option C) ── */
+    .expandableList {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+
+      .expandRow {
+        border: none;
+        border-bottom: 1px solid $glass-divider;
+        border-radius: 0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &__header {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.65rem 0.9rem;
+          background: transparent;
+          border: none;
+          color: $color-white;
+          cursor: pointer;
+          font-size: 0.9rem;
+          text-align: left;
+          transition: background 0.15s ease;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.04);
+          }
+        }
+
+        &__name {
+          font-weight: 600;
+          color: $cyan;
+          text-shadow: 0 0 8px rgba($cyan, 0.35);
+        }
+
+        &__right {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          flex-shrink: 0;
+        }
+
+        &__total {
+          color: $color-gold-glow;
+          font-weight: 700;
+          font-size: 0.9rem;
+          text-shadow: 0 0 8px rgba($color-gold-glow, 0.45);
+        }
+
+        &__chevron {
+          font-size: 0.6rem;
+          color: rgba(#fff, 0.4);
+          transition: transform 0.2s ease;
+          display: inline-block;
+        }
+
+        /* Open state */
+        &--open {
+          .expandRow__header {
+            background: rgba($purple-glow, 0.06);
+            border-bottom: 1px solid $glass-divider;
+          }
+
+          .expandRow__chevron {
+            transform: rotate(180deg);
+          }
+        }
+
+        /* Detail panel — matches desktop cell background */
+        &__detail {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 0;
+          background: rgba(0, 0, 0, 0.4);
+          padding: 0.6rem 0.9rem 0.7rem;
+          border-top: none;
+
+          /* Vertical dividers between BP cells */
+          > * + * {
+            border-left: 1px solid $glass-divider;
+          }
+        }
+
+        &__cell {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+          padding: 0 4px;
+        }
+
+        &__cellLabel {
+          font-size: 0.62rem;
+          color: rgba(#fff, 0.38);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        &__cellVal {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #e8e8e8;
         }
       }
     }
   }
 }
-
-.classSelectionHeader {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  background-color: black;
-  color: rgb(21, 201, 232);
-  padding: 15px;
-  border-bottom: 1px solid rgb(204, 19, 255);
-
-  @include maxw($cellphone-portrait) {
-    width: 100%;
-    font-size: 1.5rem;
-    padding: 1rem;
-    border: 1px solid rgb(204, 19, 255);
-    margin-bottom: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 0 6px rgba($color-gold-glow, 0.6);
-  }
-}
-
-.tableHeaderRow {
-  background-color: $color-black;
-  color: $color-accent-blue;
-
-  th {
-    justify-content: space-between;
-    padding: 15px;
-    border-right: 1px solid rgb(204, 19, 255);
-  }
-
-  @include maxw($cellphone-portrait) {
-    display: none;
-  }
-}
-
-td {
-  height: 2rem;
-  font-size: 1rem;
-}
-
-.no-results {
-  text-align: center;
-  color: #888;
-  margin-top: 20px;
-}
-
-/* ------------------------------------ Legend Store END -------------------------------------- */
