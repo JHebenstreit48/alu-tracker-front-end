@@ -94,33 +94,9 @@ export default function Filters({ filters, onChange, onReset }: Props) {
           }
         >
           <option value="">All Rarities</option>
-          <option value="Uncommon" className="optionUncommon">
-            Uncommon
-          </option>
-          <option value="Rare" className="optionRare">
-            Rare
-          </option>
-          <option value="Epic" className="optionEpic">
-            Epic
-          </option>
-        </select>
-      </label>
-
-      <label className="DropdownLabel" id="classSelector">
-        Class:
-        <select
-          className="dropdownSelector"
-          value={filters.selectedClass}
-          onChange={(e) =>
-            update({ selectedClass: e.target.value || "All Levels" })
-          }
-        >
-          <option value="All Levels">All Levels</option>
-          <option value="D">Class D</option>
-          <option value="C">Class C</option>
-          <option value="B">Class B</option>
-          <option value="A">Class A</option>
-          <option value="S">Class S</option>
+          <option value="Uncommon" className="optionUncommon">Uncommon</option>
+          <option value="Rare" className="optionRare">Rare</option>
+          <option value="Epic" className="optionEpic">Epic</option>
         </select>
       </label>
 
@@ -131,9 +107,7 @@ export default function Filters({ filters, onChange, onReset }: Props) {
           type="text"
           placeholder="Search by brand or model"
           value={filters.searchTerm}
-          onChange={(e) =>
-            update({ searchTerm: e.target.value })
-          }
+          onChange={(e) => update({ searchTerm: e.target.value })}
         />
       </label>
 
