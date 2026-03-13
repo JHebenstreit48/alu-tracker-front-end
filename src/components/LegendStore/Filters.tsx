@@ -1,4 +1,4 @@
-import type { LegendStoreFilters } from "@/interfaces/LegendStore";
+import type { LegendStoreFilters } from "@/types/LegendStore";
 
 interface Props {
   filters: LegendStoreFilters;

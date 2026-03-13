@@ -1,14 +1,13 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
 
-/* ------------------------------------ Legend Store START ------------------------------------ */
-
 $control-bg: #0d0016;
 $glass-bg: rgba(14, 4, 28, 0.82);
 $glass-border: rgba(204, 19, 255, 0.55);
 $glass-divider: rgba(204, 19, 255, 0.2);
 $cyan: rgb(21, 201, 232);
 $purple-glow: rgb(204, 19, 255);
+$trade-coin-gold: rgb(255, 180, 0);
 
 /* ===== Shared glass mixins ===== */
 @mixin glass-panel-outer {
@@ -221,6 +220,40 @@ $purple-glow: rgb(204, 19, 255);
   }
 }
 
+/* ===== Store view toggle (Credits vs Trade Coins) ===== */
+.storeViewToggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 2rem auto 0;
+  width: fit-content;
+
+  .storeViewBtn {
+    padding: 0.6rem 1.8rem;
+    border-radius: 12px;
+    border: 1px solid rgba(#fff, 0.15);
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+      #0f0f10;
+    color: #aaa;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+
+    &.active {
+      border-color: rgba($color-gold-glow, 0.8);
+      color: $color-white;
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.25) inset;
+    }
+
+    &:hover:not(.active) {
+      border-color: rgba($color-gold-glow, 0.4);
+      color: #ddd;
+    }
+  }
+}
+
 /* ===== Mobile view toggle ===== */
 .mobileViewToggle {
   display: none;
@@ -259,6 +292,33 @@ $purple-glow: rgb(204, 19, 255);
   }
 }
 
+/* ===== Legend store grid — two tables per row on desktop ===== */
+.legendStoreGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 90%;
+  max-width: 1400px;
+  margin: 3rem auto 5rem;
+  align-items: stretch;
+
+  > .classSection:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+
+    .responsiveTable {
+      width: 50% !important;
+      margin-inline: auto;
+    }
+  }
+
+  @include maxw($cellphone-portrait) {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 0;
+    margin: 1rem auto 3rem;
+  }
+}
+
 /* ===== Desktop table ===== */
 .responsiveTable {
   @include glass-panel-inner;
@@ -269,23 +329,25 @@ $purple-glow: rgb(204, 19, 255);
     0 0 48px rgba($color-gold-glow, 0.08),
     0 8px 32px rgba(0, 0, 0, 0.7);
   background: $glass-bg;
-  width: $table-width !important;
-  margin: 6rem auto 5rem auto;
+  width: 100% !important;
+  height: 100%;
+  margin: 0;
   border-collapse: separate !important;
   border-spacing: 0;
+  vertical-align: top;
 
   th,
   td {
-    padding: 0.5rem;
+    padding: 0.45rem 0.5rem;
     text-align: center;
   }
 
   .classSelectionHeader {
     @include glass-header;
-    font-size: 2rem;
+    font-size: 1.8rem;
 
     th {
-      padding: 15px;
+      padding: 12px;
     }
   }
 
@@ -294,11 +356,12 @@ $purple-glow: rgb(204, 19, 255);
     color: $color-accent-blue;
 
     th {
-      padding: 12px 15px;
+      padding: 10px 12px;
       border-right: 1px solid $glass-divider;
       border-bottom: 1px solid $glass-border;
       font-weight: 700;
       letter-spacing: 0.03em;
+      font-size: 0.9rem;
       text-shadow: 0 0 8px rgba($cyan, 0.4);
 
       &:last-child {
@@ -321,8 +384,8 @@ $purple-glow: rgb(204, 19, 255);
     }
 
     td {
-      height: 2rem;
-      font-size: 1rem;
+      height: 1.8rem;
+      font-size: 0.9rem;
       border-right: 1px solid $glass-divider;
       color: #e8e8e8;
 
@@ -346,12 +409,35 @@ $purple-glow: rgb(204, 19, 255);
     color: #888;
     padding: 2rem;
   }
+
+  /* Trade Coin table variant */
+  &--tc {
+    tbody {
+      td {
+        &:nth-child(3) {
+          color: $trade-coin-gold;
+          font-weight: 700;
+          text-shadow: 0 0 8px rgba($trade-coin-gold, 0.4);
+        }
+
+        &:last-child {
+          color: #e8e8e8;
+          font-weight: 400;
+          text-shadow: none;
+        }
+      }
+    }
+  }
 }
 
 /* ===== Class section (desktop/mobile split) ===== */
 .classSection {
+  display: flex;
+  flex-direction: column;
+
   .classSection__desktop {
-    display: block;
+    display: flex;
+    flex: 1;
 
     @include maxw($cellphone-portrait) {
       display: none;
@@ -367,12 +453,10 @@ $purple-glow: rgb(204, 19, 255);
       margin: 3rem auto;
     }
 
-    /* Outer — owns the border and glow, never clips */
     .classSection__mobileOuter {
       @include glass-panel-outer;
     }
 
-    /* Inner — owns overflow clip and glass sheen, no border */
     .classSection__mobileInner {
       @include glass-panel-inner;
     }
@@ -528,7 +612,6 @@ $purple-glow: rgb(204, 19, 255);
           display: inline-block;
         }
 
-        /* Open state */
         &--open {
           .expandRow__header {
             background: rgba($purple-glow, 0.06);
@@ -540,7 +623,6 @@ $purple-glow: rgb(204, 19, 255);
           }
         }
 
-        /* Detail panel — matches desktop cell background */
         &__detail {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
@@ -549,9 +631,12 @@ $purple-glow: rgb(204, 19, 255);
           padding: 0.6rem 0.9rem 0.7rem;
           border-top: none;
 
-          /* Vertical dividers between BP cells */
           > * + * {
             border-left: 1px solid $glass-divider;
+          }
+
+          &--tc {
+            grid-template-columns: repeat(2, 1fr);
           }
         }
 

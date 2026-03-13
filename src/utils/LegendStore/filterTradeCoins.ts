@@ -1,12 +1,12 @@
 import type {
-  LegendStoreBlueprint,
+  LegendStoreTradeCoin,
   LegendStoreFilters,
 } from "@/types/LegendStore";
 
-export function filterBlueprints(
-  all: LegendStoreBlueprint[],
+export function filterTradeCoins(
+  all: LegendStoreTradeCoin[],
   f: LegendStoreFilters
-): LegendStoreBlueprint[] {
+): LegendStoreTradeCoin[] {
   let res = all;
 
   if (f.selectedCarRarity) {
@@ -29,9 +29,7 @@ export function filterBlueprints(
   }
 
   if (f.selectedIndividualLevel !== null) {
-    res = res.filter(
-      (c) => c.GarageLevel === f.selectedIndividualLevel
-    );
+    res = res.filter((c) => c.GarageLevel === f.selectedIndividualLevel);
   }
 
   if (f.selectedStarRank !== null) {
