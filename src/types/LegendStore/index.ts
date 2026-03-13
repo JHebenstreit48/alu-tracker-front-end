@@ -1,0 +1,30 @@
+export interface LegendStoreBlueprint {
+  Class: string;
+  Brand: string;
+  Model: string;
+  GarageLevel?: number;
+  StarRank: number;
+  CarRarity: string;
+  BlueprintPrices: number[];
+  seededAt?: string;
+}
+
+export interface LegendStoreTradeCoin {
+  Class: string;
+  Brand: string;
+  Model: string;
+  GarageLevel?: number;
+  StarRank: number;
+  CarRarity: string;
+  TradeCoinCost: number;
+  DailyLimit: number;
+  seededAt?: string;
+}
+
+export interface LegendStoreFilters {
+  selectedCarRarity: string | null;
+  searchTerm: string;
+  selectedCumulativeLevel: number | null;
+  selectedIndividualLevel: number | null;
+  selectedStarRank: number | null;
+}

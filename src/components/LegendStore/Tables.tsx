@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import type {
   LegendStoreBlueprint,
   LegendStoreFilters,
-} from "@/interfaces/LegendStore";
+} from "@/types/LegendStore";
 import { useLegendStoreBlueprints } from "@/hooks/LegendStore/useLegendStoreBlueprints";
 import { filterBlueprints } from "@/utils/LegendStore/filterBlueprints";
 import type { MobileView } from "./MobileViewToggle";
@@ -87,10 +87,7 @@ function ExpandableView({ rows }: { rows: LegendStoreBlueprint[] }) {
             key={key}
             className={`expandRow ${isOpen ? "expandRow--open" : ""}`}
           >
-            <button
-              className="expandRow__header"
-              onClick={() => toggle(key)}
-            >
+            <button className="expandRow__header" onClick={() => toggle(key)}>
               <span className="expandRow__name">
                 {car.Brand} {car.Model}
               </span>

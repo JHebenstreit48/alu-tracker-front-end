@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { dbTracker } from "@/Firebase/client";
-import type { LegendStoreBlueprint } from "@/types/LegendStore";
+import type { LegendStoreTradeCoin } from "@/types/LegendStore";
 
-type FSBlueprint = {
+type FSTradeCoin = {
   Class?: string;
   Brand?: string;
   Model?: string;
   GarageLevel?: number;
   StarRank?: number;
   CarRarity?: string;
-  BlueprintPrices?: unknown;
+  TradeCoinCost?: number;
+  DailyLimit?: number;
 };
 
-export function useLegendStoreBlueprints() {
-  const [items, setItems] = useState<LegendStoreBlueprint[]>([]);
+export function useLegendStoreTradeCoins() {
+  const [items, setItems] = useState<LegendStoreTradeCoin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,18 +23,11 @@ export function useLegendStoreBlueprints() {
     const load = async () => {
       try {
         const snap = await getDocs(
-          collection(dbTracker, "blueprintCredits")  // updated from "blueprints"
+          collection(dbTracker, "blueprintTradeCoins")
         );
 
-        const list: LegendStoreBlueprint[] = snap.docs.map((doc) => {
-          const d = doc.data() as FSBlueprint;
-
-          const prices = Array.isArray(d.BlueprintPrices)
-            ? d.BlueprintPrices.map((v) => Number(v)).filter((n) =>
-                Number.isFinite(n)
-              )
-            : [];
-
+        const list: LegendStoreTradeCoin[] = snap.docs.map((doc) => {
+          const d = doc.data() as FSTradeCoin;
           return {
             Class: String(d.Class || "").trim(),
             Brand: String(d.Brand || "").trim(),
@@ -42,14 +36,15 @@ export function useLegendStoreBlueprints() {
               typeof d.GarageLevel === "number" ? d.GarageLevel : undefined,
             StarRank: Number(d.StarRank || 0),
             CarRarity: String(d.CarRarity || "").trim(),
-            BlueprintPrices: prices,
+            TradeCoinCost: Number(d.TradeCoinCost || 0),
+            DailyLimit: Number(d.DailyLimit || 1),
           };
         });
 
         setItems(list);
       } catch (e) {
-        console.error("[useLegendStoreBlueprints] load failed", e);
-        setError("Failed to load Legend Store data.");
+        console.error("[useLegendStoreTradeCoins] load failed", e);
+        setError("Failed to load Trade Coin data.");
       } finally {
         setLoading(false);
       }

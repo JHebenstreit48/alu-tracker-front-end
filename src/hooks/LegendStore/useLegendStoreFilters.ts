@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import type { LegendStoreFilters } from "@/interfaces/LegendStore";
+import type { LegendStoreFilters } from "@/types/LegendStore";
 
 const defaultFilters: LegendStoreFilters = {
-  selectedClass: "All Levels",
   selectedCarRarity: null,
   searchTerm: "",
   selectedCumulativeLevel: null,
