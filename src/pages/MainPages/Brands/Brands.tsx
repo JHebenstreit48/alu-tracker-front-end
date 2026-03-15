@@ -2,10 +2,9 @@ import Header from "@/components/Shared/HeaderFooter/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import BackToTop from "@/components/Shared/Navigation/BackToTopButton";
-
 import BrandQuickList from "@/components/Brands/BrandInfo/BrandQuickList";
+import MapDisplay from "@/components/Brands/Map/MapDisplay";
 import { useBrands } from "@/hooks/Brands/useBrands";
-
 import "@/scss/Brands/BrandQuickList.scss";
 
 export default function Brands() {
@@ -26,7 +25,10 @@ export default function Brands() {
             </div>
           </div>
         ) : (
-          <BrandQuickList manufacturers={brands} />
+          <>
+            <MapDisplay manufacturers={brands} />
+            <BrandQuickList manufacturers={brands} />
+          </>
         )}
 
         <BackToTop />
