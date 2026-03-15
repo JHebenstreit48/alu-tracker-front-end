@@ -5,6 +5,7 @@ import PageTab from "@/components/Shared/Navigation/PageTab";
 import Filters from "@/components/LegendStore/Filters";
 import Tables from "@/components/LegendStore/Tables";
 import TradeCoinTables from "@/components/LegendStore/TradeCoinTables";
+import ImportTables from "@/components/LegendStore/ImportTables";
 import MobileViewToggle, { type MobileView } from "@/components/LegendStore/MobileViewToggle";
 import StoreViewToggle, { type StoreView } from "@/components/LegendStore/StoreViewToggle";
 import "@/scss/LegendStore/LegendStore.scss";
@@ -32,6 +33,14 @@ export default function LegendStorePrices() {
           <MobileViewToggle view={mobileView} onChange={setMobileView} />
           <div className="legendStoreGrid">
             <TradeCoinTables filters={filters} mobileView={mobileView} />
+          </div>
+        </>
+      )}
+      {storeView === "imports" && (
+        <>
+          <MobileViewToggle view={mobileView} onChange={setMobileView} />
+          <div className="legendStoreGrid">
+            <ImportTables filters={filters} mobileView={mobileView} />
           </div>
         </>
       )}

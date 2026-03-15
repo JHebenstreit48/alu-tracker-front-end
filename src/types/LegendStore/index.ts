@@ -21,6 +21,19 @@ export interface LegendStoreTradeCoin {
   seededAt?: string;
 }
 
+export interface LegendStoreImport {
+  Class: string;
+  Brand: string;
+  Model: string;
+  GarageLevel?: number;
+  StarRank: number;
+  CarRarity: string;
+  ImportRarity: string;
+  TradeCoinCost: number;
+  DailyLimit: number;
+  seededAt?: string;
+}
+
 export interface LegendStoreFilters {
   selectedCarRarity: string | null;
   searchTerm: string;
