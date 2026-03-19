@@ -10,16 +10,6 @@ export const abc = [
     ],
   },
   {
-    letterKey: "R",
-    brands: [
-      {
-        brandsKey: "Raesr",
-        // logo: Logos.ExoticRides,
-        info: "",
-      },
-    ],
-  },
-  {
     letterKey: "S",
     brands: [
       {
