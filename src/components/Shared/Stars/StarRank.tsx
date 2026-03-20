@@ -1,11 +1,9 @@
-import "@/scss/MiscellaneousStyle/StarRank.scss";
-import { useEffect, useState } from "react";
-import {
-  getCarTrackingData,
-  setCarTrackingData,
-} from "@/utils/shared/StorageUtils";
-import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
-import { getImageUrl } from "@/utils/shared/imageUrl";
+import '@/scss/MiscellaneousStyle/StarRank.scss';
+import { useEffect, useState } from 'react';
+import { getCarTrackingData } from '@/utils/shared/StorageUtils';
+import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
+import { getImageUrl } from '@/utils/shared/imageUrl';
+import { setCarTrackingDataWithSync } from '@/utils/CarDetails/SyncStorageUtils';
 
 interface StarRatingProps {
   count: number;
@@ -14,8 +12,7 @@ interface StarRatingProps {
   isKeyCar?: boolean;
 }
 
-const STAR_ICON_SRC =
-  getImageUrl("/images/icons/star.png") || "/images/icons/star.png";
+const STAR_ICON_SRC = getImageUrl('/images/icons/star.png') || '/images/icons/star.png';
 
 const StarRank: React.FC<StarRatingProps> = ({
   count,
@@ -31,7 +28,7 @@ const StarRank: React.FC<StarRatingProps> = ({
     if (trackerMode && trackingKey) {
       const data = getCarTrackingData(trackingKey);
 
-      if (typeof data.stars === "number" && data.stars > 0) {
+      if (typeof data.stars === 'number' && data.stars > 0) {
         setSelectedStars(data.stars);
       } else if (isKeyCar) {
         setSelectedStars(1);
@@ -45,7 +42,10 @@ const StarRank: React.FC<StarRatingProps> = ({
     if (!trackerMode || !trackingKey) return;
     const newStars = index + 1;
     setSelectedStars(newStars);
-    setCarTrackingData(trackingKey, { stars: newStars });
+    const existing = getCarTrackingData(trackingKey);
+    const update = { ...existing, stars: newStars, ...(!isKeyCar && { owned: true }) };
+    void setCarTrackingDataWithSync(trackingKey, update);
+    window.dispatchEvent(new Event('tracking:updated'));
   };
 
   const safeCount = Number.isInteger(count) && count > 0 ? count : 0;
@@ -55,12 +55,12 @@ const StarRank: React.FC<StarRatingProps> = ({
       {Array.from({ length: safeCount }).map((_, i) => {
         const isFilled = i < selectedStars;
         const classes = [
-          "starIcon",
-          trackerMode ? "clickable" : "",
-          !isFilled && trackerMode ? "grayed" : "",
+          'starIcon',
+          trackerMode ? 'clickable' : '',
+          !isFilled && trackerMode ? 'grayed' : '',
         ]
           .filter(Boolean)
-          .join(" ");
+          .join(' ');
 
         return (
           <img
