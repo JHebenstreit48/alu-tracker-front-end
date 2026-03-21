@@ -10,20 +10,17 @@ function normalizeLabel(s: string): string {
   return s
     .trim()
     .replace(/\s+/g, " ")
-    .replace(/[.]+$/g, "") // drop trailing periods
+    .replace(/[.]+$/g, "")
     .toLowerCase();
 }
 
-export function mapToCatalog(label: string): string | undefined {
+export function mapToCatalog(label: string): { key: string; label: string } | undefined {
   const norm = normalizeLabel(label);
 
   for (const item of sourcesCatalog) {
-    // direct label match
-    if (normalizeLabel(item.label) === norm) return item.key;
-
-    // alias match
+    if (normalizeLabel(item.label) === norm) return { key: item.key, label: item.label };
     const aliases = item.aliases ?? [];
-    if (aliases.some((a) => normalizeLabel(a) === norm)) return item.key;
+    if (aliases.some((a) => normalizeLabel(a) === norm)) return { key: item.key, label: item.label };
   }
 
   return undefined;
@@ -36,18 +33,21 @@ export function dedupeAndCount(labels: string[]): DerivedSource[] {
     const cleaned = raw?.trim();
     if (!cleaned) continue;
 
-    const norm = normalizeLabel(cleaned);
-    const existing = map.get(norm);
+    const matched = mapToCatalog(cleaned);
+    // Use the canonical catalog label as the key if matched, otherwise the cleaned raw label
+    const key = matched ? matched.key : normalizeLabel(cleaned);
+    const displayLabel = matched ? matched.label : cleaned.replace(/[.]+$/g, "");
 
+    const existing = map.get(key);
     if (existing) {
       existing.count += 1;
       continue;
     }
 
-    map.set(norm, {
-      label: cleaned.replace(/[.]+$/g, ""), // keep pretty but remove trailing dot
+    map.set(key, {
+      label: displayLabel,
       count: 1,
-      matchedCatalogKey: mapToCatalog(cleaned),
+      matchedCatalogKey: matched?.key,
     });
   }
 
