@@ -24,36 +24,51 @@
         margin: 38px auto 3px auto;
       }
 
+      // Scoped reset — prevents .carInfoTable td styles bleeding in
+      td,
+      th {
+        padding: 6px 8px;
+        height: auto;
+        line-height: 1.2;
+        vertical-align: middle;
+      }
+
       .keyInfoCell {
         background-color: black;
+        color: gold;
+        font-size: 1.3rem;
+        text-align: center;
+        border-top: 1px solid purple;
+        padding: 0.8rem;
+      }
+
+      .keyObtainedCheckbox {
+        text-align: center;
+        border-top: 1px solid purple;
+        padding: 0.8rem;
+
+        label {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          color: white;
+          font-size: 1.2rem;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        input[type='checkbox'] {
+          transform: scale(1.2);
+          margin: 0;
+        }
       }
 
       th {
         background-color: black;
         color: $color-accent-blue;
         font-size: 1.8rem;
-        padding: 5px;
         text-align: center;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0 auto;
-      }
-
-      td {
-        color: gold;
-        padding: 2px;
-        font-size: 1.3rem;
-        text-align: center;
-        border-top: 1px solid purple;
-        margin: 0 auto;
-      }
-
-      input[type='checkbox'] {
-        transform: scale(1.2);
-        margin-right: 0.5rem;
-      }
-      label {
-        color: white;
-        font-size: 1.2rem;
       }
     }
   }
