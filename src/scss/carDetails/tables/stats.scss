@@ -4,11 +4,22 @@
   .statsGrid {
     display: flex;
     flex-flow: row wrap;
-    justify-content: center; /* centers last odd card */
-    align-items: flex-start;
-    gap: 3rem;
-    margin: 0; /* tightened gap */
+    justify-content: center;
+    align-items: center;
+    margin: 0;
     padding: 0;
+
+    @include maxw($cellphone-portrait) {
+      gap: 0.75rem;
+    }
+  }
+
+  .statsCardsGrid {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
 
     @include maxw($cellphone-portrait) {
       gap: 0.75rem;
@@ -17,9 +28,9 @@
 
   /* Stats cards should match size across Stock/Stars/Gold */
   .statsTableCard {
-    width: $info-table-width; /* same outer width as cards */
-    min-height: 36rem; /* match .tableCard */
-    justify-content: flex-start;
+    width: $info-table-width;
+    min-height: 36rem;
+    justify-content: center;
 
     @include maxw($cellphone-portrait) {
       width: 22rem;
@@ -29,7 +40,7 @@
   /* --- PATCH: Stats table column behavior MUST remain 50/50 and consistent --- */
   .statsTableCard .carInfoTable {
     width: 100%;
-    table-layout: fixed; /* keep even columns */
+    table-layout: fixed;
   }
 
   .statsTableCard .carInfoTable td {
@@ -58,7 +69,7 @@
 
   /* --- PATCH: normalize header height across ALL stats cards (Stock/Stars/Gold) --- */
   .statsTableCard .tableHeader2 {
-    height: 101.5px !important; /* match the star header height from devtools */
+    height: 101.5px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     vertical-align: middle !important;

@@ -1,4 +1,4 @@
-@use "@scss/Globals/index" as *;
+@use '@scss/Globals/index' as *;
 
 .carDetail {
   /* right-side row above stats tables */
@@ -6,7 +6,17 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 0 0 0 12rem;
+    margin: 0 0 2rem 12rem;
+  }
+
+  .statsModeToggleRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 0 2rem;
+    box-sizing: border-box;
   }
 
   .statsModeToggle {

@@ -56,7 +56,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
         </div>
       ) : null}
 
-      {/* ✅ ONLY the cards go inside this wrapper */}
+      {/* ONLY the cards go inside this wrapper */}
       <div className="statsCardsGrid">
         {hasStats(stock) ? (
           <StatsCardTable
