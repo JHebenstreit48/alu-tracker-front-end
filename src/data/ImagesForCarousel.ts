@@ -24,7 +24,7 @@ const Carousel: ImageCarouselType[] = [
   { path: '/images/cars/A/AstonMartin/valkyrie.webp' },
   { path: '/images/cars/A/AutomobiliPininfarina/battista.webp' },
   { path: '/images/cars/M/McLaren/senna.webp' },
-  { path: '/images/cars/B/Bugatti/veyron164grandsportvitesse.webp' },
+  { path: '/images/cars/B/Bugatti/veyron164grandsportvitesse.webp' }
 ];
 
 export default Carousel;

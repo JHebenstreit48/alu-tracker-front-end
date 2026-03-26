@@ -2,8 +2,8 @@
 @use '@scss/Globals/index' as *;
 
 /* =============================
-     Car name between toggles
-     ============================= */
+   Car name between toggles
+   ============================= */
 .carDetail {
   .CarDetailTitle {
     flex: 1 1 auto;
@@ -50,7 +50,7 @@
   }
 
   /* =============================
-     Car Image
+     Car Image — unchanged, preserves original sizing
      ============================= */
   .carImage {
     display: flex;
@@ -68,5 +68,32 @@
       width: 23rem;
       margin: var(--car-image-margin, #{$car-image-margin});
     }
+  }
+
+  /* =============================
+     Placeholder — only shown when image is missing
+     ============================= */
+  .carImagePlaceholder {
+    width: $car-image-width;
+    margin: var(--car-image-margin, #{$car-image-margin});
+    border: 3px solid $car-image-border-color;
+    box-shadow: 0 0 7px 4px $car-image-shadow-color;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+
+    @include maxw($cellphone-portrait) {
+      width: 23rem;
+      margin: var(--car-image-margin, #{$car-image-margin});
+    }
+  }
+
+  .carImagePlaceholderText {
+    color: $color-gold-glow;
+    font-size: 0.9rem;
+    opacity: 0.6;
+    text-align: center;
   }
 }

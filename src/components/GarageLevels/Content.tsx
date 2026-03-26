@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
 import type { Car } from "@/types/GarageLevels/garageLevelCars";
 
@@ -7,7 +8,40 @@ interface GarageLevelProps {
   cars: Car[];
 }
 
-const FALLBACK = "/images/fallbacks/car-missing.jpg";
+interface GLCarImageProps {
+  car: Car;
+  index: number;
+}
+
+function GLCarImage({ car, index }: GLCarImageProps) {
+  const [errored, setErrored] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  const src = getCarImageUrl(car.image);
+
+  return (
+    <div key={`${car.brand}-${car.model}-${index}`}>
+      {!errored && (
+        <img
+          className="CarImages"
+          src={src}
+          alt={`${car.brand} ${car.model}`}
+          style={{ display: loaded ? "block" : "none" }}
+          onLoad={() => setLoaded(true)}
+          onError={() => setErrored(true)}
+        />
+      )}
+
+      {(!loaded || errored) && (
+        <div className="CarImages" />
+      )}
+
+      <p className="CarImagesCaption">
+        {car.brand} {car.model}
+      </p>
+    </div>
+  );
+}
 
 export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
   if (!GarageLevelKey) {
@@ -33,20 +67,11 @@ export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
       <div className="CarImagesContainer">
         {cars.length > 0 ? (
           cars.map((car, i) => (
-            <div key={`${car.brand}-${car.model}-${i}`}>
-              <img
-                className="CarImages"
-                src={getCarImageUrl(car.image) || FALLBACK}
-                alt={`${car.brand} ${car.model}`}
-                onError={(e) => {
-                  const img = e.currentTarget as HTMLImageElement;
-                  if (img.src !== FALLBACK) img.src = FALLBACK;
-                }}
-              />
-              <p className="CarImagesCaption">
-                {car.brand} {car.model}
-              </p>
-            </div>
+            <GLCarImage
+              key={`${car.brand}-${car.model}-${i}`}
+              car={car}
+              index={i}
+            />
           ))
         ) : (
           <p>No cars available.</p>
