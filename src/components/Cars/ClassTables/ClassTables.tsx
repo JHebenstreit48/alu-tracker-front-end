@@ -44,6 +44,7 @@ export default function ClassTables({
           ) : (
             cars.map((car) => {
               const carKey = generateCarKey(car.brand, car.model);
+              const slug = car.normalizedKey ?? carKey;
               const tracking = getTrackingForKey(carKey);
 
               return (
@@ -54,7 +55,7 @@ export default function ClassTables({
                   <OwnedGoldHighlighter carKey={carKey}>
                     <div className="carCell">
                       <Link
-                        to={`/cars/${carKey}`}
+                        to={`/cars/${slug}`}
                         state={{ trackerMode }}
                       >
                         {car.brand} {car.model}
