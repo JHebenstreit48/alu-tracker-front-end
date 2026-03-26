@@ -22,12 +22,12 @@ export function formatAddedDate(
 
   if (!Number.isFinite(d) || !Number.isFinite(m) || !Number.isFinite(y)) return raw;
 
-  // Build a Date in a safe way (UTC so timezone doesn't roll the day)
+  // Build a Date in UTC so timezone doesn't affect the day
   const date = new Date(Date.UTC(y, m - 1, d));
 
   if (preference === 'mdy') return `${m}/${d}/${y}`;
   if (preference === 'dmy') return `${d}/${m}/${y}`;
 
-  // locale default
-  return date.toLocaleDateString(locale);
+  // Force UTC timezone when formatting so local offset doesn't roll the date back
+  return date.toLocaleDateString(locale, { timeZone: 'UTC' });
 }

@@ -49,7 +49,7 @@ export default function ImageCarousel({
     if (n === 0) return;
 
     if (prev === n - 1 && active === 0) {
-      setDisplayIndex(n); // move to clone
+      setDisplayIndex(n);
     } else {
       setDisplayIndex(active);
     }
@@ -57,13 +57,20 @@ export default function ImageCarousel({
     prevActiveRef.current = active;
   }, [active, slides.length]);
 
+  // Fix: stable transitionend listener — only depends on slides.length,
+  // reads displayIndex from a ref to avoid re-adding on every index change
+  const displayIndexRef = useRef(displayIndex);
+  useEffect(() => {
+    displayIndexRef.current = displayIndex;
+  }, [displayIndex]);
+
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
 
     const onEnd = (): void => {
       const n = slides.length;
-      if (n > 0 && displayIndex === n) {
+      if (n > 0 && displayIndexRef.current === n) {
         setTxEnabled(false);
         setDisplayIndex(0);
         requestAnimationFrame(() =>
@@ -74,7 +81,8 @@ export default function ImageCarousel({
 
     el.addEventListener("transitionend", onEnd);
     return () => el.removeEventListener("transitionend", onEnd);
-  }, [displayIndex, slides.length]);
+  // Only re-attach if slides.length changes, not on every displayIndex change
+  }, [slides.length]);
 
   // --- loading state ---
   const markReady = useCallback(() => {
@@ -94,7 +102,8 @@ export default function ImageCarousel({
     }
   }, [imagesLoaded, isReady, slides.length, markReady]);
 
-  // Preload using Storage URLs
+  // Fix: preload with a timeout safety net so slow images don't
+  // block the carousel from starting indefinitely
   useEffect(() => {
     if (isReady || slides.length === 0) return;
 
@@ -106,24 +115,18 @@ export default function ImageCarousel({
         img.onload = () => resolve();
         img.onerror = () => resolve();
         img.src = src;
-
-        if (img.complete) {
-          resolve();
-          return;
-        }
-
-        if (typeof img.decode === "function") {
-          img
-            .decode()
-            .then(() => resolve())
-            .catch(() => resolve());
-        }
+        if (img.complete) resolve();
       });
 
-    const urls = slides.map((s) => getCarImageUrl(s.path));
+    // Safety net: mark ready after 4s max regardless of image load state
+    const timeout = window.setTimeout(() => {
+      if (!cancelled) markReady();
+    }, 4000);
 
+    const urls = slides.map((s) => getCarImageUrl(s.path));
     void Promise.all(urls.map(loadImage)).then(() => {
       if (!cancelled) {
+        window.clearTimeout(timeout);
         setImagesLoaded(slides.length);
         markReady();
       }
@@ -131,6 +134,7 @@ export default function ImageCarousel({
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
     };
   }, [isReady, slides, markReady]);
 
@@ -161,7 +165,6 @@ export default function ImageCarousel({
               src={getCarImageUrl(image.path)}
               alt={`Car Image ${i + 1}`}
               isActive={i === active}
-              showOverlay={false}
               eager={i === 0}
               onLoad={onLoad}
               onError={onError}
