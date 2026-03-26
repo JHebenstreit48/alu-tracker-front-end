@@ -1,4 +1,5 @@
-import type { Car } from "@/interfaces/GarageLevels";
+import { getCarImageUrl } from "@/utils/shared/imageUrl";
+import type { Car } from "@/types/GarageLevels/garageLevelCars";
 
 interface GarageLevelProps {
   GarageLevelKey: number;
@@ -6,7 +7,7 @@ interface GarageLevelProps {
   cars: Car[];
 }
 
-const FALLBACK = "/images/fallbacks/car-missing.jpg"; // adjust if you have a different path
+const FALLBACK = "/images/fallbacks/car-missing.jpg";
 
 export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
   if (!GarageLevelKey) {
@@ -35,7 +36,7 @@ export function GLContent({ GarageLevelKey, xp, cars }: GarageLevelProps) {
             <div key={`${car.brand}-${car.model}-${i}`}>
               <img
                 className="CarImages"
-                src={car.image || FALLBACK}
+                src={getCarImageUrl(car.image) || FALLBACK}
                 alt={`${car.brand} ${car.model}`}
                 onError={(e) => {
                   const img = e.currentTarget as HTMLImageElement;

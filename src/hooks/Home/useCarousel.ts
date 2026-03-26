@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type UseCarouselOpts = {
   length: number;
-  intervalMs?: number;    // default 2500
-  pauseOnHover?: boolean; // default true
+  intervalMs?: number;
+  pauseOnHover?: boolean;
 };
 
 export function useCarousel({
@@ -14,25 +14,56 @@ export function useCarousel({
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const last = useMemo(() => Math.max(0, length - 1), [length]);
-  const intervalRef = useRef<number | null>(null);
 
-  // auto-advance
+  const pausedRef = useRef(paused);
   useEffect(() => {
-    if (length <= 1 || paused) return;
-    const id = window.setInterval(() => {
-      setActive((i) => (i >= last ? 0 : i + 1));
-    }, Math.max(1200, intervalMs));
-    intervalRef.current = id;
-    return () => {
-      if (intervalRef.current) window.clearInterval(intervalRef.current);
+    pausedRef.current = paused;
+  }, [paused]);
+
+  // Auto-advance with tab visibility reset
+  useEffect(() => {
+    if (length <= 1) return;
+
+    let id: number;
+
+    const start = () => {
+      id = window.setInterval(() => {
+        if (pausedRef.current) return;
+        setActive((i) => (i >= last ? 0 : i + 1));
+      }, Math.max(1200, intervalMs));
     };
-  }, [length, last, paused, intervalMs]);
 
-  // public API
-  const prev = () => setActive((i) => (i <= 0 ? last : i - 1));
-  const next = () => setActive((i) => (i >= last ? 0 : i + 1));
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        // Tab came back into focus — clear old stale interval and
+        // start a fresh one so it doesn't fire immediately
+        window.clearInterval(id);
+        start();
+      } else {
+        // Tab hidden — clear interval entirely to avoid throttled catchup
+        window.clearInterval(id);
+      }
+    };
 
-  // optional hover pause bindings
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    start();
+
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [length, last, intervalMs]);
+
+  const prev = useCallback(
+    () => setActive((i) => (i <= 0 ? last : i - 1)),
+    [last]
+  );
+
+  const next = useCallback(
+    () => setActive((i) => (i >= last ? 0 : i + 1)),
+    [last]
+  );
+
   const hoverProps = pauseOnHover
     ? {
         onMouseEnter: () => setPaused(true),
