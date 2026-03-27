@@ -1,22 +1,22 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import App from '@/App';
 import Home from '@/pages/MainPages/Home/Home';
 import ErrorPage from '@/pages/Error/ErrorPage';
 
-import Brands from '@/pages/MainPages/Brands/Brands';
-import BrandInfo from '@/pages/MainPages/Brands/BrandInfo';
-
-import Cars from '@/pages/MainPages/CarInfo/Cars';
-import CarDetails from '@/pages/Subpages/CarDetails';
-import GarageLevels from '@/pages/MainPages/GarageLevels/GarageLevels';
-import LegendStorePrices from '@/pages/MainPages/LegendStore/LegendStore';
-import CarTracker from '@/pages/Subpages/CarTracker';
-
-import Feedback from '@/pages/MainPages/Feedback/Feedback'; // ← NEW
-import Account from '@/pages/Subpages/Account';
-import CarDataSubmission from '@/pages/Subpages/CarDataSubmission';
-import About from '@/pages/Subpages/About';
-import Sources from '@/pages/Subpages/Sources'; // NEW
+// All non-home pages load lazily — only downloaded when user visits that route
+const Brands = lazy(() => import('@/pages/MainPages/Brands/Brands'));
+const BrandInfo = lazy(() => import('@/pages/MainPages/Brands/BrandInfo'));
+const Cars = lazy(() => import('@/pages/MainPages/CarInfo/Cars'));
+const CarDetails = lazy(() => import('@/pages/Subpages/CarDetails'));
+const GarageLevels = lazy(() => import('@/pages/MainPages/GarageLevels/GarageLevels'));
+const LegendStorePrices = lazy(() => import('@/pages/MainPages/LegendStore/LegendStore'));
+const CarTracker = lazy(() => import('@/pages/Subpages/CarTracker'));
+const Feedback = lazy(() => import('@/pages/MainPages/Feedback/Feedback'));
+const Account = lazy(() => import('@/pages/Subpages/Account'));
+const CarDataSubmission = lazy(() => import('@/pages/Subpages/CarDataSubmission'));
+const About = lazy(() => import('@/pages/Subpages/About'));
+const Sources = lazy(() => import('@/pages/Subpages/Sources'));
 
 export const router = createBrowserRouter([
   {
@@ -30,51 +30,51 @@ export const router = createBrowserRouter([
       },
       {
         path: '/brands',
-        element: <Brands />,
+        element: <Suspense fallback={null}><Brands /></Suspense>,
       },
       {
         path: '/brands/:slug',
-        element: <BrandInfo />,
+        element: <Suspense fallback={null}><BrandInfo /></Suspense>,
       },
       {
         path: '/cars',
-        element: <Cars />,
+        element: <Suspense fallback={null}><Cars /></Suspense>,
       },
       {
         path: '/cars/:slug',
-        element: <CarDetails />,
+        element: <Suspense fallback={null}><CarDetails /></Suspense>,
       },
       {
         path: '/car-tracker/',
-        element: <CarTracker />,
+        element: <Suspense fallback={null}><CarTracker /></Suspense>,
       },
       {
         path: '/garagelevels',
-        element: <GarageLevels />,
+        element: <Suspense fallback={null}><GarageLevels /></Suspense>,
       },
       {
         path: '/legendstoreprices',
-        element: <LegendStorePrices />,
+        element: <Suspense fallback={null}><LegendStorePrices /></Suspense>,
       },
       {
         path: '/feedback',
-        element: <Feedback />,
+        element: <Suspense fallback={null}><Feedback /></Suspense>,
       },
       {
         path: '/account',
-        element: <Account />,
+        element: <Suspense fallback={null}><Account /></Suspense>,
       },
       {
         path: '/car-data-submission',
-        element: <CarDataSubmission />,
+        element: <Suspense fallback={null}><CarDataSubmission /></Suspense>,
       },
       {
         path: '/about',
-        element: <About />,
+        element: <Suspense fallback={null}><About /></Suspense>,
       },
       {
         path: '/sources',
-        element: <Sources />,
+        element: <Suspense fallback={null}><Sources /></Suspense>,
       },
     ],
   },
