@@ -4,19 +4,22 @@ import App from '@/App';
 import Home from '@/pages/MainPages/Home/Home';
 import ErrorPage from '@/pages/Error/ErrorPage';
 
-// All non-home pages load lazily — only downloaded when user visits that route
+// Subpages — eager loaded to prevent FOUC since they're accessed via
+// direct links, buttons, and footer navigation
+import CarDetails from '@/pages/Subpages/CarDetails';
+import CarTracker from '@/pages/Subpages/CarTracker';
+import BrandInfo from '@/pages/MainPages/Brands/BrandInfo';
+import Feedback from '@/pages/MainPages/Feedback/Feedback';
+import Account from '@/pages/Subpages/Account';
+import CarDataSubmission from '@/pages/Subpages/CarDataSubmission';
+import About from '@/pages/Subpages/About';
+import Sources from '@/pages/Subpages/Sources';
+
+// Main tab pages — lazy loaded since they're only visited intentionally
 const Brands = lazy(() => import('@/pages/MainPages/Brands/Brands'));
-const BrandInfo = lazy(() => import('@/pages/MainPages/Brands/BrandInfo'));
 const Cars = lazy(() => import('@/pages/MainPages/CarInfo/Cars'));
-const CarDetails = lazy(() => import('@/pages/Subpages/CarDetails'));
 const GarageLevels = lazy(() => import('@/pages/MainPages/GarageLevels/GarageLevels'));
 const LegendStorePrices = lazy(() => import('@/pages/MainPages/LegendStore/LegendStore'));
-const CarTracker = lazy(() => import('@/pages/Subpages/CarTracker'));
-const Feedback = lazy(() => import('@/pages/MainPages/Feedback/Feedback'));
-const Account = lazy(() => import('@/pages/Subpages/Account'));
-const CarDataSubmission = lazy(() => import('@/pages/Subpages/CarDataSubmission'));
-const About = lazy(() => import('@/pages/Subpages/About'));
-const Sources = lazy(() => import('@/pages/Subpages/Sources'));
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +37,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/brands/:slug',
-        element: <Suspense fallback={null}><BrandInfo /></Suspense>,
+        element: <BrandInfo />,
       },
       {
         path: '/cars',
@@ -42,11 +45,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/cars/:slug',
-        element: <Suspense fallback={null}><CarDetails /></Suspense>,
+        element: <CarDetails />,
       },
       {
         path: '/car-tracker/',
-        element: <Suspense fallback={null}><CarTracker /></Suspense>,
+        element: <CarTracker />,
       },
       {
         path: '/garagelevels',
@@ -58,23 +61,23 @@ export const router = createBrowserRouter([
       },
       {
         path: '/feedback',
-        element: <Suspense fallback={null}><Feedback /></Suspense>,
+        element: <Feedback />,
       },
       {
         path: '/account',
-        element: <Suspense fallback={null}><Account /></Suspense>,
+        element: <Account />,
       },
       {
         path: '/car-data-submission',
-        element: <Suspense fallback={null}><CarDataSubmission /></Suspense>,
+        element: <CarDataSubmission />,
       },
       {
         path: '/about',
-        element: <Suspense fallback={null}><About /></Suspense>,
+        element: <About />,
       },
       {
         path: '/sources',
-        element: <Suspense fallback={null}><Sources /></Suspense>,
+        element: <Sources />,
       },
     ],
   },
