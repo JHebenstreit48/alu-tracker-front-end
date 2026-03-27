@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { generateCarKey } from '@/utils/shared/StorageUtils';
-import LoadingSpinner from '@/components/Shared/Loading/LoadingSpinner';
 import OwnedGoldHighlighter from '@/components/Cars/ClassTables/OwnedGoldHighlighter';
 import { FavoriteHeart } from '@/components/Shared/CarsAndBrands';
 import { CarImageCell } from '@/components/Cars/ClassTables/CarImageCell';
@@ -14,7 +13,6 @@ export default function ClassTables({
   trackerMode = false,
 }: ClassTablesProps) {
   const headerText = selectedClass === 'All Classes' ? 'All Classes' : selectedClass;
-
   const { trackingEnabled, getTrackingForKey } = useCarListTracking();
 
   return (
@@ -22,10 +20,7 @@ export default function ClassTables({
       <table>
         <tbody>
           <tr className="tableHeaderRow">
-            <th
-              className="tableHeader"
-              colSpan={2}
-            >
+            <th className="tableHeader" colSpan={2}>
               {headerText}
             </th>
           </tr>
@@ -38,7 +33,7 @@ export default function ClassTables({
           {loading || cars.length === 0 ? (
             <tr>
               <td colSpan={2}>
-                <LoadingSpinner message="Cataloging all speed machines..." />
+                <p>Loading cars...</p>
               </td>
             </tr>
           ) : (
@@ -48,16 +43,10 @@ export default function ClassTables({
               const tracking = getTrackingForKey(carKey);
 
               return (
-                <tr
-                  className="tableData"
-                  key={carKey}
-                >
+                <tr className="tableData" key={carKey}>
                   <OwnedGoldHighlighter carKey={carKey}>
                     <div className="carCell">
-                      <Link
-                        to={`/cars/${slug}`}
-                        state={{ trackerMode }}
-                      >
+                      <Link to={`/cars/${slug}`} state={{ trackerMode }}>
                         {car.brand} {car.model}
                       </Link>
                       <FavoriteHeart carKey={carKey} />

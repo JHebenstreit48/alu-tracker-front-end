@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ImageCarouselType } from "@/data/ImagesForCarousel";
-import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import { useCarousel } from "@/hooks/Home/useCarousel";
 import { Slide } from "@/components/HomePage/Slide";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
@@ -42,7 +41,6 @@ export default function ImageCarousel({
   const [txEnabled, setTxEnabled] = useState(true);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
-  // --- seamless wrap logic ---
   useEffect(() => {
     const n = slides.length;
     const prev = prevActiveRef.current;
@@ -57,8 +55,6 @@ export default function ImageCarousel({
     prevActiveRef.current = active;
   }, [active, slides.length]);
 
-  // Fix: stable transitionend listener — only depends on slides.length,
-  // reads displayIndex from a ref to avoid re-adding on every index change
   const displayIndexRef = useRef(displayIndex);
   useEffect(() => {
     displayIndexRef.current = displayIndex;
@@ -81,10 +77,8 @@ export default function ImageCarousel({
 
     el.addEventListener("transitionend", onEnd);
     return () => el.removeEventListener("transitionend", onEnd);
-  // Only re-attach if slides.length changes, not on every displayIndex change
   }, [slides.length]);
 
-  // --- loading state ---
   const markReady = useCallback(() => {
     setIsReady(true);
     sessionStorage.setItem("carouselReady", "1");
@@ -102,8 +96,6 @@ export default function ImageCarousel({
     }
   }, [imagesLoaded, isReady, slides.length, markReady]);
 
-  // Fix: preload with a timeout safety net so slow images don't
-  // block the carousel from starting indefinitely
   useEffect(() => {
     if (isReady || slides.length === 0) return;
 
@@ -118,7 +110,6 @@ export default function ImageCarousel({
         if (img.complete) resolve();
       });
 
-    // Safety net: mark ready after 4s max regardless of image load state
     const timeout = window.setTimeout(() => {
       if (!cancelled) markReady();
     }, 4000);
@@ -172,17 +163,6 @@ export default function ImageCarousel({
           ))}
         </div>
       </div>
-
-      {!isReady && (
-        <div
-          className="carousel-spinner"
-          role="status"
-          aria-live="polite"
-          aria-busy="true"
-        >
-          <LoadingSpinner message="Cars entering the starting line!" />
-        </div>
-      )}
     </div>
   );
 }
