@@ -1,6 +1,5 @@
 import Header from "@/components/Shared/HeaderFooter/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
-import LoadingSpinner from "@/components/Shared/Loading/LoadingSpinner";
 import BackToTop from "@/components/Shared/Navigation/BackToTopButton";
 import BrandQuickList from "@/components/Brands/BrandInfo/BrandQuickList";
 import MapDisplay from "@/components/Brands/Map/MapDisplay";
@@ -20,8 +19,7 @@ export default function Brands() {
         ) : loading ? (
           <div className="brandsLoadingWrapper">
             <div className="loadingContainer">
-              <LoadingSpinner />
-              <p>Warming up the brands…</p>
+              <p>Loading brands...</p>
             </div>
           </div>
         ) : (
