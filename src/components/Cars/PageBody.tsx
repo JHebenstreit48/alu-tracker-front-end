@@ -63,7 +63,7 @@ export default function CarData({
 
         <div className="pageSizeControl">
           <span className="paginationLabel">Cars per page:</span>
-          {[25, 50, 100, 150, 200, 250, 300, 305].map((size) => (
+          {[25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325].map((size) => (
             <button
               key={size}
               onClick={() => handlePageSizeChange(size)}
