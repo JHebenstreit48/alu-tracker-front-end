@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
-import type { CarStatsPatch } from "@/types/CarDataSubmission/carSubmission";
+import type { Car } from "@/types/shared/car";
+import type { CarStatsPatch, StarStatBlock } from
+  "@/types/CarDataSubmission/carSubmission";
 
 type Props = {
   selectedKeys: string[];
+  selectedCars: Car[];
   onApplyStats: (stats: CarStatsPatch) => void;
 };
 
@@ -15,10 +18,58 @@ const toNum = (s: string): number | undefined => {
   return Number.isFinite(n) ? n : undefined;
 };
 
-export default function StatsFields({ selectedKeys, onApplyStats }: Props): JSX.Element {
+type StatBlockState = {
+  rank: string;
+  topSpeed: string;
+  accel: string;
+  handling: string;
+  nitro: string;
+};
+
+const emptyBlock = (): StatBlockState => ({
+  rank: "",
+  topSpeed: "",
+  accel: "",
+  handling: "",
+  nitro: "",
+});
+
+const blockToStat = (b: StatBlockState): StarStatBlock | undefined => {
+  const out: StarStatBlock = {};
+  const r = toNum(b.rank);
+  const ts = toNum(b.topSpeed);
+  const a = toNum(b.accel);
+  const h = toNum(b.handling);
+  const n = toNum(b.nitro);
+  if (r !== undefined) out.rank = r;
+  if (ts !== undefined) out.topSpeed = ts;
+  if (a !== undefined) out.acceleration = a;
+  if (h !== undefined) out.handling = h;
+  if (n !== undefined) out.nitro = n;
+  return Object.keys(out).length ? out : undefined;
+};
+
+const anyInBlock = (b: StatBlockState): boolean =>
+  Object.values(b).some((v) => v.trim() !== "");
+
+const STAR_KEYS = [
+  "oneStar",
+  "twoStar",
+  "threeStar",
+  "fourStar",
+  "fiveStar",
+  "sixStar",
+] as const;
+
+const STAR_LABELS = ["1★", "2★", "3★", "4★", "5★", "6★"];
+
+export default function StatsFields({
+  selectedKeys,
+  selectedCars,
+  onApplyStats,
+}: Props): JSX.Element {
   const disabled = selectedKeys.length === 0;
 
-  // Blueprints
   const [bp1, setBp1] = useState<NumState>("");
   const [bp2, setBp2] = useState<NumState>("");
   const [bp3, setBp3] = useState<NumState>("");
@@ -26,52 +77,48 @@ export default function StatsFields({ selectedKeys, onApplyStats }: Props): JSX.
   const [bp5, setBp5] = useState<NumState>("");
   const [bp6, setBp6] = useState<NumState>("");
 
-  // Stock
-  const [stockRank, setStockRank] = useState<NumState>("");
-  const [stockTopSpeed, setStockTopSpeed] = useState<NumState>("");
-  const [stockAccel, setStockAccel] = useState<NumState>("");
-  const [stockHandling, setStockHandling] = useState<NumState>("");
-  const [stockNitro, setStockNitro] = useState<NumState>("");
+  const [stock, setStock] = useState<StatBlockState>(emptyBlock());
+  const [max1, setMax1] = useState<StatBlockState>(emptyBlock());
+  const [max2, setMax2] = useState<StatBlockState>(emptyBlock());
+  const [max3, setMax3] = useState<StatBlockState>(emptyBlock());
+  const [max4, setMax4] = useState<StatBlockState>(emptyBlock());
+  const [max5, setMax5] = useState<StatBlockState>(emptyBlock());
+  const [max6, setMax6] = useState<StatBlockState>(emptyBlock());
+  const [gold, setGold] = useState<StatBlockState>(emptyBlock());
+  const [applied, setApplied] = useState<boolean>(false);
 
-  // Max Star (rank-only scaffold)
-  const [max1, setMax1] = useState<NumState>("");
-  const [max2, setMax2] = useState<NumState>("");
-  const [max3, setMax3] = useState<NumState>("");
-  const [max4, setMax4] = useState<NumState>("");
-  const [max5, setMax5] = useState<NumState>("");
-  const [max6, setMax6] = useState<NumState>("");
+  const maxBlocks = [max1, max2, max3, max4, max5, max6];
+  const maxSetters = [setMax1, setMax2, setMax3, setMax4, setMax5, setMax6];
 
-  // Gold
-  const [goldRank, setGoldRank] = useState<NumState>("");
-  const [goldTopSpeed, setGoldTopSpeed] = useState<NumState>("");
-  const [goldAccel, setGoldAccel] = useState<NumState>("");
-  const [goldHandling, setGoldHandling] = useState<NumState>("");
-  const [goldNitro, setGoldNitro] = useState<NumState>("");
+  const maxStars = useMemo(() => {
+    if (selectedCars.length === 1 && selectedCars[0].stars) {
+      return selectedCars[0].stars;
+    }
+    return 6;
+  }, [selectedCars]);
 
   const anyValue = useMemo(() => {
-    const all = [
-      bp1, bp2, bp3, bp4, bp5, bp6,
-      stockRank, stockTopSpeed, stockAccel, stockHandling, stockNitro,
-      max1, max2, max3, max4, max5, max6,
-      goldRank, goldTopSpeed, goldAccel, goldHandling, goldNitro,
-    ];
-    return all.some((x) => x.trim() !== "");
-  }, [
-    bp1, bp2, bp3, bp4, bp5, bp6,
-    stockRank, stockTopSpeed, stockAccel, stockHandling, stockNitro,
-    max1, max2, max3, max4, max5, max6,
-    goldRank, goldTopSpeed, goldAccel, goldHandling, goldNitro,
-  ]);
+    const bps = [bp1, bp2, bp3, bp4, bp5, bp6];
+    return (
+      bps.some((x) => x.trim() !== "") ||
+      anyInBlock(stock) ||
+      maxBlocks.some(anyInBlock) ||
+      anyInBlock(gold)
+    );
+  }, [bp1, bp2, bp3, bp4, bp5, bp6, stock, maxBlocks, gold]);
 
   const apply = () => {
     if (disabled || !anyValue) return;
 
     const stats: CarStatsPatch = {};
 
-    // 1) Blueprints
     const blueprints: Record<string, unknown> = {};
-    const b1 = toNum(bp1); const b2 = toNum(bp2); const b3 = toNum(bp3);
-    const b4 = toNum(bp4); const b5 = toNum(bp5); const b6 = toNum(bp6);
+    const b1 = toNum(bp1);
+    const b2 = toNum(bp2);
+    const b3 = toNum(bp3);
+    const b4 = toNum(bp4);
+    const b5 = toNum(bp5);
+    const b6 = toNum(bp6);
     if (b1 !== undefined) blueprints.oneStar = b1;
     if (b2 !== undefined) blueprints.twoStar = b2;
     if (b3 !== undefined) blueprints.threeStar = b3;
@@ -80,109 +127,115 @@ export default function StatsFields({ selectedKeys, onApplyStats }: Props): JSX.
     if (b6 !== undefined) blueprints.sixStar = b6;
     if (Object.keys(blueprints).length) stats.blueprints = blueprints;
 
-    // 2) Stock
-    const stock: Record<string, unknown> = {};
-    const sRank = toNum(stockRank);
-    const sTS = toNum(stockTopSpeed);
-    const sA = toNum(stockAccel);
-    const sH = toNum(stockHandling);
-    const sN = toNum(stockNitro);
-    if (sRank !== undefined) stock.rank = sRank;
-    if (sTS !== undefined) stock.topSpeed = sTS;
-    if (sA !== undefined) stock.acceleration = sA;
-    if (sH !== undefined) stock.handling = sH;
-    if (sN !== undefined) stock.nitro = sN;
-    if (Object.keys(stock).length) stats.stock = stock;
+    const stockStat = blockToStat(stock);
+    if (stockStat) stats.stock = stockStat;
 
-    // 3) Max Star Rank
-    const maxAtStar: Record<string, unknown> = {};
-    const m1 = toNum(max1); const m2 = toNum(max2); const m3 = toNum(max3);
-    const m4 = toNum(max4); const m5 = toNum(max5); const m6 = toNum(max6);
-    if (m1 !== undefined) maxAtStar.oneStarMaxRank = m1;
-    if (m2 !== undefined) maxAtStar.twoStarMaxRank = m2;
-    if (m3 !== undefined) maxAtStar.threeStarMaxRank = m3;
-    if (m4 !== undefined) maxAtStar.fourStarMaxRank = m4;
-    if (m5 !== undefined) maxAtStar.fiveStarMaxRank = m5;
-    if (m6 !== undefined) maxAtStar.sixStarMaxRank = m6;
+    const maxAtStar: CarStatsPatch["maxAtStar"] = {};
+    maxBlocks.forEach((block, i) => {
+      const stat = blockToStat(block);
+      if (stat) maxAtStar[STAR_KEYS[i]] = stat;
+    });
     if (Object.keys(maxAtStar).length) stats.maxAtStar = maxAtStar;
 
-    // 4) Gold
-    const gold: Record<string, unknown> = {};
-    const gRank = toNum(goldRank);
-    const gTS = toNum(goldTopSpeed);
-    const gA = toNum(goldAccel);
-    const gH = toNum(goldHandling);
-    const gN = toNum(goldNitro);
-    if (gRank !== undefined) gold.rank = gRank;
-    if (gTS !== undefined) gold.topSpeed = gTS;
-    if (gA !== undefined) gold.acceleration = gA;
-    if (gH !== undefined) gold.handling = gH;
-    if (gN !== undefined) gold.nitro = gN;
-    if (Object.keys(gold).length) stats.gold = gold;
+    const goldStat = blockToStat(gold);
+    if (goldStat) stats.gold = goldStat;
 
     onApplyStats(stats);
+    setApplied(true);
+    setTimeout(() => setApplied(false), 3000);
+  };
+
+  const updateBlock = (
+    setter: React.Dispatch<React.SetStateAction<StatBlockState>>,
+    field: keyof StatBlockState,
+    value: string
+  ) => {
+    setter((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
     <div className="StatsFields">
       <p className="CarDataFormHint">
         Simple number inputs. Leave blank to skip changing that stat.
+        {selectedCars.length === 1 && (
+          <span> Showing stats for a {selectedCars[0].stars}★ car.</span>
+        )}
+      </p>
+      <p className="CarDataFormHint">
+        <span style={{ color: "#ffc400" }}>
+          ★ Top Speed must be entered in KPH.
+        </span>
       </p>
 
       <div className="StatsBlocks">
         <section className="StatsBlock">
           <h3 className="StatsBlockTitle">Blueprints</h3>
           <div className="StatsGrid">
-            <Field label="1★" v={bp1} s={setBp1} />
-            <Field label="2★" v={bp2} s={setBp2} />
-            <Field label="3★" v={bp3} s={setBp3} />
-            <Field label="4★" v={bp4} s={setBp4} />
-            <Field label="5★" v={bp5} s={setBp5} />
-            <Field label="6★" v={bp6} s={setBp6} />
+            {[
+              [bp1, setBp1, "1★"],
+              [bp2, setBp2, "2★"],
+              [bp3, setBp3, "3★"],
+              [bp4, setBp4, "4★"],
+              [bp5, setBp5, "5★"],
+              [bp6, setBp6, "6★"],
+            ]
+              .slice(0, maxStars)
+              .map(([v, s, label]) => (
+                <Field
+                  key={label as string}
+                  label={label as string}
+                  v={v as string}
+                  s={s as (x: string) => void}
+                />
+              ))}
           </div>
         </section>
 
         <section className="StatsBlock">
           <h3 className="StatsBlockTitle">Stock</h3>
-          <div className="StatsGrid StatsGrid--nitroCenter">
-            <Field label="Rank" v={stockRank} s={setStockRank} />
-            <Field label="Top Speed" v={stockTopSpeed} s={setStockTopSpeed} />
-            <Field label="Acceleration" v={stockAccel} s={setStockAccel} />
-            <Field label="Handling" v={stockHandling} s={setStockHandling} />
-            <div className="StatsNitro">
-              <Field label="Nitro" v={stockNitro} s={setStockNitro} />
-            </div>
-          </div>
+          <StatBlockFields
+            block={stock}
+            setter={setStock}
+            update={updateBlock}
+          />
         </section>
 
-        <section className="StatsBlock">
-          <h3 className="StatsBlockTitle">Max Star (Rank)</h3>
-          <div className="StatsGrid">
-            <Field label="1★ Max Rank" v={max1} s={setMax1} />
-            <Field label="2★ Max Rank" v={max2} s={setMax2} />
-            <Field label="3★ Max Rank" v={max3} s={setMax3} />
-            <Field label="4★ Max Rank" v={max4} s={setMax4} />
-            <Field label="5★ Max Rank" v={max5} s={setMax5} />
-            <Field label="6★ Max Rank" v={max6} s={setMax6} />
-          </div>
-        </section>
+        {maxBlocks.slice(0, maxStars).map((block, i) => (
+          <section key={STAR_KEYS[i]} className="StatsBlock">
+            <h3 className="StatsBlockTitle">
+              Max {STAR_LABELS[i]}
+              {i + 1 === maxStars ? " (Gold Max)" : ""}
+            </h3>
+            <StatBlockFields
+              block={block}
+              setter={maxSetters[i]}
+              update={updateBlock}
+            />
+          </section>
+        ))}
 
         <section className="StatsBlock">
           <h3 className="StatsBlockTitle">Gold</h3>
-          <div className="StatsGrid StatsGrid--nitroCenter">
-            <Field label="Rank" v={goldRank} s={setGoldRank} />
-            <Field label="Top Speed" v={goldTopSpeed} s={setGoldTopSpeed} />
-            <Field label="Acceleration" v={goldAccel} s={setGoldAccel} />
-            <Field label="Handling" v={goldHandling} s={setGoldHandling} />
-            <div className="StatsNitro">
-              <Field label="Nitro" v={goldNitro} s={setGoldNitro} />
-            </div>
-          </div>
+          <StatBlockFields
+            block={gold}
+            setter={setGold}
+            update={updateBlock}
+          />
         </section>
       </div>
 
+      {applied && (
+        <p className="CarDataFormMsg CarDataFormMsg--ok">
+          ✓ Stats staged — click Submit Changes when ready.
+        </p>
+      )}
+
       <div className="CarDataFormRow">
-        <button type="button" onClick={apply} disabled={disabled || !anyValue}>
+        <button
+          type="button"
+          onClick={apply}
+          disabled={disabled || !anyValue}
+        >
           Apply stats to selected
         </button>
       </div>
@@ -190,11 +243,69 @@ export default function StatsFields({ selectedKeys, onApplyStats }: Props): JSX.
   );
 }
 
-function Field({ label, v, s }: { label: string; v: string; s: (x: string) => void }) {
+function StatBlockFields({
+  block,
+  setter,
+  update,
+}: {
+  block: StatBlockState;
+  setter: React.Dispatch<React.SetStateAction<StatBlockState>>;
+  update: (
+    setter: React.Dispatch<React.SetStateAction<StatBlockState>>,
+    field: keyof StatBlockState,
+    value: string
+  ) => void;
+}) {
+  return (
+    <div className="StatsGrid StatsGrid--nitroCenter">
+      <Field
+        label="Rank"
+        v={block.rank}
+        s={(v) => update(setter, "rank", v)}
+      />
+      <Field
+        label="Top Speed"
+        v={block.topSpeed}
+        s={(v) => update(setter, "topSpeed", v)}
+      />
+      <Field
+        label="Acceleration"
+        v={block.accel}
+        s={(v) => update(setter, "accel", v)}
+      />
+      <Field
+        label="Handling"
+        v={block.handling}
+        s={(v) => update(setter, "handling", v)}
+      />
+      <div className="StatsNitro">
+        <Field
+          label="Nitro"
+          v={block.nitro}
+          s={(v) => update(setter, "nitro", v)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  v,
+  s,
+}: {
+  label: string;
+  v: string;
+  s: (x: string) => void;
+}) {
   return (
     <label className="CarDataFormLabel">
       {label}
-      <input value={v} onChange={(e) => s(e.target.value)} inputMode="decimal" />
+      <input
+        value={v}
+        onChange={(e) => s(e.target.value)}
+        inputMode="decimal"
+      />
     </label>
   );
 }

@@ -43,7 +43,6 @@ export default function CarDataForm(): JSX.Element {
     setBusy(true);
     try {
       const cleaned = buildSubmission(payload);
-      // Pass token if logged in, undefined if guest
       await createSubmission(cleaned, token ?? undefined);
       setOkMsg(
         "Submission created! Your edits are now in the review queue."
@@ -95,6 +94,7 @@ export default function CarDataForm(): JSX.Element {
         <h2>Stats</h2>
         <StatsFields
           selectedKeys={selectedKeys}
+          selectedCars={selectedCars}
           onApplyStats={(statsPatch) =>
             selectedKeys.forEach((k) => updatePatch(k, { stats: statsPatch }))
           }
