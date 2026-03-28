@@ -32,8 +32,6 @@ export default function CarDataForm(): JSX.Element {
   }, [cars, selectedKeys]);
 
   const onSubmit = async () => {
-    if (!token) return;
-
     setOkMsg(null);
     setErrMsg(null);
 
@@ -45,11 +43,16 @@ export default function CarDataForm(): JSX.Element {
     setBusy(true);
     try {
       const cleaned = buildSubmission(payload);
-      await createSubmission(token, cleaned);
-      setOkMsg("Submission created! Your edits are now in the review queue.");
+      // Pass token if logged in, undefined if guest
+      await createSubmission(cleaned, token ?? undefined);
+      setOkMsg(
+        "Submission created! Your edits are now in the review queue."
+      );
       clearAll();
-    } catch (e: any) {
-      setErrMsg(e?.message || "Failed to submit");
+    } catch (e: unknown) {
+      const msg =
+        e instanceof Error ? e.message : "Failed to submit";
+      setErrMsg(msg);
     } finally {
       setBusy(false);
     }
@@ -82,7 +85,9 @@ export default function CarDataForm(): JSX.Element {
         <CarFields
           selectedKeys={selectedKeys}
           selectedCars={selectedCars}
-          onApply={(partial) => selectedKeys.forEach((k) => updatePatch(k, partial))}
+          onApply={(partial) =>
+            selectedKeys.forEach((k) => updatePatch(k, partial))
+          }
         />
       </section>
 
@@ -109,8 +114,19 @@ export default function CarDataForm(): JSX.Element {
           />
         </label>
 
+        {!token && (
+          <p className="CarDataFormHint">
+            Submitting as guest. Sign in to attach your username to the
+            submission.
+          </p>
+        )}
+
         <div className="CarDataFormRow">
-          <button type="button" onClick={onSubmit} disabled={busy || !selectedKeys.length}>
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={busy || !selectedKeys.length}
+          >
             {busy ? "Submitting…" : "Submit Changes"}
           </button>
 
@@ -119,8 +135,12 @@ export default function CarDataForm(): JSX.Element {
           </button>
         </div>
 
-        {okMsg && <div className="CarDataFormMsg CarDataFormMsg--ok">{okMsg}</div>}
-        {errMsg && <div className="CarDataFormMsg CarDataFormMsg--err">{errMsg}</div>}
+        {okMsg && (
+          <div className="CarDataFormMsg CarDataFormMsg--ok">{okMsg}</div>
+        )}
+        {errMsg && (
+          <div className="CarDataFormMsg CarDataFormMsg--err">{errMsg}</div>
+        )}
       </section>
     </div>
   );
