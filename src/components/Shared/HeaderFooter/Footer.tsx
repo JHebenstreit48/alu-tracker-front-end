@@ -41,6 +41,17 @@ export default function Footer() {
         <span className="Footer__dot" aria-hidden="true">•</span>
 
         <NavLink
+          to="/car-data-submission"
+          className={({ isActive }) =>
+            `Footer__link ${isActive ? "Footer__link--active" : ""}`
+          }
+        >
+          Submit Car Data
+        </NavLink>
+
+        <span className="Footer__dot" aria-hidden="true">•</span>
+
+        <NavLink
           to="/sources"
           className={({ isActive }) =>
             `Footer__link ${isActive ? "Footer__link--active" : ""}`

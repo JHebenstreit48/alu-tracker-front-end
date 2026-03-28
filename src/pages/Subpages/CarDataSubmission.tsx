@@ -11,12 +11,9 @@ export default function CarDataSubmission(): JSX.Element {
   const { token, syncReady, roles } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const hasAccess = !!token; // keep open to logged-in users for now
-
   const onBack = () => {
-    // If user refreshed or opened directly, history back may leave the app.
     if (window.history.length > 1) navigate(-1);
-    else navigate("/account");
+    else navigate("/");
   };
 
   return (
@@ -36,21 +33,26 @@ export default function CarDataSubmission(): JSX.Element {
         </div>
 
         {!syncReady ? (
-          <div className="CarDataSubmissionGate">Loading account…</div>
-        ) : !hasAccess ? (
-          <div className="CarDataSubmissionGate">
-            You must be logged in to submit car edits.
-          </div>
+          <div className="CarDataSubmissionGate">Loading…</div>
         ) : (
           <>
             <header className="CarDataSubmissionHeader">
-              <h1 className="CarDataSubmissionTitle">Car Data Submission</h1>
+              <h1 className="CarDataSubmissionTitle">
+                Car Data Submission
+              </h1>
               <p className="CarDataSubmissionSubtitle">
                 Select cars, edit fields, and submit a review request.
-                <br />
-                <span className="CarDataSubmissionMeta">
-                  Roles: <strong>{roles.length ? roles.join(", ") : "user"}</strong>
-                </span>
+                {token && roles.length > 0 && (
+                  <br />
+                )}
+                {token && (
+                  <span className="CarDataSubmissionMeta">
+                    Roles:{" "}
+                    <strong>
+                      {roles.length ? roles.join(", ") : "user"}
+                    </strong>
+                  </span>
+                )}
               </p>
             </header>
 
