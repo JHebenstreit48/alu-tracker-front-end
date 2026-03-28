@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "@/components/SignupLogin/context/AuthContext";
+import { AuthContext } from "@/context/Auth/authContext";
 
 export default function SyncOverlay(): JSX.Element | null {
   const { token, syncReady } = useContext(AuthContext);

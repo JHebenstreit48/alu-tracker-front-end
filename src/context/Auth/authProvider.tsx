@@ -40,6 +40,9 @@ export const AuthProvider = ({ children }: Props) => {
       setToken(storedToken);
       setUsername(storedUsername);
       hydrate(storedToken);
+    } else {
+      // No token — guest user, nothing to hydrate, mark sync ready immediately
+      setSyncReady(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -64,7 +67,9 @@ export const AuthProvider = ({ children }: Props) => {
 
       // ✅ safer: if roles missing OR empty => fallback to ["user"]
       const nextRoles =
-        Array.isArray(data?.roles) && data.roles.length > 0 ? data.roles : ["user"];
+        Array.isArray(data?.roles) && data.roles.length > 0
+          ? data.roles
+          : ["user"];
 
       setRoles(nextRoles);
       localStorage.setItem("roles", JSON.stringify(nextRoles));
