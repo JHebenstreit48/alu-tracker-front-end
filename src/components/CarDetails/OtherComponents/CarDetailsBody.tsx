@@ -15,18 +15,12 @@ import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
 import UnitToggle from '@/components/CarDetails/OtherComponents/UnitToggle';
 
-import '@/scss/Cars/CarDetails/CarDetail.scss';
-import '@/scss/Cars/CarDetails/CarStatus.scss';
-import '@/scss/Cars/CarDetails/UnitToggle.scss';
-import '@/scss/Cars/CarDetails/CarComments.scss';
-
 interface Props {
   slug: string;
 }
 
 export default function CarDetailsBody({ slug }: Props) {
-  const { car, status, error, keyObtained, setKeyObtained, goBack } =
-    useCarDetailsPage(slug);
+  const { car, status, error, keyObtained, setKeyObtained, goBack } = useCarDetailsPage(slug);
 
   const { trackerMode, toggleTrackerMode } = useTrackerMode();
   const { unit, setUnit } = usePreferredUnit();
@@ -34,22 +28,17 @@ export default function CarDetailsBody({ slug }: Props) {
   const handleKeyObtainedChange = useKeyObtained(car, setKeyObtained);
   useAutoSyncDependency([keyObtained, trackerMode, car?.brand, car?.model]);
 
-  // Visible title in the page body
   const carTitle = car ? `${car.brand} ${car.model}` : 'Car Details';
-
-  // Browser tab text (PageTab controls <title>)
   const pageTabTitle = car ? `${car.brand} ${car.model}` : 'Car Details';
 
   return (
     <div className="carDetail">
       <PageTab title={pageTabTitle}>
-        {/* Header bar is now generic & short */}
         <Header
           text="Car Details"
           className="carDetailsHeader"
         />
 
-        {/* Car title + tools sit in the body, under the header bar */}
         {car && (
           <>
             <div className="toolsRow">
@@ -57,9 +46,7 @@ export default function CarDetailsBody({ slug }: Props) {
                 isEnabled={trackerMode}
                 onToggle={toggleTrackerMode}
               />
-
               <h1 className="CarDetailTitle">{carTitle}</h1>
-
               <UnitToggle
                 value={unit}
                 onChange={setUnit}
@@ -68,7 +55,6 @@ export default function CarDetailsBody({ slug }: Props) {
           </>
         )}
 
-        {/* Detail header row (Back + Last updated) now sits under the tools row + thin line */}
         <DetailHeader
           onBack={goBack}
           updatedAt={car?.updatedAt}
@@ -96,7 +82,6 @@ export default function CarDetailsBody({ slug }: Props) {
               onKeyObtainedChange={handleKeyObtainedChange}
               unitPreference={unit}
             />
-            {/* This bottom divider stays */}
             <hr className="content-divider" />
             <CommentsPanel
               normalizedKey={slug}
