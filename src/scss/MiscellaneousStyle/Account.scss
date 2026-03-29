@@ -15,7 +15,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   padding: $page-padding;
   color: #e9e6ee;
 
-  /* generic gate/error/info panel */
   .AccountGate {
     background: $panel-bg;
     border: $panel-border;
@@ -26,7 +25,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-/* ===== Back row (in-page, not the global site header) ===== */
+/* ===== Back row ===== */
 .AccountBackRow {
   display: flex;
   justify-content: flex-start;
@@ -82,7 +81,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-/* ===== Grid layout for sections ===== */
+/* ===== Grid layout ===== */
 .AccountGrid {
   display: grid;
   grid-template-columns: 1fr;
@@ -92,13 +91,12 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
     grid-template-columns: 1fr 1fr;
   }
 
-  /* allow any single-wide section to span both columns if needed */
   .AccountSection--full {
     grid-column: 1 / -1;
   }
 }
 
-/* ===== Cards in Account page (scoped) ===== */
+/* ===== Cards ===== */
 .AccountPage .card {
   background: $panel-bg;
   border: $panel-border;
@@ -119,7 +117,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   textarea {
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box; /* ✅ prevents overflow with padding/border */
+    box-sizing: border-box;
     background: #0f0a14;
     color: #e9e6ee;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -168,7 +166,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
     font-weight: 700;
   }
 
-  /* Nice spacing for stacked elements inside cards */
   .AccountRow {
     display: flex;
     gap: 0.6rem;
@@ -181,7 +178,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
     font-size: 0.95rem;
   }
 
-  /* Helpful for QR images in 2FA card (won’t affect other pages) */
   img {
     max-width: 100%;
     height: auto;
@@ -189,7 +185,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-/* ===== AdminTools component (scoped) ===== */
+/* ===== AdminTools component ===== */
 .AdminTools {
   display: flex;
   flex-direction: column;
@@ -219,6 +215,23 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   align-self: flex-start;
 }
 
+.AdminToolsBtn--danger {
+  background: linear-gradient(
+    180deg,
+    rgba(#be0505, 0.95),
+    rgba(#be0505, 0.75)
+  ) !important;
+  border: 1px solid rgba(#be0505, 0.5) !important;
+
+  &:hover {
+    background: linear-gradient(
+      180deg,
+      #be0505,
+      rgba(#be0505, 0.9)
+    ) !important;
+  }
+}
+
 .AdminToolsMsg {
   border-radius: 10px;
   padding: 0.55rem 0.7rem;
@@ -237,11 +250,75 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   color: #ff4d6d;
 }
 
+/* ===== Admin Submissions page ===== */
+.AdminSubmissionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.AdminSubmissionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.AdminSubmissionMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: #bfb6cc;
+  font-size: 0.9rem;
+
+  strong {
+    color: #e9e6ee;
+  }
+}
+
+.AdminSubmissionCars {
+  color: #e9e6ee;
+  font-size: 0.95rem;
+}
+
+.AdminSubmissionNote {
+  color: #bfb6cc;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.AdminSubmissionDetails {
+  summary {
+    cursor: pointer;
+    color: $gold-accent;
+    font-family: var(--display-font, "Cinzel"), serif;
+    font-size: 0.9rem;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.AdminSubmissionPre {
+  background: #0f0a14;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: #e9e6ee;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 /* ===== Phone-specific tweaks ===== */
 @include maxw($cellphone-portrait) {
   .AccountGrid {
     gap: 0.75rem;
   }
+
   .AccountPage .card {
     padding: 0.85rem 0.9rem;
   }
