@@ -7,7 +7,7 @@ import { buildSubmission } from "@/utils/CarDataSubmission/buildSubmission";
 
 import CarPicker from "./CarPicker";
 import CarFields from "./CarFields";
-import StatsFields from "./StatsFields";
+import StatsFields from "../Stats/StatsFields";
 
 export default function CarDataForm(): JSX.Element {
   const { token } = useContext(AuthContext);

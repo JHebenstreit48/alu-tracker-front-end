@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '@/context/Auth/authContext';
 import { bootstrapOwner } from '@/api/adminAPI';
 
@@ -33,8 +34,6 @@ export default function AdminTools(): JSX.Element | null {
             Array.isArray(gotRoles) ? gotRoles.join(', ') : 'updated'
           }`
         );
-
-        // ✅ try to reflect roles immediately in UI
         await refreshMe();
         return;
       }
@@ -61,16 +60,24 @@ export default function AdminTools(): JSX.Element | null {
         </p>
 
         {hasAdminAccess ? (
-          <p className="AdminToolsHint">
-            You already have admin access. (Nice. The bouncers know you.)
-          </p>
+          <>
+            <p className="AdminToolsHint">
+              You already have admin access. (Nice. The bouncers know you.)
+            </p>
+            <Link
+              to="/admin/submissions"
+              className="AccountBackBtn"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              Open Submission Review →
+            </Link>
+          </>
         ) : (
           <>
             <p className="AdminToolsHint">
-              Not an admin yet. If you’re the project owner, you can bootstrap the owner role one
-              time.
+              Not an admin yet. If you're the project owner, you can bootstrap
+              the owner role one time.
             </p>
-
             <button
               type="button"
               className="AdminToolsBtn"
