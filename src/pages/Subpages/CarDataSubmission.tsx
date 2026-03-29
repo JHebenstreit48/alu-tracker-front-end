@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import Header from "@/components/Shared/HeaderFooter/Header";
 import { AuthContext } from "@/context/Auth/authContext";
-import CarDataForm from "@/components/CarDataForm/CarDataForm";
+import CarDataForm from "@/components/CarDataForm/Form/CarDataForm";
 
 import "@/scss/CarDataForm/DataForm.scss";
 
