@@ -8,14 +8,6 @@ import '@/scss/NavHeaderFooterError/Header.scss';
 import '@/scss/NavHeaderFooterError/Navigation.scss';
 import '@/scss/NavHeaderFooterError/Footer.scss';
 
-// ✅ CarDetails SCSS hoisted here so it lands in the critical CSS bundle
-// and is never chunk-split away from the eager CarDetails route.
-// This prevents intermittent FOUC when navigating to /cars/:slug.
-import '@/scss/Cars/CarDetails/CarDetail.scss';
-import '@/scss/Cars/CarDetails/CarStatus.scss';
-import '@/scss/Cars/CarDetails/UnitToggle.scss';
-import '@/scss/Cars/CarDetails/CarComments.scss';
-
 export default function App() {
   const location = useLocation();
   const { token } = useContext(AuthContext);

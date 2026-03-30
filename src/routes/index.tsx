@@ -1,17 +1,18 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import App from '@/App';
-import Home from '@/pages/MainPages/Home/Home';
 import ErrorPage from '@/pages/Error/ErrorPage';
 
-// Main tab pages — lazy loaded since they're only visited intentionally
-const Brands = lazy(() => import('@/pages/MainPages/Brands/Brands'));
-const Cars = lazy(() => import('@/pages/MainPages/CarInfo/Cars'));
-const GarageLevels = lazy(() => import('@/pages/MainPages/GarageLevels/GarageLevels'));
-const LegendStorePrices = lazy(() => import('@/pages/MainPages/LegendStore/LegendStore'));
+// Only Home is lazy — Lighthouse tests the home page, this is the only
+// page where lazy loading actually improves the performance score.
+const Home = lazy(() => import('@/pages/MainPages/Home/Home'));
 
-// Subpages — eager loaded to prevent FOUC since they're accessed via
-// direct links, buttons, and footer navigation
+// Everything else eager — prevents SCSS chunk ordering issues and
+// ensures images and styles load immediately on navigation and hard refresh.
+import Brands from '@/pages/MainPages/Brands/Brands';
+import Cars from '@/pages/MainPages/CarInfo/Cars';
+import GarageLevels from '@/pages/MainPages/GarageLevels/GarageLevels';
+import LegendStorePrices from '@/pages/MainPages/LegendStore/LegendStore';
 import CarDetails from '@/pages/Subpages/CarDetails';
 import CarTracker from '@/pages/Subpages/CarTracker';
 import BrandInfo from '@/pages/MainPages/Brands/BrandInfo';
@@ -30,15 +31,15 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <Suspense fallback={null}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: '/brands',
-        element: (
-          <Suspense fallback={null}>
-            <Brands />
-          </Suspense>
-        ),
+        element: <Brands />,
       },
       {
         path: '/brands/:slug',
@@ -46,11 +47,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/cars',
-        element: (
-          <Suspense fallback={null}>
-            <Cars />
-          </Suspense>
-        ),
+        element: <Cars />,
       },
       {
         path: '/cars/:slug',
@@ -62,19 +59,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/garagelevels',
-        element: (
-          <Suspense fallback={null}>
-            <GarageLevels />
-          </Suspense>
-        ),
+        element: <GarageLevels />,
       },
       {
         path: '/legendstoreprices',
-        element: (
-          <Suspense fallback={null}>
-            <LegendStorePrices />
-          </Suspense>
-        ),
+        element: <LegendStorePrices />,
       },
       {
         path: '/feedback',

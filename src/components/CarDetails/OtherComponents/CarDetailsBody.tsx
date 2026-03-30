@@ -15,6 +15,8 @@ import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
 import UnitToggle from '@/components/CarDetails/OtherComponents/UnitToggle';
 
+import "@/scss/carDetails/index.scss";
+
 interface Props {
   slug: string;
 }
