@@ -1,6 +1,17 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
 
+// Sizes
+$status-font-size: 1rem;
+$status-gap: 0.5rem;
+$status-pad: 0.5rem 0;
+
+// Chip colors
+$status-complete: #2ecc71;
+$status-progress: #f1c40f;
+$status-missing:  #e74c3c;
+$status-unknown:  #7f8c8d;
+
 .cdetail-status {
   min-width: 0;
   flex: 1;
@@ -13,5 +24,66 @@
     gap: 0.5rem;
     margin: 0.6rem 1rem 0.75rem 1rem;
     justify-content: flex-start;
+  }
+}
+
+.car-status-card {
+  width: 100%;
+  font-size: $status-font-size;
+
+  .updated {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: $status-pad;
+  }
+
+  .status-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $status-gap;
+    margin-top: 0.5rem;
+  }
+
+  .label {
+    color: $color-gold-glow;
+    font-weight: 700;
+  }
+
+  time {
+    color: $color-white;
+  }
+
+  .chip {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    color: #000;
+    background: $status-unknown;
+    box-shadow: 0 0 6px 2px #{color.change($color-gold-glow, $alpha: 0.35)};
+
+    &.chip--complete    { background: $status-complete; }
+    &.chip--in-progress { background: $status-progress; }
+    &.chip--missing     { background: $status-missing; }
+    &.chip--unknown     { background: $status-unknown; }
+  }
+
+  .msg {
+    color: $color-white;
+    opacity: 0.9;
+  }
+
+  &.is-inline {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .updated { padding: 0; }
+    .status-row { margin-top: 0; }
   }
 }

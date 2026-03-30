@@ -1,5 +1,4 @@
 import usePreferredUnit, { UnitPref } from "@/hooks/CarDetails/usePreferredUnit";
-import "@/scss/Cars/CarDetails/UnitToggle.scss";
 
 interface Props {
   value?: UnitPref;                      // allow controlled or self-contained
