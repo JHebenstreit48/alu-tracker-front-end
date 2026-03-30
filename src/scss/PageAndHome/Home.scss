@@ -113,23 +113,27 @@ $panel-bg-bot: #0a0610;
   }
 
   .carousel-item {
-    flex: 0 0 100%;
-    min-block-size: 37rem;
-    @include maxw($tablet-portrait) {
-      min-block-size: 19rem;
-    }
-    @include maxw($cellphone-portrait) {
-      min-block-size: 9.16rem;
-    }
+  flex: 0 0 100%;
+  min-block-size: 37rem;
+  block-size: 37rem;
 
-    > .carousel-image-box {
-      inline-size: 100%;
-      block-size: 100%;
-      border-radius: inherit;
-      overflow: hidden;
-      line-height: 0;
-    }
+  @include maxw($tablet-portrait) {
+    min-block-size: 19rem;
+    block-size: 19rem;
   }
+  @include maxw($cellphone-portrait) {
+    min-block-size: 9.16rem;
+    block-size: 9.16rem;
+  }
+
+  > .carousel-image-box {
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+    line-height: 0;
+  }
+}
 
   .carousel-spinner {
     position: absolute;
@@ -140,12 +144,12 @@ $panel-bg-bot: #0a0610;
   }
 
   .d-block {
-    display: block;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: contain;
-    border-radius: inherit;
-  }
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
 }
 
 /* ====================================
