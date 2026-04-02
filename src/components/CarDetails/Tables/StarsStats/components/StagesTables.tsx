@@ -28,7 +28,7 @@ function toStageRows(v: unknown): StageRow[] {
   return v
     .map((item, idx) => {
       const obj = item && typeof item === "object" ? (item as StageStatLine) : {};
-      const stage = typeof obj.stage === "number" ? obj.stage : idx + 1; // default to 1-based if missing
+      const stage = typeof obj.stage === "number" ? obj.stage : idx + 1;
       return { stage, ...obj };
     })
     .filter((r) => Number.isFinite(r.stage))
@@ -63,7 +63,7 @@ export default function StagesTables({ car, unitPreference }: Props) {
 
       cards.push({
         key: `${s.key}-stage-${row.stage}`,
-        title: <StageHeader stage={row.stage} />,
+        title: <StageHeader stage={row.stage} starRank={s.num} />,
         stats,
       });
     }

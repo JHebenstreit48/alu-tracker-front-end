@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "jsx": "react-jsx",
     "target": "ESNext",
     "module": "ESNext",
@@ -16,7 +17,7 @@
     },
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types"]  // ✅ leave src/types out
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["./vite-env.d.ts", "./src/**/*"],
   "exclude": ["node_modules"]
