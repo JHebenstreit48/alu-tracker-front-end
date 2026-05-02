@@ -4,7 +4,7 @@ import OwnedGoldHighlighter from '@/components/Cars/ClassTables/OwnedGoldHighlig
 import { FavoriteHeart } from '@/components/Shared/CarsAndBrands';
 import { CarImageCell } from '@/components/Cars/ClassTables/CarImageCell';
 import { useCarListTracking } from '@/hooks/Cars/useCarListTracking';
-import type { ClassTablesProps } from '@/types/Cars/ClassTables';
+import type { ClassTablesProps } from '@/types/Cars/Tables/classTables';
 
 export default function ClassTables({
   cars,
