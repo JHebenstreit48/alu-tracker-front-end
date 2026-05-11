@@ -5,51 +5,68 @@
    Local tokens (derived from Globals)
    ------------------------------------ */
 $gold: $color-gold-glow;
-$frame: $table-border-color; /* deep blue you already use */
-$panel-bg-top: #1a0e20;
-$panel-bg-bot: #0a0610;
+$frame: $table-border-color;
+$panel-bg-top: #160a1e;
+$panel-bg-bot: #08030f;
 
-/* Shared halo for framed blocks (info box + carousel) */
-@mixin gold-halo($radius: 16px, $width: 4px) {
+/* Shared halo for framed blocks
+   — softened opacity for modern premium feel */
+@mixin gold-halo($radius: 16px, $width: 2px) {
   border-radius: $radius;
-  border: $width solid $frame;
-  box-shadow: 0 0 0 1px rgba($gold, 0.32) inset, 0 0 10px 3px rgba($gold, 0.58);
+  border: $width solid rgba($gold, 0.2);
+  box-shadow:
+    0 0 0 1px rgba($gold, 0.12) inset,
+    0 0 12px 2px rgba($gold, 0.32),
+    0 4px 24px rgba(0, 0, 0, 0.5);
 }
 
 /* ====================================
    Asphalt Info Box
    ==================================== */
 .asphalt-info {
-  /* size & centering */
   max-inline-size: 90rem;
   margin: 3rem auto 5rem auto;
   padding: clamp(1rem, 2.2vw, 2rem);
 
-  /* theme background with subtle gradient depth */
+  /* Slightly deeper panel, aligns with new page bg */
   background: linear-gradient(180deg, $panel-bg-top 0%, $panel-bg-bot 100%);
   color: $color-white;
 
-  @include gold-halo(16px, 2px);
+  @include gold-halo(16px, 1px);
 
-  /* inner content wrapper (your GameInfo div) */
+  /* Subtle top highlight line for depth */
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($gold, 0.25) 30%,
+      rgba($gold, 0.25) 70%,
+      transparent
+    );
+  }
+
   > div {
     max-inline-size: 78rem;
     margin-inline: auto;
   }
 
-  /* paragraphs: consistent across browsers */
   p.info {
-    /* keep paragraphs as normal blocks (flex removed for consistency) */
     font-size: clamp(1rem, 1.35vw, 1.25rem);
     line-height: 1.6;
     letter-spacing: 0.1px;
-    /* spacing between paragraphs, no top margin on first */
+
     & + .info {
       margin-block-start: 0.9rem;
     }
   }
 
-  /* responsive */
   @include maxw($tablet-portrait) {
     margin-top: 10rem;
     padding: 1.25rem;
@@ -70,15 +87,19 @@ $panel-bg-bot: #0a0610;
 }
 
 /* ====================================
-   Carousel Shell (same frame language)
+   Carousel Shell
    ==================================== */
 #asphalt-carousel-slides {
   position: relative;
   max-inline-size: 90rem;
   margin: 0 auto 2.25rem;
-  border: 5px solid $color-black;
+
+  /* Thinned border — let glow do the work */
+  border: 2px solid rgba($gold, 0.15);
   border-radius: 16px;
-  box-shadow: 0 0 9px 3px rgba($gold, 0.55);
+  box-shadow:
+    0 0 12px 2px rgba($gold, 0.35),
+    0 8px 32px rgba(0, 0, 0, 0.6);
   background-color: #000;
   overflow: hidden;
 
@@ -87,17 +108,19 @@ $panel-bg-bot: #0a0610;
   }
   @include maxw($cellphone-portrait) {
     max-inline-size: 23rem;
-    border-width: 2px;
+    border-width: 1px;
     border-radius: 8px;
-    box-shadow: 0 0 9px 3px rgba($gold, 0.5);
+    box-shadow:
+      0 0 8px 2px rgba($gold, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.5);
   }
 
-  /* inner keeps rounded corners while sliding */
   .carousel-inner {
     border-radius: inherit;
     overflow: hidden;
     min-block-size: 37rem;
     background-color: #000;
+
     @include maxw($tablet-portrait) {
       min-block-size: 19rem;
     }
@@ -113,27 +136,27 @@ $panel-bg-bot: #0a0610;
   }
 
   .carousel-item {
-  flex: 0 0 100%;
-  min-block-size: 37rem;
-  block-size: 37rem;
+    flex: 0 0 100%;
+    min-block-size: 37rem;
+    block-size: 37rem;
 
-  @include maxw($tablet-portrait) {
-    min-block-size: 19rem;
-    block-size: 19rem;
-  }
-  @include maxw($cellphone-portrait) {
-    min-block-size: 9.16rem;
-    block-size: 9.16rem;
-  }
+    @include maxw($tablet-portrait) {
+      min-block-size: 19rem;
+      block-size: 19rem;
+    }
+    @include maxw($cellphone-portrait) {
+      min-block-size: 9.16rem;
+      block-size: 9.16rem;
+    }
 
-  > .carousel-image-box {
-    inline-size: 100%;
-    block-size: 100%;
-    border-radius: inherit;
-    overflow: hidden;
-    line-height: 0;
+    > .carousel-image-box {
+      inline-size: 100%;
+      block-size: 100%;
+      border-radius: inherit;
+      overflow: hidden;
+      line-height: 0;
+    }
   }
-}
 
   .carousel-spinner {
     position: absolute;
@@ -144,12 +167,12 @@ $panel-bg-bot: #0a0610;
   }
 
   .d-block {
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
 }
 
 /* ====================================
