@@ -11,8 +11,8 @@ $purple-glow: #7a05be;
    Hamburger (mobile-only, bullet-proof)
 ============================== */
 .Hamburger {
-  display: none; /* desktop default */
-  position: absolute; /* will be anchored by .Header__nav on mobile */
+  display: none;
+  position: absolute;
   left: 0;
   background: none;
   color: $gold-accent;
@@ -25,7 +25,6 @@ $purple-glow: #7a05be;
     outline-offset: 2px;
   }
 
-  /* Show on phone widths, centered vertically in header bar */
   @include maxw($cellphone-portrait) {
     display: block;
     left: 0.6rem;
@@ -34,7 +33,6 @@ $purple-glow: #7a05be;
   }
 }
 
-/* Bullet-proof: force-hide again above phone width (guards against overrides) */
 @include minw($cellphone-portrait + 1px) {
   .Hamburger {
     display: none !important;
@@ -43,7 +41,6 @@ $purple-glow: #7a05be;
 
 /* ==============================
    Wrapper
-   - Transparent on desktop so header gradient shows through
 ============================== */
 .NavigationWrapper {
   position: static;
@@ -52,14 +49,13 @@ $purple-glow: #7a05be;
   padding-block: 0.5rem;
   z-index: 100;
 
-  /* Mobile drawer: solid bg so content doesn’t bleed through */
   @include maxw($cellphone-portrait) {
     position: fixed;
     top: clamp(3.5rem, 9vw, 6rem);
     left: 0;
     height: calc(100dvh - clamp(3.5rem, 9vw, 6rem));
     width: 70%;
-    background-color: #2a0055;
+    background-color: #160030;
     padding: 1rem 0.5rem;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
@@ -70,7 +66,6 @@ $purple-glow: #7a05be;
   }
 }
 
-/* Optional comfort: landscape phones are short on height */
 @include phone-landscape-short {
   .NavigationWrapper {
     top: 3.25rem;
@@ -90,12 +85,10 @@ $purple-glow: #7a05be;
   margin: 0;
   list-style: none;
 
-  /* tablet & below can wrap */
   @include maxw($tablet-portrait) {
     flex-wrap: wrap;
   }
 
-  /* phone stack */
   @include maxw($cellphone-portrait) {
     flex-direction: column;
     align-items: stretch;
@@ -105,7 +98,6 @@ $purple-glow: #7a05be;
 
 /* ==============================
    Buttons-as-tabs
-   – No blue box. Clean underline on hover/focus/active.
 ============================== */
 .btn-primary {
   font-family: 'Cinzel', serif;
@@ -115,7 +107,6 @@ $purple-glow: #7a05be;
   border-radius: 0;
 }
 
-/* kill default tap highlight on mobile */
 .nav-css,
 .btn-lg {
   -webkit-tap-highlight-color: transparent;
@@ -128,16 +119,12 @@ $purple-glow: #7a05be;
   color: $gold-accent;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  text-shadow: 0 2px 2px rgba(122, 5, 190, 0.7);
+  text-shadow: 0 2px 2px rgba(100, 0, 160, 0.5);
   text-decoration: none;
-
-  /* Remove any default backgrounds/boxes from frameworks */
   background: transparent !important;
   box-shadow: none !important;
-
   transition: opacity 120ms ease, transform 120ms ease;
 
-  /* Animated gold underline (appears on hover/focus/active) */
   &::after {
     content: '';
     position: absolute;
@@ -169,7 +156,9 @@ $purple-glow: #7a05be;
     outline: none;
   }
   &:focus-visible {
-    text-shadow: 0 2px 2px rgba(122, 5, 190, 0.9), 0 0 6px rgba(223, 190, 7, 0.55),
+    text-shadow:
+      0 2px 2px rgba(100, 0, 160, 0.9),
+      0 0 6px rgba(223, 190, 7, 0.55),
       0 0 14px rgba(223, 190, 7, 0.25);
   }
   &:focus-visible::after {
@@ -179,20 +168,19 @@ $purple-glow: #7a05be;
   }
 }
 
-/* Active page: persistent underline + slight glow (no borders/box) */
 .is-active {
-  text-shadow: 0 2px 2px rgba(122, 5, 190, 0.9), 0 0 6px rgba(223, 190, 7, 0.55);
+  text-shadow:
+    0 2px 2px rgba(100, 0, 160, 0.9),
+    0 0 6px rgba(223, 190, 7, 0.55);
 }
 .is-active::after {
   transform: scaleX(1);
 }
 
-/* Legacy class cleanup (prevents side borders if present anywhere) */
 .active-link {
   border: none !important;
 }
 
-/* Motion preference */
 @media (prefers-reduced-motion: reduce) {
   .btn-lg {
     transition: none;
