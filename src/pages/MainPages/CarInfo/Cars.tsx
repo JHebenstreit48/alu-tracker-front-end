@@ -1,16 +1,16 @@
-import { useState } from "react";
-import CarData from "@/components/Cars/PageBody";
-
+import { useState, useEffect } from 'react';
+import CarData from '@/components/Cars/PageBody';
 import {
-  useCarAPI,
-  useCarFilters,
-  useCarHandlers,
-  useCarPagination,
-} from "@/hooks/Cars";
-import { useTrackerMode } from "@/hooks/shared/useTrackerMode";
-import { getAllCarTrackingData } from "@/utils/shared/StorageUtils";
+  FilteredCarsProvider,
+  useFilteredCarsContext,
+  setLocalFilteredCars,
+} from '@/context/Cars/filteredCarsContext';
 
-export default function Cars() {
+import { useCarAPI, useCarFilters, useCarHandlers, useCarPagination } from '@/hooks/Cars';
+import { useTrackerMode } from '@/hooks/shared/useTrackerMode';
+import { getAllCarTrackingData } from '@/utils/shared/StorageUtils';
+
+function CarsInner() {
   const {
     searchTerm,
     selectedStars,
@@ -27,12 +27,8 @@ export default function Cars() {
     handleResetFilters,
   } = useCarHandlers();
 
-  const [showOwned, setShowOwned] = useState(
-    localStorage.getItem("showOwned") === "true"
-  );
-  const [showKeyCars, setShowKeyCars] = useState(
-    localStorage.getItem("showKeyCars") === "true"
-  );
+  const [showOwned, setShowOwned] = useState(localStorage.getItem('showOwned') === 'true');
+  const [showKeyCars, setShowKeyCars] = useState(localStorage.getItem('showKeyCars') === 'true');
 
   const { trackerMode } = useTrackerMode();
   const tracking = getAllCarTrackingData();
@@ -51,24 +47,27 @@ export default function Cars() {
     showKeyCars,
   });
 
-  const {
-    paginatedCars,
-    totalFiltered,
-    carsPerPage,
-    handlePageSizeChange,
-    
-  } = useCarPagination(filteredCars);
+  const { setFilteredCars } = useFilteredCarsContext();
+
+  useEffect(() => {
+    setFilteredCars(filteredCars);
+    setLocalFilteredCars(filteredCars);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredCars]);
+
+  const { paginatedCars, totalFiltered, carsPerPage, handlePageSizeChange } =
+    useCarPagination(filteredCars);
 
   const toggleOwned = () => {
     const next = !showOwned;
     setShowOwned(next);
-    localStorage.setItem("showOwned", String(next));
+    localStorage.setItem('showOwned', String(next));
   };
 
   const toggleKeyCars = () => {
     const next = !showKeyCars;
     setShowKeyCars(next);
-    localStorage.setItem("showKeyCars", String(next));
+    localStorage.setItem('showKeyCars', String(next));
   };
 
   return (
@@ -103,5 +102,13 @@ export default function Cars() {
       handlePageSizeChange={handlePageSizeChange}
       totalFiltered={totalFiltered}
     />
+  );
+}
+
+export default function Cars() {
+  return (
+    <FilteredCarsProvider>
+      <CarsInner />
+    </FilteredCarsProvider>
   );
 }

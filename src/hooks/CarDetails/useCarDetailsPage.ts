@@ -6,17 +6,14 @@ import {
   generateCarKey,
   getCarTrackingData,
 } from "@/utils/shared/StorageUtils";
-
 import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";
 
 export function useCarDetailsPage(slug: string | undefined) {
-  const { trackerMode, unitPreference, goBack } = useCarNavigation(slug);
+  const { trackerMode, unitPreference, goBack, prevSlug, nextSlug, goToCar } = useCarNavigation(slug);
   const { car, status, error, keyObtained, setKeyObtained } = useCarData(slug, trackerMode);
 
-  // 🔑 Run the one-time seeding (writes stars: 1 to localStorage if missing)
   useKeyCarSeeding(car, trackerMode);
 
-  // Keep UI ↔ storage aligned for keyObtained at load
   useEffect(() => {
     if (!car || !trackerMode || !car.keyCar) return;
     const k = generateCarKey(car.brand, car.model);
@@ -36,5 +33,8 @@ export function useCarDetailsPage(slug: string | undefined) {
     trackerMode,
     unitPreference,
     goBack,
+    prevSlug,
+    nextSlug,
+    goToCar,
   };
 }
