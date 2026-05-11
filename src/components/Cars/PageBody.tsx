@@ -1,12 +1,12 @@
 import ClassTables from '@/components/Cars/ClassTables/ClassTables';
-import CarFilters from '@/components/Cars/CarFilters/CarFilters';
+import CarFilters from '@/components/Cars/Filters/CarFilters';
 import Header from '@/components/Shared/HeaderFooter/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 
 import { useNavigate } from 'react-router-dom';
 
 import '@/scss/Cars/CarsPage/index.scss';
-import type { CarDataProps } from '@/types/Cars/filterProps';
+import type { CarDataProps } from '@/types/Cars/Filters/carPageProps';
 
 export default function CarData({
   loading,

@@ -1,9 +1,4 @@
-interface CheckboxesProps {
-  showOwned: boolean;
-  showKeyCars: boolean;
-  onToggleOwned: () => void;
-  onToggleKeyCars: () => void;
-}
+import { CheckboxesProps } from '@/types/Cars/Filters/CheckboxesProps';
 
 export default function Checkboxes({
   showOwned,
@@ -13,7 +8,6 @@ export default function Checkboxes({
 }: CheckboxesProps) {
   return (
     <>
-      {/* Left column of the row */}
       <label className="CheckboxLabel ownedFilter" htmlFor="ownedChk">
         <input
           id="ownedChk"
@@ -25,7 +19,6 @@ export default function Checkboxes({
         <span>Owned</span>
       </label>
 
-      {/* Right column of the row */}
       <label className="CheckboxLabel keyCarFilter" htmlFor="keyChk">
         <input
           id="keyChk"

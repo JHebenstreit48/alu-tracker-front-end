@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Car } from "@/types/shared/car";
 import { CarTracking } from "@/types/shared/tracking"
-import { useFilteredCars } from "@/components/Cars/CarFilters/Utilities/useFilteredCars";
+import { useFilteredCars } from "@/utils/Cars/Filters/useFilteredCars";
 
 interface UseCarFiltersProps {
   cars: Car[];

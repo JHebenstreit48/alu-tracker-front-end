@@ -1,6 +1,6 @@
-import CarFilters from "@/components/Cars/CarFilters/CarFilters";
-import { useCarFilterLogic } from "@/components/Cars/CarFilters/Utilities/useCarFilterLogic";
-import { CarFiltersProps } from "@/components/Cars/CarFilters/interfaces/CarFiltersProps";
+import CarFilters from "@/components/Cars/Filters/CarFilters";
+import { useCarFilterLogic } from "@/utils/Cars/Filters/useCarFilterLogic";
+import { CarFiltersProps } from "@/types/Cars/Filters/CarFiltersProps";
 import { Car } from "@/types/shared/car";
 
 interface CarFiltersWrapperProps extends Omit<CarFiltersProps, "availableBrands" | "availableCountries"> {

@@ -3,26 +3,25 @@ export default function GameInfo() {
     <div className="asphalt-info">
       <div>
         <p className="info">
-          Asphalt 9 Legends was first released on July 25th, 2018 and was previously called Asphalt
-          Legends Unite as of July 17th, 2024. They have since changed the name again to Asphalt
-          Legends It features a wide variety of cars from manufacturers all over the world. The
-          automotive brands featured in this game range from the more common everyday brands like
-          Chevrolet, Ford, Nissan, Honda to luxury and exotic brands such as Lamborghini, Pagani,
-          Ferrari, and much more. When the game was still known as Asphalt 9 Legends, it only had a
-          maximum of 18 garage levels. Since the update and name change to Asphalt Legends Unite,
-          the garage levels have been increased to 60 total garage levels.
+          Asphalt Legends has gone through several name changes since it first launched as Asphalt
+          9: Legends on July 25, 2018. It was renamed Asphalt Legends Unite on July 17, 2024, and
+          then simplified to its current name, Asphalt Legends, on July 24, 2025 with the release
+          of the Legacy of Speed update. The game features an extensive roster of cars from
+          manufacturers around the world, ranging from everyday brands like Chevrolet, Ford, Honda,
+          and Nissan to exotic and luxury names like Ferrari, Lamborghini, Pagani, and many more.
         </p>
 
         <p className="info">
-          Asphalt Legends Unite is available on Xbox One and Xbox Series consoles, PlayStation 4 &
-          5, Steam, Windows, Nintendo Switch, iOS, Android, Huawei App Gallery, and Galaxy Store.
+          With the rebrand to Asphalt Legends Unite came a major expansion to the garage system,
+          growing from 18 garage levels to 60. The game is available on iOS, Android, Steam,
+          Windows, Nintendo Switch, Xbox One, Xbox Series, PlayStation 4 and 5, Huawei App Gallery,
+          and Galaxy Store.
         </p>
 
         <p className="info">
-          This website is an unofficial fan-made project created to help fill in gaps in information
-          about Asphalt Legends Unite. I noticed that many existing resources were incomplete or
-          outdated, so I built this site to provide a more organized and helpful reference for
-          players.
+          Asphalt Legends Tracker is an unofficial fan project built to give players a cleaner and
+          more reliable place to look things up. For more about the project, its goals, and how data
+          is sourced, visit the About page.
         </p>
       </div>
     </div>

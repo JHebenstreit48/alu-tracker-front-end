@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { DropdownsProps } from '@/components/Cars/CarFilters/interfaces/DropdownsProps';
+import { DropdownsProps } from '@/types/Cars/Filters/DropdownsProps';
 
 const renderStars = (count: number) => '★'.repeat(count);
 

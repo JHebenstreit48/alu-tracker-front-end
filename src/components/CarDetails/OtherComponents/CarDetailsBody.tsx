@@ -14,6 +14,7 @@ import useKeyObtained from '@/hooks/CarDetails/useKeyObtained';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
 import UnitToggle from '@/components/CarDetails/OtherComponents/UnitToggle';
+import CarNavArrows from '@/components/CarDetails/OtherComponents/carNavArrows';
 
 import "@/scss/carDetails/index.scss";
 
@@ -22,7 +23,17 @@ interface Props {
 }
 
 export default function CarDetailsBody({ slug }: Props) {
-  const { car, status, error, keyObtained, setKeyObtained, goBack } = useCarDetailsPage(slug);
+  const {
+    car,
+    status,
+    error,
+    keyObtained,
+    setKeyObtained,
+    goBack,
+    prevSlug,
+    nextSlug,
+    goToCar,
+  } = useCarDetailsPage(slug);
 
   const { trackerMode, toggleTrackerMode } = useTrackerMode();
   const { unit, setUnit } = usePreferredUnit();
@@ -42,19 +53,17 @@ export default function CarDetailsBody({ slug }: Props) {
         />
 
         {car && (
-          <>
-            <div className="toolsRow">
-              <CarTrackerToggle
-                isEnabled={trackerMode}
-                onToggle={toggleTrackerMode}
-              />
-              <h1 className="CarDetailTitle">{carTitle}</h1>
-              <UnitToggle
-                value={unit}
-                onChange={setUnit}
-              />
-            </div>
-          </>
+          <div className="toolsRow">
+            <CarTrackerToggle
+              isEnabled={trackerMode}
+              onToggle={toggleTrackerMode}
+            />
+            <h1 className="CarDetailTitle">{carTitle}</h1>
+            <UnitToggle
+              value={unit}
+              onChange={setUnit}
+            />
+          </div>
         )}
 
         <DetailHeader
@@ -67,15 +76,17 @@ export default function CarDetailsBody({ slug }: Props) {
           <div className="error-message">
             <h2>⚠️ Could not load this car&apos;s details.</h2>
             <p>The car may not exist or an error occurred while fetching.</p>
-            <button
-              onClick={goBack}
-              className="backBtn"
-            >
+            <button onClick={goBack} className="backBtn">
               Back to Car List
             </button>
           </div>
         ) : car ? (
           <>
+            <CarNavArrows
+              prevSlug={prevSlug}
+              nextSlug={nextSlug}
+              onNavigate={goToCar}
+            />
             <CarImage car={car} />
             <TablesGrid
               car={car}
