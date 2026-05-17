@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Car } from '@/types/shared/car';
+import { Car, ObtainableViaEntry } from '@/types/shared/car';
 import StarRankSelector from '@/components/CarDetails/OtherComponents/StarRankSelector';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import {
@@ -8,6 +8,54 @@ import {
   setCarTrackingData,
 } from '@/utils/shared/StorageUtils';
 import { formatAddedDate } from '@/utils/CarDetails/formatDate';
+
+function renderObtainableVia(obtainableVia: Car['obtainableVia']) {
+  if (!obtainableVia || (Array.isArray(obtainableVia) && obtainableVia.length === 0)) {
+    return <span>—</span>;
+  }
+
+  if (
+    Array.isArray(obtainableVia) &&
+    obtainableVia.length > 0 &&
+    typeof obtainableVia[0] === 'object' &&
+    obtainableVia[0] !== null &&
+    'methods' in obtainableVia[0]
+  ) {
+    return (
+      <div className="obtainable-list">
+        {(obtainableVia as ObtainableViaEntry[]).map((group, i) => (
+          <div
+            key={i}
+            className={`obtainable-group${i > 0 ? ' obtainable-group--bordered' : ''}`}
+          >
+            <div className="obtainable-status-label">
+              <span className={`obtainable-badge obtainable-${group.status}`}>
+                {group.status.charAt(0).toUpperCase() + group.status.slice(1)}
+              </span>
+            </div>
+            <div className="obtainable-methods">
+              {group.methods.map((method, j) => (
+                <span key={j} className="obtainable-method-item">
+                  {method}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (Array.isArray(obtainableVia)) {
+    return <span>{obtainableVia.join(', ')}</span>;
+  }
+
+  if (typeof obtainableVia === 'string') {
+    return <span>{obtainableVia.trim() || '—'}</span>;
+  }
+
+  return <span>—</span>;
+}
 
 const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, forceOwned }) => {
   const carKey = generateCarKey(car.brand, car.model);
@@ -24,7 +72,6 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
     setGoldMaxed(data.goldMaxed === true);
   }, [carKey]);
 
-  // ✅ Only mark as owned if user manually selects star (for non-key cars)
   useEffect(() => {
     if (!car.keyCar && selectedStarRank > 0 && hasUserInteracted.current && !owned) {
       setOwned(true);
@@ -36,26 +83,15 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
     setSelectedStarRank(value);
   };
 
-  // ✅ Force owned logic (e.g. key car and key obtained)
   useEffect(() => {
     if (forceOwned && !owned) setOwned(true);
   }, [forceOwned, owned]);
 
-  // ✅ Save to localStorage
   useEffect(() => {
     setCarTrackingData(carKey, { stars: selectedStarRank, owned, goldMaxed });
   }, [carKey, selectedStarRank, owned, goldMaxed]);
 
-  // ✅ Sync if logged in
   useAutoSyncDependency([selectedStarRank, owned, goldMaxed]);
-
-  const obtainableViaDisplay = Array.isArray(car.obtainableVia)
-    ? car.obtainableVia.length
-      ? car.obtainableVia.join(', ')
-      : '—'
-    : typeof car.obtainableVia === 'string' && car.obtainableVia.trim()
-      ? car.obtainableVia.trim()
-      : '—';
 
   return (
     <table className="carInfoTable basicInfoTable">
@@ -86,7 +122,6 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
           <td colSpan={2}>{car.country}</td>
         </tr>
 
-        {/* ✅ Added Date under Country */}
         {car.addedDate && (
           <tr>
             <td>Added</td>
@@ -101,7 +136,13 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
 
         <tr>
           <td>Obtainable Via</td>
-          <td>{obtainableViaDisplay}</td>
+          <td
+            id="obtainable-cell"
+            className="obtainable-cell"
+            style={{ padding: 0, verticalAlign: 'top' }}
+          >
+            {renderObtainableVia(car.obtainableVia)}
+          </td>
         </tr>
 
         <tr>

@@ -11,7 +11,7 @@ import {
   DocumentData,
 } from "firebase/firestore";
 import { dbTracker } from "@/Firebase/client";
-import type { Car } from "@/types/shared/car";
+import type { Car, ObtainableViaEntry } from "@/types/shared/car";
 
 type AnyObj = Record<string, unknown>;
 
@@ -32,15 +32,22 @@ function pickBool(data: AnyObj, legacyKey: string, newKey: string): boolean | un
   return typeof v === "boolean" ? v : undefined;
 }
 
-function pickStringArrayOrString(
+function pickObtainableVia(
   data: AnyObj,
   legacyKey: string,
   newKey: string
-): string[] | string | null | undefined {
+): ObtainableViaEntry[] | string[] | string | null | undefined {
   const v = data[legacyKey] ?? data[newKey];
   if (v === null) return null;
   if (typeof v === "string") return v;
-  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+  if (Array.isArray(v)) {
+    if (v.length === 0) return v as ObtainableViaEntry[];
+    // New format — array of { status, methods[] } grouped objects
+    if (v.every((x) => x && typeof x === "object" && "status" in x && "methods" in x))
+      return v as ObtainableViaEntry[];
+    // Old format — array of strings
+    if (v.every((x) => typeof x === "string")) return v as string[];
+  }
   return undefined;
 }
 
@@ -57,7 +64,6 @@ const carConverter: FirestoreDataConverter<Car> = {
     const klass = pickString(data, "Class", "class").trim();
     const image = pickString(data, "Image", "image").trim();
 
-    // ✅ avoid mixing ?? and || (use parentheses + a temp)
     const idFromField = pickNumber(data, "Id", "id");
     const idFromDocId = Number(snapshot.id);
     const id =
@@ -68,11 +74,10 @@ const carConverter: FirestoreDataConverter<Car> = {
     const country = (pickString(data, "Country", "country") || "").trim() || undefined;
 
     const obtainableVia =
-      pickStringArrayOrString(data, "ObtainableVia", "obtainableVia") ?? null;
+      pickObtainableVia(data, "ObtainableVia", "obtainableVia") ?? null;
 
     const keyCar = pickBool(data, "KeyCar", "keyCar");
 
-    // ✅ NEW: optional sources array (for Sources page + per-car attribution)
     const sourcesRaw = data.sources;
     const sources =
       Array.isArray(sourcesRaw) && sourcesRaw.every((x) => typeof x === "string")
@@ -105,8 +110,6 @@ const carsCol = collection(dbTracker, "cars").withConverter(carConverter);
 
 export class FirebaseCarsAdapter {
   async list(limitCount = 2000): Promise<Car[]> {
-    // If orderBy("normalizedKey") ever errors due to missing field,
-    // swap to orderBy("brand") temporarily.
     const q = query(carsCol, orderBy("normalizedKey"), limit(limitCount));
     const snap = await getDocs(q);
     return snap.docs.map((d) => d.data());
