@@ -25,6 +25,12 @@ export interface NewStatsFormat {
   gold?: { gold?: StatBlock };
 }
 
+/** Single group in the obtainableVia array — groups methods by status */
+export type ObtainableViaEntry = {
+  status: "present" | "recent" | "obsolete";
+  methods: string[];
+};
+
 export interface Car {
   id: number;
   image?: string;
@@ -33,7 +39,12 @@ export interface Car {
   model: string;
   country?: string;
   rarity: string;
-  obtainableVia?: string[] | string | null;
+  /**
+   * New format: array of { status, methods[] } objects grouped by status
+   * Legacy format: array of strings or a single string
+   * Empty array or null = no data yet
+   */
+  obtainableVia?: ObtainableViaEntry[] | string[] | string | null;
   class: string;
   stars: number;
   keyCar?: boolean;
@@ -51,7 +62,7 @@ export type FullCar = Car &
   GoldMaxStats &
   Blueprints &
   StockStats &
-  MaxStarStats & 
+  MaxStarStats &
   NewStatsFormat & {
     updatedAt?: string;
     _status?: CarStatus | null;

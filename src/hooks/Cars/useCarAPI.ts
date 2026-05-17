@@ -10,15 +10,15 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 import { dbTracker } from "@/Firebase/client";
-import type { Car } from "@/types/shared/car";
+import type { Car, ObtainableViaEntry } from "@/types/shared/car";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
 
 type AnyObj = Record<string, unknown>;
 
 type CarWithMeta = {
   car: Car;
-  key: string;    // normalizedKey (or docId fallback)
-  prefer: number; // higher wins (new format wins)
+  key: string;
+  prefer: number;
 };
 
 function pickString(obj: AnyObj, legacyKey: string, newKey: string): string {
@@ -38,15 +38,22 @@ function pickBool(obj: AnyObj, legacyKey: string, newKey: string): boolean | und
   return typeof v === "boolean" ? v : undefined;
 }
 
-function pickStringArrayOrString(
+function pickObtainableVia(
   obj: AnyObj,
   legacyKey: string,
   newKey: string
-): string[] | string | null | undefined {
+): ObtainableViaEntry[] | string[] | string | null | undefined {
   const v = obj[legacyKey] ?? obj[newKey];
   if (v === null) return null;
   if (typeof v === "string") return v;
-  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+  if (Array.isArray(v)) {
+    if (v.length === 0) return v as ObtainableViaEntry[];
+    // New format — array of { status, methods[] } grouped objects
+    if (v.every((x) => x && typeof x === "object" && "status" in x && "methods" in x))
+      return v as ObtainableViaEntry[];
+    // Old format — array of strings
+    if (v.every((x) => typeof x === "string")) return v as string[];
+  }
   return undefined;
 }
 
@@ -65,9 +72,6 @@ function resolveImageUrl(raw: string): string | undefined {
   return getCarImageUrl(s);
 }
 
-/**
- * Convert Firestore doc (legacy OR new) into canonical Car.
- */
 function toCar(docId: string, raw: AnyObj): CarWithMeta | null {
   const brand = pickString(raw, "Brand", "brand").trim();
   const model = pickString(raw, "Model", "model").trim();
@@ -81,9 +85,7 @@ function toCar(docId: string, raw: AnyObj): CarWithMeta | null {
   const id = pickNumber(raw, "Id", "id") ?? 0;
 
   const country = (pickString(raw, "Country", "country") || "").trim() || undefined;
-  const obtainableVia =
-    pickStringArrayOrString(raw, "ObtainableVia", "obtainableVia") ?? null;
-
+  const obtainableVia = pickObtainableVia(raw, "ObtainableVia", "obtainableVia") ?? null;
   const keyCar = pickBool(raw, "KeyCar", "keyCar");
 
   const normalizedKey =

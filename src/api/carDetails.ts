@@ -2,6 +2,7 @@ import { doc, getDoc, type Timestamp } from "firebase/firestore";
 import { dbTracker } from "@/Firebase/client";
 
 import type { FullCar } from "@/types/shared/car";
+import type { ObtainableViaEntry } from "@/types/shared/car";
 import type { CarStatus, ApiStatusDoc } from "@/types/shared/status";
 import { mapApiStatus } from "@/utils/CarDetails/status";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
@@ -25,19 +26,25 @@ function pickBool(data: AnyObj, legacyKey: string, newKey: string): boolean | un
   return typeof v === "boolean" ? v : undefined;
 }
 
-function pickStringArrayOrString(
+function pickObtainableVia(
   data: AnyObj,
   legacyKey: string,
   newKey: string
-): string[] | string | null | undefined {
+): ObtainableViaEntry[] | string[] | string | null | undefined {
   const v = data[legacyKey] ?? data[newKey];
   if (v === null) return null;
   if (typeof v === "string") return v;
-  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+  if (Array.isArray(v)) {
+    if (v.length === 0) return v as ObtainableViaEntry[];
+    // New format — array of { status, methods[] } grouped objects
+    if (v.every((x) => x && typeof x === "object" && "status" in x && "methods" in x))
+      return v as ObtainableViaEntry[];
+    // Old format — array of strings
+    if (v.every((x) => typeof x === "string")) return v as string[];
+  }
   return undefined;
 }
 
-// Avoid double-prefixing if stored value is already a full URL
 function resolveImageUrl(raw: string): string {
   const s = (raw ?? "").trim();
   if (!s) return "";
@@ -58,12 +65,6 @@ function numFromObj(o: AnyObj | null, key: string): number | undefined {
   return undefined;
 }
 
-/**
- * Mirrors a stat block between legacy and canonical keys.
- * We return ONLY canonical flat keys here (stockRank, goldTopSpeed, etc)
- *
- * Enhancement: If V2 object exists (data.stock / data.gold), prefer it.
- */
 function pickGoldOrStock(
   data: AnyObj,
   legacyPrefix: "Gold" | "Stock",
@@ -74,11 +75,9 @@ function pickGoldOrStock(
   const legacyRankKey = legacyPrefix === "Gold" ? "Gold_Max_Rank" : "Stock_Rank";
   const newRankKey = legacyPrefix === "Gold" ? "goldMaxRank" : "stockRank";
 
-  // V2 objects: data.gold.rank / data.stock.rank
   const v2Obj = asObj(data[newPrefix]);
 
   if (legacyPrefix === "Gold") {
-    // legacy uses goldMaxRank but V2 uses gold.rank
     const rankFromV2 = numFromObj(v2Obj, "rank");
     const rank = rankFromV2 ?? pickNumber(data, legacyRankKey, newRankKey);
     if (rank !== undefined) out[newRankKey] = rank;
@@ -104,13 +103,6 @@ function pickGoldOrStock(
   return out;
 }
 
-/**
- * Star Max:
- * - Legacy flat keys: oneStarMaxRank, twoStarMaxTopSpeed, etc
- * - V2 nested object: maxStar.oneStar.rank etc
- *
- * We still OUTPUT flat keys to keep UI stable.
- */
 function pickStarMax(data: AnyObj, star: 1 | 2 | 3 | 4 | 5 | 6): AnyObj {
   const out: AnyObj = {};
 
@@ -194,7 +186,7 @@ export async function fetchCarDetail(slug: string): Promise<FullCar> {
   const rarity = pickString(data, "Rarity", "rarity").trim();
   const country = pickString(data, "Country", "country").trim();
   const keyCar = pickBool(data, "KeyCar", "keyCar");
-  const obtainableVia = pickStringArrayOrString(data, "ObtainableVia", "obtainableVia");
+  const obtainableVia = pickObtainableVia(data, "ObtainableVia", "obtainableVia");
   const epics = pickNumber(data, "Epics", "epics");
 
   const added = pickString(data, "Added", "added").trim();
@@ -203,16 +195,12 @@ export async function fetchCarDetail(slug: string): Promise<FullCar> {
   const tags = pickString(data, "Tags", "tags").trim();
 
   const merged: AnyObj = {
-    // keep original extras for now (safe during migration)
     ...data,
-
-    // ✅ canonical identity
     id,
     brand,
     model,
     class: klass,
     image,
-
     ...(stars !== undefined ? { stars } : {}),
     ...(rarity ? { rarity } : {}),
     ...(country ? { country } : {}),
@@ -223,8 +211,6 @@ export async function fetchCarDetail(slug: string): Promise<FullCar> {
     ...(addedDate ? { addedDate } : {}),
     ...(tags ? { tags } : {}),
     ...(addedWith !== undefined ? { addedWith } : {}),
-
-    // ✅ canonical stat blocks (flat) — now supports V2 nested sources too
     ...pickBlueprints(data),
     ...pickGoldOrStock(data, "Stock", "stock"),
     ...pickGoldOrStock(data, "Gold", "gold"),
