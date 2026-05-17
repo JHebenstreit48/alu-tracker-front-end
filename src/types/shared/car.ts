@@ -27,7 +27,7 @@ export interface NewStatsFormat {
 
 /** Single group in the obtainableVia array — groups methods by status */
 export type ObtainableViaEntry = {
-  status: "present" | "recent" | "obsolete";
+  status: "original" | "current" | "recent" | "inactive" | "obsolete";
   methods: string[];
 };
 

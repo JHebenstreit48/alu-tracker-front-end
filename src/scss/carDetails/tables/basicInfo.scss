@@ -121,14 +121,25 @@
       color: #ff6b6b;
     }
 
+    &.obtainable-inactive {
+      background-color: rgba(100, 149, 237, 0.2);
+      color: #7aaef5;
+    }
+
     &.obtainable-recent {
       background-color: rgba(223, 190, 7, 0.2);
       color: $color-gold-glow;
     }
 
-    &.obtainable-present {
+    &.obtainable-present,
+    &.obtainable-current {
       background-color: rgba(50, 200, 100, 0.2);
       color: #5dbb7a;
+    }
+
+    &.obtainable-original {
+      background-color: rgba(180, 100, 220, 0.2);
+      color: #c47fe8;
     }
   }
 }
