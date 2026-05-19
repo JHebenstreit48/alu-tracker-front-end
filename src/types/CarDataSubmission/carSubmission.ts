@@ -1,4 +1,5 @@
 import type { Car } from '@/types/shared/car';
+import type { DeltasByStar } from '@/types/CarDataSubmission/carDeltas';
 
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
 
@@ -45,6 +46,8 @@ export type CarStatsPatch = {
   blueprints?: Record<string, unknown>;
   importPartsUpgrades?: Record<string, unknown>;
   garageLevelXp?: Record<string, unknown>;
+  stageDeltas?: DeltasByStar;
+  importDeltas?: DeltasByStar;
 };
 
 export type CarPatch = CarIdentityPatch & {

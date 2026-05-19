@@ -44,13 +44,10 @@ export default function CarDataForm(): JSX.Element {
     try {
       const cleaned = buildSubmission(payload);
       await createSubmission(cleaned, token ?? undefined);
-      setOkMsg(
-        "Submission created! Your edits are now in the review queue."
-      );
+      setOkMsg("Submission created! Your edits are now in the review queue.");
       clearAll();
     } catch (e: unknown) {
-      const msg =
-        e instanceof Error ? e.message : "Failed to submit";
+      const msg = e instanceof Error ? e.message : "Failed to submit";
       setErrMsg(msg);
     } finally {
       setBusy(false);

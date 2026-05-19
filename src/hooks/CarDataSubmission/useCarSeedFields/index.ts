@@ -1,0 +1,1 @@
+export { useCarSeedFields, type CarSeedFields } from '@/hooks/CarDataSubmission/useCarSeedFields/useCarSeedFields';

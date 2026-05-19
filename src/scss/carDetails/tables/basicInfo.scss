@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "@scss/Globals/index" as *;
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
 
 .carDetail {
   .tableCard {
@@ -46,7 +46,7 @@
       white-space: nowrap;
     }
 
-    tbody tr:last-child input[type="checkbox"] {
+    tbody tr:last-child input[type='checkbox'] {
       transform: translateY(1px);
     }
   }
@@ -60,7 +60,7 @@
     padding: 15px 80px 20px 80px !important;
 
     font-size: $table-header-font-size-car-details !important;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   // =============================
@@ -141,5 +141,10 @@
       background-color: rgba(180, 100, 220, 0.2);
       color: #c47fe8;
     }
+  }
+
+  &.obtainable-upcoming {
+    background-color: rgba(0, 210, 200, 0.2);
+    color: #00d4c8;
   }
 }
