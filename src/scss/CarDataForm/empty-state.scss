@@ -1,0 +1,25 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.StatsEmptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: rgba(#e9e6ee, 0.35);
+
+  &__icon {
+    font-size: 2rem;
+    opacity: 0.4;
+    line-height: 1;
+  }
+
+  &__text {
+    font-size: 0.9rem;
+    color: rgba(#e9e6ee, 0.4);
+  }
+}

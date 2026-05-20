@@ -1,0 +1,137 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.StatsCarSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba($gold-accent, 0.22);
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.StatsCarSelector__label {
+  font-size: 0.8rem;
+  color: rgba(#e9e6ee, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-right: 0.25rem;
+}
+
+.StatsCarSelector__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  flex: 1;
+  padding: 6px 0;
+}
+
+.StatsCarChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid rgba(#7a05be, 0.35);
+  background: rgba(#7a05be, 0.15);
+  color: rgba(#c4a8f0, 0.65);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  user-select: none;
+
+  &--active {
+    background: rgba(#7a05be, 0.45);
+    border-color: rgba(#7a05be, 0.75);
+    color: #e2d4ff;
+    box-shadow: 0 0 8px rgba(#7a05be, 0.35);
+  }
+
+  &:hover:not(&--active) {
+    background: rgba(#7a05be, 0.28);
+    color: #c4a8f0;
+  }
+
+  &__label {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+    line-height: 1;
+  }
+
+  &__remove {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 50%;
+    color: rgba(#e9e6ee, 0.7);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    transition: background 0.15s, color 0.15s;
+    opacity: 0;
+    pointer-events: none;
+
+    .StatsCarChip:hover & {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    &:hover {
+      background: rgba(#e05555, 0.75);
+      color: #fff;
+    }
+  }
+}
+
+.StatsCarSelector__nav {
+  display: flex;
+  gap: 0.3rem;
+  margin-left: auto;
+}
+
+.StatsCarNav {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(#e9e6ee, 0.6);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: none;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.11);
+    color: #e9e6ee;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}

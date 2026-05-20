@@ -12,7 +12,12 @@ function carKey(c: Car): string {
   return c.normalizedKey || String(c.id);
 }
 
-export default function CarPicker({ cars, brands, selectedKeys, onToggleKey }: Props): JSX.Element {
+export default function CarPicker({
+  cars,
+  brands,
+  selectedKeys,
+  onToggleKey,
+}: Props): JSX.Element {
   const [brand, setBrand] = useState("");
   const [query, setQuery] = useState("");
 
@@ -55,9 +60,7 @@ export default function CarPicker({ cars, brands, selectedKeys, onToggleKey }: P
           <select value={brand} onChange={(e) => setBrand(e.target.value)}>
             <option value="">All brands</option>
             {brands.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
+              <option key={b} value={b}>{b}</option>
             ))}
           </select>
         </label>
@@ -87,11 +90,13 @@ export default function CarPicker({ cars, brands, selectedKeys, onToggleKey }: P
           const checked = selectedSet.has(k);
           return (
             <label key={k} className="CarPickerItem">
-              <input type="checkbox" checked={checked} onChange={() => onToggleKey(k)} />
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => onToggleKey(k)}
+              />
               <div className="CarPickerText">
-                <div className="CarPickerMain">
-                  {c.brand} {c.model}
-                </div>
+                <div className="CarPickerMain">{c.brand} {c.model}</div>
                 <div className="CarPickerMeta">
                   {c.class} • {c.rarity} • {c.stars}★
                 </div>
@@ -101,7 +106,9 @@ export default function CarPicker({ cars, brands, selectedKeys, onToggleKey }: P
         })}
       </div>
 
-      <p className="CarDataFormHint">Showing {filtered.length} (capped at 250)</p>
+      <p className="CarDataFormHint">
+        Showing {filtered.length} (capped at 250)
+      </p>
     </div>
   );
 }

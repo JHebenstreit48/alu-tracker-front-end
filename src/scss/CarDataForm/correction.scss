@@ -1,0 +1,40 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.StatsTabHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.CorrectionToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(#e9e6ee, 0.5);
+  user-select: none;
+
+  input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: $gold-accent;
+    cursor: pointer;
+  }
+
+  &:has(input:checked) span { color: $gold-accent; }
+}
+
+.CarDataFormLabel--readOnly {
+  opacity: 0.6;
+}
+
+.CarDataFormInput--readOnly {
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+  border-style: dashed;
+}
