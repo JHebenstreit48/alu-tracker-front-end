@@ -9,7 +9,6 @@ import Overview      from '@/components/CarDataForm/Stats/tabs/Overview';
 import MaxStars      from '@/components/CarDataForm/Stats/tabs/MaxStars';
 import Stages        from '@/components/CarDataForm/Stats/tabs/Stages';
 import Deltas        from '@/components/CarDataForm/Stats/tabs/Deltas';
-import Imports       from '@/components/CarDataForm/Stats/tabs/Imports';
 import UpgradeCosts  from '@/components/CarDataForm/Stats/tabs/UpgradeCosts';
 import GarageLevelXp from '@/components/CarDataForm/Stats/tabs/GarageLevelXp';
 
@@ -20,14 +19,13 @@ type Props = {
   onToggleKey: (key: string) => void;
 };
 
-type TabId = 'overview' | 'maxStars' | 'stages' | 'deltas' | 'imports' | 'cost' | 'xp';
+type TabId = 'overview' | 'maxStars' | 'stages' | 'deltas' | 'cost' | 'xp';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'overview', label: 'Blueprints · Stock · Gold' },
   { id: 'maxStars', label: 'Max ★ Stats' },
   { id: 'stages',   label: 'Stages' },
   { id: 'deltas',   label: 'Deltas' },
-  { id: 'imports',  label: 'Imports' },
   { id: 'cost',     label: 'Upgrade Cost' },
   { id: 'xp',       label: 'Garage Level XP' },
 ];
@@ -54,7 +52,6 @@ export default function StatsFields({
 
   const handleRemove = (key: string) => {
     onToggleKey(key);
-    // If removing the active car, move to previous
     const removedIdx = selectedCars.findIndex(
       (c) => (c.normalizedKey ?? String(c.id)) === key
     );
@@ -111,7 +108,6 @@ export default function StatsFields({
       {activeTab === 'maxStars' && <MaxStars      {...tabProps} />}
       {activeTab === 'stages'   && <Stages        {...tabProps} />}
       {activeTab === 'deltas'   && <Deltas        {...tabProps} />}
-      {activeTab === 'imports'  && <Imports       {...tabProps} />}
       {activeTab === 'cost'     && <UpgradeCosts  {...tabProps} />}
       {activeTab === 'xp'       && <GarageLevelXp {...tabProps} />}
 

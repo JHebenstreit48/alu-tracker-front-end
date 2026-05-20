@@ -42,5 +42,6 @@ export function makeSeedSelectors(seedData: FullCar | null) {
     seedImportXp:           sd?.imports?.garageLevelXp?.perCardByStage           ?? null,
     seedImportReqs:         sd?.imports?.requirements?.incrementalByStage        ?? null,
     seedImportDeltasByStar: sd?.importDeltas                                     ?? null,
+    seedStageDeltasByStar:  sd?.stagesDeltas                                     ?? null,
   };
 }

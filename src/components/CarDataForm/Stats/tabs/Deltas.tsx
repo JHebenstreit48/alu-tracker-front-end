@@ -1,7 +1,7 @@
 import EmptyState from '@/components/CarDataForm/Stats/shared/EmptyState';
 import DeltaRowFields from '@/components/CarDataForm/Stats/shared/DeltaRowFields';
 import type { CarSeedFields } from '@/hooks/CarDataSubmission/useCarSeedFields/useCarSeedFields';
-import { STAR_LABELS } from '@/types/CarDataSubmission/tabs/shared';
+import { STAR_KEYS, STAR_LABELS } from '@/types/CarDataSubmission/tabs/shared';
 import type { DeltaRowState, ImportDeltaRowState } from '@/types/CarDataSubmission/tabs/deltas';
 
 type Props = {
@@ -18,10 +18,23 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
     activeKey, activeStars,
     getStageDeltas, getImportDeltas,
     updateStageDelta, updateImportDelta,
+    seedStageDeltasByStar,
+    seedImportDeltasByStar,
     isCorrectionMode, toggleCorrectionMode,
   } = fields;
 
   const correcting = isCorrectionMode(activeKey, 'deltas');
+
+  // Read-only only if any card or delta value is > 0 (including decimals like 0.5).
+  // All-zero rows mean data hasn't been entered yet — keep editable.
+  function rowHasSeedData(seedEntry: any): boolean {
+    if (!seedEntry) return false;
+    const cards = seedEntry.cardsAppliedByStat ?? {};
+    const delta = seedEntry.statDeltaByStat ?? {};
+    return [...Object.values(cards), ...Object.values(delta)].some(
+      (v) => typeof v === 'number' && v > 0
+    );
+  }
 
   return (
     <>
@@ -36,23 +49,34 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
 
         <div className="DeltaSection">
           <h3 className="DeltaSection__title">Stage Deltas</h3>
-          {getStageDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => (
-            <div key={starIdx} className="DeltaStarGroup">
-              <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
-              {rows.map((row, rowIdx) => (
-                <DeltaRowFields
-                  key={rowIdx}
-                  row={row}
-                  onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
-                />
-              ))}
-            </div>
-          ))}
+          {getStageDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => {
+            const starKey = STAR_KEYS[starIdx];
+            const seedRows: any[] = seedStageDeltasByStar?.[starKey] ?? [];
+            return (
+              <div key={starIdx} className="DeltaStarGroup">
+                <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
+                {rows.map((row, rowIdx) => {
+                  const seedEntry = seedRows[rowIdx] ?? null;
+                  const readOnly = !correcting && rowHasSeedData(seedEntry);
+                  return (
+                    <DeltaRowFields
+                      key={rowIdx}
+                      row={row}
+                      onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
+                      readOnly={readOnly}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
 
         <div className="DeltaSection">
           <h3 className="DeltaSection__title">Import Deltas</h3>
           {getImportDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => {
+            const starKey = STAR_KEYS[starIdx];
+            const seedRows: any[] = seedImportDeltasByStar?.[starKey] ?? [];
             const importRows = rows as ImportDeltaRowState[];
 
             const stageMap = new Map<number, { row: ImportDeltaRowState; idx: number }[]>();
@@ -65,15 +89,20 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
               <div key={starIdx} className="DeltaStarGroup">
                 <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
                 {Array.from(stageMap.entries()).map(([stageNum, entries]) =>
-                  entries.map(({ row, idx }) => (
-                    <DeltaRowFields
-                      key={idx}
-                      row={row as unknown as DeltaRowState}
-                      onChange={(field, v) => updateImportDelta(starIdx, idx, field as keyof ImportDeltaRowState, v)}
-                      stageLabel={`Stage ${stageNum}`}
-                      rarity={row.rarity}
-                    />
-                  ))
+                  entries.map(({ row, idx }) => {
+                    const seedEntry = seedRows[idx] ?? null;
+                    const readOnly = !correcting && rowHasSeedData(seedEntry);
+                    return (
+                      <DeltaRowFields
+                        key={idx}
+                        row={row as unknown as DeltaRowState}
+                        onChange={(field, v) => updateImportDelta(starIdx, idx, field as keyof ImportDeltaRowState, v)}
+                        stageLabel={`Stage ${stageNum}`}
+                        rarity={row.rarity}
+                        readOnly={readOnly}
+                      />
+                    );
+                  })
                 )}
               </div>
             );
