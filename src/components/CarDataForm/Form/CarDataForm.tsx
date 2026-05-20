@@ -95,6 +95,7 @@ export default function CarDataForm(): JSX.Element {
           onApplyStats={(statsPatch) =>
             selectedKeys.forEach((k) => updatePatch(k, { stats: statsPatch }))
           }
+          onToggleKey={toggleKey}
         />
       </section>
 

@@ -57,6 +57,7 @@ export function useCarSeedFields(selectedCars: Car[], activeCarIdx: number) {
     state.importCostMap, state.importXpMap, state.importReqMap,
     state.stageDeltasMap, state.importDeltasMap, state.correctionMode,
     stagesDeltaRowCount, importStageNums,
+    seeds.seedImportDeltasByStar,
   );
 
   const updaters = makeUpdaters(

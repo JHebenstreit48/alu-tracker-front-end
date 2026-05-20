@@ -34,7 +34,7 @@ export default function GarageLevelXp({ fields, noCarsSelected, carSelector, per
       </div>
       <div className="StatsBlocks">
         <section className="StatsBlock StatsBlock--wide">
-          <h3 className="StatsBlockTitle">Garage XP per stage upgrade</h3>
+          <h3 className="StatsBlockTitle">Garage Level XP per stage upgrade</h3>
           <div className="StatsGrid StatsGrid--costXp">
             {seedStageNums.map((stageNum, i) => {
               const seedVal = seedGarageLevelXp?.[stageNum];

@@ -69,16 +69,16 @@ export function buildStatsPatch(car: Car, getters: ReturnedGetters): CarStatsPat
   getStageDeltas(k).slice(0, stars).forEach((rows, i) => {
     const entries = rows.filter(anyInDeltaRow).map((row) => {
       const entry: any = { stage: row.stage };
-      const rb = {
-        topSpeed: toNum(row.rankTopSpeed), acceleration: toNum(row.rankAccel),
-        handling: toNum(row.rankHandling), nitro: toNum(row.rankNitro),
+      const cards = {
+        topSpeed: toNum(row.cardsTopSpeed), acceleration: toNum(row.cardsAccel),
+        handling: toNum(row.cardsHandling), nitro: toNum(row.cardsNitro),
       };
-      const sb = {
-        topSpeed: toNum(row.statTopSpeed), acceleration: toNum(row.statAccel),
-        handling: toNum(row.statHandling), nitro: toNum(row.statNitro),
+      const delta = {
+        topSpeed: toNum(row.deltaTopSpeed), acceleration: toNum(row.deltaAccel),
+        handling: toNum(row.deltaHandling), nitro: toNum(row.deltaNitro),
       };
-      if (Object.values(rb).some((v) => v !== undefined)) entry.rankByStat = rb;
-      if (Object.values(sb).some((v) => v !== undefined)) entry.statByStat = sb;
+      if (Object.values(cards).some((v) => v !== undefined)) entry.cardsAppliedByStat = cards;
+      if (Object.values(delta).some((v) => v !== undefined)) entry.statDeltaByStat = delta;
       return entry;
     });
     if (entries.length) (sdOut as any)[STAR_KEYS[i]] = entries;
@@ -90,16 +90,16 @@ export function buildStatsPatch(car: Car, getters: ReturnedGetters): CarStatsPat
     const entries = rows.filter(anyInDeltaRow).map((row) => {
       const entry: any = { stage: row.stage };
       if ('rarity' in row && row.rarity) entry.rarity = row.rarity;
-      const rb = {
-        topSpeed: toNum(row.rankTopSpeed), acceleration: toNum(row.rankAccel),
-        handling: toNum(row.rankHandling), nitro: toNum(row.rankNitro),
+      const cards = {
+        topSpeed: toNum(row.cardsTopSpeed), acceleration: toNum(row.cardsAccel),
+        handling: toNum(row.cardsHandling), nitro: toNum(row.cardsNitro),
       };
-      const sb = {
-        topSpeed: toNum(row.statTopSpeed), acceleration: toNum(row.statAccel),
-        handling: toNum(row.statHandling), nitro: toNum(row.statNitro),
+      const delta = {
+        topSpeed: toNum(row.deltaTopSpeed), acceleration: toNum(row.deltaAccel),
+        handling: toNum(row.deltaHandling), nitro: toNum(row.deltaNitro),
       };
-      if (Object.values(rb).some((v) => v !== undefined)) entry.rankByStat = rb;
-      if (Object.values(sb).some((v) => v !== undefined)) entry.statByStat = sb;
+      if (Object.values(cards).some((v) => v !== undefined)) entry.cardsAppliedByStat = cards;
+      if (Object.values(delta).some((v) => v !== undefined)) entry.statDeltaByStat = delta;
       return entry;
     });
     if (entries.length) (idOut as any)[STAR_KEYS[i]] = entries;

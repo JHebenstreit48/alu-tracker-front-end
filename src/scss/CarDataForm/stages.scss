@@ -1,0 +1,19 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.StagesStarGroup {
+  margin-bottom: 1.5rem;
+
+  &__title {
+    font-family: var(--display-font, 'Cinzel'), serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba($gold-accent, 0.7);
+    margin: 0 0 0.6rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba($gold-accent, 0.15);
+  }
+}

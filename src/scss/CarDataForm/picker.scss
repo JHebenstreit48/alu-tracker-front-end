@@ -1,0 +1,63 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.CarPickerControls {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+
+  .CarDataFormLabel,
+  .CarPickerBtns {
+    width: min(520px, 100%);
+  }
+}
+
+.CarPickerBtns {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.CarPickerList {
+  margin-top: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(#0f0a14, 0.55);
+  max-height: 360px;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+.CarPickerItem {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover { background: rgba(#7a05be, 0.18); }
+
+  input {
+    margin-top: 0.2rem;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.CarPickerMain {
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.CarPickerMeta {
+  color: #bfb6cc;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

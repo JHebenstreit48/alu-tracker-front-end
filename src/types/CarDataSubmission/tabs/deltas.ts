@@ -8,8 +8,8 @@ export type DeltaStatBlock = {
 export type DeltaEntry = {
   stage: number;
   rarity?: string;
-  rankByStat?: DeltaStatBlock;
-  statByStat?: DeltaStatBlock;
+  cardsAppliedByStat?: DeltaStatBlock;
+  statDeltaByStat?: DeltaStatBlock;
 };
 
 export type DeltasByStar = {
@@ -23,27 +23,27 @@ export type DeltasByStar = {
 
 export type DeltaRowState = {
   stage: number;
-  rankTopSpeed: string;
-  rankAccel: string;
-  rankHandling: string;
-  rankNitro: string;
-  statTopSpeed: string;
-  statAccel: string;
-  statHandling: string;
-  statNitro: string;
+  cardsTopSpeed: string;
+  cardsAccel: string;
+  cardsHandling: string;
+  cardsNitro: string;
+  deltaTopSpeed: string;
+  deltaAccel: string;
+  deltaHandling: string;
+  deltaNitro: string;
 };
 
 export type ImportDeltaRowState = {
   stage: number;
   rarity: string;
-  rankTopSpeed: string;
-  rankAccel: string;
-  rankHandling: string;
-  rankNitro: string;
-  statTopSpeed: string;
-  statAccel: string;
-  statHandling: string;
-  statNitro: string;
+  cardsTopSpeed: string;
+  cardsAccel: string;
+  cardsHandling: string;
+  cardsNitro: string;
+  deltaTopSpeed: string;
+  deltaAccel: string;
+  deltaHandling: string;
+  deltaNitro: string;
 };
 
 export type DeltasState = DeltaRowState[][];
@@ -52,8 +52,8 @@ export type ImportDeltasState = ImportDeltaRowState[][];
 export function emptyDeltaRow(stage: number): DeltaRowState {
   return {
     stage,
-    rankTopSpeed: '', rankAccel: '', rankHandling: '', rankNitro: '',
-    statTopSpeed: '', statAccel: '', statHandling: '', statNitro: '',
+    cardsTopSpeed: '', cardsAccel: '', cardsHandling: '', cardsNitro: '',
+    deltaTopSpeed: '', deltaAccel: '', deltaHandling: '', deltaNitro: '',
   };
 }
 
@@ -61,15 +61,15 @@ export function emptyImportDeltaRow(stage: number, rarity = ''): ImportDeltaRowS
   return {
     stage,
     rarity,
-    rankTopSpeed: '', rankAccel: '', rankHandling: '', rankNitro: '',
-    statTopSpeed: '', statAccel: '', statHandling: '', statNitro: '',
+    cardsTopSpeed: '', cardsAccel: '', cardsHandling: '', cardsNitro: '',
+    deltaTopSpeed: '', deltaAccel: '', deltaHandling: '', deltaNitro: '',
   };
 }
 
 export function anyInDeltaRow(row: DeltaRowState | ImportDeltaRowState): boolean {
   return [
-    row.rankTopSpeed, row.rankAccel, row.rankHandling, row.rankNitro,
-    row.statTopSpeed, row.statAccel, row.statHandling, row.statNitro,
+    row.cardsTopSpeed, row.cardsAccel, row.cardsHandling, row.cardsNitro,
+    row.deltaTopSpeed, row.deltaAccel, row.deltaHandling, row.deltaNitro,
   ].some((v) => v.trim() !== '');
 }
 

@@ -110,7 +110,6 @@ export function makeUpdaters(
     setImportDeltasMap((p) => {
       const def = STAR_KEYS.map((_, i) => [
         emptyImportDeltaRow(importStageNums[i] ? Number(importStageNums[i]) : i + 1, 'uncommon'),
-        emptyImportDeltaRow(importStageNums[i] ? Number(importStageNums[i]) : i + 1, 'rare'),
       ]);
       const state = (p[activeKey] ?? def).map((r) => [...r]);
       state[starIdx][rowIdx] = { ...state[starIdx][rowIdx], [field]: v };

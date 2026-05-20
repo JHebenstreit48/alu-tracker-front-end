@@ -1,0 +1,72 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.CarDataSubmissionPage {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: $page-padding;
+  color: #e9e6ee;
+}
+
+.CarDataSubmissionGate {
+  background: $panel-bg;
+  border: $panel-border;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  box-shadow: $panel-shadow;
+}
+
+.CarDataSubmissionBackRow {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.CarDataSubmissionBackBtn {
+  background: none;
+  border: 1px solid rgba($gold-accent, 0.45);
+  color: $gold-accent;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--display-font, 'Cinzel'), serif;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(#7a05be, 0.35);
+    color: #fff;
+    outline: none;
+  }
+
+  &:active {
+    background: rgba(#7a05be, 0.55);
+    box-shadow: 0 0 10px rgba(#7a05be, 0.6);
+  }
+}
+
+.CarDataSubmissionHeader {
+  margin: 1rem 0 0.75rem;
+
+  .CarDataSubmissionTitle {
+    margin: 0;
+    font-family: var(--display-font, 'Cinzel'), serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+    color: $gold-accent;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .CarDataSubmissionSubtitle {
+    margin: 0.25rem 0 0;
+    color: #bfb6cc;
+
+    strong {
+      color: #fff;
+      font-weight: 700;
+    }
+  }
+}

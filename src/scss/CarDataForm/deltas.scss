@@ -1,0 +1,102 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use 'vars' as *;
+
+.DeltasPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.DeltaSection {
+  &__title {
+    font-family: var(--display-font, 'Cinzel'), serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba($gold-accent, 0.85);
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba($gold-accent, 0.2);
+    text-align: center;
+  }
+}
+
+.DeltaStarGroup {
+  margin-bottom: 0.75rem;
+
+  &__title {
+    font-family: var(--display-font, 'Cinzel'), serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba($gold-accent, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.4rem;
+    text-align: center;
+  }
+}
+
+.DeltaRow {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  margin-bottom: 0.4rem;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__stageNum {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(#e9e6ee, 0.4);
+  }
+
+  &__section {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  &__sectionTitle {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.35rem;
+    border-bottom: 1px solid rgba($gold-accent, 0.3);
+    color: rgba($gold-accent, 0.85);
+
+    &--stat {
+      color: rgba($gold-accent, 0.85);
+      border-bottom-color: rgba($gold-accent, 0.3);
+    }
+  }
+}
+
+.DeltaRow .CarDataFormLabel {
+  font-size: 11px;
+  gap: 0.2rem;
+}
+
+.DeltaRow input {
+  padding: 0.35rem 0.5rem;
+  font-size: 12px;
+}

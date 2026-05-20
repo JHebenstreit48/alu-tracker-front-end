@@ -21,6 +21,11 @@ export default function MaxStars({ fields, noCarsSelected, carSelector }: Props)
 
   const correcting = isCorrectionMode(activeKey, 'maxStars');
 
+  // For 3★ cars: show 1★ and 2★ only (3★ max = Gold, shown on Overview tab)
+  // For 4★+ cars: show all stars up to last, last gets (w/o Epic Imports) label
+  const starsToShow = activeStars <= 3 ? activeStars - 1 : activeStars;
+  const showEpicLabel = activeStars >= 4;
+
   return (
     <>
       {carSelector}
@@ -30,15 +35,17 @@ export default function MaxStars({ fields, noCarsSelected, carSelector }: Props)
           <span>Submit correction</span>
         </label>
       </div>
-      <div className={`StatsBlocks${activeStars % 2 !== 0 ? ' StatsBlocks--odd' : ''}`}>
-        {getMax(activeKey).slice(0, activeStars).map((block, i) => {
+      <div className={`StatsBlocks${starsToShow % 2 !== 0 ? ' StatsBlocks--odd' : ''}`}>
+        {getMax(activeKey).slice(0, starsToShow).map((block, i) => {
           const seedStar = seedMaxStar?.[STAR_KEYS[i]] ?? null;
           const hasRealData = seedStar && !Object.values(seedStar).every((v) => v === 0);
+          const isLast = i + 1 === starsToShow;
+          const label = isLast && showEpicLabel
+            ? `Max ${STAR_LABELS[i]} (w/o Epic Imports)`
+            : `Max ${STAR_LABELS[i]}`;
           return (
             <section key={STAR_KEYS[i]} className="StatsBlock">
-              <h3 className="StatsBlockTitle">
-                Max {STAR_LABELS[i]}{i + 1 === activeStars ? ' (Gold Max)' : ''}
-              </h3>
+              <h3 className="StatsBlockTitle">{label}</h3>
               <div className="StatsGrid StatsGrid--nitroCenter">
                 <Field label="Rank"         v={block.rank}     s={(v) => updateMax(i, 'rank', v)}     readOnly={!correcting && !!hasRealData} placeholder={seedStar?.rank ? String(seedStar.rank) : '—'} />
                 <Field label="Top Speed"    v={block.topSpeed}  s={(v) => updateMax(i, 'topSpeed', v)}  readOnly={!correcting && !!hasRealData} placeholder={seedStar?.topSpeed ? String(seedStar.topSpeed) : '—'} />

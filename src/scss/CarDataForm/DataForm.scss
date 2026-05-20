@@ -142,7 +142,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
       }
     }
 
-    // All buttons EXCEPT tab bar buttons
     button:not(.StatsTab) {
       font-family: 'Cinzel', serif;
       font-weight: 700;
@@ -331,10 +330,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Additions — new classes only
-// ─────────────────────────────────────────────────────────────
-
 // ── Tab bar ───────────────────────────────────────────────────
 
 .StatsTabs {
@@ -348,27 +343,22 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
 }
 
 .StatsTab {
-  // Full reset from card button rule
   font-family: var(--display-font, 'Cinzel'), serif !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-
-  // Default: dim, no background
   color: rgba(#e9e6ee, 0.38) !important;
   background: transparent !important;
   border: none !important;
   border-bottom: 2px solid transparent !important;
   border-radius: 5px 5px 0 0 !important;
   box-shadow: none !important;
-
   padding: 0.5rem 0.9rem 0.45rem !important;
   cursor: pointer !important;
   white-space: nowrap;
   line-height: 1 !important;
   margin-bottom: -1px;
-
   transition:
     color 0.15s ease,
     background 0.15s ease,
@@ -381,7 +371,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
     box-shadow: none !important;
   }
 
-  // Active: bright gold, glass top, gold underline
   &--active {
     color: $gold-accent !important;
     background: rgba(255, 255, 255, 0.07) !important;
@@ -401,7 +390,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-// ── Car selector strip (multi-car navigation) ─────────────────
+// ── Car selector strip ────────────────────────────────────────
 
 .StatsCarSelector {
   display: flex;
@@ -428,19 +417,19 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
 .StatsCarSelector__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.6rem;
   flex: 1;
+  padding: 6px 0;
 }
 
 .StatsCarChip {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 6px;
   font-size: 0.78rem;
   font-weight: 700;
-  cursor: pointer;
   border: 1px solid rgba(#7a05be, 0.35);
   background: rgba(#7a05be, 0.15);
   color: rgba(#c4a8f0, 0.65);
@@ -457,6 +446,53 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   &:hover:not(&--active) {
     background: rgba(#7a05be, 0.28);
     color: #c4a8f0;
+  }
+
+  &__label {
+    background: none !important;
+    border: none !important;
+    color: inherit !important;
+    font: inherit !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    line-height: 1 !important;
+  }
+
+  &__remove {
+    position: absolute !important;
+    top: -9px !important;
+    right: -9px !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: rgba(#e9e6ee, 0.7) !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+    transition: background 0.15s, color 0.15s !important;
+    opacity: 0;
+    pointer-events: none;
+
+    .StatsCarChip:hover & {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    &:hover {
+      background: rgba(#e05555, 0.75) !important;
+      color: #fff !important;
+    }
   }
 }
 
@@ -490,7 +526,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-// ── "Select a car" empty state ────────────────────────────────
+// ── Empty state ───────────────────────────────────────────────
 
 .StatsEmptyState {
   display: flex;
@@ -516,7 +552,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
 
 // ── Layout helpers ────────────────────────────────────────────
 
-// Odd-count grids: last lone block centered
 .StatsBlocks--odd {
   @include minw($tablet-portrait) {
     > .StatsBlock:last-child {
@@ -529,7 +564,6 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 }
 
-// Gold always full-width centered in overview
 .StatsBlock--goldFull {
   grid-column: 1 / -1;
 
@@ -537,12 +571,10 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   .StatsBlockTitle { text-align: center; }
 }
 
-// Wide single-section blocks (cost, xp)
 .StatsBlock--wide {
   grid-column: 1 / -1;
 }
 
-// Cost/XP field grid
 .StatsGrid--costXp {
   grid-template-columns: 1fr 1fr;
 
@@ -854,7 +886,7 @@ $page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
   }
 
   &__fields { display: flex; flex-direction: column; gap: 0.6rem; }
-  
+
   &__sectionTitle {
     font-size: 10px;
     font-weight: 700;

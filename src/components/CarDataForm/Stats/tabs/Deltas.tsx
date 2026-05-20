@@ -2,7 +2,7 @@ import EmptyState from '@/components/CarDataForm/Stats/shared/EmptyState';
 import DeltaRowFields from '@/components/CarDataForm/Stats/shared/DeltaRowFields';
 import type { CarSeedFields } from '@/hooks/CarDataSubmission/useCarSeedFields/useCarSeedFields';
 import { STAR_LABELS } from '@/types/CarDataSubmission/tabs/shared';
-import type { ImportDeltaRowState } from '@/types/CarDataSubmission/tabs/deltas';
+import type { DeltaRowState, ImportDeltaRowState } from '@/types/CarDataSubmission/tabs/deltas';
 
 type Props = {
   fields: CarSeedFields;
@@ -33,6 +33,7 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
         </label>
       </div>
       <div className="DeltasPanel">
+
         <div className="DeltaSection">
           <h3 className="DeltaSection__title">Stage Deltas</h3>
           {getStageDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => (
@@ -43,28 +44,42 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
                   key={rowIdx}
                   row={row}
                   onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
-                  readOnly={false}
                 />
               ))}
             </div>
           ))}
         </div>
+
         <div className="DeltaSection">
           <h3 className="DeltaSection__title">Import Deltas</h3>
-          {getImportDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => (
-            <div key={starIdx} className="DeltaStarGroup">
-              <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
-              {rows.map((row, rowIdx) => (
-                <DeltaRowFields
-                  key={rowIdx}
-                  row={row as any}
-                  onChange={(field, v) => updateImportDelta(starIdx, rowIdx, field as keyof ImportDeltaRowState, v)}
-                  readOnly={false}
-                />
-              ))}
-            </div>
-          ))}
+          {getImportDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => {
+            const importRows = rows as ImportDeltaRowState[];
+
+            const stageMap = new Map<number, { row: ImportDeltaRowState; idx: number }[]>();
+            importRows.forEach((row, idx) => {
+              const existing = stageMap.get(row.stage) ?? [];
+              stageMap.set(row.stage, [...existing, { row, idx }]);
+            });
+
+            return (
+              <div key={starIdx} className="DeltaStarGroup">
+                <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
+                {Array.from(stageMap.entries()).map(([stageNum, entries]) =>
+                  entries.map(({ row, idx }) => (
+                    <DeltaRowFields
+                      key={idx}
+                      row={row as unknown as DeltaRowState}
+                      onChange={(field, v) => updateImportDelta(starIdx, idx, field as keyof ImportDeltaRowState, v)}
+                      stageLabel={`Stage ${stageNum}`}
+                      rarity={row.rarity}
+                    />
+                  ))
+                )}
+              </div>
+            );
+          })}
         </div>
+
       </div>
     </>
   );

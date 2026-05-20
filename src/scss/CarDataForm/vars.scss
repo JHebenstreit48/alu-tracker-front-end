@@ -1,0 +1,7 @@
+@use '@scss/Globals/index' as *;
+
+$gold-accent: rgb(255, 196, 0) !default;
+$panel-bg: linear-gradient(180deg, #19121f 0%, #120c18 60%, #0b0910 100%) !default;
+$panel-border: 1px solid rgba($gold-accent, 0.35) !default;
+$panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !default;
+$page-padding: clamp(0.75rem, 2.5vw, 1.25rem);
