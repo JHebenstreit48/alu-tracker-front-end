@@ -19,6 +19,31 @@ interface Submission {
   createdAt: { _seconds: number } | string;
 }
 
+function flattenDeltas(deltas: Record<string, any[]>): any[] {
+  return Object.values(deltas).flat();
+}
+
+function formatCarsForDisplay(cars: Record<string, CarPatch>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(cars).map(([carKey, carPatch]) => {
+      const patch = carPatch as any;
+      const stageDeltas = patch?.stats?.stageDeltas;
+      const importDeltas = patch?.stats?.importDeltas;
+      return [
+        carKey,
+        {
+          ...patch,
+          stats: {
+            ...patch?.stats,
+            ...(stageDeltas ? { stageDeltas: flattenDeltas(stageDeltas) } : {}),
+            ...(importDeltas ? { importDeltas: flattenDeltas(importDeltas) } : {}),
+          },
+        },
+      ];
+    })
+  );
+}
+
 export default function AdminSubmissions(): JSX.Element {
   const { token, roles } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -72,7 +97,10 @@ export default function AdminSubmissions(): JSX.Element {
   if (!token || !hasAdminAccess) {
     return (
       <PageTab title="Admin Submissions">
-        <Header text="Admin Submissions" className="accountHeader" />
+        <Header
+          text="Admin Submissions"
+          className="accountHeader"
+        />
         <div className="AccountPage">
           <div className="AccountGate">Access denied. Admin role required.</div>
         </div>
@@ -82,7 +110,10 @@ export default function AdminSubmissions(): JSX.Element {
 
   return (
     <PageTab title="Submission Review">
-      <Header text="Submission Review" className="accountHeader" />
+      <Header
+        text="Submission Review"
+        className="accountHeader"
+      />
 
       <div className="AccountPage">
         <div className="AccountBackRow">
@@ -97,14 +128,10 @@ export default function AdminSubmissions(): JSX.Element {
 
         <header className="AccountHeader">
           <h1 className="AccountTitle">Submission Review</h1>
-          <p className="AccountSubtitle">
-            Pending car data submissions awaiting approval.
-          </p>
+          <p className="AccountSubtitle">Pending car data submissions awaiting approval.</p>
         </header>
 
-        {msg && (
-          <div className="CarDataFormMsg CarDataFormMsg--ok">{msg}</div>
-        )}
+        {msg && <div className="CarDataFormMsg CarDataFormMsg--ok">{msg}</div>}
 
         {loading && <p className="CarDataFormHint">Loading submissions…</p>}
         {error && <p className="CarDataFormError">{error}</p>}
@@ -115,7 +142,10 @@ export default function AdminSubmissions(): JSX.Element {
 
         <div className="AdminSubmissionsList">
           {submissions.map((s) => (
-            <div key={s.id} className="card AdminSubmissionCard">
+            <div
+              key={s.id}
+              className="card AdminSubmissionCard"
+            >
               <div className="AdminSubmissionMeta">
                 <span>
                   <strong>Submitted by:</strong> {s.submitterUsername}
@@ -143,7 +173,7 @@ export default function AdminSubmissions(): JSX.Element {
               <details className="AdminSubmissionDetails">
                 <summary>View raw data</summary>
                 <pre className="AdminSubmissionPre">
-                  {JSON.stringify(s.cars, null, 2)}
+                  {JSON.stringify(formatCarsForDisplay(s.cars), null, 2)}
                 </pre>
               </details>
 
