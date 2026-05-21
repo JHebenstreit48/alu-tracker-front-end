@@ -39,7 +39,7 @@ export function useCarSeedFields(selectedCars: Car[], activeCarIdx: number) {
   );
 
   const stagesDeltaRowCount = useMemo(() => {
-    const deltas = (sd as any)?.stagesDeltas;
+    const deltas = (sd as any)?.stageDeltas;
     if (!deltas) return 3;
     return Math.max(...STAR_KEYS.map((k) => Array.isArray(deltas[k]) ? deltas[k].length : 0), 3);
   }, [sd]);
@@ -58,6 +58,7 @@ export function useCarSeedFields(selectedCars: Car[], activeCarIdx: number) {
     state.stageDeltasMap, state.importDeltasMap, state.correctionMode,
     stagesDeltaRowCount, importStageNums,
     seeds.seedImportDeltasByStar,
+    seeds.seedStageDeltasByStar,
   );
 
   const updaters = makeUpdaters(
