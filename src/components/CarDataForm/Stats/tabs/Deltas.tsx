@@ -45,6 +45,10 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
     };
   }
 
+  function stageDeltaLabel(stage: number): string {
+    return stage === 1 ? 'Stock → Stage 1' : `Stage ${stage - 1} → Stage ${stage}`;
+  }
+
   return (
     <>
       {carSelector}{perCarNote}
@@ -74,6 +78,7 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
                       onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
                       readOnlyCards={ro.cards}
                       readOnlyDeltas={ro.deltas}
+                      stageLabel={stageDeltaLabel(row.stage)}
                     />
                   );
                 })}
