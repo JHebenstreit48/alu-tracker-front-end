@@ -1,7 +1,7 @@
 import { STAR_KEYS, emptyBlock } from '@/types/CarDataSubmission/tabs/shared';
 import type { StatBlockState } from '@/types/CarDataSubmission/tabs/shared';
 import {
-  initDeltasState,
+  emptyDeltaRow,
   emptyImportDeltaRow,
   type DeltaRowState,
   type ImportDeltaRowState,
@@ -32,7 +32,25 @@ export function makeUpdaters(
   setStageDeltasMap:  Setter<DeltasMap>,
   setImportDeltasMap: Setter<ImportDeltasMap>,
   setCorrectionMode:  Setter<CorrectionMap>,
+  seedStageDeltasByStar: Record<string, any[]> | null,
 ) {
+  function buildInitialStageDeltasState(): DeltaRowState[][] {
+    let nextStage = 1;
+    return STAR_KEYS.map((starKey) => {
+      const seedEntries: any[] = seedStageDeltasByStar?.[starKey] ?? [];
+      if (seedEntries.length) {
+        const lastStage = seedEntries[seedEntries.length - 1]?.stage ?? nextStage;
+        nextStage = lastStage + 1;
+        return seedEntries.map((entry: any) => emptyDeltaRow(entry.stage));
+      }
+      const rows = Array(stagesDeltaRowCount).fill(null).map((_, i) =>
+        emptyDeltaRow(nextStage + i)
+      );
+      nextStage = nextStage + stagesDeltaRowCount;
+      return rows;
+    });
+  }
+
   const updateBp = (i: number, v: string) =>
     setBpsMap((p) => {
       const a = [...(p[activeKey] ?? Array(6).fill(''))]; a[i] = v;
@@ -99,7 +117,7 @@ export function makeUpdaters(
     starIdx: number, rowIdx: number, field: keyof DeltaRowState, v: string
   ) =>
     setStageDeltasMap((p) => {
-      const state = (p[activeKey] ?? initDeltasState(stagesDeltaRowCount)).map((r) => [...r]);
+      const state = (p[activeKey] ?? buildInitialStageDeltasState()).map((r) => [...r]);
       state[starIdx][rowIdx] = { ...state[starIdx][rowIdx], [field]: v };
       return { ...p, [activeKey]: state };
     });

@@ -67,6 +67,7 @@ export function useCarSeedFields(selectedCars: Car[], activeCarIdx: number) {
     state.setStageInputMap, state.setCostMap, state.setXpMap,
     state.setImportCostMap, state.setImportXpMap, state.setImportReqMap,
     state.setStageDeltasMap, state.setImportDeltasMap, state.setCorrectionMode,
+    seeds.seedStageDeltasByStar,  // ← added
   );
 
   const anyValue = useMemo(() =>
