@@ -24,6 +24,7 @@ export default function Overview({ fields, noCarsSelected, carSelector }: Props)
 
   const {
     activeKey, activeStars,
+    activeCar,
     getBps, getStock, getGold,
     updateBp, updateStock, updateGold,
     seedBlueprints, seedStock, seedGold,
@@ -31,6 +32,7 @@ export default function Overview({ fields, noCarsSelected, carSelector }: Props)
   } = fields;
 
   const correcting = isCorrectionMode(activeKey, 'overview');
+  const isKeyCar = !!activeCar?.keyCar;
 
   return (
     <>
@@ -52,7 +54,8 @@ export default function Overview({ fields, noCarsSelected, carSelector }: Props)
             {getBps(activeKey).slice(0, activeStars).map((v, i) => {
               const starKey = STAR_KEY_MAP[STAR_KEYS[i]];
               const seedVal = seedBlueprints?.[starKey];
-              const hasReal = seedVal !== undefined && seedVal !== 0;
+              // For key cars, 1★ blueprints = 0 is intentional — treat as real data
+              const hasReal = seedVal !== undefined && (seedVal !== 0 || (isKeyCar && i === 0));
               return (
                 <Field
                   key={STAR_KEYS[i]}
