@@ -15,12 +15,16 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
   if (noCarsSelected) return <EmptyState message="Select a car to enter delta data." />;
 
   const {
-    activeKey, activeStars,
-    getStageDeltas, getImportDeltas,
-    updateStageDelta, updateImportDelta,
+    activeKey,
+    activeStars,
+    getStageDeltas,
+    getImportDeltas,
+    updateStageDelta,
+    updateImportDelta,
     seedStageDeltasByStar,
     seedImportDeltasByStar,
-    isCorrectionMode, toggleCorrectionMode,
+    isCorrectionMode,
+    toggleCorrectionMode,
   } = fields;
 
   const correcting = isCorrectionMode(activeKey, 'deltas');
@@ -32,7 +36,7 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
   function stageReadOnly(seedEntry: any) {
     if (!seedEntry || correcting) return { cards: false, deltas: false };
     return {
-      cards:  blockHasData(seedEntry.rankByStat ?? {}),
+      cards: blockHasData(seedEntry.rankByStat ?? {}),
       deltas: blockHasData(seedEntry.statByStat ?? {}),
     };
   }
@@ -40,7 +44,7 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
   function importReadOnly(seedEntry: any) {
     if (!seedEntry || correcting) return { cards: false, deltas: false };
     return {
-      cards:  blockHasData(seedEntry.cardsAppliedByStat ?? {}),
+      cards: blockHasData(seedEntry.cardsAppliedByStat ?? {}),
       deltas: blockHasData(seedEntry.statDeltaByStat ?? {}),
     };
   }
@@ -51,80 +55,96 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
 
   return (
     <>
-      {carSelector}{perCarNote}
+      {carSelector}
+      {perCarNote}
       <div className="StatsTabHeader">
         <label className="CorrectionToggle">
-          <input type="checkbox" checked={correcting} onChange={() => toggleCorrectionMode('deltas')} />
+          <input
+            type="checkbox"
+            checked={correcting}
+            onChange={() => toggleCorrectionMode('deltas')}
+          />
           <span>Submit correction</span>
         </label>
       </div>
       <div className="DeltasPanel">
-
         <div className="DeltaSection">
           <h3 className="DeltaSection__title">Stage Deltas</h3>
-          {getStageDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => {
-            const starKey = STAR_KEYS[starIdx];
-            const seedRows: any[] = seedStageDeltasByStar?.[starKey] ?? [];
-            return (
-              <div key={starIdx} className="DeltaStarGroup">
-                <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
-                {rows.map((row, rowIdx) => {
-                  const seedEntry = seedRows[rowIdx] ?? null;
-                  const ro = stageReadOnly(seedEntry);
-                  return (
-                    <DeltaRowFields
-                      key={rowIdx}
-                      row={row}
-                      onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
-                      readOnlyCards={ro.cards}
-                      readOnlyDeltas={ro.deltas}
-                      stageLabel={stageDeltaLabel(row.stage)}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })}
+          {getStageDeltas(activeKey)
+            .slice(0, activeStars)
+            .map((rows, starIdx) => {
+              const starKey = STAR_KEYS[starIdx];
+              const seedRows: any[] = seedStageDeltasByStar?.[starKey] ?? [];
+              return (
+                <div
+                  key={starIdx}
+                  className="DeltaStarGroup"
+                >
+                  <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
+                  {rows.map((row, rowIdx) => {
+                    const seedEntry = seedRows[rowIdx] ?? null;
+                    const ro = stageReadOnly(seedEntry);
+                    return (
+                      <DeltaRowFields
+                        key={rowIdx}
+                        row={row}
+                        onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
+                        readOnlyCards={ro.cards}
+                        readOnlyDeltas={ro.deltas}
+                        stageLabel={stageDeltaLabel(row.stage)}
+                        cardsLabel="Rank Increase per Stat"
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
         </div>
 
         <div className="DeltaSection">
           <h3 className="DeltaSection__title">Import Deltas</h3>
-          {getImportDeltas(activeKey).slice(0, activeStars).map((rows, starIdx) => {
-            const starKey = STAR_KEYS[starIdx];
-            const seedRows: any[] = seedImportDeltasByStar?.[starKey] ?? [];
-            const importRows = rows as ImportDeltaRowState[];
+          {getImportDeltas(activeKey)
+            .slice(0, activeStars)
+            .map((rows, starIdx) => {
+              const starKey = STAR_KEYS[starIdx];
+              const seedRows: any[] = seedImportDeltasByStar?.[starKey] ?? [];
+              const importRows = rows as ImportDeltaRowState[];
 
-            const stageMap = new Map<number, { row: ImportDeltaRowState; idx: number }[]>();
-            importRows.forEach((row, idx) => {
-              const existing = stageMap.get(row.stage) ?? [];
-              stageMap.set(row.stage, [...existing, { row, idx }]);
-            });
+              const stageMap = new Map<number, { row: ImportDeltaRowState; idx: number }[]>();
+              importRows.forEach((row, idx) => {
+                const existing = stageMap.get(row.stage) ?? [];
+                stageMap.set(row.stage, [...existing, { row, idx }]);
+              });
 
-            return (
-              <div key={starIdx} className="DeltaStarGroup">
-                <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
-                {Array.from(stageMap.entries()).map(([stageNum, entries]) =>
-                  entries.map(({ row, idx }) => {
-                    const seedEntry = seedRows[idx] ?? null;
-                    const ro = importReadOnly(seedEntry);
-                    return (
-                      <DeltaRowFields
-                        key={idx}
-                        row={row as unknown as DeltaRowState}
-                        onChange={(field, v) => updateImportDelta(starIdx, idx, field as keyof ImportDeltaRowState, v)}
-                        stageLabel={`Stage ${stageNum}`}
-                        rarity={row.rarity}
-                        readOnlyCards={ro.cards}
-                        readOnlyDeltas={ro.deltas}
-                      />
-                    );
-                  })
-                )}
-              </div>
-            );
-          })}
+              return (
+                <div
+                  key={starIdx}
+                  className="DeltaStarGroup"
+                >
+                  <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
+                  {Array.from(stageMap.entries()).map(([stageNum, entries]) =>
+                    entries.map(({ row, idx }) => {
+                      const seedEntry = seedRows[idx] ?? null;
+                      const ro = importReadOnly(seedEntry);
+                      return (
+                        <DeltaRowFields
+                          key={idx}
+                          row={row as unknown as DeltaRowState}
+                          onChange={(field, v) =>
+                            updateImportDelta(starIdx, idx, field as keyof ImportDeltaRowState, v)
+                          }
+                          stageLabel={`Stage ${stageNum}`}
+                          rarity={row.rarity}
+                          readOnlyCards={ro.cards}
+                          readOnlyDeltas={ro.deltas}
+                        />
+                      );
+                    })
+                  )}
+                </div>
+              );
+            })}
         </div>
-
       </div>
     </>
   );
