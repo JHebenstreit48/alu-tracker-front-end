@@ -82,12 +82,23 @@ export function makeGetters(
 
   const getStageDeltas = (k: string) => {
     if (stageDeltasMap[k]) return stageDeltasMap[k];
+
+    let nextStage = 1;
+
     return STAR_KEYS.map((starKey) => {
       const seedEntries: any[] = seedStageDeltasByStar?.[starKey] ?? [];
       if (seedEntries.length) {
-        return seedEntries.map((entry: any) => seedEntryToStageDeltaRow(entry));
+        const rows = seedEntries.map((entry: any) => seedEntryToStageDeltaRow(entry));
+        const lastStage = seedEntries[seedEntries.length - 1]?.stage ?? nextStage;
+        nextStage = lastStage + 1;
+        return rows;
       }
-      return Array(stagesDeltaRowCount).fill(null).map((_, i) => emptyDeltaRow(i + 1));
+      // No seed data — generate empty rows starting from nextStage
+      const rows = Array(stagesDeltaRowCount).fill(null).map((_, i) =>
+        emptyDeltaRow(nextStage + i)
+      );
+      nextStage = nextStage + stagesDeltaRowCount;
+      return rows;
     });
   };
 
