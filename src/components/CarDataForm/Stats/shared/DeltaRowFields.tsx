@@ -7,11 +7,23 @@ type Props = {
   row: DeltaRowState;
   onChange: (field: keyof DeltaRowState, value: string) => void;
   readOnly?: boolean;
+  readOnlyCards?: boolean;
+  readOnlyDeltas?: boolean;
   stageLabel?: string;
   rarity?: string;
 };
 
-export default function DeltaRowFields({ row, onChange, readOnly = false, stageLabel, rarity }: Props) {
+export default function DeltaRowFields({
+  row, onChange,
+  readOnly = false,
+  readOnlyCards,
+  readOnlyDeltas,
+  stageLabel,
+  rarity,
+}: Props) {
+  const roCards  = readOnly || (readOnlyCards  ?? false);
+  const roDeltas = readOnly || (readOnlyDeltas ?? false);
+
   return (
     <div className="DeltaRow">
       <div className="DeltaRow__label">
@@ -21,19 +33,19 @@ export default function DeltaRowFields({ row, onChange, readOnly = false, stageL
       <div className="DeltaRow__section">
         <div className="DeltaRow__sectionTitle">Cards Applied per Stat</div>
         <div className="StatsGrid">
-          <Field label="Top Speed"    v={row.cardsTopSpeed} s={(v) => onChange('cardsTopSpeed', v)} readOnly={readOnly} />
-          <Field label="Acceleration" v={row.cardsAccel}    s={(v) => onChange('cardsAccel', v)}    readOnly={readOnly} />
-          <Field label="Handling"     v={row.cardsHandling} s={(v) => onChange('cardsHandling', v)} readOnly={readOnly} />
-          <Field label="Nitro"        v={row.cardsNitro}    s={(v) => onChange('cardsNitro', v)}    readOnly={readOnly} />
+          <Field label="Top Speed"    v={row.cardsTopSpeed} s={(v) => onChange('cardsTopSpeed', v)} readOnly={roCards} />
+          <Field label="Acceleration" v={row.cardsAccel}    s={(v) => onChange('cardsAccel', v)}    readOnly={roCards} />
+          <Field label="Handling"     v={row.cardsHandling} s={(v) => onChange('cardsHandling', v)} readOnly={roCards} />
+          <Field label="Nitro"        v={row.cardsNitro}    s={(v) => onChange('cardsNitro', v)}    readOnly={roCards} />
         </div>
       </div>
       <div className="DeltaRow__section">
         <div className="DeltaRow__sectionTitle">Stat Delta per Stat</div>
         <div className="StatsGrid">
-          <Field label="Top Speed"    v={row.deltaTopSpeed} s={(v) => onChange('deltaTopSpeed', v)} readOnly={readOnly} />
-          <Field label="Acceleration" v={row.deltaAccel}    s={(v) => onChange('deltaAccel', v)}    readOnly={readOnly} />
-          <Field label="Handling"     v={row.deltaHandling} s={(v) => onChange('deltaHandling', v)} readOnly={readOnly} />
-          <Field label="Nitro"        v={row.deltaNitro}    s={(v) => onChange('deltaNitro', v)}    readOnly={readOnly} />
+          <Field label="Top Speed"    v={row.deltaTopSpeed} s={(v) => onChange('deltaTopSpeed', v)} readOnly={roDeltas} />
+          <Field label="Acceleration" v={row.deltaAccel}    s={(v) => onChange('deltaAccel', v)}    readOnly={roDeltas} />
+          <Field label="Handling"     v={row.deltaHandling} s={(v) => onChange('deltaHandling', v)} readOnly={roDeltas} />
+          <Field label="Nitro"        v={row.deltaNitro}    s={(v) => onChange('deltaNitro', v)}    readOnly={roDeltas} />
         </div>
       </div>
     </div>

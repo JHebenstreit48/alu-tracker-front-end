@@ -1,7 +1,9 @@
 import { STAR_KEYS, emptyBlock } from '@/types/CarDataSubmission/tabs/shared';
 import {
   initDeltasState,
+  emptyDeltaRow,
   emptyImportDeltaRow,
+  type DeltaRowState,
   type ImportDeltaRowState,
 } from '@/types/CarDataSubmission/tabs/deltas';
 import type {
@@ -10,20 +12,40 @@ import type {
   DeltasMap, ImportDeltasMap, CorrectionMap,
 } from '@/hooks/CarDataSubmission/useCarSeedFields/types';
 
+// Stage deltas: always rankByStat / statByStat. Zero = not entered = empty string.
+function seedEntryToStageDeltaRow(entry: any): DeltaRowState {
+  const rank = entry.rankByStat ?? {};
+  const stat = entry.statByStat ?? {};
+  const val = (v: any) => (v !== undefined && v !== 0) ? String(v) : '';
+  return {
+    stage:         entry.stage ?? 1,
+    cardsTopSpeed: val(rank.topSpeed),
+    cardsAccel:    val(rank.acceleration),
+    cardsHandling: val(rank.handling),
+    cardsNitro:    val(rank.nitro),
+    deltaTopSpeed: val(stat.topSpeed),
+    deltaAccel:    val(stat.acceleration),
+    deltaHandling: val(stat.handling),
+    deltaNitro:    val(stat.nitro),
+  };
+}
+
+// Import deltas: always cardsAppliedByStat / statDeltaByStat. Zero = not entered = empty string.
 function seedEntryToImportDeltaRow(entry: any): ImportDeltaRowState {
   const cards = entry.cardsAppliedByStat ?? {};
   const delta = entry.statDeltaByStat ?? {};
+  const val = (v: any) => (v !== undefined && v !== 0) ? String(v) : '';
   return {
     stage:         entry.stage ?? 1,
     rarity:        entry.rarity ?? 'uncommon',
-    cardsTopSpeed: cards.topSpeed     !== undefined ? String(cards.topSpeed)     : '',
-    cardsAccel:    cards.acceleration !== undefined ? String(cards.acceleration) : '',
-    cardsHandling: cards.handling     !== undefined ? String(cards.handling)     : '',
-    cardsNitro:    cards.nitro        !== undefined ? String(cards.nitro)        : '',
-    deltaTopSpeed: delta.topSpeed     !== undefined ? String(delta.topSpeed)     : '',
-    deltaAccel:    delta.acceleration !== undefined ? String(delta.acceleration) : '',
-    deltaHandling: delta.handling     !== undefined ? String(delta.handling)     : '',
-    deltaNitro:    delta.nitro        !== undefined ? String(delta.nitro)        : '',
+    cardsTopSpeed: val(cards.topSpeed),
+    cardsAccel:    val(cards.acceleration),
+    cardsHandling: val(cards.handling),
+    cardsNitro:    val(cards.nitro),
+    deltaTopSpeed: val(delta.topSpeed),
+    deltaAccel:    val(delta.acceleration),
+    deltaHandling: val(delta.handling),
+    deltaNitro:    val(delta.nitro),
   };
 }
 
@@ -44,6 +66,7 @@ export function makeGetters(
   stagesDeltaRowCount: number,
   importStageNums: string[],
   seedImportDeltasByStar: Record<string, any[]> | null,
+  seedStageDeltasByStar:  Record<string, any[]> | null,
 ) {
   const getBps    = (k: string) => bpsMap[k]   ?? Array(6).fill('');
   const getStock  = (k: string) => stockMap[k]  ?? emptyBlock();
@@ -57,12 +80,19 @@ export function makeGetters(
   const getImportXp    = (k: string) => importXpMap[k]   ?? {};
   const getImportReqs  = (k: string) => importReqMap[k]  ?? {};
 
-  const getStageDeltas = (k: string) =>
-    stageDeltasMap[k] ?? initDeltasState(stagesDeltaRowCount);
+  const getStageDeltas = (k: string) => {
+    if (stageDeltasMap[k]) return stageDeltasMap[k];
+    return STAR_KEYS.map((starKey) => {
+      const seedEntries: any[] = seedStageDeltasByStar?.[starKey] ?? [];
+      if (seedEntries.length) {
+        return seedEntries.map((entry: any) => seedEntryToStageDeltaRow(entry));
+      }
+      return Array(stagesDeltaRowCount).fill(null).map((_, i) => emptyDeltaRow(i + 1));
+    });
+  };
 
   const getImportDeltas = (k: string) => {
     if (importDeltasMap[k]) return importDeltasMap[k];
-
     return STAR_KEYS.map((starKey, i) => {
       const seedEntries: any[] = seedImportDeltasByStar?.[starKey] ?? [];
       if (seedEntries.length) {

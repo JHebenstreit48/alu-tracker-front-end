@@ -25,15 +25,24 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
 
   const correcting = isCorrectionMode(activeKey, 'deltas');
 
-  // Read-only only if any card or delta value is > 0 (including decimals like 0.5).
-  // All-zero rows mean data hasn't been entered yet — keep editable.
-  function rowHasSeedData(seedEntry: any): boolean {
-    if (!seedEntry) return false;
-    const cards = seedEntry.cardsAppliedByStat ?? {};
-    const delta = seedEntry.statDeltaByStat ?? {};
-    return [...Object.values(cards), ...Object.values(delta)].some(
-      (v) => typeof v === 'number' && v > 0
-    );
+  function blockHasData(block: Record<string, any>): boolean {
+    return Object.values(block).some((v) => typeof v === 'number' && v > 0);
+  }
+
+  function stageReadOnly(seedEntry: any) {
+    if (!seedEntry || correcting) return { cards: false, deltas: false };
+    return {
+      cards:  blockHasData(seedEntry.rankByStat ?? {}),
+      deltas: blockHasData(seedEntry.statByStat ?? {}),
+    };
+  }
+
+  function importReadOnly(seedEntry: any) {
+    if (!seedEntry || correcting) return { cards: false, deltas: false };
+    return {
+      cards:  blockHasData(seedEntry.cardsAppliedByStat ?? {}),
+      deltas: blockHasData(seedEntry.statDeltaByStat ?? {}),
+    };
   }
 
   return (
@@ -57,13 +66,14 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
                 <h4 className="DeltaStarGroup__title">{STAR_LABELS[starIdx]}</h4>
                 {rows.map((row, rowIdx) => {
                   const seedEntry = seedRows[rowIdx] ?? null;
-                  const readOnly = !correcting && rowHasSeedData(seedEntry);
+                  const ro = stageReadOnly(seedEntry);
                   return (
                     <DeltaRowFields
                       key={rowIdx}
                       row={row}
                       onChange={(field, v) => updateStageDelta(starIdx, rowIdx, field, v)}
-                      readOnly={readOnly}
+                      readOnlyCards={ro.cards}
+                      readOnlyDeltas={ro.deltas}
                     />
                   );
                 })}
@@ -91,7 +101,7 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
                 {Array.from(stageMap.entries()).map(([stageNum, entries]) =>
                   entries.map(({ row, idx }) => {
                     const seedEntry = seedRows[idx] ?? null;
-                    const readOnly = !correcting && rowHasSeedData(seedEntry);
+                    const ro = importReadOnly(seedEntry);
                     return (
                       <DeltaRowFields
                         key={idx}
@@ -99,7 +109,8 @@ export default function Deltas({ fields, noCarsSelected, carSelector, perCarNote
                         onChange={(field, v) => updateImportDelta(starIdx, idx, field as keyof ImportDeltaRowState, v)}
                         stageLabel={`Stage ${stageNum}`}
                         rarity={row.rarity}
-                        readOnly={readOnly}
+                        readOnlyCards={ro.cards}
+                        readOnlyDeltas={ro.deltas}
                       />
                     );
                   })
