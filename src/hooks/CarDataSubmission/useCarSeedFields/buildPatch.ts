@@ -65,32 +65,41 @@ export function buildStatsPatch(car: Car, getters: ReturnedGetters): CarStatsPat
   });
   if (Object.keys(xp).length) stats.garageLevelXp = xp;
 
-  // Stage deltas — use rankByStat / statByStat (old field names, stages-specific)
+  // Stage deltas — rankByStat/statByStat, only rows with at least one non-zero value
   const sdOut: DeltasByStar = {};
   getStageDeltas(k).slice(0, stars).forEach((rows, i) => {
-    const entries = rows.filter(anyInDeltaRow).map((row) => {
-      const entry: any = { stage: row.stage };
-      const rank = {
-        topSpeed:     toNum(row.cardsTopSpeed),
-        acceleration: toNum(row.cardsAccel),
-        handling:     toNum(row.cardsHandling),
-        nitro:        toNum(row.cardsNitro),
-      };
-      const stat = {
-        topSpeed:     toNum(row.deltaTopSpeed),
-        acceleration: toNum(row.deltaAccel),
-        handling:     toNum(row.deltaHandling),
-        nitro:        toNum(row.deltaNitro),
-      };
-      if (Object.values(rank).some((v) => v !== undefined)) entry.rankByStat = rank;
-      if (Object.values(stat).some((v) => v !== undefined)) entry.statByStat = stat;
-      return entry;
-    });
+    const entries = rows
+      .filter((row) =>
+        [
+          toNum(row.cardsTopSpeed), toNum(row.cardsAccel),
+          toNum(row.cardsHandling), toNum(row.cardsNitro),
+          toNum(row.deltaTopSpeed), toNum(row.deltaAccel),
+          toNum(row.deltaHandling), toNum(row.deltaNitro),
+        ].some((v) => v !== undefined && v !== 0)
+      )
+      .map((row) => {
+        const entry: any = { stage: row.stage };
+        const rank = {
+          topSpeed:     toNum(row.cardsTopSpeed),
+          acceleration: toNum(row.cardsAccel),
+          handling:     toNum(row.cardsHandling),
+          nitro:        toNum(row.cardsNitro),
+        };
+        const stat = {
+          topSpeed:     toNum(row.deltaTopSpeed),
+          acceleration: toNum(row.deltaAccel),
+          handling:     toNum(row.deltaHandling),
+          nitro:        toNum(row.deltaNitro),
+        };
+        if (Object.values(rank).some((v) => v !== undefined)) entry.rankByStat = rank;
+        if (Object.values(stat).some((v) => v !== undefined)) entry.statByStat = stat;
+        return entry;
+      });
     if (entries.length) (sdOut as any)[STAR_KEYS[i]] = entries;
   });
   if (Object.keys(sdOut).length) stats.stageDeltas = sdOut;
 
-  // Import deltas — use cardsAppliedByStat / statDeltaByStat (new field names)
+  // Import deltas — cardsAppliedByStat/statDeltaByStat
   const idOut: DeltasByStar = {};
   getImportDeltas(k).slice(0, stars).forEach((rows, i) => {
     const entries = rows.filter(anyInDeltaRow).map((row) => {
