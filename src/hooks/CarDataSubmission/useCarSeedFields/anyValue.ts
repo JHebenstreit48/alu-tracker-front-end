@@ -4,18 +4,20 @@ import { anyInDeltaRow } from '@/types/CarDataSubmission/tabs/deltas';
 import { anyInStageInput } from '@/types/CarDataSubmission/tabs/stages';
 
 export type ReturnedGetters = {
-  getBps:          (k: string) => string[];
-  getStock:        (k: string) => any;
-  getGold:         (k: string) => any;
-  getMax:          (k: string) => any[];
-  getStageInputs:  (k: string) => Record<string, any>;
-  getCosts:        (k: string) => Record<string, string>;
-  getXp:           (k: string) => Record<string, string>;
-  getImportCosts:  (k: string) => Record<string, Record<string, string>>;
-  getImportXp:     (k: string) => Record<string, Record<string, string>>;
-  getImportReqs:   (k: string) => Record<string, Record<string, Record<string, string>>>;
-  getStageDeltas:  (k: string) => any[][];
-  getImportDeltas: (k: string) => any[][];
+  getBps:                   (k: string) => string[];
+  getStock:                 (k: string) => any;
+  getGold:                  (k: string) => any;
+  getMax:                   (k: string) => any[];
+  getStageInputs:           (k: string) => Record<string, any>;
+  getCosts:                 (k: string) => Record<string, string>;
+  getXp:                    (k: string) => Record<string, string>;
+  getImportCosts:           (k: string) => Record<string, Record<string, string>>;
+  getImportXp:              (k: string) => Record<string, Record<string, string>>;
+  getImportReqs:            (k: string) => Record<string, Record<string, Record<string, string>>>;
+  getStageDeltas:           (k: string) => any[][];
+  getImportDeltas:          (k: string) => any[][];
+  hasUserStageDeltaEdits:   (k: string) => boolean;
+  hasUserImportDeltaEdits:  (k: string) => boolean;
 };
 
 export function computeAnyValue(
@@ -26,6 +28,7 @@ export function computeAnyValue(
     getBps, getStock, getGold, getMax, getStageInputs,
     getCosts, getXp, getImportCosts, getImportXp, getImportReqs,
     getStageDeltas, getImportDeltas,
+    hasUserStageDeltaEdits, hasUserImportDeltaEdits,
   } = getters;
 
   return selectedCars.some((c) => {
@@ -45,8 +48,8 @@ export function computeAnyValue(
       Object.values(getImportReqs(k)).some((s) =>
         Object.values(s).some((r) =>
           Object.values(r as any).some((v) => (v as string).trim() !== ''))) ||
-      getStageDeltas(k).some((rows) => rows.some(anyInDeltaRow)) ||
-      getImportDeltas(k).some((rows) => rows.some(anyInDeltaRow))
+      (hasUserStageDeltaEdits(k) && getStageDeltas(k).some((rows) => rows.some(anyInDeltaRow))) ||
+      (hasUserImportDeltaEdits(k) && getImportDeltas(k).some((rows) => rows.some(anyInDeltaRow)))
     );
   });
 }
