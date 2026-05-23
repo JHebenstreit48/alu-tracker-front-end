@@ -14,6 +14,7 @@ export function buildStatsPatch(car: Car, getters: ReturnedGetters): CarStatsPat
     getBps, getStock, getGold, getMax, getStageInputs,
     getCosts, getXp, getStageDeltas, getImportDeltas,
     hasUserStageDeltaEdits, hasUserImportDeltaEdits,
+    getSeedStagesByStar,
   } = getters;
 
   const blockToStar = (b: StatBlockState): StarStatBlock | undefined => {
@@ -41,18 +42,34 @@ export function buildStatsPatch(car: Car, getters: ReturnedGetters): CarStatsPat
   });
   if (Object.keys(mx).length) stats.maxAtStar = mx;
 
+  // Stages — group by star key using seed stage numbers
   const si = getStageInputs(k);
-  const st: Record<string, unknown> = {};
-  Object.entries(si).forEach(([stageNum, entry]) => {
-    const out: Record<string, unknown> = {};
-    const r  = toNum(entry.rank);     if (r  !== undefined) out.rank         = r;
-    const ts = toNum(entry.topSpeed); if (ts !== undefined) out.topSpeed     = ts;
-    const a  = toNum(entry.accel);    if (a  !== undefined) out.acceleration = a;
-    const h  = toNum(entry.handling); if (h  !== undefined) out.handling     = h;
-    const n  = toNum(entry.nitro);    if (n  !== undefined) out.nitro        = n;
-    if (Object.keys(out).length) st[stageNum] = out;
-  });
-  if (Object.keys(st).length) stats.stages = st;
+  if (Object.keys(si).length) {
+    const seedStagesByStar = getSeedStagesByStar();
+    const stagesOut: Record<string, any[]> = {};
+
+    STAR_KEYS.slice(0, stars).forEach((starKey) => {
+      const seedEntries: any[] = seedStagesByStar?.[starKey] ?? [];
+      const starEntries: any[] = [];
+
+      seedEntries.forEach((seedEntry: any) => {
+        const stageNum = String(seedEntry.stage);
+        const input = si[stageNum];
+        if (!input) return;
+        const out: Record<string, unknown> = { stage: seedEntry.stage };
+        const r  = toNum(input.rank);     if (r  !== undefined) out.rank         = r;
+        const ts = toNum(input.topSpeed); if (ts !== undefined) out.topSpeed     = ts;
+        const a  = toNum(input.accel);    if (a  !== undefined) out.acceleration = a;
+        const h  = toNum(input.handling); if (h  !== undefined) out.handling     = h;
+        const n  = toNum(input.nitro);    if (n  !== undefined) out.nitro        = n;
+        if (Object.keys(out).length > 1) starEntries.push(out);
+      });
+
+      if (starEntries.length) stagesOut[starKey] = starEntries;
+    });
+
+    if (Object.keys(stagesOut).length) stats.stages = stagesOut;
+  }
 
   const co: Record<string, unknown> = {};
   Object.entries(getCosts(k)).forEach(([stageNum, v]) => {

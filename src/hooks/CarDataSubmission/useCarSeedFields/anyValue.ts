@@ -18,6 +18,7 @@ export type ReturnedGetters = {
   getImportDeltas:          (k: string) => any[][];
   hasUserStageDeltaEdits:   (k: string) => boolean;
   hasUserImportDeltaEdits:  (k: string) => boolean;
+  getSeedStagesByStar:      () => Record<string, any[]> | null;
 };
 
 export function computeAnyValue(
