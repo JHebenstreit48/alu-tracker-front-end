@@ -71,12 +71,14 @@ export function buildStatsPatch(car: Car, getters: ReturnedGetters): CarStatsPat
     if (Object.keys(stagesOut).length) stats.stages = stagesOut;
   }
 
+  // Credit costs
   const co: Record<string, unknown> = {};
   Object.entries(getCosts(k)).forEach(([stageNum, v]) => {
     const n = toNum(v); if (n !== undefined) co[stageNum] = n;
   });
-  if (Object.keys(co).length) stats.importPartsUpgrades = co;
+  if (Object.keys(co).length) stats.creditCosts = co;
 
+  // Garage Level XP
   const xp: Record<string, unknown> = {};
   Object.entries(getXp(k)).forEach(([stageNum, v]) => {
     const n = toNum(v); if (n !== undefined) xp[stageNum] = n;
