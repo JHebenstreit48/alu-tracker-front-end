@@ -44,7 +44,7 @@ export type CarStatsPatch = {
   gold?: StarStatBlock;
   stages?: Record<string, unknown>;
   blueprints?: Record<string, unknown>;
-  importPartsUpgrades?: Record<string, unknown>;
+  creditCosts?: Record<string, unknown>;
   garageLevelXp?: Record<string, unknown>;
   stageDeltas?: DeltasByStar;
   importDeltas?: DeltasByStar;

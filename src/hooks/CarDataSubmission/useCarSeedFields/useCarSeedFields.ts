@@ -59,6 +59,7 @@ export function useCarSeedFields(selectedCars: Car[], activeCarIdx: number) {
     stagesDeltaRowCount, importStageNums,
     seeds.seedImportDeltasByStar,
     seeds.seedStageDeltasByStar,
+    seeds.seedStagesByStar,  // ← added
   );
 
   const updaters = makeUpdaters(
@@ -67,7 +68,7 @@ export function useCarSeedFields(selectedCars: Car[], activeCarIdx: number) {
     state.setStageInputMap, state.setCostMap, state.setXpMap,
     state.setImportCostMap, state.setImportXpMap, state.setImportReqMap,
     state.setStageDeltasMap, state.setImportDeltasMap, state.setCorrectionMode,
-    seeds.seedStageDeltasByStar,  // ← added
+    seeds.seedStageDeltasByStar,
   );
 
   const anyValue = useMemo(() =>

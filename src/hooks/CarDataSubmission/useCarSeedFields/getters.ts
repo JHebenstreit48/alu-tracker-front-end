@@ -1,6 +1,5 @@
 import { STAR_KEYS, emptyBlock } from '@/types/CarDataSubmission/tabs/shared';
 import {
-  initDeltasState,
   emptyDeltaRow,
   emptyImportDeltaRow,
   type DeltaRowState,
@@ -71,7 +70,8 @@ export function makeGetters(
   stagesDeltaRowCount: number,
   importStageNums: string[],
   seedImportDeltasByStar: Record<string, any[]> | null,
-  seedStageDeltasByStar: Record<string, any[]> | null
+  seedStageDeltasByStar: Record<string, any[]> | null,
+  seedStagesByStar: Record<string, any[]> | null
 ) {
   const getBps = (k: string) => bpsMap[k] ?? Array(6).fill('');
   const getStock = (k: string) => stockMap[k] ?? emptyBlock();
@@ -88,11 +88,12 @@ export function makeGetters(
   const hasUserStageDeltaEdits = (k: string) => !!stageDeltasMap[k];
   const hasUserImportDeltaEdits = (k: string) => !!importDeltasMap[k];
 
+  // Returns seed stages grouped by star key for use in buildPatch
+  const getSeedStagesByStar = () => seedStagesByStar;
+
   const getStageDeltas = (k: string) => {
     if (stageDeltasMap[k]) return stageDeltasMap[k];
-
     let nextStage = 1;
-
     return STAR_KEYS.map((starKey) => {
       const seedEntries: any[] = seedStageDeltasByStar?.[starKey] ?? [];
       if (seedEntries.length) {
@@ -140,5 +141,6 @@ export function makeGetters(
     isCorrectionMode,
     hasUserStageDeltaEdits,
     hasUserImportDeltaEdits,
+    getSeedStagesByStar,
   };
 }
