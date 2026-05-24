@@ -5,12 +5,12 @@ import { useCarSeedFields } from '@/hooks/CarDataSubmission/useCarSeedFields/use
 import { carLabel } from '@/types/CarDataSubmission/tabs/shared';
 import CarChipSelector from '@/components/CarDataForm/Stats/shared/CarChipSelector';
 
-import Overview      from '@/components/CarDataForm/Stats/tabs/Overview';
-import MaxStars      from '@/components/CarDataForm/Stats/tabs/MaxStars';
-import Stages        from '@/components/CarDataForm/Stats/tabs/Stages';
-import Deltas        from '@/components/CarDataForm/Stats/tabs/Deltas';
-import UpgradeCosts  from '@/components/CarDataForm/Stats/tabs/UpgradeCosts';
-import GarageLevelXp from '@/components/CarDataForm/Stats/tabs/GarageLevelXp';
+import Overview      from '@/components/CarDataForm/Form/tabs/Overview';
+import MaxStars      from '@/components/CarDataForm/Form/tabs/MaxStars';
+import Stages        from '@/components/CarDataForm/Form/tabs/Stages';
+import Deltas        from '@/components/CarDataForm/Form/tabs/Deltas';
+import UpgradeCosts  from '@/components/CarDataForm/Form/tabs/UpgradeCosts';
+import GarageLevelXp from '@/components/CarDataForm/Form/tabs/GarageLevelXp';
 
 type Props = {
   selectedKeys: string[];
