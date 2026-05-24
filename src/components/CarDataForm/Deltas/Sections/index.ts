@@ -1,0 +1,2 @@
+export { default as StageDeltasSection } from '@/components/CarDataForm/Deltas/Sections/StageDeltasSection';
+export { default as ImportDeltasSection } from '@/components/CarDataForm/Deltas/Sections/ImportDeltasSection';
