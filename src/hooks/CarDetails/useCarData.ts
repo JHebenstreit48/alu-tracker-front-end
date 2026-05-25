@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchCarDetail, fetchCarStatus } from "@/api/carDetails";
+import { mapApiStatus } from "@/utils/CarDetails/status";
 import {
   getCarTrackingData,
   setCarTrackingData,
@@ -26,17 +27,26 @@ export function useCarData(
         setCar(detail);
 
         const s = await fetchCarStatus(slug);
-        setStatus(s);
+        console.log("detail.status:", detail.status);
+        console.log("fetchCarStatus result:", s);
+
+        if (s) {
+          setStatus(s);
+        } else if (detail.status) {
+          const fallback = mapApiStatus({
+            status: String(detail.status),
+            message: detail.message as string | undefined,
+          });
+          setStatus(fallback);
+        }
 
         const key = generateCarKey(detail.brand, detail.model);
         const stored = getCarTrackingData(key);
 
-        // A) Seed stars for key cars in tracker mode
         if (trackerMode && detail.keyCar && stored.stars === undefined) {
           setCarTrackingData(key, { ...stored, stars: 1 });
         }
 
-        // B) Migrate: if owned but no keyObtained, set both
         if (detail.keyCar) {
           if (stored?.keyObtained !== undefined) {
             setKeyObtained(stored.keyObtained);

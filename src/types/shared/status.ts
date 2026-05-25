@@ -1,7 +1,7 @@
 export type FirestoreTimestampJson = {
-    _seconds: number;
-    _nanoseconds: number;
-  };
+  _seconds: number;
+  _nanoseconds: number;
+};
 
 export type ApiStatusDoc = {
   status: string;
@@ -10,8 +10,8 @@ export type ApiStatusDoc = {
   createdAt?: string | FirestoreTimestampJson;
 };
 
-  export type CarStatus = {
-    status: "complete" | "in progress" | "missing" | "unknown";
-    message?: string;
-    lastChecked?: string | null; // ISO string; UI will localize
-  };
+export type CarStatus = {
+  status: 'complete' | 'in progress' | 'coming soon' | 'missing' | 'unknown';
+  message?: string;
+  lastChecked?: string | null;
+};

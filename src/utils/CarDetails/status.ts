@@ -39,6 +39,7 @@ export function toCarStatus(value: string): CarStatus["status"] | null {
   switch (value) {
     case "complete":
     case "in progress":
+    case "coming soon":
     case "missing":
     case "unknown":
       return value;

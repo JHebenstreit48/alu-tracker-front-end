@@ -9,8 +9,9 @@ $status-pad: 0.5rem 0;
 // Chip colors
 $status-complete: #2ecc71;
 $status-progress: #f1c40f;
-$status-missing:  #e74c3c;
-$status-unknown:  #7f8c8d;
+$status-coming-soon: #3b82f6;
+$status-missing: #e74c3c;
+$status-unknown: #7f8c8d;
 
 .cdetail-status {
   min-width: 0;
@@ -57,7 +58,6 @@ $status-unknown:  #7f8c8d;
   }
 
   .chip {
-    text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 700;
     padding: 0.25rem 0.6rem;
@@ -66,10 +66,21 @@ $status-unknown:  #7f8c8d;
     background: $status-unknown;
     box-shadow: 0 0 6px 2px #{color.change($color-gold-glow, $alpha: 0.35)};
 
-    &.chip--complete    { background: $status-complete; }
-    &.chip--in-progress { background: $status-progress; }
-    &.chip--missing     { background: $status-missing; }
-    &.chip--unknown     { background: $status-unknown; }
+    &.chip--complete {
+      background: $status-complete;
+    }
+    &.chip--in-progress {
+      background: $status-progress;
+    }
+    &.chip--coming-soon {
+      background: $status-coming-soon;
+    }
+    &.chip--missing {
+      background: $status-missing;
+    }
+    &.chip--unknown {
+      background: $status-unknown;
+    }
   }
 
   .msg {
@@ -83,7 +94,11 @@ $status-unknown:  #7f8c8d;
     justify-content: flex-end;
     gap: 1rem;
 
-    .updated { padding: 0; }
-    .status-row { margin-top: 0; }
+    .updated {
+      padding: 0;
+    }
+    .status-row {
+      margin-top: 0;
+    }
   }
 }
