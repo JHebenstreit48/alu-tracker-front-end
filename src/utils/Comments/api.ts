@@ -2,7 +2,7 @@ import type {
   ApiOk,
   CommentsListData,
   CreateCommentData,
-} from "@/interfaces/Comments";
+} from "@/types/Comments";
 
 // Comments API base:
 // - Uses VITE_COMMENTS_API_BASE_URL if set

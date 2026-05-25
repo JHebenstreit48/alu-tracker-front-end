@@ -1,9 +1,9 @@
 import type { CarStatus } from "@/types/shared/status";
 
 type Props = {
-  updatedAt?: string;          // ISO string (UTC)
+  updatedAt?: string;
   status?: CarStatus | null;
-  inline?: boolean;            // NEW: render chip+message and timestamp on one row
+  inline?: boolean;
 };
 
 const formatDateTimeLocal = (iso?: string) => {
@@ -16,15 +16,25 @@ const formatDateTimeLocal = (iso?: string) => {
   }).format(d);
 };
 
+const STATUS_LABELS: Record<CarStatus["status"], string> = {
+  "complete":     "Complete",
+  "in progress":  "In Progress",
+  "coming soon":  "Coming Soon",
+  "missing":      "Missing",
+  "unknown":      "Unknown",
+};
+
 export default function CarDataStatusCard({ updatedAt, status, inline = false }: Props) {
   const formatted = formatDateTimeLocal(updatedAt);
+  const label = status ? (STATUS_LABELS[status.status] ?? status.status) : null;
+  const chipClass = status ? `chip chip--${status.status.replaceAll(" ", "-")}` : "";
 
   return (
     <div className={`car-status-card${inline ? " is-inline" : ""}`}>
       {status ? (
         <div className="status-row">
-          <span className={`chip chip--${status.status.replace(" ", "-")}`}>
-            {status.status}
+          <span className={chipClass}>
+            {label}
           </span>
           {status.message ? <span className="msg">— {status.message}</span> : null}
         </div>
