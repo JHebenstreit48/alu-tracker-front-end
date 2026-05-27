@@ -1,0 +1,105 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+
+.carFilters {
+  --card-bg: #0d0016;
+  --card-grad-top: rgba(255, 215, 0, 0.06);
+  --card-grad-bottom: rgba(0, 0, 0, 0.55);
+  --ctrl-w: clamp(11rem, 18vw, 13rem);
+  --search-w: clamp(11rem, 18vw, 13rem);
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'heading heading'
+    'star    class'
+    'rarity  brand'
+    'country country'
+    'search  search'
+    'owned   keycar'
+    'reset   reset';
+
+  background: radial-gradient(120% 120% at 10% -10%, var(--card-grad-top), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), var(--card-grad-bottom)), var(--card-bg);
+
+  border: $filter-border;
+  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.25) inset,
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba($color-gold-glow, 0.18);
+  border-radius: 18px;
+
+  width: $filter-width;
+  padding: $filter-padding;
+  gap: $filter-gap;
+  column-gap: 0.5rem;
+  color: $color-white;
+  font-size: $filter-font-size;
+  text-align: center;
+  align-items: center;
+
+  .filterHeading {
+    grid-area: heading;
+    font-size: clamp(1.6rem, 2.2vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    margin: 0.15rem 0 0.6rem;
+    text-shadow: 0 0 10px rgba($color-gold-glow, 0.28);
+  }
+
+  .resetButton {
+    grid-area: reset;
+    margin-top: 0.5rem;
+    justify-self: center;
+    background: linear-gradient(
+      to bottom,
+      $reset-btn-bg,
+      color.scale($reset-btn-bg, $lightness: -6%)
+    );
+    color: white;
+    padding: 0.6rem 2rem;
+    border-radius: 14px;
+    border: 1px solid rgba($color-gold-glow, 0.35);
+    box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.18) inset,
+      0 8px 18px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow 0.18s ease, background-color 0.2s ease;
+
+    &:hover {
+      background-color: $table-border-color;
+      color: $color-white;
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.26) inset,
+        0 10px 22px rgba(0, 0, 0, 0.6);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  @include maxw($cellphone-portrait) {
+    --ctrl-w: 18rem;
+    --search-w: 18rem;
+
+    width: 20rem;
+    margin: 2rem auto;
+    border-radius: 14px;
+
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'heading'
+      'star'
+      'class'
+      'rarity'
+      'brand'
+      'country'
+      'search'
+      'owned'
+      'keycar'
+      'reset';
+
+    .ownedFilter,
+    .keyCarFilter {
+      justify-self: center;
+    }
+  }
+}

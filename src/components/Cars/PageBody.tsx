@@ -5,8 +5,10 @@ import PageTab from '@/components/Shared/Navigation/PageTab';
 
 import { useNavigate } from 'react-router-dom';
 
-import '@/scss/Cars/CarsPage/index.scss';
+import '@/scss/Cars/index.scss';
 import type { CarDataProps } from '@/types/Cars/Filters/carPageProps';
+
+const PAGE_SIZES = [25, 50, 100, 200] as const;
 
 export default function CarData({
   loading,
@@ -25,7 +27,10 @@ export default function CarData({
     return (
       <div className="cars">
         <PageTab title="Cars">
-          <Header text="Cars" className="carsHeader" />
+          <Header
+            text="Cars"
+            className="carsHeader"
+          />
           <div className="error-message">{error}</div>
         </PageTab>
       </div>
@@ -35,10 +40,16 @@ export default function CarData({
   return (
     <div className="cars">
       <PageTab title="Cars">
-        <Header text="Cars" className="carsHeader" />
+        <Header
+          text="Cars"
+          className="carsHeader"
+        />
 
         <div className="filtersAndTrackerLink">
-          <CarFilters {...filterProps} availableStars={[3, 4, 5, 6]} />
+          <CarFilters
+            {...filterProps}
+            availableStars={[3, 4, 5, 6]}
+          />
           <div className="trackerSummaryLink">
             <button
               className="trackerSummary"
@@ -63,16 +74,25 @@ export default function CarData({
 
         <div className="pageSizeControl">
           <span className="paginationLabel">Cars per page:</span>
-          {[25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325].map((size) => (
+          <div className="pageSizeButtons">
+            {PAGE_SIZES.map((size) => (
+              <button
+                key={size}
+                onClick={() => handlePageSizeChange(size)}
+                disabled={carsPerPage === size}
+                className="carsPerPage"
+              >
+                {size}
+              </button>
+            ))}
             <button
-              key={size}
-              onClick={() => handlePageSizeChange(size)}
-              disabled={carsPerPage === size}
+              onClick={() => handlePageSizeChange(totalFiltered)}
+              disabled={carsPerPage === totalFiltered}
               className="carsPerPage"
             >
-              {size}
+              All
             </button>
-          ))}
+          </div>
         </div>
       </PageTab>
     </div>

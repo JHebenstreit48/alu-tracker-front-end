@@ -1,0 +1,85 @@
+@use '@scss/Globals' as *;
+
+table {
+  border: 4px solid $table-border-color;
+  margin: $table-margin;
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: $table-width;
+  box-shadow: $shadow-gold-xl;
+
+  @include maxw($cellphone-portrait) {
+    width: 88%;
+    border: 3px solid $table-border-color;
+
+    tr {
+      border-bottom: 2px solid $td-border-color;
+      margin-bottom: 1.2rem;
+    }
+
+    td, th {
+      border-left: none;
+      border-right: none;
+      padding: 0;
+    }
+
+    tr:first-of-type {
+      margin-bottom: 0 !important;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .tableHeaderRow {
+      display: table-row !important;
+    }
+
+    .tableHeaderRow th {
+      display: table-cell !important;
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+    }
+  }
+}
+
+.tableData {
+  font-size: 1.4rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $color-white;
+
+  @include maxw($cellphone-portrait) {
+    display: block;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid $td-border-color;
+  }
+}
+
+td {
+  text-align: center;
+  color: $color-white;
+  border: 1px solid $td-border-color;
+  padding: $td-padding;
+  width: 1%;
+  vertical-align: middle;
+  height: 10rem;
+
+  @include maxw($cellphone-portrait) {
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
+}
+
+.noImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10rem;
+  font-weight: bold;
+  font-size: 1rem;
+
+  @include maxw($cellphone-portrait) {
+    height: 10rem;
+    font-size: 1rem;
+  }
+}

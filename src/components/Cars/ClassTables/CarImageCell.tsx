@@ -20,6 +20,15 @@ function isOwned(entry?: CarTracking): boolean {
   );
 }
 
+function getRarityClass(rarity: string): string {
+  switch (rarity) {
+    case "Uncommon": return "classBadge--uncommon";
+    case "Rare":     return "classBadge--rare";
+    case "Epic":     return "classBadge--epic";
+    default:         return "classBadge--unknown";
+  }
+}
+
 export function CarImageCell({
   car,
   carKey,
@@ -43,9 +52,15 @@ export function CarImageCell({
 
   const owned = trackingEnabled && isOwned(tracking);
   const imgClass = `carPic${trackingEnabled && !owned ? " carPic--locked" : ""}`;
+  const rarityClass = getRarityClass(car.rarity);
 
   return (
     <>
+      <div className="classBadgeWrapper">
+        <div className={`classBadge ${rarityClass}`}>
+          <span className="classBadge__letter">{car.class}</span>
+        </div>
+      </div>
       <img
         className={imgClass}
         src={imageSrc}

@@ -1,0 +1,10 @@
+@use '@scss/Globals/index' as *;
+
+.carFilters {
+  .searchFilter { grid-area: search; }
+
+  #searchInput {
+    width: var(--search-w);
+    margin: 0 auto;
+  }
+}

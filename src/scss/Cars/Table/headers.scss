@@ -1,0 +1,48 @@
+@use '@scss/Globals' as *;
+
+.tableHeader {
+  color: $color-accent-blue;
+  background-color: $color-black;
+  text-align: center;
+  padding: $table-header-padding;
+  font-size: $table-header-font-size-cars;
+  border-top: 1px solid rgba(204, 19, 255, 0.308);
+  border-left: 1px solid $td-border-color;
+
+  @include maxw($cellphone-portrait) {
+    width: 90%;
+    margin: 0 auto;
+    padding: 1rem;
+    font-size: 1.7rem;
+    text-align: center;
+    border-left: none;
+  }
+}
+
+.tableHeaderRow {
+  @include maxw($cellphone-portrait) {
+    margin-bottom: 0 !important;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.tableHeaders {
+  color: rgb(0, 102, 255);
+  background-color: rgb(15, 10, 32);
+  text-align: center;
+  padding: $table-header-padding;
+  font-size: $table-header-font-size-cars;
+  border-top: 1px solid rgba(204, 19, 255, 0.308);
+  border-left: 1px solid $td-border-color;
+
+  @include maxw($cellphone-portrait) {
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0.6rem 0;
+    margin: 0;
+    border: 1px solid $td-border-color;
+    width: 100%;
+  }
+}

@@ -1,0 +1,30 @@
+@use '@scss/Globals/index' as *;
+
+.carFilters {
+  .ownedFilter {
+    grid-area: owned;
+    justify-self: end;
+  }
+
+  .keyCarFilter {
+    grid-area: keycar;
+    justify-self: start;
+  }
+
+  .CheckboxLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 1.05rem;
+    user-select: none;
+    margin-top: 0.15rem;
+
+    input[type='checkbox'] {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      accent-color: $color-gold-glow;
+      cursor: pointer;
+    }
+  }
+}
