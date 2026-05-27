@@ -1,7 +1,24 @@
 @use 'sass:color';
 @use '@scss/Globals' as *;
 
-/* Wraps the centered card and the off-to-the-right button */
+/* ==============================
+   Page Layout
+   ============================== */
+.cars {
+  min-height: 75vh;
+  padding-bottom: 4rem;
+}
+
+.carCount {
+  font-size: 1.5rem;
+  color: rgb(21, 201, 232);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* ==============================
+   Filters + Tracker Link Layout
+   ============================== */
 .filtersAndTrackerLink {
   position: relative;
   width: max-content;
@@ -11,7 +28,6 @@
     margin: 0 auto;
   }
 
-  /* Put the button out of normal flow so it can't shift the centered card */
   .trackerSummaryLink {
     position: absolute;
     top: 0rem;
@@ -22,11 +38,10 @@
 
     @include maxw($large-laptop-max) {
       left: 62rem;
-      right: 0; // anchor to the right side of .filtersAndTrackerLink
+      right: 0;
       top: 0;
     }
 
-    /* phones: drop under the card and center */
     @include maxw($cellphone-portrait) {
       position: static;
       margin-top: 1.5rem;
@@ -36,15 +51,17 @@
   }
 }
 
-/* Button look, same theme as the card but lighter label */
 .trackerSummary {
-  background: radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
+  background:
+    radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.55)), #0d0016;
 
   color: rgb(21, 201, 232);
   border: 1px solid rgba($color-gold-glow, 0.35);
   border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.22) inset, 0 8px 18px rgba(0, 0, 0, 0.6),
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.22) inset,
+    0 8px 18px rgba(0, 0, 0, 0.6),
     0 0 16px rgba($color-gold-glow, 0.18);
 
   padding: 0.5rem 1.05rem;
@@ -53,13 +70,19 @@
   letter-spacing: 0.2px;
   line-height: 1;
   cursor: pointer;
-  transition: transform 0.06s ease, box-shadow 0.18s ease, background-color 0.2s ease;
+  transition:
+    transform 0.06s ease,
+    box-shadow 0.18s ease,
+    background-color 0.2s ease;
 
   &:hover {
-    background: radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.1), transparent 60%),
+    background:
+      radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.1), transparent 60%),
       linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.6)), #0f0f10;
     color: $color-white;
-    box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.28) inset, 0 10px 22px rgba(0, 0, 0, 0.65),
+    box-shadow:
+      0 0 0 1px rgba($color-gold-glow, 0.28) inset,
+      0 10px 22px rgba(0, 0, 0, 0.65),
       0 0 18px rgba($color-gold-glow, 0.24);
   }
 

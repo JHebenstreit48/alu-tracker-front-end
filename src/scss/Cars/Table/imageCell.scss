@@ -1,0 +1,130 @@
+@use '@scss/Globals' as *;
+@use '@scss/Globals/colors/rarity' as *;
+
+.carImage {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  position: relative;
+
+  @include maxw($cellphone-portrait) {
+    margin-top: 0;
+    border-top: 1px solid $td-border-color;
+  }
+
+  .carPic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    padding: 0;
+    margin: 0 auto;
+
+    @include maxw($cellphone-portrait) {
+      height: auto;
+      max-height: 11rem;
+      max-width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .carPic--locked {
+    filter: grayscale(100%);
+    opacity: 0.45;
+  }
+
+  .starOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.28rem 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    text-align: center;
+    font-size: 0.3rem;
+
+    @include maxw($cellphone-portrait) {
+      padding: 0.05rem;
+      margin: 0;
+      height: 1.5rem;
+    }
+  }
+
+  .StarRating .starIcon.grayed {
+    filter: grayscale(100%) brightness(0);
+    opacity: 1;
+  }
+
+  .classBadgeWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    z-index: 3;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.9));
+  }
+
+  .classBadge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 3.5rem 3.5rem 0 0;
+    z-index: 3;
+
+    &--uncommon {
+      border-color: $rarity-text-uncommon transparent transparent transparent;
+    }
+    &--rare {
+      border-color: $rarity-text-rare transparent transparent transparent;
+    }
+    &--epic {
+      border-color: $rarity-text-epic transparent transparent transparent;
+    }
+    &--unknown {
+      border-color: #444 transparent transparent transparent;
+    }
+
+    // Inset shadow along top and left edges
+    &::after {
+      content: '';
+      position: absolute;
+      top: -3.5rem;
+      left: 0;
+      width: 3.5rem;
+      height: 3.5rem;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 50%);
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    &__letter {
+      position: absolute;
+      top: -3.2rem;
+      left: 0.3rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $color-white;
+      line-height: 1;
+      z-index: 6;
+      text-shadow:
+        1px 1px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        2px 2px 0 #000,
+        -2px -2px 0 #000,
+        0 3px 8px rgba(0, 0, 0, 1);
+
+      @include maxw($cellphone-portrait) {
+        font-size: 1.3rem;
+        top: -3.1rem;
+      }
+    }
+  }
+}
