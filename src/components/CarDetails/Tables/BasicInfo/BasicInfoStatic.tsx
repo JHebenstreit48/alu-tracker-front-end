@@ -20,9 +20,33 @@ function renderObtainableVia(obtainableVia: Car['obtainableVia']) {
     return (
       <div className="obtainable-list">
         {(obtainableVia as ObtainableViaEntry[]).map((group, i) => {
-          const allShort = group.methods.every(
-            (m) => m.length <= SHORT_METHOD_THRESHOLD
-          );
+          const rendered: React.ReactNode[] = [];
+          let shortBuffer: string[] = [];
+
+          const flushBuffer = (key: string) => {
+            if (shortBuffer.length > 0) {
+              rendered.push(
+                <span key={key} className="obtainable-method-item">
+                  {shortBuffer.join(' | ')}
+                </span>
+              );
+              shortBuffer = [];
+            }
+          };
+
+          group.methods.forEach((method, j) => {
+            if (method.length <= SHORT_METHOD_THRESHOLD) {
+              shortBuffer.push(method);
+            } else {
+              flushBuffer(`buf-${j}`);
+              rendered.push(
+                <span key={j} className="obtainable-method-item">
+                  {method}
+                </span>
+              );
+            }
+          });
+          flushBuffer('buf-end');
 
           return (
             <div
@@ -34,18 +58,8 @@ function renderObtainableVia(obtainableVia: Car['obtainableVia']) {
                   {group.status.charAt(0).toUpperCase() + group.status.slice(1)}
                 </span>
               </div>
-              <div className={`obtainable-methods${allShort ? ' obtainable-methods--inline' : ''}`}>
-                {allShort ? (
-                  <span className="obtainable-method-item">
-                    {group.methods.join(' | ')}
-                  </span>
-                ) : (
-                  group.methods.map((method, j) => (
-                    <span key={j} className="obtainable-method-item">
-                      {method}
-                    </span>
-                  ))
-                )}
+              <div className="obtainable-methods">
+                {rendered}
               </div>
             </div>
           );
