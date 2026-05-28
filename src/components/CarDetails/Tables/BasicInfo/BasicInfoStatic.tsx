@@ -3,6 +3,8 @@ import { Car, ObtainableViaEntry } from '@/types/shared/car';
 import StarRankSelector from '@/components/CarDetails/OtherComponents/StarRankSelector';
 import { formatAddedDate } from '@/utils/CarDetails/formatDate';
 
+const SHORT_METHOD_THRESHOLD = 20;
+
 function renderObtainableVia(obtainableVia: Car['obtainableVia']) {
   if (!obtainableVia || (Array.isArray(obtainableVia) && obtainableVia.length === 0)) {
     return <span>—</span>;
@@ -17,25 +19,37 @@ function renderObtainableVia(obtainableVia: Car['obtainableVia']) {
   ) {
     return (
       <div className="obtainable-list">
-        {(obtainableVia as ObtainableViaEntry[]).map((group, i) => (
-          <div
-            key={i}
-            className={`obtainable-group${i > 0 ? ' obtainable-group--bordered' : ''}`}
-          >
-            <div className="obtainable-status-label">
-              <span className={`obtainable-badge obtainable-${group.status}`}>
-                {group.status.charAt(0).toUpperCase() + group.status.slice(1)}
-              </span>
-            </div>
-            <div className="obtainable-methods">
-              {group.methods.map((method, j) => (
-                <span key={j} className="obtainable-method-item">
-                  {method}
+        {(obtainableVia as ObtainableViaEntry[]).map((group, i) => {
+          const allShort = group.methods.every(
+            (m) => m.length <= SHORT_METHOD_THRESHOLD
+          );
+
+          return (
+            <div
+              key={i}
+              className={`obtainable-group${i > 0 ? ' obtainable-group--bordered' : ''}`}
+            >
+              <div className="obtainable-status-label">
+                <span className={`obtainable-badge obtainable-${group.status}`}>
+                  {group.status.charAt(0).toUpperCase() + group.status.slice(1)}
                 </span>
-              ))}
+              </div>
+              <div className={`obtainable-methods${allShort ? ' obtainable-methods--inline' : ''}`}>
+                {allShort ? (
+                  <span className="obtainable-method-item">
+                    {group.methods.join(' | ')}
+                  </span>
+                ) : (
+                  group.methods.map((method, j) => (
+                    <span key={j} className="obtainable-method-item">
+                      {method}
+                    </span>
+                  ))
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   }
