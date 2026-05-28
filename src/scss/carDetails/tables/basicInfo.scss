@@ -99,6 +99,13 @@
     display: flex;
     flex-direction: column;
     padding: 6px 16px 8px 16px;
+
+    &--inline {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 4px 16px 6px 16px;
+    }
   }
 
   .obtainable-method-item {
