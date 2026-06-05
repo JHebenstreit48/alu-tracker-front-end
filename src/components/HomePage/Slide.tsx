@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo } from 'react';
 
 type SlideProps = {
   src: string;
@@ -9,17 +9,10 @@ type SlideProps = {
   eager?: boolean;
 };
 
-function SlideBase({
-  src,
-  alt,
-  isActive,
-  onLoad,
-  onError,
-  eager = false,
-}: SlideProps) {
+function SlideBase({ src, alt, isActive, onLoad, onError, eager = false }: SlideProps) {
   return (
     <div
-      className={`carousel-item ${isActive ? "active" : ""}`}
+      className={`carousel-item ${isActive ? 'active' : ''}`}
       aria-hidden={!isActive}
     >
       <div className="carousel-image-box">
@@ -27,10 +20,13 @@ function SlideBase({
           src={src}
           alt={alt}
           className="d-block w-100"
-          loading={eager ? "eager" : "lazy"}
+          loading={eager ? 'eager' : 'lazy'}
           onLoad={onLoad}
           onError={onError}
         />
+        <div className="carousel-caption">
+          <p>{alt}</p>
+        </div>
       </div>
     </div>
   );

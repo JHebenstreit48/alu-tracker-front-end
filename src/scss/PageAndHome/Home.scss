@@ -28,13 +28,11 @@ $panel-bg-bot: #08030f;
   margin: 3rem auto 5rem auto;
   padding: clamp(1rem, 2.2vw, 2rem);
 
-  /* Slightly deeper panel, aligns with new page bg */
   background: linear-gradient(180deg, $panel-bg-top 0%, $panel-bg-bot 100%);
   color: $color-white;
 
   @include gold-halo(16px, 1px);
 
-  /* Subtle top highlight line for depth */
   position: relative;
   &::before {
     content: '';
@@ -94,7 +92,6 @@ $panel-bg-bot: #08030f;
   max-inline-size: 90rem;
   margin: 0 auto 2.25rem;
 
-  /* Thinned border — let glow do the work */
   border: 2px solid rgba($gold, 0.15);
   border-radius: 16px;
   box-shadow:
@@ -139,6 +136,7 @@ $panel-bg-bot: #08030f;
     flex: 0 0 100%;
     min-block-size: 37rem;
     block-size: 37rem;
+    position: relative;
 
     @include maxw($tablet-portrait) {
       min-block-size: 19rem;
@@ -172,6 +170,35 @@ $panel-bg-bot: #08030f;
     block-size: 100%;
     object-fit: cover;
     border-radius: inherit;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    bottom: 0;
+    inset-inline: 0;
+    background: rgba(0, 0, 0, 0.75);
+    color: $gold-text;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    font-size: clamp(1.2rem, 2vw, 1.75rem);
+    letter-spacing: 1.5px;
+    z-index: 2;
+    text-shadow: 0 0 8px rgba($gold, 0.5);
+
+    p {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    @include maxw($tablet-portrait) {
+      font-size: clamp(1rem, 1.6vw, 1.3rem);
+      padding: 0.6rem 0.75rem;
+    }
+
+    @include maxw($cellphone-portrait) {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.5rem;
+    }
   }
 }
 
