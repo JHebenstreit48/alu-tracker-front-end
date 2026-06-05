@@ -154,7 +154,7 @@ export default function ImageCarousel({
             <Slide
               key={i}
               src={getCarImageUrl(image.path)}
-              alt={`Car Image ${i + 1}`}
+              alt={image.name}
               isActive={i === active}
               eager={i === 0}
               onLoad={onLoad}
