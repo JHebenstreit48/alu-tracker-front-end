@@ -60,6 +60,16 @@ function renderObtainableVia(obtainableVia: Car['obtainableVia']) {
               </div>
               <div className="obtainable-methods">
                 {rendered}
+                {group.status === 'removed' && (group as any).removedDate && (
+                  <span className="obtainable-method-item obtainable-removed-meta">
+                    Removed: {(group as any).removedDate}
+                  </span>
+                )}
+                {group.status === 'removed' && (group as any).reason && (
+                  <span className="obtainable-method-item obtainable-removed-meta">
+                    Reason: {(group as any).reason}
+                  </span>
+                )}
               </div>
             </div>
           );
