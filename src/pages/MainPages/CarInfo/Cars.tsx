@@ -49,11 +49,13 @@ function CarsInner() {
 
   const { setFilteredCars } = useFilteredCarsContext();
 
+  const filteredCarsKey = JSON.stringify(filteredCars.map(c => c.normalizedKey));
+
   useEffect(() => {
     setFilteredCars(filteredCars);
     setLocalFilteredCars(filteredCars);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredCars]);
+  }, [filteredCarsKey]);
 
   const { paginatedCars, totalFiltered, carsPerPage, handlePageSizeChange } =
     useCarPagination(filteredCars);

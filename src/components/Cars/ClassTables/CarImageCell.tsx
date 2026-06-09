@@ -38,16 +38,8 @@ export function CarImageCell({
   const imageSrc = car.image ?? null;
   const altText = `${car.brand} ${car.model}`;
 
-  if (car.ImageStatus === "Removed") {
-    return <span className="noImage">🚫 Removed from Game</span>;
-  }
-
-  if (car.ImageStatus === "Coming Soon") {
-    return <span className="noImage">🚧 Image Coming Soon</span>;
-  }
-
   if (!imageSrc) {
-    return <span className="noImage">❓ Unknown</span>;
+    return <span className="noImage">🚧 Image Coming Soon</span>;
   }
 
   const owned = trackingEnabled && isOwned(tracking);

@@ -36,7 +36,7 @@ export type ObtainableViaEntry = {
 export interface Car {
   id: number;
   image?: string;
-  ImageStatus?: "Coming Soon" | "Available" | "Removed";
+  imageStatus?: "Coming Soon" | "Available" | "Removed";
   brand: string;
   model: string;
   country?: string;

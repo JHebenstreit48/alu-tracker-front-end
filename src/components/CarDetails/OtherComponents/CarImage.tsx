@@ -13,6 +13,18 @@ const CarImage: React.FC<CarImageProps> = ({ car }) => {
   const src = getCarImageUrl(car.image);
   const alt = `${car.brand} ${car.model}`;
 
+  if (car.imageStatus === "Removed") {
+    return (
+      <div className={`carImageContainer ${car.keyCar ? "isKeyCar" : "isNonKeyCar"}`}>
+        <div className="carImagePlaceholder">
+          <span className="carImagePlaceholderText">
+            No longer available in game
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`carImageContainer ${car.keyCar ? "isKeyCar" : "isNonKeyCar"}`}>
       {!errored && (
