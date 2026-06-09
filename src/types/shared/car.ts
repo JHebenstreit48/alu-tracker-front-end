@@ -27,8 +27,10 @@ export interface NewStatsFormat {
 
 /** Single group in the obtainableVia array — groups methods by status */
 export type ObtainableViaEntry = {
-  status: "original" | "upcoming" | "current" | "recent" | "inactive" | "obsolete";
+  status: "original" | "upcoming" | "current" | "recent" | "inactive" | "obsolete" | "removed";
   methods: string[];
+  removedDate?: string;
+  reason?: string;
 };
 
 export interface Car {

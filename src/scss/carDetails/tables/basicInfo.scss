@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/carDetails' as *;
 
 .carDetail {
   .tableCard {
@@ -82,7 +83,7 @@
     padding-top: 0;
 
     &--bordered {
-      border-top: 2px solid rgba(180, 0, 180, 0.35);
+      border-top: 2px solid $obtainable-border-color;
     }
   }
 
@@ -90,7 +91,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 2px solid rgba(180, 0, 180, 0.35);
+    border-bottom: 2px solid $obtainable-border-color;
     margin-bottom: 0;
     padding: 0;
   }
@@ -115,6 +116,14 @@
     line-height: 1.8;
   }
 
+  .obtainable-removed-meta {
+    font-size: 0.85rem;
+    color: $obtainable-removed-meta-color;
+    opacity: 0.8;
+    font-style: italic;
+    line-height: 1.8;
+  }
+
   .obtainable-badge {
     font-size: 1rem;
     font-weight: 600;
@@ -126,34 +135,39 @@
     letter-spacing: 0.04em;
 
     &.obtainable-obsolete {
-      background-color: rgba(220, 50, 50, 0.3);
-      color: #ff8585;
+      background-color: $obtainable-obsolete-bg;
+      color: $obtainable-obsolete-color;
+    }
+
+    &.obtainable-removed {
+      background-color: $obtainable-removed-bg;
+      color: $obtainable-removed-color;
     }
 
     &.obtainable-inactive {
-      background-color: rgba(100, 149, 237, 0.3);
-      color: #93c0ff;
+      background-color: $obtainable-inactive-bg;
+      color: $obtainable-inactive-color;
     }
 
     &.obtainable-recent {
-      background-color: rgba(223, 190, 7, 0.3);
+      background-color: $obtainable-recent-bg;
       color: $color-gold-glow;
     }
 
     &.obtainable-present,
     &.obtainable-current {
-      background-color: rgba(50, 200, 100, 0.3);
-      color: #6dd98a;
+      background-color: $obtainable-current-bg;
+      color: $obtainable-current-color;
     }
 
     &.obtainable-original {
-      background-color: rgba(180, 100, 220, 0.3);
-      color: #d494f5;
+      background-color: $obtainable-original-bg;
+      color: $obtainable-original-color;
     }
 
     &.obtainable-upcoming {
-      background-color: rgba(255, 159, 74, 0.3);
-      color: #ffb366;
+      background-color: $obtainable-upcoming-bg;
+      color: $obtainable-upcoming-color;
     }
   }
 }

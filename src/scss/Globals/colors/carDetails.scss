@@ -6,3 +6,39 @@ $back-btn-hover-bg-color: $gray-555;
 
 $car-image-border-color: rgb(0, 0, 0);
 $car-image-shadow-color: $gold-accent;
+
+// =============================
+// Obtainable Via Variables
+// =============================
+
+// Border
+$obtainable-border-color: rgba(180, 0, 180, 0.35);
+
+// Obsolete
+$obtainable-obsolete-bg: rgba(220, 50, 50, 0.3);
+$obtainable-obsolete-color: #ff8585;
+
+// Removed
+$obtainable-removed-bg: rgba(180, 30, 30, 0.4);
+$obtainable-removed-color: #ff3333;
+$obtainable-removed-meta-color: #ff3333;
+
+// Inactive
+$obtainable-inactive-bg: rgba(100, 149, 237, 0.3);
+$obtainable-inactive-color: #93c0ff;
+
+// Recent
+$obtainable-recent-bg: rgba(223, 190, 7, 0.3);
+// color uses existing $color-gold-glow
+
+// Current / Present
+$obtainable-current-bg: rgba(50, 200, 100, 0.3);
+$obtainable-current-color: #6dd98a;
+
+// Original
+$obtainable-original-bg: rgba(180, 100, 220, 0.3);
+$obtainable-original-color: #d494f5;
+
+// Upcoming
+$obtainable-upcoming-bg: rgba(255, 159, 74, 0.3);
+$obtainable-upcoming-color: #ffb366;
