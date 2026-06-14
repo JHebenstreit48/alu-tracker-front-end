@@ -4,7 +4,7 @@ $car-detail-text-color: $gray-333;
 $back-btn-bg-color: $gray-333;
 $back-btn-hover-bg-color: $gray-555;
 
-$car-image-border-color: rgb(0, 0, 0);
+$car-image-border-color: $color-black;        // was rgb(0,0,0) — now uses core token
 $car-image-shadow-color: $gold-accent;
 
 // =============================
@@ -42,3 +42,12 @@ $obtainable-original-color: #d494f5;
 // Upcoming
 $obtainable-upcoming-bg: rgba(255, 159, 74, 0.3);
 $obtainable-upcoming-color: #ffb366;
+
+// =============================
+// Status Chip Colors            // NEW
+// =============================
+$status-complete: #2ecc71;
+$status-progress: #f1c40f;
+$status-coming-soon: #3b82f6;
+$status-missing: #e74c3c;
+$status-unknown: #7f8c8d;
