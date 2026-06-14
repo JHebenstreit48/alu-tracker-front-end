@@ -1,5 +1,6 @@
 @use 'Colors' as *;
 
+$card-radius: 8px;                  // NEW — panels, cards (e.g. brand quick list)
 $filter-border: 3px solid gold;
 $input-radius: 6px;
 $reset-btn-radius: 12px;

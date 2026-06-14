@@ -1,14 +1,34 @@
-$color-black: #000 !default;
-$color-white: #fff !default;
+$color-black: #000;
+$color-white: #fff;
 
-$gray-333: #333 !default;
-$gray-555: #555 !default;
+// =============================
+// Grays
+// =============================
+$gray-333: #333;
+$gray-444: #444;
+$gray-555: #555;
 
-$color-accent-blue: rgb(21, 201, 232) !default;
+// =============================
+// Dark Surfaces
+// =============================
+$surface-dark-1: #1a1a1a;
+$surface-dark-2: #1e1e1e;
+$surface-dark-3: #2a2a2a;
+$surface-dark-4: #2c2c2c;
 
-// GOLD (universal)
-$gold-accent: rgb(223, 190, 7) !default;
-$gold-text: rgb(255, 196, 0) !default;
+// =============================
+// Blues
+// =============================
+$color-accent-blue: rgb(21, 201, 232);
+$color-link-blue: rgb(24, 189, 249);
+$color-brand-link-blue: #50b7f5;
+
+// =============================
+// Golds / Yellows
+// =============================
+$gold-accent: rgb(223, 190, 7);
+$gold-text: rgb(255, 196, 0);
+$color-warning-yellow: #ffc300;
 
 // Back-compat alias
-$color-gold-glow: $gold-accent !default;
+$color-gold-glow: $gold-accent;

@@ -1,15 +1,18 @@
+@use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/brands' as *;
+
 .map-wrapper {
-  max-width: 1200px;
+  max-width: $quick-list-max-width;
   margin: 0 auto;
-  padding: 1rem;
+  padding: $quick-list-padding;
 }
 
 .map-container {
   position: relative;
   width: 100%;
   height: 600px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border-radius: $card-radius;
+  box-shadow: $shadow-map-container;
   overflow: hidden;
 
   .mapboxgl-map {
@@ -31,9 +34,9 @@
   align-items: flex-end;
   justify-content: center;
   cursor: pointer;
-  color: #e63946;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
-  transition: color 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+  color: $map-pin-color;
+  filter: $shadow-map-pin;
+  transition: color $transition-fast, transform $transition-fast, filter $transition-fast;
 
   svg {
     display: block;
@@ -42,7 +45,7 @@
 
   &:hover,
   &:focus-visible {
-    color: #c1121f;
+    color: $map-pin-hover-color;
     transform: translateY(-4px) scale(1.12);
     outline: none;
   }

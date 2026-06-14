@@ -1,0 +1,8 @@
+@use '@scss/Globals/colors/core' as *;
+
+// =============================
+// Base Reusable Glow Shadows
+// =============================
+$shadow-gold-xl: 0 0 10px 6px $color-gold-glow;
+$shadow-gold-lg: 0 0 8px 4px $color-gold-glow;
+$shadow-gold-basic: 0 0 8px $color-gold-glow;
