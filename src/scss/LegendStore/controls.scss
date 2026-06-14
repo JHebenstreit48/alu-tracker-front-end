@@ -1,0 +1,176 @@
+@use 'sass:color';
+@use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/legendStore' as *;
+@use './mixins' as *;
+
+.legendStoreControls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'heading    heading'
+    'cumulative individual'
+    'star       rarity'
+    'search     search'
+    'reset      reset';
+  background:
+    radial-gradient(120% 120% at 10% -10%, rgba($color-gold-glow, 0.08), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.55)),
+    $control-bg;
+  border: $filter-border;
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.25) inset,
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba($color-gold-glow, 0.18);
+  width: $filter-width;
+  margin: 3rem auto 0 auto;
+  padding: clamp(1.25rem, 2.2vw, 2.25rem);
+  gap: $filter-gap;
+  color: $color-white;
+  font-size: $filter-font-size;
+
+  @include maxw($cellphone-portrait) {
+    width: 20rem;
+    margin: 2rem auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'heading'
+      'cumulative'
+      'individual'
+      'star'
+      'rarity'
+      'search'
+      'reset';
+  }
+
+  .filterHeading {
+    grid-area: heading;
+    text-align: center;
+    font-size: clamp(1.6rem, 2.2vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    margin: 0.25rem 0 1rem;
+    text-shadow: 0 0 10px rgba($color-gold-glow, 0.28);
+  }
+
+  .DropdownLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    @include maxw($cellphone-portrait) {
+      width: 100%;
+    }
+
+    select,
+    input {
+      height: $input-height;
+      padding: 6px 12px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(#fff, 0.15);
+      background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.18)),
+        #0f0f10;
+      color: #eee;
+      transition: box-shadow $transition-fast, border-color $transition-fast, transform 0.05s ease;
+
+      &:hover {
+        border-color: rgba($color-gold-glow, 0.45);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: rgba($color-gold-glow, 0.8);
+        box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.35), 0 4px 16px rgba(0, 0, 0, 0.45) inset;
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+
+    select {
+      appearance: none;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2));
+      color: #f5f5f5;
+    }
+
+    &:nth-of-type(1) { grid-area: cumulative; }
+    &:nth-of-type(2) { grid-area: individual; }
+    &:nth-of-type(3) { grid-area: star; }
+
+    &:nth-of-type(4) {
+      grid-area: rarity;
+
+      select {
+        option {
+          background-color: $color-black;
+          color: $rarity-text-neutral;
+        }
+
+        .optionUncommon { @include rarity-option-on-black($rarity-text-uncommon); }
+        .optionRare     { @include rarity-option-on-black($rarity-text-rare); }
+        .optionEpic     { @include rarity-option-on-black($rarity-text-epic); }
+
+        &:has(option:checked.optionUncommon) { @include rarity-select-outline($rarity-text-uncommon); }
+        &:has(option:checked.optionRare)     { @include rarity-select-outline($rarity-text-rare); }
+        &:has(option:checked.optionEpic)     { @include rarity-select-outline($rarity-text-epic); }
+      }
+    }
+
+    &:nth-of-type(5) {
+      grid-area: search;
+
+      #searchInput {
+        width: 50%;
+        margin: 0 auto;
+
+        &::placeholder {
+          text-align: center;
+        }
+
+        &:focus::placeholder {
+          color: rgba(0, 0, 0, 0);
+        }
+
+        @include maxw($cellphone-portrait) {
+          width: 18rem;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  .resetButton {
+    grid-area: reset;
+    margin-top: 0.75rem;
+    justify-self: center;
+    background: linear-gradient(
+      to bottom,
+      $reset-btn-bg,
+      color.scale($reset-btn-bg, $lightness: -6%)
+    );
+    color: $color-white;
+    padding: 0.65rem 2.1rem;
+    border-radius: 14px;
+    border: 1px solid rgba($color-gold-glow, 0.35);
+    box-shadow:
+      0 0 0 2px rgba($color-gold-glow, 0.18) inset,
+      0 8px 18px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow $transition-fast, background-color $transition-base;
+
+    &:hover {
+      background-color: $table-border-color;
+      color: $color-white;
+      box-shadow:
+        0 0 0 2px rgba($color-gold-glow, 0.26) inset,
+        0 10px 22px rgba(0, 0, 0, 0.6);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}

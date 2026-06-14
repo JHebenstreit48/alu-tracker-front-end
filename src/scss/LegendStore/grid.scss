@@ -1,0 +1,374 @@
+@use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/legendStore' as *;
+@use './mixins' as *;
+
+.legendStoreGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 90%;
+  max-width: 1400px;
+  margin: 3rem auto 5rem;
+  align-items: stretch;
+
+  > .classSection:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+
+    .responsiveTable {
+      width: 50% !important;
+      margin-inline: auto;
+    }
+  }
+
+  @include maxw($cellphone-portrait) {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 0;
+    margin: 1rem auto 3rem;
+  }
+}
+
+.responsiveTable {
+  @include glass-panel-inner;
+  border: 1px solid $glass-border !important;
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.12) inset,
+    0 0 24px rgba($purple-glow, 0.25),
+    0 0 48px rgba($color-gold-glow, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.7);
+  background: $glass-bg;
+  width: 100% !important;
+  height: 100%;
+  margin: 0;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  vertical-align: top;
+
+  th,
+  td {
+    padding: 0.45rem 0.5rem;
+    text-align: center;
+  }
+
+  .classSelectionHeader {
+    @include glass-header;
+    font-size: 1.8rem;
+
+    th {
+      padding: 12px;
+    }
+  }
+
+  .tableHeaderRow {
+    background: rgba(0, 0, 0, 0.4);
+    color: $color-accent-blue;
+
+    th {
+      padding: 10px 12px;
+      border-right: 1px solid $glass-divider;
+      border-bottom: 1px solid $glass-border;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 0.9rem;
+      text-shadow: 0 0 8px rgba($color-accent-blue, 0.4);
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background $transition-fast;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      &:not(:last-child) td {
+        border-bottom: 1px solid $glass-divider;
+      }
+    }
+
+    td {
+      height: 1.8rem;
+      font-size: 0.9rem;
+      border-right: 1px solid $glass-divider;
+      color: #e8e8e8;
+
+      &:first-child {
+        color: $color-accent-blue;
+        font-weight: 600;
+        text-shadow: 0 0 8px rgba($color-accent-blue, 0.3);
+      }
+
+      &:last-child {
+        border-right: none;
+        color: $color-gold-glow;
+        font-weight: 700;
+        text-shadow: 0 0 8px rgba($color-gold-glow, 0.4);
+      }
+    }
+  }
+
+  .no-results {
+    text-align: center;
+    color: #888;
+    padding: 2rem;
+  }
+
+  &--tc {
+    tbody {
+      td {
+        &:nth-child(3) {
+          color: $trade-coin-gold;
+          font-weight: 700;
+          text-shadow: 0 0 8px rgba($trade-coin-gold, 0.4);
+        }
+
+        &:last-child {
+          color: #e8e8e8;
+          font-weight: 400;
+          text-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+.classSection {
+  display: flex;
+  flex-direction: column;
+
+  .classSection__desktop {
+    display: flex;
+    flex: 1;
+
+    @include maxw($cellphone-portrait) {
+      display: none;
+    }
+  }
+
+  .classSection__mobile {
+    display: none;
+
+    @include maxw($cellphone-portrait) {
+      display: block;
+      width: 20rem;
+      margin: 3rem auto;
+    }
+
+    .classSection__mobileOuter {
+      @include glass-panel-outer;
+    }
+
+    .classSection__mobileInner {
+      @include glass-panel-inner;
+    }
+
+    .classSection__mobileHeader {
+      @include glass-header;
+      font-size: 1.6rem;
+    }
+
+    .cardViewList {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+
+      .carCard {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid $glass-divider;
+        border-radius: 0;
+        padding: 0.7rem 0.9rem;
+        color: $color-white;
+        transition: background $transition-fast;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.03);
+        }
+
+        &__name {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: $color-accent-blue;
+          border-bottom: 1px solid $glass-divider;
+          padding-bottom: 0.4rem;
+          margin-bottom: 0.5rem;
+          text-shadow: 0 0 8px rgba($color-accent-blue, 0.35);
+        }
+
+        &__blueprints {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 4px;
+          margin-bottom: 0.5rem;
+        }
+
+        &__bp {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+        }
+
+        &__bpLabel {
+          font-size: 0.62rem;
+          color: rgba(#fff, 0.38);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        &__bpVal {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #e8e8e8;
+        }
+
+        &__total {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-top: 1px solid $glass-divider;
+          padding-top: 0.45rem;
+
+          span:first-child {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: rgba(#fff, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+          }
+
+          span:last-child {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: $color-gold-glow;
+            text-shadow: 0 0 8px rgba($color-gold-glow, 0.45);
+          }
+        }
+      }
+    }
+
+    .expandableList {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+
+      .expandRow {
+        border: none;
+        border-bottom: 1px solid $glass-divider;
+        border-radius: 0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &__header {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.65rem 0.9rem;
+          background: transparent;
+          border: none;
+          color: $color-white;
+          cursor: pointer;
+          font-size: 0.9rem;
+          text-align: left;
+          transition: background $transition-fast;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.04);
+          }
+        }
+
+        &__name {
+          font-weight: 600;
+          color: $color-accent-blue;
+          text-shadow: 0 0 8px rgba($color-accent-blue, 0.35);
+        }
+
+        &__right {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          flex-shrink: 0;
+        }
+
+        &__total {
+          color: $color-gold-glow;
+          font-weight: 700;
+          font-size: 0.9rem;
+          text-shadow: 0 0 8px rgba($color-gold-glow, 0.45);
+        }
+
+        &__chevron {
+          font-size: 0.6rem;
+          color: rgba(#fff, 0.4);
+          transition: transform $transition-base;
+          display: inline-block;
+        }
+
+        &--open {
+          .expandRow__header {
+            background: rgba($purple-glow, 0.06);
+            border-bottom: 1px solid $glass-divider;
+          }
+
+          .expandRow__chevron {
+            transform: rotate(180deg);
+          }
+        }
+
+        &__detail {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 0;
+          background: rgba(0, 0, 0, 0.4);
+          padding: 0.6rem 0.9rem 0.7rem;
+          border-top: none;
+
+          > * + * {
+            border-left: 1px solid $glass-divider;
+          }
+
+          &--tc {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          &--import {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        &__cell {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+          padding: 0 4px;
+        }
+
+        &__cellLabel {
+          font-size: 0.62rem;
+          color: rgba(#fff, 0.38);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        &__cellVal {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #e8e8e8;
+        }
+      }
+    }
+  }
+}

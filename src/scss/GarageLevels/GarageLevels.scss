@@ -1,26 +1,14 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
-
-/* ==============================
-   Local tokens
-============================== */
-$caption-gradient: linear-gradient(
-  to bottom,
-  #25034b 31%,
-  #37097e 69%,
-  #3b0c9d 86%,
-  #3c0b8f 117%,
-  #490db2
-);
+@use '@scss/Globals/colors/garageLevels' as *;
 
 /* ==============================
    Page-level layout / overrides
 ============================== */
 .garageLevelsPage {
-  // Override shared tracker toggle only on this page
   .glTrackerToggle {
     margin: 2rem 0 0 1rem;
-    justify-content: flex-start; // tweak to center/right if you prefer
+    justify-content: flex-start;
   }
 }
 
@@ -30,10 +18,7 @@ $caption-gradient: linear-gradient(
 .gl-container {
   display: flex;
   flex-direction: column;
-
-  /* IMPORTANT: let children (the <section> blocks) stretch full width */
-  align-items: stretch; /* instead of center */
-
+  align-items: stretch;
   gap: 0.9rem;
   margin-top: 0.5rem;
 
@@ -41,13 +26,11 @@ $caption-gradient: linear-gradient(
     margin-top: 1.5rem;
   }
 
-  /* Keep just the controls centered */
   .gl-trigger,
   .gl-panel {
-    align-self: center; /* centers only these two */
+    align-self: center;
   }
 
-  /* Make every garage-level section take 100% width so inner blocks can grow */
   > section[id^="garage-level-section-"] {
     width: 100%;
   }
@@ -73,8 +56,8 @@ $caption-gradient: linear-gradient(
     box-shadow: 0 0 0 2px rgba($color-accent-blue, 0.18) inset,
       0 10px 26px rgba(0, 0, 0, 0.55);
     cursor: pointer;
-    transition: box-shadow 0.18s ease, transform 0.06s ease,
-      border-color 0.18s ease;
+    transition: box-shadow $transition-fast, transform 0.06s ease,
+      border-color $transition-fast;
 
     &:hover {
       border-color: rgba($color-gold-glow, 0.6);
@@ -90,7 +73,6 @@ $caption-gradient: linear-gradient(
     }
   }
 
-  /* Panel: extra padding; don’t clip chip focus/glow */
   .gl-panel {
     display: none;
     position: relative;
@@ -130,6 +112,7 @@ $caption-gradient: linear-gradient(
       overflow-y: auto;
       scrollbar-width: none;
       padding-inline: 0.1rem;
+
       &::-webkit-scrollbar {
         display: none;
       }
@@ -149,13 +132,11 @@ $caption-gradient: linear-gradient(
         padding: 0.5rem 0;
       }
 
-      /* Ghost pills */
       .gl-chip {
         appearance: none;
         border-radius: 999px;
         padding: 0.42rem 0.5rem;
-        font: 800 0.98rem/1 system-ui, -apple-system, Segoe UI, Roboto,
-          sans-serif;
+        font: 800 0.98rem/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
         letter-spacing: 0.01em;
         color: #eef1f7;
         background: transparent;
@@ -163,8 +144,8 @@ $caption-gradient: linear-gradient(
         box-shadow: 0 1px 0 rgba(#000, 0.35);
         cursor: pointer;
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
-        transition: background-color 0.18s ease,
-          border-color 0.18s ease, box-shadow 0.2s ease,
+        transition: background-color $transition-fast,
+          border-color $transition-fast, box-shadow 0.2s ease,
           transform 0.08s ease;
 
         &:hover,
@@ -204,7 +185,7 @@ $caption-gradient: linear-gradient(
 
   @include maxw($cellphone-portrait) {
     margin: 0 0 1.4rem;
-    color: rgb(255, 196, 0);
+    color: $gold-text;
     text-shadow: 4px 4px 4px #000;
   }
 }
@@ -219,7 +200,7 @@ $caption-gradient: linear-gradient(
 }
 
 /* ==============================
-   XP strip — wide desktop default
+   XP strip
 ============================== */
 .xp {
   display: flex;
@@ -232,12 +213,10 @@ $caption-gradient: linear-gradient(
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-
     width: 100%;
-    max-width: min(90rem, 96vw); /* TWEAK HERE for bar width */
-    padding: 1rem 1.4rem; /* TWEAK HERE for bar height */
+    max-width: min(90rem, 96vw);
+    padding: 1rem 1.4rem;
     font-size: 20px;
-
     color: $color-gold-glow;
     background:
       linear-gradient(
@@ -264,20 +243,20 @@ $caption-gradient: linear-gradient(
 }
 
 /* ==============================
-   Images grid (max 2 cols; wider cards)
+   Images grid
 ============================== */
 .CarImagesContainer {
   margin: 0rem auto 2rem;
-  max-width: min(1300px, 96vw); /* TWEAK HERE: gallery width */
+  max-width: min(1300px, 96vw);
   display: grid;
-  grid-template-columns: repeat(2, minmax(32rem, 1fr)); /* card width */
+  grid-template-columns: repeat(2, minmax(32rem, 1fr));
   gap: 2.5rem 0rem;
   justify-content: center;
   justify-items: center;
 
   > div {
     width: 100%;
-    max-width: 32rem; /* match card width */
+    max-width: 32rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -319,7 +298,6 @@ $caption-gradient: linear-gradient(
     font-size: clamp(15px, 1.05rem, 18px);
     font-weight: 600;
     letter-spacing: 0.01em;
-
     border-radius: 999px;
     background: linear-gradient(
       180deg,
