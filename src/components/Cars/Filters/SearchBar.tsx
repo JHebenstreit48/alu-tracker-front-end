@@ -7,7 +7,7 @@ export default function SearchBar({ searchTerm, onSearch }: SearchBarProps) {
       <input
         id="searchInput"
         type="text"
-        placeholder="Search by Model"
+        placeholder="Search by Brand, Model, or Both"
         value={searchTerm}
         onChange={(e) => onSearch(e.target.value)}
       />
