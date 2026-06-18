@@ -1,17 +1,6 @@
 @use 'sass:color';
 @use '@scss/Globals/index' as *;
-
-// Sizes
-$status-font-size: 1rem;
-$status-gap: 0.5rem;
-$status-pad: 0.5rem 0;
-
-// Chip colors
-$status-complete: #2ecc71;
-$status-progress: #f1c40f;
-$status-coming-soon: #3b82f6;
-$status-missing: #e74c3c;
-$status-unknown: #7f8c8d;
+@use '@scss/Globals/colors/carDetails' as *;
 
 .cdetail-status {
   min-width: 0;
@@ -62,25 +51,15 @@ $status-unknown: #7f8c8d;
     font-weight: 700;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
-    color: #000;
+    color: $color-black;
     background: $status-unknown;
     box-shadow: 0 0 6px 2px #{color.change($color-gold-glow, $alpha: 0.35)};
 
-    &.chip--complete {
-      background: $status-complete;
-    }
-    &.chip--in-progress {
-      background: $status-progress;
-    }
-    &.chip--coming-soon {
-      background: $status-coming-soon;
-    }
-    &.chip--missing {
-      background: $status-missing;
-    }
-    &.chip--unknown {
-      background: $status-unknown;
-    }
+    &.chip--complete    { background: $status-complete; }
+    &.chip--in-progress { background: $status-progress; }
+    &.chip--coming-soon { background: $status-coming-soon; }
+    &.chip--missing     { background: $status-missing; }
+    &.chip--unknown     { background: $status-unknown; }
   }
 
   .msg {
@@ -94,11 +73,7 @@ $status-unknown: #7f8c8d;
     justify-content: flex-end;
     gap: 1rem;
 
-    .updated {
-      padding: 0;
-    }
-    .status-row {
-      margin-top: 0;
-    }
+    .updated { padding: 0; }
+    .status-row { margin-top: 0; }
   }
 }

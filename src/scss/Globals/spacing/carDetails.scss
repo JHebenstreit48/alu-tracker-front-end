@@ -4,20 +4,20 @@ $info-table-width: 45rem;
 $car-image-width: 60rem;
 $key-car-info-table-width: 60.5rem;
 
-/* KEEP BOTH VALUES (separate variables) */
 $car-image-margin-nonkey: 2rem auto 3rem auto;
 $car-image-margin-key: 2rem auto 0 auto;
-
-/* KEEP THIS TOO (legacy default so anything still referencing it won't explode) */
 $car-image-margin: $car-image-margin-nonkey;
 
 $car-name-margin-bottom: 15px;
 $back-btn-padding: 10px 1.5rem;
 $blueprints-width: 50rem;
-// Optional: stats compact sizing (if you like)
 $cd-stats-table-width: 34rem;
 
-/* Runtime switch: set CSS custom property based on key/non-key class */
+// Status chip spacing            // NEW
+$status-font-size-spacing: 1rem;  // kept here as layout-affecting size
+$status-gap: 0.5rem;
+$status-pad: 0.5rem 0;
+
 .carImageContainer {
   --car-image-margin: #{$car-image-margin-nonkey};
 }

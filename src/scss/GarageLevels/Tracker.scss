@@ -1,26 +1,6 @@
 @use "sass:color";
 @use "@scss/Globals/index" as *;
 
-/* ==============================
-            Variables
-   ============================== */
-
-$shadow-style: 1px 0 5px 5px $color-gold-glow;
-
-$control-grid-gap: 1rem;
-$control-width: 18rem;
-$control-border-color: black;
-$control-box-shadow-color: $color-gold-glow;
-$control-bg-color: black;
-$control-padding: 4rem;
-$control-font-size: 1.2rem;
-
-$filter-heading-font-size: 1.9rem;
-
-/* ==============================
-            Garage Level Tracker
-      ============================== */
-
 .glTrackerToggle {
   display: flex;
   margin: 2rem auto;
@@ -52,10 +32,6 @@ $filter-heading-font-size: 1.9rem;
   }
 }
 
-/* ==============================
-             Level Selector
-      ============================== */
-
 .garageLevelTracker {
   display: flex;
   flex-flow: column wrap;
@@ -65,10 +41,10 @@ $filter-heading-font-size: 1.9rem;
   margin: 0rem auto 3rem auto;
   gap: $control-grid-gap;
   width: $control-width;
-  border: 3px solid $control-border-color;
-  box-shadow: 0 0 8px 3px $control-box-shadow-color;
+  border: 3px solid $color-black;
+  box-shadow: 0 0 8px 3px $color-gold-glow;
   border-radius: 1rem;
-  background-color: $control-bg-color;
+  background-color: $color-black;
   padding: $control-padding;
   font-size: $control-font-size;
   color: $color-white;
@@ -83,7 +59,7 @@ $filter-heading-font-size: 1.9rem;
 
     .levelTrackerText {
       color: $color-white;
-      font-size: 1.5rem;
+      font-size: $level-tracker-font-size;
       margin-bottom: 1rem;
     }
   }
@@ -102,10 +78,6 @@ $filter-heading-font-size: 1.9rem;
     margin-top: 1rem;
   }
 }
-
-/* ==============================
-           XP Input Section
-      ============================== */
 
 .xpInputSection {
   display: grid;

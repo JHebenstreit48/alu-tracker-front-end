@@ -1,0 +1,126 @@
+@use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/legendStore' as *;
+
+.storeViewToggle {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1.25rem;
+  margin: 2rem auto 0;
+  width: fit-content;
+
+  @include maxw($cellphone-portrait) {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 20rem;
+  }
+
+  .storeViewGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+
+    &__label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(#fff, 0.4);
+      cursor: default;
+    }
+  }
+
+  .storeViewSelect,
+  .storeViewBtn {
+    padding: 0.6rem 1.8rem;
+    border-radius: 12px;
+    border: 1px solid rgba(#fff, 0.15);
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+      #0f0f10;
+    color: #aaa;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color $transition-fast, color $transition-fast, box-shadow $transition-fast;
+
+    &.active {
+      border-color: rgba($color-gold-glow, 0.8);
+      color: $color-white;
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.25) inset;
+    }
+
+    &:hover:not(.active) {
+      border-color: rgba($color-gold-glow, 0.4);
+      color: #ddd;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgba($color-gold-glow, 0.8);
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.25) inset;
+    }
+  }
+
+  .storeViewSelect {
+    appearance: none;
+    padding-right: 2.4rem;
+    background-color: #0f0f10;
+    background-image:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aaaaaa'/%3E%3C/svg%3E");
+    background-repeat: no-repeat, no-repeat;
+    background-position: 0 0, right 0.75rem center;
+    background-size: 100% 100%, 10px 6px;
+
+    option {
+      background-color: #0f0f10;
+      color: #eee;
+    }
+
+    &.active {
+      background-image:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ffffff'/%3E%3C/svg%3E");
+    }
+  }
+}
+
+.mobileViewToggle {
+  display: none;
+
+  @include maxw($cellphone-portrait) {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem auto 0;
+    width: 20rem;
+  }
+
+  .toggleBtn {
+    flex: 1;
+    padding: 0.55rem 0;
+    border-radius: 10px;
+    border: 1px solid rgba(#fff, 0.15);
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+      #0f0f10;
+    color: #aaa;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color $transition-fast, color $transition-fast, box-shadow $transition-fast;
+
+    &.active {
+      border-color: rgba($color-gold-glow, 0.8);
+      color: $color-white;
+      box-shadow: 0 0 0 2px rgba($color-gold-glow, 0.25) inset;
+    }
+
+    &:hover:not(.active) {
+      border-color: rgba($color-gold-glow, 0.4);
+      color: #ddd;
+    }
+  }
+}

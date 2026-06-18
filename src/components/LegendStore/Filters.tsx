@@ -105,7 +105,7 @@ export default function Filters({ filters, onChange, onReset }: Props) {
         <input
           id="searchInput"
           type="text"
-          placeholder="Search by brand or model"
+          placeholder="Search by Brand, Model, or Both"
           value={filters.searchTerm}
           onChange={(e) => update({ searchTerm: e.target.value })}
         />

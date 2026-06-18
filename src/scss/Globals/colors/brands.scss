@@ -1,0 +1,13 @@
+@use './core' as *;
+
+// Brand Quick List
+$brand-link-color: $color-brand-link-blue;
+$brand-link-hover-color: $color-white;
+$quick-list-text-color: $color-white;
+$quick-list-background-color: $surface-dark-1;
+$section-heading-border-color: $gray-444;
+$loading-text-color: $color-warning-yellow;
+
+// Brand Map
+$map-pin-color: #e63946;
+$map-pin-hover-color: #c1121f;

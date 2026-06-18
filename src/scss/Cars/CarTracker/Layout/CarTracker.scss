@@ -2,14 +2,6 @@
 @use '@scss/Globals/index' as *;
 
 /* ==============================
-   Variables (layout-only here)
-============================== */
-$summary-gap: 1rem;
-$back-btn-font-size: 1.1rem;
-$back-btn-padding: 10px 18px;
-$back-btn-radius: 12px;
-
-/* ==============================
    Car Tracker Page Layout
 ============================== */
 .carTrackerPage {
@@ -19,12 +11,12 @@ $back-btn-radius: 12px;
     margin: 1.3rem auto 0 1rem;
     background-color: $color-black;
     color: $color-accent-blue;
-    padding: $back-btn-padding;
+    padding: $tracker-back-btn-padding;
     font-size: $back-btn-font-size;
     border: 1px solid $color-accent-blue;
     border-radius: $back-btn-radius;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color $transition-medium;
 
     &:hover {
       background-color: $color-accent-blue;
@@ -39,10 +31,9 @@ $back-btn-radius: 12px;
 
   .trackerSummaryBlock {
     display: grid;
-    gap: $summary-gap;
+    gap: $tracker-summary-gap;
     width: 100%;
     margin-top: 1rem;
-    /* ✅ if you still want a little inner breathing room, put it here not on the page */
     padding-inline: clamp(10px, 3vw, 20px);
 
     @include maxw($cellphone-portrait) {
@@ -58,7 +49,7 @@ $back-btn-radius: 12px;
     font-weight: 700;
     letter-spacing: 0.02em;
     margin: 0.25rem 0 0.35rem;
-    color: $color-gold-glow; /* ✅ gold headings */
+    color: $color-gold-glow;
     font-family: var(--display-font, 'Cinzel'), serif;
   }
 
@@ -77,11 +68,10 @@ $back-btn-radius: 12px;
     box-shadow: 0 0 6px rgba($color-gold-glow, 0.18), 0 0 1px rgba($color-gold-glow, 0.5) inset;
   }
 
-  /* Row 1 unchanged aside from previous grid centering */
   .summaryProgressRow {
     display: grid;
     grid-template-columns: 1fr;
-    gap: $summary-gap;
+    gap: $tracker-summary-gap;
 
     @include minw($tablet-portrait) {
       grid-template-columns: repeat(3, minmax(0, 1fr));

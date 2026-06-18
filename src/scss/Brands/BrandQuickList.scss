@@ -1,26 +1,5 @@
-/* =============================
-   Variables
-   ============================= */
-$quick-list-max-width: 1200px;
-$quick-list-padding: 1rem;
-$quick-list-background-color: #1a1a1a;
-$quick-list-border-radius: 8px;
-$quick-list-text-color: white;
-
-$brand-link-color: #50b7f5;
-$brand-link-hover-color: #ffffff;
-
-$section-margin-bottom: 2rem;
-$section-heading-font-size: 2rem;
-$section-heading-border-color: #444;
-$section-heading-padding-bottom: 0.25rem;
-
-$brand-link-font-weight: 500;
-
-$logo-slot-size: 4rem;
-
-$mobileMaxWidthPortrait: 480px;
-$cellphone-landscape: 390px;
+@use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/brands' as *;
 
 /* =============================
    Brand Quick List Layout
@@ -30,10 +9,10 @@ $cellphone-landscape: 390px;
   margin: 3rem auto 2rem auto;
   padding: $quick-list-padding;
   background-color: $quick-list-background-color;
-  border-radius: $quick-list-border-radius;
+  border-radius: $card-radius;
   color: $quick-list-text-color;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+  @include phone-portrait {
     margin-top: 8rem;
     width: 86%;
   }
@@ -89,7 +68,6 @@ $cellphone-landscape: 390px;
     }
   }
 
-  // Fixed-width slot so text always aligns whether or not a logo is present
   .brand-list-logo-slot {
     display: inline-flex;
     align-items: center;
@@ -110,26 +88,26 @@ $cellphone-landscape: 390px;
 
   .brand-list-name {
     line-height: 1.2;
-    font-size: 1.3rem;
+    font-size: $brand-list-name-font-size;
   }
 }
 
 /* =============================
-   Loading State Layout (UNNESTED)
+   Loading State Layout
    ============================= */
 .brandsLoadingWrapper {
   max-width: $quick-list-max-width;
   margin: 15rem auto 2rem auto;
   padding: $quick-list-padding;
   background-color: $quick-list-background-color;
-  border-radius: $quick-list-border-radius;
+  border-radius: $card-radius;
   color: $quick-list-text-color;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
-  @media only screen and (max-width: $mobileMaxWidthPortrait) and (orientation: portrait) {
+  @include phone-portrait {
     margin-top: 8rem;
     width: 86%;
   }
@@ -145,7 +123,7 @@ $cellphone-landscape: 390px;
 
   .loading-text {
     margin-top: 1rem;
-    color: #ffc300;
+    color: $loading-text-color;
     font-weight: bold;
     font-size: 1.1rem;
   }

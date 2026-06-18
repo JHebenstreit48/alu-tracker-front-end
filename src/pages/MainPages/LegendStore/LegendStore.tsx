@@ -8,7 +8,7 @@ import TradeCoinTables from "@/components/LegendStore/TradeCoinTables";
 import ImportTables from "@/components/LegendStore/ImportTables";
 import MobileViewToggle, { type MobileView } from "@/components/LegendStore/MobileViewToggle";
 import StoreViewToggle, { type StoreView } from "@/components/LegendStore/StoreViewToggle";
-import "@/scss/LegendStore/LegendStore.scss";
+import "@/scss/LegendStore/index.scss";
 
 export default function LegendStorePrices() {
   const { filters, setFilters, reset } = useLegendStoreFilters();

@@ -1,0 +1,39 @@
+@use '@scss/Globals/index' as *;
+@use '@scss/Globals/colors/legendStore' as *;
+
+@mixin glass-panel-outer {
+  border-radius: 16px;
+  border: 1px solid $glass-border;
+  background: $glass-bg;
+  box-shadow:
+    0 0 0 1px rgba($color-gold-glow, 0.12) inset,
+    0 0 24px rgba($purple-glow, 0.25),
+    0 0 48px rgba($color-gold-glow, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.7);
+}
+
+@mixin glass-panel-inner {
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.01) 50%,
+      rgba(0, 0, 0, 0.15) 100%
+    ),
+    transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@mixin glass-header {
+  text-align: center;
+  font-weight: 800;
+  color: $color-accent-blue;
+  letter-spacing: 0.03em;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(14, 4, 28, 0.4));
+  border-bottom: 1px solid $glass-border;
+  text-shadow: 0 0 12px rgba($color-accent-blue, 0.5);
+}
