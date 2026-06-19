@@ -3,7 +3,7 @@ import Dropdowns from "@/components/Cars/Filters/Dropdowns";
 import Checkboxes from "@/components/Cars/Filters/Checkboxes";
 import SearchBar from "@/components/Cars/Filters/SearchBar";
 
-import "@/scss/Cars/index.scss";
+import "@/scss/cars/index.scss";
 
 export default function CarFilters({
   onSearch,
