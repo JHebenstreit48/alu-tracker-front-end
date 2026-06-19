@@ -1,17 +1,12 @@
 import Header from '@/components/Shared/HeaderFooter/Header';
-import SyncButton from '@/components/UserDataSync/SyncButton';
+// import SyncButton from '@/components/UserDataSync/SyncButton';
 import { useCarTrackerData } from '@/hooks/Tracking/useCarTrackerData';
 
 import CollectionProgress from '@/components/Tracking/Cars/Sections/CollectionProgress';
 import StarProgress from '@/components/Tracking/Cars/Sections/StarProgress';
 import GarageLevels from '@/components/Tracking/Cars/Sections/GarageLevels';
 
-import '@/scss/Cars/CarTracker/Layout/CarTracker.scss';
-import '@/scss/Cars/CarTracker/Components/CarsOwned.scss';
-import '@/scss/Cars/CarTracker/Components/KeysOwned.scss';
-import '@/scss/Cars/CarTracker/Components/GoldMaxed.scss';
-import '@/scss/Cars/CarTracker/Components/StarRank.scss';
-import '@/scss/Cars/CarTracker/Components/GarageLevels.scss';
+import '@/scss/CarTracker/index.scss'
 
 export default function CarTrackerBody() {
   const {
@@ -38,7 +33,7 @@ export default function CarTrackerBody() {
         Back to Cars
       </button>
 
-      <SyncButton />
+      {/* <SyncButton /> */}
 
       {/* Only the content sections sit inside trackerSummaryBlock */}
       <div className="trackerSummaryBlock">

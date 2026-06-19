@@ -1,6 +1,6 @@
 @use '@scss/Globals/colors/core' as *;
 @use '@scss/Globals/colors/tracker' as *;
-@use './core' as shadowCore;
+@use './core' as *;
 
 // =============================
 // Tracker Page Shadows
@@ -8,11 +8,12 @@
 $shadow-ring-green: 0 0 6px 1px $ring-color-green;
 $shadow-ring-gold: 0 0 6px 1px $ring-color-gold;
 $shadow-ring-blue: 0 0 6px 1px $ring-color-blue;
-$shadow-style: 1px 0 5px 5px $color-gold-glow;
 
 $owned-ring-glow: $shadow-ring-green;
 $gold-maxed-ring-glow: $shadow-ring-gold;
 $key-ring-glow: $shadow-ring-blue;
 
-$tracker-btn-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.2);
-$tracker-btn-hover-glow: 0 0 10px 3px rgba(21, 201, 232, 0.8);
+// Garage Level rings (shown on Tracker page) — now matches Car Collection ring glow style
+$gl-ring-glow-blue: 0 0 6px 1px $color-accent-blue;
+$gl-ring-glow-green: 0 0 6px 1px $ring-color-green;
+$gl-ring-glow-gold: 0 0 6px 1px $color-gold-glow;

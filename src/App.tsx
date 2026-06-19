@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Footer from '@/components/Shared/HeaderFooter/Footer';
 import { AuthContext } from '@/context/Auth/authContext';
 import { syncFromAccount } from '@/utils/UserDataSync/syncFromAccount';
+import '@/scss/Globals/Reset.scss';
 import '@/scss/PageAndHome/Page.scss';
 import '@/scss/NavHeaderFooterError/Header.scss';
 import '@/scss/NavHeaderFooterError/Navigation.scss';

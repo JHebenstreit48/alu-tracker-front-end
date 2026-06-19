@@ -26,7 +26,8 @@ $color-brand-link-blue: #50b7f5;
 // =============================
 // Purples
 // =============================
-$purple-glow: rgb(204, 19, 255);        // NEW
+$purple-glow: rgb(204, 19, 255);
+$table-border-color: rgb(11, 7, 134);     // NEW — shared Cars + LegendStore
 
 // =============================
 // Golds / Yellows
@@ -37,3 +38,8 @@ $color-warning-yellow: #ffc300;
 
 // Back-compat alias
 $color-gold-glow: $gold-accent;
+
+// =============================
+// Buttons (shared)
+// =============================
+$reset-btn-bg: rgb(52, 1, 75);            // NEW — shared Cars + LegendStore

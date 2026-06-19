@@ -1,0 +1,28 @@
+@use '@scss/Globals/index' as *;
+
+.glText {
+  font-size: $gl-label-font-size;
+  text-align: center;
+  margin: 0.5rem 0 0 0;
+
+  @include maxw($cellphone-portrait) {
+    margin: 0.6rem auto 0;
+    padding-inline: 0.6rem;
+    max-width: 32ch;
+    line-height: 1.35;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+}
+
+.glTextCurrentLevel {
+  color: $color-accent-blue;
+}
+
+.glTextXp {
+  color: $ring-color-green;
+}
+
+.glTextOverall {
+  color: $color-gold-glow;
+}

@@ -3,13 +3,13 @@
 
 .starRankOwnershipChart {
   width: 100%;
-  max-width: 50rem;
+  max-width: $chart-max-width;
   text-align: center;
   margin-top: 1rem;
 
   .sectionSubtitle {
     margin: 0 0 0rem;
-    font-size: 1rem;
+    font-size: $star-section-title-font-size;
     font-weight: 600;
     color: $color-gold-glow;
     font-family: var(--display-font, 'Cinzel'), serif;
@@ -18,11 +18,11 @@
   .ownedVsUnownedSubtitle {
     margin: 0 0 0.5rem 0;
     color: $color-accent-blue;
-    font-size: 0.8rem;
+    font-size: $chart-subtitle-font-size;
   }
 
   .chartContainer {
     width: 90%;
-    height: 18rem;
+    height: $chart-height;
   }
 }
