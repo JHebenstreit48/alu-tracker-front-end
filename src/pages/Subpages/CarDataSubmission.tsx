@@ -5,7 +5,7 @@ import Header from "@/components/Shared/HeaderFooter/Header";
 import { AuthContext } from "@/context/Auth/authContext";
 import CarDataForm from "@/components/CarDataForm/Form/CarDataForm";
 
-import "@/scss/CarDataForm/index.scss";
+import "@/scss/carDataForm/index.scss";
 
 export default function CarDataSubmission(): JSX.Element {
   const { token, syncReady, roles } = useContext(AuthContext);

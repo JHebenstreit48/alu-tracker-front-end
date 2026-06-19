@@ -5,7 +5,7 @@ import { getCarImageUrl } from "@/utils/shared/imageUrl";
 import type {
   GarageLevelsInterface,
   Car,
-} from "@/interfaces/GarageLevels";
+} from "@/types/GarageLevels/garageLevelCars";
 
 type FSGarageLevel = {
   GarageLevelKey: number;

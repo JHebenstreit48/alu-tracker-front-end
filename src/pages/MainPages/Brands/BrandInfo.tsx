@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import "@/scss/Brands/BrandInfo.scss";
+import "@/scss/brands/BrandInfo.scss";
 
 import { useBrandBySlug } from "@/hooks/Brands/useBrandsBySlug";
 import { getImageUrl } from "@/utils/shared/imageUrl";

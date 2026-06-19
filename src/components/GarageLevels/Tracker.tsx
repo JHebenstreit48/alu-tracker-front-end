@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import type { GarageLevelsInterface } from "@/interfaces/GarageLevels";
-import "@/scss/GarageLevels/Tracker.scss";
+import React, { useState, useEffect } from 'react';
+import type { GarageLevelsInterface } from '@/types/GarageLevels/garageLevelCars';
+import '@/scss/GarageLevels/Tracker.scss';
 
 interface GarageLevelTrackerProps {
   levels: GarageLevelsInterface[];
@@ -8,39 +8,31 @@ interface GarageLevelTrackerProps {
 
 const GarageLevelTracker: React.FC<GarageLevelTrackerProps> = ({ levels }) => {
   const [currentLevel, setCurrentLevel] = useState(() => {
-    return Number(localStorage.getItem("currentGarageLevel")) || 1;
+    return Number(localStorage.getItem('currentGarageLevel')) || 1;
   });
 
   const [currentXp, setCurrentXp] = useState(() => {
-    return localStorage.getItem("currentXp") || "";
+    return localStorage.getItem('currentXp') || '';
   });
 
   useEffect(() => {
-    localStorage.setItem("currentGarageLevel", currentLevel.toString());
+    localStorage.setItem('currentGarageLevel', currentLevel.toString());
   }, [currentLevel]);
 
   useEffect(() => {
-    localStorage.setItem("currentXp", currentXp);
+    localStorage.setItem('currentXp', currentXp);
   }, [currentXp]);
 
-  const nextLevelData = levels.find(
-    (level) => level.GarageLevelKey === currentLevel + 1
-  );
+  const nextLevelData = levels.find((level) => level.GarageLevelKey === currentLevel + 1);
   const nextXpRequired = nextLevelData?.xp || 0;
 
   const xpRemaining =
-    nextXpRequired > 0
-      ? Math.max(
-          nextXpRequired - Number(currentXp.replace(/,/g, "")),
-          0
-        )
-      : 0;
+    nextXpRequired > 0 ? Math.max(nextXpRequired - Number(currentXp.replace(/,/g, '')), 0) : 0;
 
   const handleXpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/,/g, "");
+    const value = e.target.value.replace(/,/g, '');
     if (/^\d*$/.test(value)) {
-      const formattedValue =
-        value === "" ? "" : Number(value).toLocaleString("en-US");
+      const formattedValue = value === '' ? '' : Number(value).toLocaleString('en-US');
       setCurrentXp(formattedValue);
     }
   };
@@ -51,6 +43,7 @@ const GarageLevelTracker: React.FC<GarageLevelTrackerProps> = ({ levels }) => {
         <label>
           Select Current Garage Level:
           <select
+            className="garageLevelSelect"
             value={currentLevel}
             onChange={(e) => setCurrentLevel(Number(e.target.value))}
           >
@@ -70,6 +63,7 @@ const GarageLevelTracker: React.FC<GarageLevelTrackerProps> = ({ levels }) => {
         <label>
           Enter Current XP:
           <input
+            className="garageLevelXpInput"
             type="text"
             value={currentXp}
             onChange={handleXpChange}
@@ -80,12 +74,8 @@ const GarageLevelTracker: React.FC<GarageLevelTrackerProps> = ({ levels }) => {
 
       <div className="xpRemaining">
         <label>
-          XP to Next Level:{" "}
-          <strong>
-            {xpRemaining > 0
-              ? xpRemaining.toLocaleString("en-US")
-              : "0"}
-          </strong>
+          XP to Next Level:{' '}
+          <strong>{xpRemaining > 0 ? xpRemaining.toLocaleString('en-US') : '0'}</strong>
         </label>
       </div>
     </div>

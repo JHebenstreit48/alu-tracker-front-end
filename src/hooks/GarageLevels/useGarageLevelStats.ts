@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "@/context/Auth/authContext";
 import { useGarageLevels } from "@/hooks/GarageLevels/useGarageLevels";
 import { useUserGarageLevelSync } from "@/hooks/GarageLevels/useUserGarageLevelSync";
 import { useGarageLevelLocalSnapshot } from "@/hooks/Tracking/useGarageLevelLocalSnapshot";
@@ -7,10 +8,11 @@ import type { GarageLevelStats } from "@/types/GarageLevels/garageLevels";
 const MAX_LEVEL = 60;
 
 export function useGarageLevelStats(): GarageLevelStats {
+  const { token } = useContext(AuthContext);
   const { levels, loading: levelsLoading, error } = useGarageLevels();
 
   // Still run Firebase → localStorage → defaults logic
-  const { loading: glLoading } = useUserGarageLevelSync();
+  const { loading: glLoading } = useUserGarageLevelSync(token);
 
   // Always render from localStorage snapshot (reactive)
   const { currentGarageLevel, currentXp, refresh } = useGarageLevelLocalSnapshot();

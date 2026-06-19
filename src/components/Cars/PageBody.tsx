@@ -5,7 +5,7 @@ import PageTab from '@/components/Shared/Navigation/PageTab';
 
 import { useNavigate } from 'react-router-dom';
 
-import '@/scss/Cars/index.scss';
+import '@/scss/cars/index.scss';
 import type { CarDataProps } from '@/types/Cars/Filters/carPageProps';
 
 const PAGE_SIZES = [25, 50, 100, 200] as const;
