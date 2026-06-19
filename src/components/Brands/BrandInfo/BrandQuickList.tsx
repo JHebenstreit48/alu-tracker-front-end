@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
-import "@/scss/Brands/BrandQuickList.scss";
+
 import type { Brand } from "@/types/Brands";
 import { getImageUrl } from "@/utils/shared/imageUrl";
+
+import "@/scss/brands/BrandQuickList.scss";
 
 interface BrandQuickListProps {
   manufacturers: Brand[];
