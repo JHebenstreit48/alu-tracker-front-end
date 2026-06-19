@@ -22,7 +22,7 @@
     }
     .CircularProgressbar-text {
       fill: $ring-color-green !important;
-      font-size: 1.5rem;
+      font-size: $progress-ring-bold-font-size;
     }
   }
 }
@@ -31,18 +31,17 @@
    Owned Text
 ============================== */
 .carsOwnedText {
-  font-size: 1.2rem;
+  font-size: $progress-ring-font-size;
   text-align: center;
   margin: 0.5rem 0 0 0;
   color: $ring-color-green;
 
-  /* phone-only: wrap nicely and keep readable line length */
   @include maxw($cellphone-portrait) {
     margin: 0.6rem auto 0;
     padding-inline: 0.6rem;
-    max-width: 32ch; /* ~optimal line length on mobile */
+    max-width: 32ch;
     line-height: 1.35;
-    text-wrap: balance; /* progressive enhancement */
-    overflow-wrap: break-word; /* prevent overflow just in case */
+    text-wrap: balance;
+    overflow-wrap: break-word;
   }
 }

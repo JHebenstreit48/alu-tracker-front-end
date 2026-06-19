@@ -1,21 +1,9 @@
+@use '@scss/Globals/colors/core' as *;
+
 /* ===== Global Reset (safe, minimal, production-friendly) ===== */
 
 html {
   box-sizing: border-box;
-
-  /* Theme tokens */
-  --bg-0: #12031c;  /* deep purple (base) */
-  --bg-1: #20043a;  /* surface-1 */
-  --bg-2: #2b0a4d;  /* surface-2 */
-  --ink-0: #f7f5fb; /* primary text on dark */
-  --ink-1: #d9cfee; /* secondary text on dark */
-  --gold-0: #f2c94c; /* accent gold */
-  --gold-1: #b88a1a; /* deeper gold */
-
-  --glow-gold: 0 0 0.5rem rgba(242, 201, 76, 0.35);
-
-  --container-max: 1200px;
-  --container-pad: clamp(1rem, 2.5vw, 2rem);
 }
 *, *::before, *::after { box-sizing: inherit; }
 
@@ -23,9 +11,7 @@ html {
 
 html, body { min-height: 100dvh; }
 body {
-  margin: 0; /* no global padding anywhere */
-  color: var(--ink-0);
-  background: var(--bg-0); /* Page.scss adds gradients */
+  margin: 0;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,26 +22,24 @@ img, picture, video, canvas, svg { display: block; max-width: 100%; }
 input, button, textarea, select { font: inherit; color: inherit; background: transparent; }
 
 :focus-visible {
-  outline: 2px solid var(--gold-0);
+  outline: 2px solid $gold-accent;
   outline-offset: 3px;
-  box-shadow: var(--glow-gold);
+  box-shadow: 0 0 0.5rem rgba($gold-accent, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: .001ms !important; animation-iteration-count: 1 !important;
-      transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  * {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-* { scrollbar-color: var(--ink-1) var(--bg-2); scrollbar-width: thin; }
+* { scrollbar-color: $gray-555 $surface-dark-3; scrollbar-width: thin; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-2); }
+::-webkit-scrollbar-track { background: $surface-dark-3; }
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--ink-1), var(--bg-2) 40%);
+  background: color-mix(in oklab, $gray-555, $surface-dark-3 40%);
   border-radius: 8px;
 }
-
-/* SCSS aliases to CSS vars (optional) */
-$bg-0: var(--bg-0); $bg-1: var(--bg-1); $bg-2: var(--bg-2);
-$ink-0: var(--ink-0); $ink-1: var(--ink-1);
-$gold-0: var(--gold-0); $gold-1: var(--gold-1);
-$container-max: var(--container-max); $container-pad: var(--container-pad);

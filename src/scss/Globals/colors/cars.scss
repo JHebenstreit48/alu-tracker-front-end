@@ -1,9 +1,7 @@
 @use "./core" as *;
 
-$table-border-color: rgb(11, 7, 134);
-$td-border-color: rgb(204, 19, 255);
+$td-border-color: $purple-glow;
 
-$reset-btn-bg: rgb(52, 1, 75);
 $reset-btn-hover: rgb(193, 71, 250);
 
 $tracker-btn-on-bg: rgb(50, 205, 50);

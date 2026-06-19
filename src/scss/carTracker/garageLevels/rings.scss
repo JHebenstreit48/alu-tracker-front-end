@@ -1,0 +1,52 @@
+@use '@scss/Globals/index' as *;
+
+.glRingWrapper {
+  width: $progress-ring-size;
+  height: $progress-ring-size;
+
+  .CircularProgressbar {
+    font-weight: bold;
+    margin: 0 auto;
+
+    .CircularProgressbar-trail {
+      stroke: $progress-ring-trail !important;
+    }
+
+    .CircularProgressbar-text {
+      font-size: $gl-ring-font-size;
+    }
+  }
+}
+
+.glRingWrapperCurrent {
+  .CircularProgressbar-path {
+    stroke: $color-accent-blue !important;
+    stroke-linecap: round;
+    filter: drop-shadow($gl-ring-glow-blue);
+  }
+  .CircularProgressbar-text {
+    fill: $color-accent-blue !important;
+  }
+}
+
+.glRingWrapperXp {
+  .CircularProgressbar-path {
+    stroke: $ring-color-green !important;
+    stroke-linecap: round;
+    filter: drop-shadow($gl-ring-glow-green);
+  }
+  .CircularProgressbar-text {
+    fill: $ring-color-green !important;
+  }
+}
+
+.glRingWrapperOverall {
+  .CircularProgressbar-path {
+    stroke: $color-gold-glow !important;
+    stroke-linecap: round;
+    filter: drop-shadow($gl-ring-glow-gold);
+  }
+  .CircularProgressbar-text {
+    fill: $color-gold-glow !important;
+  }
+}

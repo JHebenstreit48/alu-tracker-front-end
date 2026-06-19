@@ -1,0 +1,12 @@
+// =============================
+// Shared — Filters (Cars + LegendStore)
+// =============================
+$filter-width: clamp(28rem, 48vw, 40rem);
+$filter-padding: clamp(.75rem, 1.2vw, 1.25rem);
+$filter-gap: .85rem;
+$input-height: 2.2rem;
+
+// =============================
+// Shared — Tracker Toggle (Cars + GarageLevels via Shared/TrackerToggle.scss)
+// =============================
+$tracker-btn-padding: 0.7rem;
