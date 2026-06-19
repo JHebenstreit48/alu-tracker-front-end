@@ -1,10 +1,13 @@
-import Map, { NavigationControl } from "react-map-gl";
-import { LngLatBounds } from "mapbox-gl";
-import { useRef, useEffect, useState, useCallback } from "react";
-import MapPin from "@/components/Brands/Map/MapPin";
-import type { Brand } from "@/types/Brands";
-import "mapbox-gl/dist/mapbox-gl.css";
-import "@/scss/Brands/BrandMap.scss";
+import Map, { NavigationControl } from 'react-map-gl';
+import { LngLatBounds } from 'mapbox-gl';
+
+import { useRef, useEffect, useState, useCallback } from 'react';
+import MapPin from '@/components/Brands/Map/MapPin';
+
+import type { Brand } from '@/types/Brands';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@/scss/brands/BrandMap.scss';
 
 interface MapDisplayProps {
   manufacturers: Brand[];
@@ -30,9 +33,7 @@ export default function MapDisplay({ manufacturers }: MapDisplayProps) {
       map.flyTo({ center: [lng, lat], zoom: 5, duration: 1000 });
     } else {
       const bounds = new LngLatBounds();
-      manufacturers.forEach(({ location }) =>
-        bounds.extend([location.lng, location.lat])
-      );
+      manufacturers.forEach(({ location }) => bounds.extend([location.lng, location.lat]));
       map.fitBounds(bounds, { padding: 80, duration: 1000 });
     }
   }, [manufacturers, mapLoaded]);
@@ -54,13 +55,16 @@ export default function MapDisplay({ manufacturers }: MapDisplayProps) {
             zoom: 2,
           }}
           onLoad={handleMapLoad}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: '100%', height: '100%' }}
           maxBounds={[-180, -85, 180, 85]}
           attributionControl={true}
         >
           <NavigationControl position="top-left" />
           {manufacturers.map((m) => (
-            <MapPin key={m.slug} manufacturer={m} />
+            <MapPin
+              key={m.slug}
+              manufacturer={m}
+            />
           ))}
         </Map>
       </div>
