@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { GLContent } from "@/components/GarageLevels/Content";
-import type { GarageLevelsInterface } from "@/interfaces/GarageLevels";
+import type { GarageLevelsInterface } from "@/types/GarageLevels/garageLevelCars";
 import "@/scss/GarageLevels/GarageLevels.scss";
 
 interface GarageLevelsDropDownProps {

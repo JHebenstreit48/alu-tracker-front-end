@@ -7,8 +7,6 @@ html {
 }
 *, *::before, *::after { box-sizing: inherit; }
 
-:root { color-scheme: dark; }
-
 html, body { min-height: 100dvh; }
 body {
   margin: 0;
@@ -19,7 +17,6 @@ body {
 }
 
 img, picture, video, canvas, svg { display: block; max-width: 100%; }
-input, button, textarea, select { font: inherit; color: inherit; background: transparent; }
 
 :focus-visible {
   outline: 2px solid $gold-accent;

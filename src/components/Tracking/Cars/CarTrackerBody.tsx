@@ -6,7 +6,7 @@ import CollectionProgress from '@/components/Tracking/Cars/Sections/CollectionPr
 import StarProgress from '@/components/Tracking/Cars/Sections/StarProgress';
 import GarageLevels from '@/components/Tracking/Cars/Sections/GarageLevels';
 
-import '@/scss/CarTracker/index.scss'
+import '@/scss/carTracker/index.scss'
 
 export default function CarTrackerBody() {
   const {
