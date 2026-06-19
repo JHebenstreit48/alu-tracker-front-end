@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   DEFAULT_GL_STATE,
   GarageLevelSyncState,
@@ -34,6 +34,7 @@ export function useUserGarageLevelSync(token: string | null) {
   const [state, setState] = useState<GarageLevelSyncState>(DEFAULT_GL_STATE);
   const [loading, setLoading] = useState(true);
   const [source, setSource] = useState<Source>("default");
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -155,14 +156,39 @@ export function useUserGarageLevelSync(token: string | null) {
     };
   }, [token]);
 
+  // Call this whenever the user changes Level/XP.
+  // Writes to localStorage immediately; pushes to Firebase after a debounce.
+  const save = useCallback(
+    (next: GarageLevelSyncState, debounceMs = 800) => {
+      writeGarageLevelsToLocalStorage(next);
+      setState(next);
+
+      if (!token) return; // not logged in — local-only, nothing to push
+
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(() => {
+        void saveToAccount(token, next);
+      }, debounceMs);
+    },
+    [token]
+  );
+
+  // Clean up any pending debounced save if the component unmounts mid-wait.
+  useEffect(() => {
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, []);
+
   return {
     ...state,
     loading,
     source,
+    save,
   };
 }
 
-async function saveToAccount(token: string, state: GarageLevelSyncState): Promise<void> {
+export async function saveToAccount(token: string, state: GarageLevelSyncState): Promise<void> {
   if (!USER_API_BASE) {
     console.error("[useUserGarageLevelSync] save skipped: missing VITE_USER_API_URL");
     return;

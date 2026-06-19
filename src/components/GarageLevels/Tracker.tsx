@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GarageLevelsInterface } from '@/types/GarageLevels/garageLevelCars';
+import { AuthContext } from '@/context/Auth/authContext';
+import { useUserGarageLevelSync } from '@/hooks/GarageLevels/useUserGarageLevelSync';
 import '@/scss/GarageLevels/Tracker.scss';
 
 interface GarageLevelTrackerProps {
@@ -7,27 +9,46 @@ interface GarageLevelTrackerProps {
 }
 
 const GarageLevelTracker: React.FC<GarageLevelTrackerProps> = ({ levels }) => {
-  const [currentLevel, setCurrentLevel] = useState(() => {
-    return Number(localStorage.getItem('currentGarageLevel')) || 1;
-  });
+  const { token } = useContext(AuthContext);
+  const {
+    currentGarageLevel,
+    currentGLXp,
+    garageLevelTrackerMode,
+    loading: glLoading,
+    save,
+  } = useUserGarageLevelSync(token);
 
-  const [currentXp, setCurrentXp] = useState(() => {
-    return localStorage.getItem('currentXp') || '';
-  });
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [currentXp, setCurrentXp] = useState('');
+  const hydrated = useRef(false);
 
+  // Once Firebase → localStorage → default resolution finishes,
+  // hydrate the editable inputs with the freshest known value.
   useEffect(() => {
-    localStorage.setItem('currentGarageLevel', currentLevel.toString());
-  }, [currentLevel]);
-
-  useEffect(() => {
-    localStorage.setItem('currentXp', currentXp);
-  }, [currentXp]);
+    if (!glLoading && !hydrated.current) {
+      setCurrentLevel(currentGarageLevel || 1);
+      setCurrentXp(currentGLXp ? currentGLXp.toLocaleString('en-US') : '');
+      hydrated.current = true;
+    }
+  }, [glLoading, currentGarageLevel, currentGLXp]);
 
   const nextLevelData = levels.find((level) => level.GarageLevelKey === currentLevel + 1);
   const nextXpRequired = nextLevelData?.xp || 0;
 
   const xpRemaining =
     nextXpRequired > 0 ? Math.max(nextXpRequired - Number(currentXp.replace(/,/g, '')), 0) : 0;
+
+  // Debounced save on every change — skip the very first run (hydration).
+  useEffect(() => {
+    if (!hydrated.current) return;
+
+    save({
+      currentGarageLevel: currentLevel,
+      currentGLXp: Number(currentXp.replace(/,/g, '')) || 0,
+      garageLevelTrackerMode: garageLevelTrackerMode || 'default',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLevel, currentXp]);
 
   const handleXpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, '');
