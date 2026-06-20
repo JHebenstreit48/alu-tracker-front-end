@@ -8,7 +8,7 @@ import GarageLevelTracker from '@/components/GarageLevels/Tracker';
 import BackToTop from '@/components/Shared/Navigation/BackToTopButton';
 import { useGarageLevels } from '@/hooks/GarageLevels/useGarageLevels';
 
-import '@/scss/GarageLevels/GarageLevels.scss';
+import '@/scss/garageLevels/GarageLevels.scss';
 
 export default function GarageLevels() {
   const { levels, loading, error } = useGarageLevels();
