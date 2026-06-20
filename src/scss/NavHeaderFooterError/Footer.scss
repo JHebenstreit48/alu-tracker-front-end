@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "@scss/Globals/index" as *;
+@use "@scss/globals/index" as *;
 
 $gold-text: rgb(255, 196, 0);
 $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%);
