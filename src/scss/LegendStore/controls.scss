@@ -1,6 +1,6 @@
 @use 'sass:color';
-@use '@scss/Globals/index' as *;
-@use '@scss/Globals/colors/legendStore' as *;
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/legendStore' as *;
 @use './mixins' as *;
 
 .legendStoreControls {
