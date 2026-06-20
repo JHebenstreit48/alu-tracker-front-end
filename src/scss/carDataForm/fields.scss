@@ -36,7 +36,7 @@
 
   h3 {
     margin: 0;
-    font-family: var(--display-font, 'Cinzel'), serif;
+    font-family: $display-font;
     font-size: 0.9rem;
     color: rgba($gold-accent, 0.7);
     font-weight: 700;

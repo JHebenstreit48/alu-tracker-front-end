@@ -100,7 +100,7 @@ $purple-glow: #7a05be;
    Buttons-as-tabs
 ============================== */
 .btn-primary {
-  font-family: 'Cinzel', serif;
+  font-family: $display-font;
   font-weight: 700;
   background: none;
   border: none;
