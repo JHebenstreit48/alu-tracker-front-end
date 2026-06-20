@@ -12,7 +12,7 @@
     font-size: $star-section-title-font-size;
     font-weight: 600;
     color: $color-gold-glow;
-    font-family: var(--display-font, 'Cinzel'), serif;
+    font-family: $display-font;
   }
 
   .ownedVsUnownedSubtitle {

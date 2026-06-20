@@ -50,7 +50,7 @@
     letter-spacing: 0.02em;
     margin: 0.25rem 0 0.35rem;
     color: $color-gold-glow;
-    font-family: var(--display-font, 'Cinzel'), serif;
+    font-family: $display-font;
   }
 
   .sectionRule {

@@ -62,7 +62,7 @@ $box-shadow-dark: 0 2px 8px rgba(91, 20, 121, 0.6) !default;
   }
 
   .SiteTitle {
-    font-family: var(--display-font, 'Cinzel'), serif;
+    font-family: $display-font;
     font-size: clamp(0.9rem, 1.6vw, 1.25rem);
     text-transform: uppercase;
     letter-spacing: 0.12em;

@@ -35,14 +35,14 @@
 
     h2 {
       margin: 0 0 0.6rem 0;
-      font-family: var(--display-font, 'Cinzel'), serif;
+      font-family: $display-font;
       color: $gold-accent;
       font-weight: 700;
     }
 
     h3 {
       margin: 0.25rem 0 0.6rem 0;
-      font-family: var(--display-font, 'Cinzel'), serif;
+      font-family: $display-font;
       color: rgba($gold-accent, 0.9);
       font-weight: 700;
     }
@@ -69,7 +69,7 @@
     }
 
     button:not(.StatsTab):not(.StatsCarChip__label):not(.StatsCarChip__remove):not(.StatsCarNav) {
-      font-family: 'Cinzel', serif;
+      font-family: $display-font;
       font-weight: 700;
       background: linear-gradient(180deg, rgba(#7a05be, 0.95), rgba(#7a05be, 0.75));
       color: #fff;
