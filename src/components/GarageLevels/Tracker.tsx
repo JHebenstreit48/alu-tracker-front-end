@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { GarageLevelsInterface } from '@/types/GarageLevels/garageLevelCars';
 import { AuthContext } from '@/context/Auth/authContext';
 import { useUserGarageLevelSync } from '@/hooks/GarageLevels/useUserGarageLevelSync';
-import '@/scss/GarageLevels/Tracker.scss';
+import '@/scss/garageLevels/Tracker.scss';
 
 interface GarageLevelTrackerProps {
   levels: GarageLevelsInterface[];
