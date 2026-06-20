@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ImageCarouselType } from "@/data/ImagesForCarousel";
 import { useCarousel } from "@/hooks/Home/useCarousel";
 import { Slide } from "@/components/HomePage/Slide";
@@ -15,19 +15,11 @@ export default function ImageCarousel({
   intervalMs = 2500,
   pauseOnHover = true,
 }: Props) {
-  const slides = useMemo<ImageCarouselType[]>(
-    () => project ?? [],
-    [project]
-  );
+  const slides = useMemo<ImageCarouselType[]>(() => project ?? [], [project]);
 
   const slidesPlus = useMemo<ImageCarouselType[]>(
     () => (slides.length > 0 ? [...slides, slides[0]] : slides),
     [slides]
-  );
-
-  const [imagesLoaded, setImagesLoaded] = useState(0);
-  const [isReady, setIsReady] = useState(
-    () => sessionStorage.getItem("carouselReady") === "1"
   );
 
   const { active, setActive, hoverProps } = useCarousel({
@@ -45,13 +37,11 @@ export default function ImageCarousel({
     const n = slides.length;
     const prev = prevActiveRef.current;
     if (n === 0) return;
-
     if (prev === n - 1 && active === 0) {
       setDisplayIndex(n);
     } else {
       setDisplayIndex(active);
     }
-
     prevActiveRef.current = active;
   }, [active, slides.length]);
 
@@ -63,7 +53,6 @@ export default function ImageCarousel({
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
-
     const onEnd = (): void => {
       const n = slides.length;
       if (n > 0 && displayIndexRef.current === n) {
@@ -74,60 +63,17 @@ export default function ImageCarousel({
         );
       }
     };
-
     el.addEventListener("transitionend", onEnd);
     return () => el.removeEventListener("transitionend", onEnd);
   }, [slides.length]);
 
-  const markReady = useCallback(() => {
-    setIsReady(true);
-    sessionStorage.setItem("carouselReady", "1");
-  }, []);
-
-  const onLoad = useCallback(() => {
-    setImagesLoaded((n) => n + 1);
-  }, []);
-
-  const onError = onLoad;
-
+  // NEW: only preload the upcoming slide, not all 26
   useEffect(() => {
-    if (!isReady && slides.length > 0 && imagesLoaded >= slides.length) {
-      markReady();
-    }
-  }, [imagesLoaded, isReady, slides.length, markReady]);
-
-  useEffect(() => {
-    if (isReady || slides.length === 0) return;
-
-    let cancelled = false;
-
-    const loadImage = (src: string): Promise<void> =>
-      new Promise<void>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve();
-        img.onerror = () => resolve();
-        img.src = src;
-        if (img.complete) resolve();
-      });
-
-    const timeout = window.setTimeout(() => {
-      if (!cancelled) markReady();
-    }, 4000);
-
-    const urls = slides.map((s) => getCarImageUrl(s.path));
-    void Promise.all(urls.map(loadImage)).then(() => {
-      if (!cancelled) {
-        window.clearTimeout(timeout);
-        setImagesLoaded(slides.length);
-        markReady();
-      }
-    });
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timeout);
-    };
-  }, [isReady, slides, markReady]);
+    if (slides.length <= 1) return;
+    const nextIndex = (active + 1) % slides.length;
+    const img = new Image();
+    img.src = getCarImageUrl(slides[nextIndex].path);
+  }, [active, slides]);
 
   if (slides.length === 0) return null;
 
@@ -157,8 +103,6 @@ export default function ImageCarousel({
               alt={image.name}
               isActive={i === active}
               eager={i === 0}
-              onLoad={onLoad}
-              onError={onError}
             />
           ))}
         </div>

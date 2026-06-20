@@ -4,12 +4,10 @@ type SlideProps = {
   src: string;
   alt: string;
   isActive: boolean;
-  onLoad: () => void;
-  onError: () => void;
   eager?: boolean;
 };
 
-function SlideBase({ src, alt, isActive, onLoad, onError, eager = false }: SlideProps) {
+function SlideBase({ src, alt, isActive, eager = false }: SlideProps) {
   return (
     <div
       className={`carousel-item ${isActive ? 'active' : ''}`}
@@ -21,8 +19,7 @@ function SlideBase({ src, alt, isActive, onLoad, onError, eager = false }: Slide
           alt={alt}
           className="d-block w-100"
           loading={eager ? 'eager' : 'lazy'}
-          onLoad={onLoad}
-          onError={onError}
+          fetchPriority={eager ? 'high' : 'auto'}
         />
         <div className="carousel-caption">
           <p>{alt}</p>
