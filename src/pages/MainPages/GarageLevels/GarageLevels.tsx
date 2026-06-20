@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import Header from '@/components/Shared/HeaderFooter/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 import GarageLevelsDropDown from '@/components/GarageLevels/Dropdown';
@@ -35,7 +36,6 @@ export default function GarageLevels() {
           />
         </div>
 
-        {loading && <p>Loading garage levels…</p>}
         {error && <p className="error">{error}</p>}
 
         {!loading && !error && (
