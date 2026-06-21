@@ -1,3 +1,10 @@
+.StarRating {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 .starIcon {
   width: 24px;
   height: 24px;
