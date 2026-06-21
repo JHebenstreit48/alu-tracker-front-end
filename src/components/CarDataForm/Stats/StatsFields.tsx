@@ -5,12 +5,12 @@ import { useCarSeedFields } from '@/hooks/CarDataSubmission/useCarSeedFields/use
 import { carLabel } from '@/types/CarDataSubmission/tabs/shared';
 import CarChipSelector from '@/components/CarDataForm/Stats/shared/CarChipSelector';
 
-import Overview      from '@/components/CarDataForm/Form/tabs/Overview';
-import MaxStars      from '@/components/CarDataForm/Form/tabs/MaxStars';
-import Stages        from '@/components/CarDataForm/Form/tabs/Stages';
-import Deltas        from '@/components/CarDataForm/Form/tabs/Deltas';
-import UpgradeCosts  from '@/components/CarDataForm/Form/tabs/UpgradeCosts';
-import GarageLevelXp from '@/components/CarDataForm/Form/tabs/GarageLevelXp';
+import BlueprintsStockGold from '@/components/CarDataForm/Form/tabs/blueprintsStockGold';
+import MaxStars            from '@/components/CarDataForm/Form/tabs/MaxStars';
+import Stages              from '@/components/CarDataForm/Form/tabs/Stages';
+import Deltas               from '@/components/CarDataForm/Form/tabs/Deltas';
+import UpgradeCosts        from '@/components/CarDataForm/Form/tabs/UpgradeCosts';
+import GarageLevelXp       from '@/components/CarDataForm/Form/tabs/GarageLevelXp';
 
 type Props = {
   selectedKeys: string[];
@@ -104,12 +104,12 @@ export default function StatsFields({
         ))}
       </div>
 
-      {activeTab === 'overview' && <Overview      {...tabProps} />}
-      {activeTab === 'maxStars' && <MaxStars      {...tabProps} />}
-      {activeTab === 'stages'   && <Stages        {...tabProps} />}
-      {activeTab === 'deltas'   && <Deltas        {...tabProps} />}
-      {activeTab === 'cost'     && <UpgradeCosts  {...tabProps} />}
-      {activeTab === 'xp'       && <GarageLevelXp {...tabProps} />}
+      {activeTab === 'overview' && <BlueprintsStockGold {...tabProps} />}
+      {activeTab === 'maxStars' && <MaxStars             {...tabProps} />}
+      {activeTab === 'stages'   && <Stages               {...tabProps} />}
+      {activeTab === 'deltas'   && <Deltas               {...tabProps} />}
+      {activeTab === 'cost'     && <UpgradeCosts         {...tabProps} />}
+      {activeTab === 'xp'       && <GarageLevelXp        {...tabProps} />}
 
       {applied && (
         <p className="CarDataFormMsg CarDataFormMsg--ok">
