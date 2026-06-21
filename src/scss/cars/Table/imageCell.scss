@@ -64,6 +64,11 @@
     height: 3.5rem;
     z-index: 3;
     filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.9));
+
+    @include maxw($cellphone-portrait) {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
   }
 
   .classBadge {
@@ -75,6 +80,10 @@
     border-style: solid;
     border-width: 3.5rem 3.5rem 0 0;
     z-index: 3;
+
+    @include maxw($cellphone-portrait) {
+      border-width: 2.5rem 2.5rem 0 0;
+    }
 
     &--uncommon {
       border-color: $rarity-text-uncommon transparent transparent transparent;
@@ -101,6 +110,12 @@
       clip-path: polygon(0 0, 100% 0, 0 100%);
       pointer-events: none;
       z-index: 5;
+
+      @include maxw($cellphone-portrait) {
+        top: -2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+      }
     }
 
     &__letter {
@@ -122,8 +137,9 @@
         0 3px 8px rgba(0, 0, 0, 1);
 
       @include maxw($cellphone-portrait) {
-        font-size: 1.3rem;
-        top: -3.1rem;
+        font-size: 1.1rem;
+        top: -2.3rem;
+        left: 0.2rem;
       }
     }
   }

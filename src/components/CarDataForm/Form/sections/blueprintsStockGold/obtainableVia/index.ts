@@ -1,0 +1,1 @@
+export { default as ObtainableViaEntry } from '@/components/CarDataForm/Form/sections/blueprintsStockGold/obtainableVia/obtainableViaEntry';

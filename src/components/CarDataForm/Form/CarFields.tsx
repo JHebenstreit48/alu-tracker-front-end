@@ -10,27 +10,23 @@ type Props = {
   onApply: (partial: Record<string, unknown>) => void;
 };
 
-type KeyCarMode = "no-change" | "set-true" | "set-false";
+type KeyCarMode = 'no-change' | 'set-true' | 'set-false';
 
-export default function CarFields({
-  selectedKeys,
-  selectedCars,
-  onApply,
-}: Props): JSX.Element {
-  const [brand,      setBrand]      = useState("");
-  const [model,      setModel]      = useState("");
-  const [klass,      setKlass]      = useState("");
-  const [rarity,     setRarity]     = useState("");
-  const [stars,      setStars]      = useState("");
-  const [country,    setCountry]    = useState("");
-  const [keyCarMode, setKeyCarMode] = useState<KeyCarMode>("no-change");
-  const [ovEntries,  setOvEntries]  = useState<OvEntryDraft[]>([]);
+export default function CarFields({ selectedKeys, selectedCars, onApply }: Props): JSX.Element {
+  const [brand, setBrand] = useState('');
+  const [model, setModel] = useState('');
+  const [klass, setKlass] = useState('');
+  const [rarity, setRarity] = useState('');
+  const [stars, setStars] = useState('');
+  const [country, setCountry] = useState('');
+  const [keyCarMode, setKeyCarMode] = useState<KeyCarMode>('no-change');
+  const [ovEntries, setOvEntries] = useState<OvEntryDraft[]>([]);
 
   const disabled = selectedKeys.length === 0;
 
   const preview = useMemo(() => {
     const n = selectedCars.length;
-    if (!n) return "No cars selected.";
+    if (!n) return 'No cars selected.';
     if (n === 1) return `${selectedCars[0].brand} ${selectedCars[0].model}`;
     return `${n} cars selected`;
   }, [selectedCars]);
@@ -38,17 +34,17 @@ export default function CarFields({
   const apply = () => {
     if (disabled) return;
     const partial: Record<string, unknown> = {};
-    if (brand.trim())   partial.brand   = brand.trim();
-    if (model.trim())   partial.model   = model.trim();
-    if (klass.trim())   partial.class   = klass.trim();
-    if (rarity.trim())  partial.rarity  = rarity.trim();
+    if (brand.trim()) partial.brand = brand.trim();
+    if (model.trim()) partial.model = model.trim();
+    if (klass.trim()) partial.class = klass.trim();
+    if (rarity.trim()) partial.rarity = rarity.trim();
     if (country.trim()) partial.country = country.trim();
 
     const s = stars.trim();
-    if (s !== "" && !isNaN(Number(s))) partial.stars = Number(s);
+    if (s !== '' && !isNaN(Number(s))) partial.stars = Number(s);
 
-    if (keyCarMode === "set-true")  partial.keyCar = true;
-    if (keyCarMode === "set-false") partial.keyCar = false;
+    if (keyCarMode === 'set-true') partial.keyCar = true;
+    if (keyCarMode === 'set-false') partial.keyCar = false;
 
     if (ovEntries.length > 0) {
       const built: ObtainableViaEntry[] = ovEntries
@@ -69,27 +65,52 @@ export default function CarFields({
       <div className="CarFieldsGrid">
         <label className="CarDataFormLabel">
           Brand
-          <input value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="W Motors" />
+          <input
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            placeholder="W Motors"
+          />
         </label>
         <label className="CarDataFormLabel">
           Model
-          <input value={model} onChange={(e) => setModel(e.target.value)} placeholder="Fenyr Supersport" />
+          <input
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            placeholder="Fenyr Supersport"
+          />
         </label>
         <label className="CarDataFormLabel">
           Class
-          <input value={klass} onChange={(e) => setKlass(e.target.value)} placeholder="S" />
+          <input
+            value={klass}
+            onChange={(e) => setKlass(e.target.value)}
+            placeholder="S"
+          />
         </label>
         <label className="CarDataFormLabel">
           Rarity
-          <input value={rarity} onChange={(e) => setRarity(e.target.value)} placeholder="Epic" />
+          <input
+            value={rarity}
+            onChange={(e) => setRarity(e.target.value)}
+            placeholder="Epic"
+          />
         </label>
         <label className="CarDataFormLabel">
           Stars
-          <input value={stars} onChange={(e) => setStars(e.target.value)} placeholder="6" inputMode="numeric" />
+          <input
+            value={stars}
+            onChange={(e) => setStars(e.target.value)}
+            placeholder="6"
+            inputMode="numeric"
+          />
         </label>
         <label className="CarDataFormLabel">
           Country
-          <input value={country} onChange={(e) => setCountry(e.target.value)} placeholder="UAE" />
+          <input
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            placeholder="UAE"
+          />
         </label>
         <div className="CarFieldsKeyCarCenter">
           <label className="CarDataFormLabel CarFieldsKeyCarSelect">
@@ -106,16 +127,21 @@ export default function CarFields({
         </div>
       </div>
 
-      <ObtainableVia ovEntries={ovEntries} setOvEntries={setOvEntries} />
+      <ObtainableVia
+        ovEntries={ovEntries}
+        setOvEntries={setOvEntries}
+      />
 
       <div className="CarDataFormRow">
-        <button type="button" onClick={apply} disabled={disabled}>
+        <button
+          type="button"
+          onClick={apply}
+          disabled={disabled}
+        >
           Apply fields to selected
         </button>
       </div>
-      <p className="CarDataFormHint">
-        Leaving an input blank means "don't change that field".
-      </p>
+      <p className="CarDataFormHint">Leaving an input blank means "don't change that field".</p>
     </div>
   );
 }
