@@ -1,0 +1,32 @@
+@use '@scss/globals/index' as *;
+
+.NavigationWrapper {
+  position: static;
+  width: 100%;
+  background: transparent;
+  padding-block: 0.5rem;
+  z-index: 100;
+
+  @include maxw($cellphone-portrait) {
+    position: fixed;
+    top: clamp(3.5rem, 9vw, 6rem);
+    left: 0;
+    height: calc(100dvh - clamp(3.5rem, 9vw, 6rem));
+    width: 70%;
+    background-color: $nav-wrapper-bg;
+    padding: 1rem 0.5rem;
+    transform: translateX(-100%);
+    transition: transform $transition-nav-wrapper;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+}
+
+@include phone-landscape-short {
+  .NavigationWrapper {
+    top: 3.25rem;
+    height: calc(100dvh - 3.25rem);
+  }
+}

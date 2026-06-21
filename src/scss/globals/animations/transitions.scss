@@ -1,7 +1,8 @@
 // =============================
 // Transitions
 // =============================
-$transition-fast: 0.18s ease;        // hover states, pins, small UI elements
-$transition-base: 0.25s ease;        // general default
-$transition-medium: 0.3s ease;       // back buttons, color shifts
-$transition-slow: 0.4s ease;         // panels, overlays
+$transition-fast: 0.18s ease;
+$transition-base: 0.25s ease;
+$transition-medium: 0.3s ease;
+$transition-slow: 0.4s ease;
+$transition-nav-wrapper: 0.3s ease-in-out;

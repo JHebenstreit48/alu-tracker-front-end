@@ -5,10 +5,8 @@ import { AuthContext } from '@/context/Auth/authContext';
 import { syncFromAccount } from '@/utils/UserDataSync/syncFromAccount';
 
 import '@/scss/globals/Reset.scss';
-import '@/scss/Shared/Page.scss';
-import '@/scss/NavHeaderFooterError/Header.scss';
-import '@/scss/NavHeaderFooterError/Navigation.scss';
-import '@/scss/NavHeaderFooterError/Footer.scss';
+import '@/scss/shared/Page.scss';
+import '@/scss/shared/index.scss';
 
 export default function App() {
   const location = useLocation();

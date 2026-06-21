@@ -40,21 +40,21 @@
   border-radius: 6px;
   font-size: 0.78rem;
   font-weight: 700;
-  border: 1px solid rgba(#7a05be, 0.35);
-  background: rgba(#7a05be, 0.15);
+  border: 1px solid rgba($purple-accent, 0.35);
+  background: rgba($purple-accent, 0.15);
   color: rgba(#c4a8f0, 0.65);
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   user-select: none;
 
   &--active {
-    background: rgba(#7a05be, 0.45);
-    border-color: rgba(#7a05be, 0.75);
+    background: rgba($purple-accent, 0.45);
+    border-color: rgba($purple-accent, 0.75);
     color: #e2d4ff;
-    box-shadow: 0 0 8px rgba(#7a05be, 0.35);
+    box-shadow: 0 0 8px rgba($purple-accent, 0.35);
   }
 
   &:hover:not(&--active) {
-    background: rgba(#7a05be, 0.28);
+    background: rgba($purple-accent, 0.28);
     color: #c4a8f0;
   }
 

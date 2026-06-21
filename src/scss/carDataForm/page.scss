@@ -37,14 +37,14 @@
 
   &:hover,
   &:focus-visible {
-    background: rgba(#7a05be, 0.35);
+    background: rgba($purple-accent, 0.35);
     color: #fff;
     outline: none;
   }
 
   &:active {
-    background: rgba(#7a05be, 0.55);
-    box-shadow: 0 0 10px rgba(#7a05be, 0.6);
+    background: rgba($purple-accent, 0.55);
+    box-shadow: 0 0 10px rgba($purple-accent, 0.6);
   }
 }
 

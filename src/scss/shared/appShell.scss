@@ -1,0 +1,10 @@
+.AppRoot {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.AppMain {
+  flex: 1;
+  padding-bottom: 0.5rem;
+}

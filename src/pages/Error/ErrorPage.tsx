@@ -1,5 +1,5 @@
 import { useRouteError } from "react-router-dom";
-import '@/scss/NavHeaderFooterError/Error.scss';
+import '@/scss/shared/error/index.scss';
 
 export default function ErrorPage() {
 

@@ -1,0 +1,112 @@
+@use '@scss/globals/index' as *;
+
+.nav-css {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.25rem, 1.2vw, 1rem);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include maxw($tablet-portrait) {
+    flex-wrap: wrap;
+  }
+
+  @include maxw($cellphone-portrait) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+}
+
+.btn-primary {
+  font-family: $display-font;
+  font-weight: 700;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.nav-css,
+.btn-lg {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-lg {
+  position: relative;
+  min-height: 44px;
+  padding: 0.25rem clamp(0.5rem, 1.4vw, 0.75rem);
+  color: $gold-accent;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 2px rgba($nav-tab-glow-purple, 0.5);
+  text-decoration: none;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: opacity 120ms ease, transform 120ms ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: -6px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(
+      90deg,
+      rgba($gold-accent, 0.2),
+      rgba($gold-accent, 1),
+      rgba($gold-accent, 0.2)
+    );
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 180ms ease, height 120ms ease;
+  }
+
+  &:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    text-shadow:
+      0 2px 2px rgba($nav-tab-glow-purple, 0.9),
+      0 0 6px rgba($gold-accent, 0.55),
+      0 0 14px rgba($gold-accent, 0.25);
+  }
+  &:focus-visible::after {
+    transform: scaleX(1);
+    height: 3px;
+    filter: drop-shadow(0 0 6px rgba($gold-accent, 0.45));
+  }
+}
+
+.is-active {
+  text-shadow:
+    0 2px 2px rgba($nav-tab-glow-purple, 0.9),
+    0 0 6px rgba($gold-accent, 0.55);
+}
+.is-active::after {
+  transform: scaleX(1);
+}
+
+.active-link {
+  border: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-lg {
+    transition: none;
+  }
+  .btn-lg::after {
+    transition: none;
+  }
+}

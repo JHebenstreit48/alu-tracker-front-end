@@ -1,0 +1,11 @@
+@use "@scss/globals/index" as *;
+
+#error-page {
+  display: flex;
+  flex-direction: column;
+  color: $gold-accent;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  margin-top: 20rem;
+}

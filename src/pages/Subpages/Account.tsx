@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import PageTab from "@/components/Shared/Navigation/PageTab";
-import Header from "@/components/Shared/HeaderFooter/Header";
-import { AuthContext } from "@/context/Auth/authContext";
-import ProfileCard from "@/components/Account/ProfileCard";
-import TwoFASetupCard from "@/components/Account/MFA/TwoFASetupCard";
-import SecurityActions from "@/components/Account/SecurityActions";
-import AdminTools from "@/components/Admin/AdminTools";
+import { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import PageTab from '@/components/Shared/Navigation/PageTab';
+import Header from '@/components/Shared/HeaderFooter/Header';
+import { AuthContext } from '@/context/Auth/authContext';
+import ProfileCard from '@/components/Account/ProfileCard';
+import TwoFASetupCard from '@/components/Account/MFA/TwoFASetupCard';
+import SecurityActions from '@/components/Account/SecurityActions';
+import AdminTools from '@/components/Admin/AdminTools';
 
-import "@/scss/MiscellaneousStyle/Account.scss";
+import '@/scss/scss/account/index.scss.scss';
 
 export default function Account(): JSX.Element {
   const { token, username } = useContext(AuthContext);
@@ -17,7 +17,10 @@ export default function Account(): JSX.Element {
   if (!token) {
     return (
       <PageTab title="Account">
-        <Header text="Account" className="accountHeader" />
+        <Header
+          text="Account"
+          className="accountHeader"
+        />
 
         <div className="AccountPage">
           <div className="AccountBackRow">
@@ -39,7 +42,10 @@ export default function Account(): JSX.Element {
 
   return (
     <PageTab title="Account">
-      <Header text="Account" className="accountHeader" />
+      <Header
+        text="Account"
+        className="accountHeader"
+      />
 
       <div className="AccountPage">
         <div className="AccountBackRow">
@@ -89,9 +95,9 @@ export default function Account(): JSX.Element {
 
               <Link
                 to="/car-data-submission"
-                state={{ from: "/account" }}
+                state={{ from: '/account' }}
                 className="AccountBackBtn"
-                style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
               >
                 Open Car Data Submission →
               </Link>

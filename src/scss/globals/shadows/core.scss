@@ -6,9 +6,10 @@
 $shadow-gold-xl: 0 0 10px 6px $color-gold-glow;
 $shadow-gold-lg: 0 0 8px 4px $color-gold-glow;
 $shadow-gold-basic: 0 0 8px $color-gold-glow;
+$box-shadow-dark: 0 2px 8px rgba(91, 20, 121, 0.6);
 
 // =============================
-// Shared Tracker Toggle Shadows   // NEW — used on Cars + GarageLevels via Shared/TrackerToggle.scss
+// Shared Tracker Toggle Shadows   // used on Cars + GarageLevels via Shared/TrackerToggle.scss
 // =============================
 $shadow-style: 1px 0 5px 5px $color-gold-glow;
 $tracker-btn-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.2);

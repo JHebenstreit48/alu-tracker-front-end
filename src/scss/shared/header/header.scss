@@ -1,18 +1,4 @@
-@use 'sass:color';
 @use '@scss/globals/index' as *;
-
-/* ==============================
-   Local tokens / fallbacks
-============================== */
-$gold-text: rgb(255, 196, 0) !default;
-$gold-accent: rgb(223, 190, 7) !default;
-$header-gradient: linear-gradient(
-  to bottom,
-  #0a0118 0%,
-  #150228 55%,
-  #0a0118 100%
-) !default;
-$box-shadow-dark: 0 2px 8px rgba(91, 20, 121, 0.6) !default;
 
 .Header {
   position: sticky;
@@ -23,7 +9,7 @@ $box-shadow-dark: 0 2px 8px rgba(91, 20, 121, 0.6) !default;
   color: $gold-text;
   background-image: $header-gradient;
   box-shadow: $box-shadow-dark;
-  border-bottom: 1px solid rgba(223, 190, 7, 0.08);
+  border-bottom: 1px solid rgba($gold-accent, 0.08);
 
   @include maxw($cellphone-portrait) {
     box-shadow: $box-shadow-dark;
@@ -59,39 +45,6 @@ $box-shadow-dark: 0 2px 8px rgba(91, 20, 121, 0.6) !default;
       transform: translate(-50%, -50%);
       justify-content: center;
     }
-  }
-
-  .SiteTitle {
-    font-family: $display-font;
-    font-size: clamp(0.9rem, 1.6vw, 1.25rem);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: $gold-text;
-    text-decoration: none;
-    white-space: nowrap;
-    text-shadow:
-      0 0 3px rgba(0, 0, 0, 0.9),
-      0 0 12px rgba($gold-accent, 0.25),
-      0 0 28px rgba($gold-accent, 0.1);
-
-    @include maxw($cellphone-portrait) {
-      display: block;
-      font-size: 0.8rem;
-      max-width: 9.5rem;
-      line-height: 1.2;
-      white-space: normal;
-      text-align: center;
-      margin-inline: auto;
-    }
-  }
-
-  .SiteTitle:hover,
-  .SiteTitle:focus-visible {
-    text-decoration: none;
-    text-shadow:
-      0 0 4px rgba(0, 0, 0, 0.9),
-      0 0 14px rgba($gold-accent, 0.6),
-      0 0 32px rgba($gold-accent, 0.25);
   }
 
   .Header__nav {
