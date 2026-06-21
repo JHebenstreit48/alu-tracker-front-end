@@ -8,7 +8,7 @@ import TwoFASetupCard from '@/components/Account/MFA/TwoFASetupCard';
 import SecurityActions from '@/components/Account/SecurityActions';
 import AdminTools from '@/components/Admin/AdminTools';
 
-import '@/scss/scss/account/index.scss.scss';
+import '@/scss/account/index.scss';
 
 export default function Account(): JSX.Element {
   const { token, username } = useContext(AuthContext);
