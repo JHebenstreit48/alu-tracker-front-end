@@ -5,7 +5,7 @@
    Local tokens (fall back if not in Globals)
 ============================== */
 $gold-accent: rgb(255, 196, 0) !default;
-$purple-glow: #7a05be !default;
+$purple-glow: $purple-accent !default;
 $bg-veil: rgba(0, 0, 0, 0.72) !default;
 
 /* Panel surface + borders */

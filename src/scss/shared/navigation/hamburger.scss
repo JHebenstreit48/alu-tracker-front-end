@@ -1,0 +1,30 @@
+@use '@scss/globals/index' as *;
+
+.Hamburger {
+  display: none;
+  position: absolute;
+  left: 0;
+  background: none;
+  color: $gold-accent;
+  font-size: 2rem;
+  z-index: 101;
+  border: none;
+
+  &:focus-visible {
+    outline: 2px solid $gold-accent;
+    outline-offset: 2px;
+  }
+
+  @include maxw($cellphone-portrait) {
+    display: block;
+    left: 0.6rem;
+    top: 46%;
+    transform: translateY(-50%);
+  }
+}
+
+@include minw($cellphone-portrait + 1px) {
+  .Hamburger {
+    display: none !important;
+  }
+}

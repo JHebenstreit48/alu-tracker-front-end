@@ -1,0 +1,93 @@
+@use "@scss/globals/index" as *;
+
+/* ===== Page wrapper ===== */
+.AccountPage {
+  max-width: 960px;
+  margin-inline: auto;
+  padding: $account-page-padding;
+  color: $account-text-light;
+
+  .AccountGate {
+    background: $account-panel-bg;
+    border: $account-panel-border;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    box-shadow: $account-panel-shadow;
+  }
+}
+
+/* ===== Back row ===== */
+.AccountBackRow {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.AccountBackBtn {
+  background: none;
+  border: 1px solid rgba($gold-text, 0.45);
+  color: $gold-text;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-family: $display-font;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba($purple-accent, 0.35);
+    color: $color-white;
+    outline: none;
+  }
+
+  &:active {
+    background: rgba($purple-accent, 0.55);
+    box-shadow: 0 0 10px rgba($purple-accent, 0.6);
+  }
+}
+
+/* ===== Header ===== */
+.AccountHeader {
+  margin: 1.25rem 0 0.75rem;
+
+  .AccountTitle {
+    margin: 0;
+    font-family: $display-font;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+    letter-spacing: 0.01em;
+    color: $gold-text;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .AccountSubtitle {
+    margin: 0.25rem 0 0;
+    color: $account-text-muted;
+
+    strong {
+      color: $color-white;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ===== Grid layout ===== */
+.AccountGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include minw($tablet-portrait) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .AccountSection--full {
+    grid-column: 1 / -1;
+  }
+
+  @include maxw($cellphone-portrait) {
+    gap: 0.75rem;
+  }
+}

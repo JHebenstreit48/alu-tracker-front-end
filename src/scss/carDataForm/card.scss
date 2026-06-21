@@ -71,16 +71,16 @@
     button:not(.StatsTab):not(.StatsCarChip__label):not(.StatsCarChip__remove):not(.StatsCarNav) {
       font-family: $display-font;
       font-weight: 700;
-      background: linear-gradient(180deg, rgba(#7a05be, 0.95), rgba(#7a05be, 0.75));
+      background: linear-gradient(180deg, rgba($purple-accent, 0.95), rgba($purple-accent, 0.75));
       color: #fff;
-      border: 1px solid rgba(#7a05be, 0.5);
+      border: 1px solid rgba($purple-accent, 0.5);
       border-radius: 10px;
       padding: 0.58rem 0.9rem;
       cursor: pointer;
       line-height: 1;
 
       &:hover {
-        background: linear-gradient(180deg, #7a05be, rgba(#7a05be, 0.9));
+        background: linear-gradient(180deg, $purple-accent, rgba($purple-accent, 0.9));
       }
 
       &:disabled {

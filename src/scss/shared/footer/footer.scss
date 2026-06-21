@@ -1,20 +1,6 @@
 @use "sass:color";
 @use "@scss/globals/index" as *;
 
-$gold-text: rgb(255, 196, 0);
-$header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94%);
-
-.AppRoot {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
-.AppMain {
-  flex: 1;
-  padding-bottom: 0.5rem;
-}
-
 .Footer {
   position: relative;
   left: 0;
@@ -25,11 +11,10 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
   align-items: center;
   justify-content: space-between;
 
-  // Slightly tighter + consistent spacing
   gap: 1rem;
   padding: 0.85rem 1rem;
 
-  background-image: $header-gradient;
+  background-image: $footer-gradient;
   box-shadow:
     0 -1px 0 rgba(255, 255, 255, 0.06) inset,
     0 -8px 24px rgba(0, 0, 0, 0.35);
@@ -70,7 +55,6 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
     line-height: 1.1;
   }
 
-  // Use this only on the © chunk so the right side can wrap naturally
   &__fineprint--nowrap {
     white-space: nowrap;
   }
@@ -94,12 +78,11 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
     }
 
     &--active {
-      color: #fff;
+      color: $color-white;
       border-color: $gold-text;
     }
   }
 
-  // Mobile: stack + centered; keep your nesting style
   @include maxw($cellphone-portrait) {
     flex-direction: column;
     align-items: center;
@@ -118,7 +101,7 @@ $header-gradient: linear-gradient(to bottom, #090113 1%, #554e4e 42%, #000000 94
     }
 
     &__fineprint--nowrap {
-      white-space: normal; // allow wrap on small screens
+      white-space: normal;
     }
   }
 }

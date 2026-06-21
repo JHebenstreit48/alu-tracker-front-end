@@ -1,0 +1,63 @@
+@use "@scss/globals/index" as *;
+
+.AdminSubmissionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.AdminSubmissionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.AdminSubmissionMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: $account-text-muted;
+  font-size: 0.9rem;
+
+  strong {
+    color: $account-text-light;
+  }
+}
+
+.AdminSubmissionCars {
+  color: $account-text-light;
+  font-size: 0.95rem;
+}
+
+.AdminSubmissionNote {
+  color: $account-text-muted;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.AdminSubmissionDetails {
+  summary {
+    cursor: pointer;
+    color: $gold-text;
+    font-family: $display-font;
+    font-size: 0.9rem;
+
+    &:hover {
+      color: $color-white;
+    }
+  }
+}
+
+.AdminSubmissionPre {
+  background: $account-surface-darkest;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: $account-text-light;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
