@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import PageTab from "@/components/Shared/Navigation/PageTab";
-import Header from "@/components/Shared/HeaderFooter/Header";
+import Header from "@/components/Shared/header/Header";
 import FeedbackAdminPanel from "@/components/Shared/Feedback/FeedbackAdminPanel";
 import FeedbackPublicList from "@/components/Shared/Feedback/FeedbackPublicList";
 import { type FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
@@ -144,7 +144,7 @@ export default function Feedback() {
 
   return (
     <PageTab title="Feedback">
-      <Header text="Feedback" />
+      <Header />
 
       <div className="feedback-wrap">
         <div className="feedback-grid">

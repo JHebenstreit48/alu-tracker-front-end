@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import Header from '@/components/Shared/HeaderFooter/Header';
+import Header from '@/components/Shared/header/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 import GarageLevelsDropDown from '@/components/GarageLevels/Dropdown';
 import TrackerToggle from '@/components/Tracking/shared/TrackerToggle';
@@ -25,7 +25,6 @@ export default function GarageLevels() {
     <div className="garageLevelsPage">
       <PageTab title="Garage Levels">
         <Header
-          text="Garage Levels"
           className="garageLevelsHeader"
         />
 

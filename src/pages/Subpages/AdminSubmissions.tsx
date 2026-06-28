@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTab from '@/components/Shared/Navigation/PageTab';
-import Header from '@/components/Shared/HeaderFooter/Header';
+import Header from '@/components/Shared/header/Header';
 import { AuthContext } from '@/context/Auth/authContext';
 import { fetchPendingSubmissions, reviewSubmission } from '@/api/submissionReviewAPI';
 
@@ -98,7 +98,6 @@ export default function AdminSubmissions(): JSX.Element {
     return (
       <PageTab title="Admin Submissions">
         <Header
-          text="Admin Submissions"
           className="accountHeader"
         />
         <div className="AccountPage">
@@ -110,10 +109,7 @@ export default function AdminSubmissions(): JSX.Element {
 
   return (
     <PageTab title="Submission Review">
-      <Header
-        text="Submission Review"
-        className="accountHeader"
-      />
+      <Header className="accountHeader" />
 
       <div className="AccountPage">
         <div className="AccountBackRow">

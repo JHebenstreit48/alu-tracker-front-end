@@ -1,4 +1,4 @@
-import Header from "@/components/Shared/HeaderFooter/Header";
+import Header from "@/components/Shared/header/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import BackToTop from "@/components/Shared/Navigation/BackToTopButton";
 import BrandQuickList from "@/components/Brands/BrandInfo/BrandQuickList";
@@ -12,7 +12,7 @@ export default function Brands() {
   return (
     <div className="brands">
       <PageTab title="Brands">
-        <Header text="Brands" />
+        <Header />
 
         {error ? (
           <div className="error-message">Failed to load manufacturers.</div>

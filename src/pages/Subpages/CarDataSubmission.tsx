@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PageTab from "@/components/Shared/Navigation/PageTab";
-import Header from "@/components/Shared/HeaderFooter/Header";
+import Header from "@/components/Shared/header/Header";
 import { AuthContext } from "@/context/Auth/authContext";
 import CarDataForm from "@/components/CarDataForm/Form/CarDataForm";
 
@@ -18,7 +18,7 @@ export default function CarDataSubmission(): JSX.Element {
 
   return (
     <PageTab title="Car Data Submission">
-      <Header text="Car Data Submission" className="accountHeader" />
+      <Header className="accountHeader" />
 
       <div className="CarDataSubmissionPage">
         <div className="CarDataSubmissionBackRow">

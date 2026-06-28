@@ -1,6 +1,6 @@
 import ClassTables from '@/components/Cars/ClassTables/ClassTables';
 import CarFilters from '@/components/Cars/Filters/CarFilters';
-import Header from '@/components/Shared/HeaderFooter/Header';
+import Header from '@/components/Shared/header/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,6 @@ export default function CarData({
       <div className="cars">
         <PageTab title="Cars">
           <Header
-            text="Cars"
             className="carsHeader"
           />
           <div className="error-message">{error}</div>
@@ -41,7 +40,6 @@ export default function CarData({
     <div className="cars">
       <PageTab title="Cars">
         <Header
-          text="Cars"
           className="carsHeader"
         />
 

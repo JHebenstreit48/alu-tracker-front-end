@@ -1,5 +1,5 @@
 import PageTab from '@/components/Shared/Navigation/PageTab';
-import Header from '@/components/Shared/HeaderFooter/Header';
+import Header from '@/components/Shared/header/Header';
 import {
   DetailHeader,
   TablesGrid,
@@ -48,7 +48,6 @@ export default function CarDetailsBody({ slug }: Props) {
     <div className="carDetail">
       <PageTab title={pageTabTitle}>
         <Header
-          text="Car Details"
           className="carDetailsHeader"
         />
 
