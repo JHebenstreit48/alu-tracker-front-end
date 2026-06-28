@@ -1,4 +1,4 @@
-import Header from '@/components/Shared/HeaderFooter/Header';
+import Header from '@/components/Shared/header/Header';
 // import SyncButton from '@/components/UserDataSync/SyncButton';
 import { useCarTrackerData } from '@/hooks/Tracking/useCarTrackerData';
 

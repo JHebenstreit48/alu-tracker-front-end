@@ -2,6 +2,9 @@
 
 .Header {
   .SiteTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     font-family: $display-font;
     font-size: clamp(0.9rem, 1.6vw, 1.25rem);
     text-transform: uppercase;
@@ -15,9 +18,11 @@
       0 0 28px rgba($gold-accent, 0.1);
 
     @include maxw($cellphone-portrait) {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
       font-size: 0.8rem;
-      max-width: 9.5rem;
+      max-width: 12rem;
       line-height: 1.2;
       white-space: normal;
       text-align: center;
@@ -32,5 +37,14 @@
       0 0 4px rgba(0, 0, 0, 0.9),
       0 0 14px rgba($gold-accent, 0.6),
       0 0 32px rgba($gold-accent, 0.25);
+  }
+
+  .SiteName {
+    display: inline;
+
+    @include maxw($cellphone-portrait) {
+      display: block;
+      text-align: center;
+    }
   }
 }

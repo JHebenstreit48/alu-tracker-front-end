@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageTab from '@/components/Shared/Navigation/PageTab';
-import Header from '@/components/Shared/HeaderFooter/Header';
+import Header from '@/components/Shared/header/Header';
 import { AuthContext } from '@/context/Auth/authContext';
 import ProfileCard from '@/components/Account/ProfileCard';
 import TwoFASetupCard from '@/components/Account/MFA/TwoFASetupCard';
@@ -17,10 +17,7 @@ export default function Account(): JSX.Element {
   if (!token) {
     return (
       <PageTab title="Account">
-        <Header
-          text="Account"
-          className="accountHeader"
-        />
+        <Header className="accountHeader" />
 
         <div className="AccountPage">
           <div className="AccountBackRow">
@@ -42,10 +39,7 @@ export default function Account(): JSX.Element {
 
   return (
     <PageTab title="Account">
-      <Header
-        text="Account"
-        className="accountHeader"
-      />
+      <Header className="accountHeader" />
 
       <div className="AccountPage">
         <div className="AccountBackRow">

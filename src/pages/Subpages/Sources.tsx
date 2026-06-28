@@ -4,6 +4,7 @@ import { dedupeAndCount } from "@/utils/sources/normalizeSources";
 import { carsAdapter } from "@/lib/Firebase/carsAdapter";
 import type { Car } from "@/types/shared/car";
 
+import Header from "@/components/Shared/header/Header";  // ← add this
 import BackButton from "@/components/Sources/BackButton";
 import SourcePill from "@/components/Sources/SourcePill";
 import "@/scss/MiscellaneousStyle/Sources.scss";
@@ -76,6 +77,7 @@ export default function Sources() {
 
   return (
     <>
+    <Header />
     <BackButton />
     <main className="SourcesPage">
       <header className="SourcesPage__header">

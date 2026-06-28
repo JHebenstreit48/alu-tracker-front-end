@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLegendStoreFilters } from "@/hooks/LegendStore/useLegendStoreFilters";
-import Header from "@/components/Shared/HeaderFooter/Header";
+import Header from "@/components/Shared/header/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import Filters from "@/components/LegendStore/Filters";
 import Tables from "@/components/LegendStore/Tables";
@@ -17,7 +17,7 @@ export default function LegendStorePrices() {
 
   return (
     <PageTab title="Legend Store Prices">
-      <Header text="Legend Store" />
+      <Header />
       <Filters filters={filters} onChange={setFilters} onReset={reset} />
       <StoreViewToggle view={storeView} onChange={setStoreView} />
       {storeView === "credits" && (
