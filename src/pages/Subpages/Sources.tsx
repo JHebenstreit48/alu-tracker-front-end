@@ -7,7 +7,8 @@ import type { Car } from "@/types/shared/car";
 import Header from "@/components/Shared/header/Header";  // ← add this
 import BackButton from "@/components/Sources/BackButton";
 import SourcePill from "@/components/Sources/SourcePill";
-import "@/scss/MiscellaneousStyle/Sources.scss";
+
+import "@/scss/shared/sources.scss";
 
 type LoadState = "idle" | "loading" | "ready" | "error";
 

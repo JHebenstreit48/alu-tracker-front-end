@@ -5,7 +5,7 @@ import { AuthContext } from '@/context/Auth/authContext';
 import { syncFromAccount } from '@/utils/UserDataSync/syncFromAccount';
 
 import '@/scss/globals/Reset.scss';
-import '@/scss/shared/Page.scss';
+import '@/scss/shared/page.scss';
 import '@/scss/shared/index.scss';
 
 export default function App() {

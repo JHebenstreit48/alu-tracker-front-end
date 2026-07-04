@@ -4,7 +4,8 @@ import Header from "@/components/Shared/header/Header";
 import FeedbackAdminPanel from "@/components/Shared/Feedback/FeedbackAdminPanel";
 import FeedbackPublicList from "@/components/Shared/Feedback/FeedbackPublicList";
 import { type FeedbackItem } from "@/components/Shared/Feedback/FeedbackCard";
-import "@/scss/MiscellaneousStyle/Feedback.scss";
+
+import "@/scss/shared/feedback.scss";
 
 type Category = "bug" | "feature" | "content" | "other";
 
