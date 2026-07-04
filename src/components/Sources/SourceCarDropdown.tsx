@@ -2,7 +2,8 @@ import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Car } from "@/types/shared/car";
-import "@/scss/MiscellaneousStyle/Sources.scss";
+
+import "@/scss/shared/sources.scss";
 
 type Props = {
   cars: Car[];

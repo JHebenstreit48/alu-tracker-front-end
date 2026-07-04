@@ -1,4 +1,4 @@
-import '@/scss/MiscellaneousStyle/LoadingSpinner.scss';
+import '@/scss/shared/loadingSpinner.scss';
 
 type LoadingSpinnerProps = {
   message?: string;
