@@ -17,6 +17,7 @@ const CarDataSubmission = lazy(() => import('@/pages/Subpages/CarDataSubmission'
 const About = lazy(() => import('@/pages/Subpages/About'));
 const Sources = lazy(() => import('@/pages/Subpages/Sources'));
 const AdminSubmissions = lazy(() => import('@/pages/Subpages/AdminSubmissions'));
+const QRCodePage = lazy(() => import('@/pages/Subpages/qrCode'));
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
       { path: '/admin/submissions', element: <Suspense fallback={null}><AdminSubmissions /></Suspense> },
       { path: '/about', element: <Suspense fallback={null}><About /></Suspense> },
       { path: '/sources', element: <Suspense fallback={null}><Sources /></Suspense> },
+      { path: '/qrcode', element: <Suspense fallback={null}><QRCodePage /></Suspense> },
     ],
   },
 ]);
