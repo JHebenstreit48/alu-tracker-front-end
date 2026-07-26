@@ -1,0 +1,27 @@
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/brands' as *;
+
+.country-header {
+  display: flex;
+  justify-content: center;
+}
+
+.brand-letter-section {
+  margin-bottom: $section-margin-bottom;
+
+  h3 {
+    font-size: $section-heading-font-size;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid $section-heading-border-color;
+    padding-bottom: $section-heading-padding-bottom;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin: 0.25rem 0;
+    }
+  }
+}

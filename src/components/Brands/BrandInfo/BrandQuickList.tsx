@@ -1,76 +1,61 @@
-import { Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 
 import type { Brand } from '@/types/Brands';
 import { groupBrandsByCountryAndLetter } from '@/utils/brands/brandsByCountryAndLetter';
-import { getImageUrl } from '@/utils/shared/imageUrl';
+import { filterBrands } from '@/utils/brands/filterBrands';
+import { getAvailableCountries, getAvailableLetters } from '@/utils/brands/getAvailableFilters';
 
-import '@/scss/brands/main/brandQuickList.scss';
+import BrandFilterBar from './BrandFilterBar';
+import LetterChipRow from './LetterChipRow';
+import BrandGroupedList from './BrandGroupedList';
+
+import '@/scss/brands/main/index.scss';
 
 interface BrandQuickListProps {
   manufacturers: Brand[];
 }
 
 export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
+  const [country, setCountry] = useState('All countries');
+  const [letter, setLetter] = useState('');
+  const [search, setSearch] = useState('');
+
+  const availableCountries = useMemo(() => getAvailableCountries(manufacturers), [manufacturers]);
+  const availableLetters = useMemo(() => getAvailableLetters(manufacturers), [manufacturers]);
+
+  const filtered = useMemo(
+    () => filterBrands(manufacturers, { country, letter, search }),
+    [manufacturers, country, letter, search]
+  );
+
+  const grouped = useMemo(() => groupBrandsByCountryAndLetter(filtered), [filtered]);
+
+  const handleChipClick = (targetLetter: string) => {
+    const el = document.querySelector(`[data-letter="${targetLetter}"]`);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (!manufacturers || manufacturers.length === 0) {
     return <div className="error-message">No manufacturers found.</div>;
   }
 
-  const grouped = groupBrandsByCountryAndLetter(manufacturers);
-  const sortedCountries = Object.keys(grouped).sort();
-
   return (
     <div className="brand-quick-list">
-      {sortedCountries.map((country) => {
-        const sortedLetters = Object.keys(grouped[country]).sort();
-
-        return (
-          <div key={country} className="country-section">
-            <h2 className="country-header">{country}</h2>
-            <hr />
-
-            {sortedLetters.map((letter) => (
-              <div key={letter} className="brand-letter-section">
-                <h3>{letter}</h3>
-                <ul>
-                  {grouped[country][letter].map((manufacturer) => {
-                    const logoUrl = manufacturer.logo
-                      ? getImageUrl(manufacturer.logo)
-                      : null;
-
-                    return (
-                      <li key={manufacturer.slug}>
-                        <Link
-                          to={`/brands/${manufacturer.slug}`}
-                          className="brand-list-link"
-                        >
-                          <span className="brand-list-logo-slot">
-                            {logoUrl && (
-                              <img
-                                src={logoUrl}
-                                alt=""
-                                className="brand-list-logo"
-                                loading="lazy"
-                                onError={(e) => {
-                                  (e.currentTarget as HTMLImageElement).style.display = 'none';
-                                }}
-                              />
-                            )}
-                          </span>
-                          <span className="brand-list-name">
-                            {manufacturer.brand}
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
-
-            <hr />
-          </div>
-        );
-      })}
+      <BrandFilterBar
+        country={country}
+        letter={letter}
+        search={search}
+        availableCountries={availableCountries}
+        availableLetters={availableLetters}
+        onCountryChange={setCountry}
+        onLetterChange={setLetter}
+        onSearchChange={setSearch}
+      />
+      <LetterChipRow
+        availableLetters={availableLetters}
+        onLetterClick={handleChipClick}
+      />
+      <BrandGroupedList grouped={grouped} />
     </div>
   );
 }

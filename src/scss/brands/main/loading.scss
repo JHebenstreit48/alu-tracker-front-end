@@ -1,0 +1,36 @@
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/brands' as *;
+
+.brandsLoadingWrapper {
+  max-width: $quick-list-max-width;
+  margin: 15rem auto 2rem auto;
+  padding: $quick-list-padding;
+  background-color: $quick-list-background-color;
+  border-radius: $card-radius;
+  color: $quick-list-text-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  @include phone-portrait {
+    margin-top: 8rem;
+    width: 86%;
+  }
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 6rem;
+  margin-top: 11rem;
+
+  .loading-text {
+    margin-top: 1rem;
+    color: $loading-text-color;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+}
