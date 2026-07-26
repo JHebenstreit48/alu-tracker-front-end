@@ -1,16 +1,21 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from 'react-router-dom';
 
-import "@/scss/brands/info/brandInfo.scss";
+import { useBrandBySlug } from '@/hooks/Brands/useBrandsBySlug';
+import { getImageUrl } from '@/utils/shared/imageUrl';
 
-import { useBrandBySlug } from "@/hooks/Brands/useBrandsBySlug";
-import { getImageUrl } from "@/utils/shared/imageUrl";
+import Header from '@/components/Shared/header/Header';
+import BrandHero from '@/components/Brands/BrandInformation/BrandHero';
+import BrandDetailsList from '@/components/Brands/BrandInformation/BrandDetailsList';
+import BrandResourcesList from '@/components/Brands/BrandInformation/BrandResourcesList';
+
+import '@/scss/brands/info/index.scss';
 
 export default function BrandInfo() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { brand, loading, error } = useBrandBySlug(slug);
 
-  const handleGoBack = () => navigate("/brands");
+  const handleGoBack = () => navigate('/brands');
 
   if (loading) {
     return <div className="loading-message">Loading brand details...</div>;
@@ -27,60 +32,21 @@ export default function BrandInfo() {
     );
   }
 
-  const logoUrl = brand.logo ? getImageUrl(brand.logo) : "";
+  const logoUrl = brand.logo ? getImageUrl(brand.logo) : '';
 
   return (
     <div className="brand-info-page">
+      <Header />
+
       <button className="backBtn" onClick={handleGoBack}>
         Back
       </button>
 
-      <h1 className="brand-name">{brand.brand}</h1>
+      <BrandHero brand={brand} logoUrl={logoUrl} />
 
-      {logoUrl && (
-        <img
-          src={logoUrl}
-          alt={`${brand.brand} logo`}
-          className="brand-logo"
-          loading="lazy"
-        />
-      )}
+      <BrandDetailsList brand={brand} />
 
-      <p className="brand-description">{brand.description}</p>
-
-      <ul className="brand-details">
-        <li>
-          <strong>Country:</strong> {brand.country.join(", ")}
-        </li>
-        <li>
-          <strong>Established:</strong> {brand.established}
-        </li>
-        {brand.headquarters && (
-          <li>
-            <strong>Headquarters:</strong> {brand.headquarters}
-          </li>
-        )}
-        {brand.primaryMarket && (
-          <li>
-            <strong>Primary Market:</strong> {brand.primaryMarket}
-          </li>
-        )}
-      </ul>
-
-      {brand.resources && brand.resources.length > 0 && (
-        <div className="brand-resources">
-          <h3>Resources</h3>
-          <ul>
-            {brand.resources.map((res, idx) => (
-              <li key={idx}>
-                <a href={res.url} target="_blank" rel="noopener noreferrer">
-                  {res.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {brand.resources && <BrandResourcesList resources={brand.resources} />}
     </div>
   );
 }
