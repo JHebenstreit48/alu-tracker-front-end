@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import "@/scss/brands/BrandInfo.scss";
+
+import "@/scss/brands/info/brandInfo.scss";
 
 import { useBrandBySlug } from "@/hooks/Brands/useBrandsBySlug";
 import { getImageUrl } from "@/utils/shared/imageUrl";
@@ -26,10 +27,6 @@ export default function BrandInfo() {
     );
   }
 
-  // Logos now live in Firebase Storage (or absolute URLs).
-  // brand.logo should be something like:
-  //   - "images/logos/A/apollo_automobili.png"  (your bucket path)
-  //   - OR an https URL
   const logoUrl = brand.logo ? getImageUrl(brand.logo) : "";
 
   return (

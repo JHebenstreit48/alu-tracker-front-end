@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import type { Brand } from "@/types/Brands";
-import { getImageUrl } from "@/utils/shared/imageUrl";
+import type { Brand } from '@/types/Brands';
+import { groupBrandsByCountryAndLetter } from '@/utils/brands/brandsByCountryAndLetter';
+import { getImageUrl } from '@/utils/shared/imageUrl';
 
-import "@/scss/brands/BrandQuickList.scss";
+import '@/scss/brands/BrandQuickList.scss';
 
 interface BrandQuickListProps {
   manufacturers: Brand[];
@@ -14,37 +15,13 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
     return <div className="error-message">No manufacturers found.</div>;
   }
 
-  const groupedByCountry = manufacturers.reduce(
-    (acc: Record<string, Brand[]>, manufacturer) => {
-      const countries =
-        manufacturer.country && manufacturer.country.length > 0
-          ? manufacturer.country
-          : ["Unknown"];
-      countries.forEach((country) => {
-        if (!acc[country]) acc[country] = [];
-        acc[country].push(manufacturer);
-      });
-      return acc;
-    },
-    {}
-  );
-
-  const sortedCountries = Object.keys(groupedByCountry).sort();
+  const grouped = groupBrandsByCountryAndLetter(manufacturers);
+  const sortedCountries = Object.keys(grouped).sort();
 
   return (
     <div className="brand-quick-list">
       {sortedCountries.map((country) => {
-        const groupedByLetter = groupedByCountry[country].reduce(
-          (acc: Record<string, Brand[]>, manufacturer) => {
-            const firstLetter = manufacturer.brand.charAt(0).toUpperCase();
-            if (!acc[firstLetter]) acc[firstLetter] = [];
-            acc[firstLetter].push(manufacturer);
-            return acc;
-          },
-          {}
-        );
-
-        const sortedLetters = Object.keys(groupedByLetter).sort();
+        const sortedLetters = Object.keys(grouped[country]).sort();
 
         return (
           <div key={country} className="country-section">
@@ -55,39 +32,37 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
               <div key={letter} className="brand-letter-section">
                 <h3>{letter}</h3>
                 <ul>
-                  {groupedByLetter[letter]
-                    .sort((a, b) => a.brand.localeCompare(b.brand))
-                    .map((manufacturer) => {
-                      const logoUrl = manufacturer.logo
-                        ? getImageUrl(manufacturer.logo)
-                        : null;
+                  {grouped[country][letter].map((manufacturer) => {
+                    const logoUrl = manufacturer.logo
+                      ? getImageUrl(manufacturer.logo)
+                      : null;
 
-                      return (
-                        <li key={manufacturer.slug}>
-                          <Link
-                            to={`/brands/${manufacturer.slug}`}
-                            className="brand-list-link"
-                          >
-                            <span className="brand-list-logo-slot">
-                              {logoUrl && (
-                                <img
-                                  src={logoUrl}
-                                  alt=""
-                                  className="brand-list-logo"
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    (e.currentTarget as HTMLImageElement).style.display = "none";
-                                  }}
-                                />
-                              )}
-                            </span>
-                            <span className="brand-list-name">
-                              {manufacturer.brand}
-                            </span>
-                          </Link>
-                        </li>
-                      );
-                    })}
+                    return (
+                      <li key={manufacturer.slug}>
+                        <Link
+                          to={`/brands/${manufacturer.slug}`}
+                          className="brand-list-link"
+                        >
+                          <span className="brand-list-logo-slot">
+                            {logoUrl && (
+                              <img
+                                src={logoUrl}
+                                alt=""
+                                className="brand-list-logo"
+                                loading="lazy"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                                }}
+                              />
+                            )}
+                          </span>
+                          <span className="brand-list-name">
+                            {manufacturer.brand}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
