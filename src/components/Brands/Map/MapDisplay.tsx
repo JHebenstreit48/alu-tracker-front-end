@@ -7,7 +7,8 @@ import MapPin from '@/components/Brands/Map/MapPin';
 import type { Brand } from '@/types/Brands';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import '@/scss/brands/BrandMap.scss';
+
+import '@/scss/brands/map/brandMap.scss';
 
 interface MapDisplayProps {
   manufacturers: Brand[];

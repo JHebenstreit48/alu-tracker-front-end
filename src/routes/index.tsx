@@ -10,7 +10,7 @@ const GarageLevels = lazy(() => import('@/pages/MainPages/GarageLevels/GarageLev
 const LegendStorePrices = lazy(() => import('@/pages/MainPages/LegendStore/LegendStore'));
 const CarDetails = lazy(() => import('@/pages/Subpages/CarDetails'));
 const CarTracker = lazy(() => import('@/pages/Subpages/CarTracker'));
-const BrandInfo = lazy(() => import('@/pages/MainPages/Brands/BrandInfo'));
+const BrandInfo = lazy(() => import('@/pages/Subpages/BrandInfo'));
 const Feedback = lazy(() => import('@/pages/MainPages/Feedback/Feedback'));
 const Account = lazy(() => import('@/pages/Subpages/Account'));
 const CarDataSubmission = lazy(() => import('@/pages/Subpages/CarDataSubmission'));

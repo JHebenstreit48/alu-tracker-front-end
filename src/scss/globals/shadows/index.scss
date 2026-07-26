@@ -1,5 +1,6 @@
-@forward 'core';
-@forward 'cars';
-@forward 'tracker';
-@forward 'map';
-@forward 'account';
+@forward './account';
+@forward './brands';
+@forward './cars';
+@forward './core';
+@forward './map';
+@forward './tracker';

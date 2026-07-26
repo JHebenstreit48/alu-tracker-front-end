@@ -1,0 +1,30 @@
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/brands' as *;
+
+.brand-quick-list-filters {
+  display: flex;
+  gap: $filter-bar-gap;
+  margin-bottom: $filter-bar-margin-bottom;
+  padding-bottom: $filter-bar-padding;
+  border-bottom: 1px solid $filter-bar-border-color;
+
+  select,
+  input {
+    flex: 1;
+    background: transparent;
+    border: 0.5px solid $filter-bar-border-color;
+    color: $quick-list-text-color;
+    border-radius: $card-radius;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  select option {
+    color: $dropdown-option-text-color;
+    background-color: $dropdown-option-bg;
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

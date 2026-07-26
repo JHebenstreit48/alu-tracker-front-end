@@ -1,10 +1,11 @@
 import Header from "@/components/Shared/header/Header";
 import PageTab from "@/components/Shared/Navigation/PageTab";
 import BackToTop from "@/components/Shared/Navigation/BackToTopButton";
-import BrandQuickList from "@/components/Brands/BrandInfo/BrandQuickList";
+import BrandQuickList from "@/components/Brands/Main/BrandQuickList";
 import MapDisplay from "@/components/Brands/Map/MapDisplay";
 import { useBrands } from "@/hooks/Brands/useBrands";
-import "@/scss/brands/BrandQuickList.scss";
+
+import "@/scss/brands/main/index.scss";
 
 export default function Brands() {
   const { brands, loading, error } = useBrands();

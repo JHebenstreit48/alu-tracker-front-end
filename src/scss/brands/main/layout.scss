@@ -1,0 +1,21 @@
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/brands' as *;
+@use '@scss/globals/shadows/brands' as *;
+
+.brand-quick-list {
+  max-width: $quick-list-max-width;
+  margin: 3rem auto 2rem auto;
+  padding: $quick-list-padding;
+  background: linear-gradient(180deg, $quick-list-bg-top, $quick-list-bg-bottom);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid $quick-list-border-color;
+  border-radius: $card-radius;
+  box-shadow: $quick-list-drop-shadow, $quick-list-inner-highlight;
+  color: $quick-list-text-color;
+
+  @include phone-portrait {
+    margin-top: 8rem;
+    width: 86%;
+  }
+}

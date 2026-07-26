@@ -1,0 +1,17 @@
+@use '@scss/globals/index' as *;
+
+.brand-name {
+  font-size: $brand-name-font-size;
+  margin-bottom: 2rem;
+}
+
+.brand-logo {
+  width: $brand-logo-width;
+}
+
+.brand-description {
+  margin-top: 20px;
+  font-size: $brand-description-font-size;
+  text-align: center;
+  max-width: $brand-max-width;
+}
