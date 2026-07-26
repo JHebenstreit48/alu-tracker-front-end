@@ -4,7 +4,7 @@ import type { Brand } from '@/types/Brands';
 import { groupBrandsByCountryAndLetter } from '@/utils/brands/brandsByCountryAndLetter';
 import { getImageUrl } from '@/utils/shared/imageUrl';
 
-import '@/scss/brands/BrandQuickList.scss';
+import '@/scss/brands/main/brandQuickList.scss';
 
 interface BrandQuickListProps {
   manufacturers: Brand[];

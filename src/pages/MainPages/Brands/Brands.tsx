@@ -4,7 +4,8 @@ import BackToTop from "@/components/Shared/Navigation/BackToTopButton";
 import BrandQuickList from "@/components/Brands/BrandInfo/BrandQuickList";
 import MapDisplay from "@/components/Brands/Map/MapDisplay";
 import { useBrands } from "@/hooks/Brands/useBrands";
-import "@/scss/brands/BrandQuickList.scss";
+
+import "@/scss/brands/main/brandQuickList.scss";
 
 export default function Brands() {
   const { brands, loading, error } = useBrands();
