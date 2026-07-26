@@ -3,6 +3,7 @@ export type Brand = {
   brand: string;
   description: string;
   logo: string;
+  logoScale?: number;
   country: string[];
   established: number;
   headquarters?: string;

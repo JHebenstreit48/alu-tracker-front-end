@@ -5,12 +5,8 @@
   display: flex;
   gap: $filter-bar-gap;
   margin-bottom: $filter-bar-margin-bottom;
-  background: $filter-bar-bg;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 0.5px solid $filter-bar-border-color;
-  border-radius: $card-radius;
-  padding: $filter-bar-padding;
+  padding-bottom: $filter-bar-padding;
+  border-bottom: 1px solid $filter-bar-border-color;
 
   select,
   input {
@@ -21,6 +17,11 @@
     border-radius: $card-radius;
     padding: 0.5rem 0.6rem;
     font-size: 0.9rem;
+  }
+
+  select option {
+    color: $dropdown-option-text-color;
+    background-color: $dropdown-option-bg;
   }
 
   input::placeholder {

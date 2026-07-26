@@ -1,23 +1,21 @@
 interface BrandFilterBarProps {
   country: string;
-  letter: string;
   search: string;
   availableCountries: string[];
   availableLetters: string[];
   onCountryChange: (value: string) => void;
-  onLetterChange: (value: string) => void;
   onSearchChange: (value: string) => void;
+  onLetterJump: (letter: string) => void;
 }
 
 export default function BrandFilterBar({
   country,
-  letter,
   search,
   availableCountries,
   availableLetters,
   onCountryChange,
-  onLetterChange,
   onSearchChange,
+  onLetterJump,
 }: BrandFilterBarProps) {
   return (
     <div className="brand-quick-list-filters">
@@ -34,11 +32,7 @@ export default function BrandFilterBar({
         ))}
       </select>
 
-      <select
-        value={letter}
-        onChange={(e) => onLetterChange(e.target.value)}
-        aria-label="Filter by letter"
-      >
+      <select value="" onChange={(e) => onLetterJump(e.target.value)} aria-label="Jump to letter">
         <option value="">Jump to letter</option>
         {availableLetters.map((l) => (
           <option key={l} value={l}>

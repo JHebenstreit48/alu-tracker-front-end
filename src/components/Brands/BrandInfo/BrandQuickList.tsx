@@ -6,7 +6,6 @@ import { filterBrands } from '@/utils/brands/filterBrands';
 import { getAvailableCountries, getAvailableLetters } from '@/utils/brands/getAvailableFilters';
 
 import BrandFilterBar from './BrandFilterBar';
-import LetterChipRow from './LetterChipRow';
 import BrandGroupedList from './BrandGroupedList';
 
 import '@/scss/brands/main/index.scss';
@@ -17,20 +16,20 @@ interface BrandQuickListProps {
 
 export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
   const [country, setCountry] = useState('All countries');
-  const [letter, setLetter] = useState('');
   const [search, setSearch] = useState('');
 
   const availableCountries = useMemo(() => getAvailableCountries(manufacturers), [manufacturers]);
   const availableLetters = useMemo(() => getAvailableLetters(manufacturers), [manufacturers]);
 
   const filtered = useMemo(
-    () => filterBrands(manufacturers, { country, letter, search }),
-    [manufacturers, country, letter, search]
+    () => filterBrands(manufacturers, { country, search }),
+    [manufacturers, country, search]
   );
 
   const grouped = useMemo(() => groupBrandsByCountryAndLetter(filtered), [filtered]);
 
-  const handleChipClick = (targetLetter: string) => {
+  const handleLetterJump = (targetLetter: string) => {
+    if (!targetLetter) return;
     const el = document.querySelector(`[data-letter="${targetLetter}"]`);
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -43,17 +42,12 @@ export default function BrandQuickList({ manufacturers }: BrandQuickListProps) {
     <div className="brand-quick-list">
       <BrandFilterBar
         country={country}
-        letter={letter}
         search={search}
         availableCountries={availableCountries}
         availableLetters={availableLetters}
         onCountryChange={setCountry}
-        onLetterChange={setLetter}
         onSearchChange={setSearch}
-      />
-      <LetterChipRow
-        availableLetters={availableLetters}
-        onLetterClick={handleChipClick}
+        onLetterJump={handleLetterJump}
       />
       <BrandGroupedList grouped={grouped} />
     </div>

@@ -6,19 +6,19 @@
 $brand-link-color: $color-brand-link-blue;
 $brand-link-hover-color: $color-white;
 $quick-list-text-color: $color-white;
-$quick-list-background-color: $surface-dark-1;
+$quick-list-bg-top: rgba(255, 255, 255, 0.1);
+$quick-list-bg-bottom: rgba($surface-dark-1, 0.5);
+$quick-list-border-color: rgba(255, 255, 255, 0.18);
 $section-heading-border-color: $gray-444;
 $loading-text-color: $color-warning-yellow;
 
 // =============================
 // Filters
 // =============================
-$filter-bar-bg: rgba(255, 255, 255, 0.06);
 $filter-bar-border-color: rgba(255, 255, 255, 0.15);
-$letter-chip-bg: rgba(255, 255, 255, 0.12);
-$letter-chip-active-bg: rgba(255, 255, 255, 0.25);
-$letter-chip-text-color: $color-white;
 $logo-slot-empty-bg: rgba(255, 255, 255, 0.08);
+$dropdown-option-text-color: $color-black;
+$dropdown-option-bg: $color-white;
 
 // =============================
 // Brand Map
