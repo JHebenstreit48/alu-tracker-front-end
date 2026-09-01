@@ -18,6 +18,9 @@ const About = lazy(() => import('@/pages/Subpages/About'));
 const Sources = lazy(() => import('@/pages/Subpages/Sources'));
 const AdminSubmissions = lazy(() => import('@/pages/Subpages/AdminSubmissions'));
 const QRCodePage = lazy(() => import('@/pages/Subpages/qrCode'));
+const ConfirmEmailChange = lazy(() => import('@/pages/Subpages/confirmEmailChange'));
+const ForgotPassword = lazy(() => import('@/pages/Subpages/forgotPassword'));
+const ForgotUsername = lazy(() => import('@/pages/Subpages/forgotUsername'));
 
 export const router = createBrowserRouter([
   {
@@ -25,21 +28,150 @@ export const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Suspense fallback={null}><Home /></Suspense> },
-      { path: '/brands', element: <Suspense fallback={null}><Brands /></Suspense> },
-      { path: '/brands/:slug', element: <Suspense fallback={null}><BrandInfo /></Suspense> },
-      { path: '/cars', element: <Suspense fallback={null}><Cars /></Suspense> },
-      { path: '/cars/:slug', element: <Suspense fallback={null}><CarDetails /></Suspense> },
-      { path: '/car-tracker/', element: <Suspense fallback={null}><CarTracker /></Suspense> },
-      { path: '/garagelevels', element: <Suspense fallback={null}><GarageLevels /></Suspense> },
-      { path: '/legendstoreprices', element: <Suspense fallback={null}><LegendStorePrices /></Suspense> },
-      { path: '/feedback', element: <Suspense fallback={null}><Feedback /></Suspense> },
-      { path: '/account', element: <Suspense fallback={null}><Account /></Suspense> },
-      { path: '/car-data-submission', element: <Suspense fallback={null}><CarDataSubmission /></Suspense> },
-      { path: '/admin/submissions', element: <Suspense fallback={null}><AdminSubmissions /></Suspense> },
-      { path: '/about', element: <Suspense fallback={null}><About /></Suspense> },
-      { path: '/sources', element: <Suspense fallback={null}><Sources /></Suspense> },
-      { path: '/qrcode', element: <Suspense fallback={null}><QRCodePage /></Suspense> },
+      {
+        index: true,
+        element: (
+          <Suspense fallback={null}>
+            <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/brands',
+        element: (
+          <Suspense fallback={null}>
+            <Brands />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/brands/:slug',
+        element: (
+          <Suspense fallback={null}>
+            <BrandInfo />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/cars',
+        element: (
+          <Suspense fallback={null}>
+            <Cars />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/cars/:slug',
+        element: (
+          <Suspense fallback={null}>
+            <CarDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/car-tracker/',
+        element: (
+          <Suspense fallback={null}>
+            <CarTracker />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/garagelevels',
+        element: (
+          <Suspense fallback={null}>
+            <GarageLevels />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/legendstoreprices',
+        element: (
+          <Suspense fallback={null}>
+            <LegendStorePrices />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/feedback',
+        element: (
+          <Suspense fallback={null}>
+            <Feedback />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/account',
+        element: (
+          <Suspense fallback={null}>
+            <Account />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/car-data-submission',
+        element: (
+          <Suspense fallback={null}>
+            <CarDataSubmission />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/admin/submissions',
+        element: (
+          <Suspense fallback={null}>
+            <AdminSubmissions />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/about',
+        element: (
+          <Suspense fallback={null}>
+            <About />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/sources',
+        element: (
+          <Suspense fallback={null}>
+            <Sources />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/qrcode',
+        element: (
+          <Suspense fallback={null}>
+            <QRCodePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/confirm-email-change',
+        element: (
+          <Suspense fallback={null}>
+            <ConfirmEmailChange />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/forgot-password',
+        element: (
+          <Suspense fallback={null}>
+            <ForgotPassword />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/forgot-username',
+        element: (
+          <Suspense fallback={null}>
+            <ForgotUsername />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);

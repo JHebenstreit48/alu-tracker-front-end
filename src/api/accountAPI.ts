@@ -6,23 +6,22 @@ const json = async (res: Response) => {
   return data;
 };
 
-// --- Recovery ---
 export async function forgotPassword(email: string) {
   const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
   });
-  return json(res); // {ok:true}
+  return json(res);
 }
 
-export async function resetPassword(token: string, newPassword: string) {
+export async function resetPassword(token: string, newPassword: string, mfaCode?: string) {
   const res = await fetch(`${API_BASE_URL}/auth/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ token, newPassword }),
+    body: JSON.stringify({ token, newPassword, ...(mfaCode ? { mfaCode } : {}) }),
   });
-  return json(res); // {ok:true}
+  return json(res) as Promise<{ ok?: boolean; requires2fa?: boolean }>;
 }
 
 export async function forgotUsername(email: string) {
@@ -31,18 +30,57 @@ export async function forgotUsername(email: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
   });
-  return json(res); // {ok:true}
+  return json(res);
 }
 
-// --- MFA ---
+export async function changePassword(
+  token: string,
+  currentPassword: string,
+  newPassword: string,
+  mfaCode?: string
+) {
+  const res = await fetch(`${API_BASE_URL}/users/me/change-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ currentPassword, newPassword, ...(mfaCode ? { mfaCode } : {}) }),
+  });
+  return json(res);
+}
+
+export async function requestEmailChange(
+  token: string,
+  newEmail: string,
+  proof: { password?: string; mfaCode?: string }
+) {
+  const res = await fetch(`${API_BASE_URL}/users/me/email-change`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ newEmail, ...proof }),
+  });
+  return json(res);
+}
+
+export async function confirmEmailChange(confirmToken: string) {
+  const res = await fetch(`${API_BASE_URL}/users/me/email-change/confirm`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token: confirmToken }),
+  });
+  return json(res);
+}
+
 export async function mfaInit(token: string) {
-  // BE returns: { otpauthUrl, base32 }
   const res = await fetch(`${API_BASE_URL}/auth/mfa/init`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
   });
-  const data = await json(res); // expect { otpauthUrl, base32 }
-  // Normalize to your existing FE shape:
+  const data = await json(res);
   return { otpauthUrl: data.otpauthUrl, secret: data.base32 as string };
 }
 
@@ -55,16 +93,9 @@ export async function mfaConfirm(token: string, code: string) {
     },
     body: JSON.stringify({ code }),
   });
-
-  // No runtime change; this just lets TS know recoveryCodes may exist.
   return json(res) as Promise<{ twoFactorEnabled: boolean; recoveryCodes?: string[] }>;
 }
 
-/**
- * Backwards-compatible:
- * - existing callers can keep calling mfaDisable(token)
- * - new callers can call mfaDisable(token, proof)
- */
 export async function mfaDisable(token: string, proof?: string) {
   const headers: Record<string, string> = {
     Authorization: `Bearer ${token}`,
@@ -72,7 +103,6 @@ export async function mfaDisable(token: string, proof?: string) {
 
   const v = (proof || "").trim();
 
-  // Old behavior preserved (no body). This may 400 if backend requires proof.
   if (!v) {
     const res = await fetch(`${API_BASE_URL}/auth/mfa/disable`, {
       method: "POST",
@@ -81,7 +111,6 @@ export async function mfaDisable(token: string, proof?: string) {
     return json(res);
   }
 
-  // New behavior: send proof in body (totp or recovery)
   const isTotp = /^\d{6,8}$/.test(v);
   const payload = isTotp ? { code: v } : { recoveryCode: v };
 

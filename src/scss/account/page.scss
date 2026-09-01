@@ -73,18 +73,25 @@
   }
 }
 
-/* ===== Grid layout ===== */
+/* ===== Layout ===== */
 .AccountGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  align-items: center;
 
   @include minw($tablet-portrait) {
     grid-template-columns: 1fr 1fr;
   }
 
-  .AccountSection--full {
-    grid-column: 1 / -1;
+  .AccountColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .card {
+      margin: 0;
+    }
   }
 
   @include maxw($cellphone-portrait) {
