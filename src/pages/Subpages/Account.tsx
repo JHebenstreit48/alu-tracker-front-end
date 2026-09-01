@@ -63,23 +63,26 @@ export default function Account(): JSX.Element {
         </header>
 
         <main className="AccountGrid">
-          <section className="AccountSection">
-            <ProfileCard />
-          </section>
+          <div className="AccountColumn">
+            <section className="AccountSection">
+              <ProfileCard />
+            </section>
 
-          <section className="AccountSection">
-            <TwoFASetupCard />
-          </section>
+            <section className="AccountSection">
+              <TwoFASetupCard />
+            </section>
 
-          <section className="AccountSection">
-            <SecurityActions />
-          </section>
+            <section className="AccountSection">
+              <AdminTools />
+            </section>
+          </div>
 
-          <section className="AccountSection">
-            <AdminTools />
-          </section>
+          <div className="AccountColumn">
+            <section className="AccountSection">
+              <SecurityActions />
+            </section>
+          </div>
 
-          {/* NEW: link into the submission workflow */}
           <section className="AccountSection AccountSection--full">
             <div className="card">
               <h2>Car Data</h2>
