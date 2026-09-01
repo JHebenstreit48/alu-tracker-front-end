@@ -10,7 +10,7 @@ export async function forgotPassword(email: string) {
   const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, origin: window.location.origin }),
   });
   return json(res);
 }
@@ -61,7 +61,7 @@ export async function requestEmailChange(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ newEmail, ...proof }),
+    body: JSON.stringify({ newEmail, ...proof, origin: window.location.origin }),
   });
   return json(res);
 }

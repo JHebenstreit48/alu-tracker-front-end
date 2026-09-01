@@ -1,0 +1,52 @@
+@use "@scss/globals/index" as *;
+
+.EmailChangePage {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.EmailChangeCard {
+  width: 100%;
+  max-width: 480px;
+  background: $account-panel-bg;
+  border: $account-panel-border;
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: $account-panel-shadow;
+  text-align: center;
+
+  h2 {
+    margin: 0 0 1rem 0;
+    font-family: $display-font;
+    color: $gold-text;
+    font-weight: 700;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+  }
+
+  .authSuccess {
+    color: $account-success-green;
+    font-weight: 700;
+  }
+
+  .authError {
+    color: $account-error-red;
+    font-weight: 700;
+  }
+
+  .EmailChangeReturn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: $gold-text;
+    font-family: $display-font;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: underline;
+    }
+  }
+}
