@@ -51,8 +51,9 @@ export default function AdminTools(): JSX.Element | null {
   };
 
   return (
-    <div className="card AdminTools">
+    <div className="card">
       <h2 className="AdminToolsTitle">Admin Tools</h2>
+       <hr className="sectionDivider"></hr>
 
       <div className="AdminToolsBody">
         <p className="AdminToolsRoles">
@@ -62,7 +63,10 @@ export default function AdminTools(): JSX.Element | null {
         {hasAdminAccess ? (
           <>
             <p className="AdminToolsHint">
-              You already have admin access. (Nice. The bouncers know you.)
+              You already have admin access.
+            </p>
+            <p className="AdminToolsHint">
+              (Nice. The bouncers know you.)
             </p>
             <Link
               to="/admin/submissions"

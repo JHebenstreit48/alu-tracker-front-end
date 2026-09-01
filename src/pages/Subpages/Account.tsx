@@ -62,44 +62,47 @@ export default function Account(): JSX.Element {
           )}
         </header>
 
-        <main className="AccountGrid">
-          <div className="AccountColumn">
-            <section className="AccountSection">
-              <ProfileCard />
-            </section>
+        <main>
+          <div className="AccountGrid">
+            <div className="AccountColumn">
+              <section className="AccountSection">
+                <ProfileCard />
+              </section>
 
-            <section className="AccountSection">
-              <TwoFASetupCard />
-            </section>
+              <section className="AccountSection">
+                <TwoFASetupCard />
+              </section>
 
-            <section className="AccountSection">
-              <AdminTools />
-            </section>
-          </div>
-
-          <div className="AccountColumn">
-            <section className="AccountSection">
-              <SecurityActions />
-            </section>
-          </div>
-
-          <section className="AccountSection AccountSection--full">
-            <div className="card">
-              <h2>Car Data</h2>
-              <p className="AccountHint">
-                Submit updates for missing/incorrect car data (stats, blueprints, etc.).
-              </p>
-
-              <Link
-                to="/car-data-submission"
-                state={{ from: '/account' }}
-                className="AccountBackBtn"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-              >
-                Open Car Data Submission →
-              </Link>
+              <section className="AccountSection">
+                <AdminTools />
+              </section>
             </div>
-          </section>
+
+            <div className="AccountColumn">
+              <section className="AccountSection">
+                <SecurityActions />
+              </section>
+
+              <section className="AccountSection">
+                <div className="card">
+                  <h2>Car Data</h2>
+                  <hr className="sectionDivider"></hr>
+                  <p className="AccountHint">
+                    Submit updates for missing/incorrect car data (stats, blueprints, etc.).
+                  </p>
+
+                  <Link
+                    to="/car-data-submission"
+                    state={{ from: '/account' }}
+                    className="AccountBackBtn"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    Open Car Data Submission →
+                  </Link>
+                </div>
+              </section>
+            </div>
+          </div>
         </main>
       </div>
     </PageTab>

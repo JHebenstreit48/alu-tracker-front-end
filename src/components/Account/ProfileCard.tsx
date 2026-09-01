@@ -36,8 +36,9 @@ export default function ProfileCard(): JSX.Element {
   }, [token]);
 
   return (
-    <div className="card" style={{ marginTop: "1rem" }}>
+    <div className="card">
       <h2>Profile</h2>
+      <hr className="sectionDivider"></hr>
       {err && <div className="authError">{err}</div>}
       <div><strong>Username:</strong> {username}</div>
       <div><strong>Roles:</strong> {me?.roles?.join(", ") || "user"}</div>
