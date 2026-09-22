@@ -25,13 +25,29 @@ export interface NewStatsFormat {
   gold?: { gold?: StatBlock };
 }
 
+/** Structured method (future backend format): dates as ISO strings, e.g. "2026-09-15" */
+export type ObtainableMethodObject = {
+  name: string;
+  start?: string;
+  end?: string;
+};
+
+/**
+ * A method is either the current string format, e.g. "Legend Pass (Sep 15 - Oct 14, 2026)",
+ * or the structured object format. Both render the same way.
+ */
+export type ObtainableMethod = string | ObtainableMethodObject;
+
 /** Single group in the obtainableVia array — groups methods by status */
 export type ObtainableViaEntry = {
   status: "original" | "upcoming" | "current" | "recent" | "inactive" | "obsolete" | "removed";
-  methods: string[];
+  methods: ObtainableMethod[];
   removedDate?: string;
   reason?: string;
 };
+
+/** The status values above, as their own type (used by the utils) */
+export type ObtainableStatus = ObtainableViaEntry["status"];
 
 export interface Car {
   id: number;
