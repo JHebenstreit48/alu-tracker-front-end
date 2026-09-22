@@ -1,7 +1,9 @@
 import BasicInfo from '@/components/CarDetails/Tables/BasicInfo';
 import BlueprintsTable from '@/components/CarDetails/Tables/Blueprints/BlueprintsTable';
+import ObtainableVia from '@/components/CarDetails/Tables/ObtainableVia';
 import KeyInfo from '@/components/CarDetails/Tables/KeyInfo';
 import StatsTables from '@/components/CarDetails/Tables/StarsStats/StatsTables';
+
 import type { FullCar } from '@/types/shared/car';
 
 type Props = {
@@ -28,7 +30,7 @@ export default function TablesGrid({
         onKeyObtainedChange={onKeyObtainedChange}
       />
 
-      {/* Top two cards only */}
+      {/* [ Class info ] [ Blueprints ] / [ Obtainable Via (spans both) ] */}
       <div className="carDetailsTables">
         <div className="tableCard">
           <BasicInfo
@@ -43,6 +45,10 @@ export default function TablesGrid({
             car={car}
             trackerMode={trackerMode}
           />
+        </div>
+
+        <div className="tableCard obtainableCard">
+          <ObtainableVia obtainableVia={car.obtainableVia} />
         </div>
       </div>
 
