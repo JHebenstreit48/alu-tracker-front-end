@@ -1,4 +1,5 @@
 import { sourcesCatalog } from "@/data/sources/sourcesCatalog";
+import type { SourcesCatalogItem } from "@/types/sources/source";
 
 export type DerivedSource = {
   label: string;
@@ -14,13 +15,18 @@ function normalizeLabel(s: string): string {
     .toLowerCase();
 }
 
+function matchesItem(item: SourcesCatalogItem, norm: string): boolean {
+  if (normalizeLabel(item.label) === norm) return true;
+  if (item.aliases?.some((a) => normalizeLabel(a) === norm)) return true;
+  if (item.prefixes?.some((p) => norm.startsWith(normalizeLabel(p)))) return true;
+  return false;
+}
+
 export function mapToCatalog(label: string): { key: string; label: string } | undefined {
   const norm = normalizeLabel(label);
 
   for (const item of sourcesCatalog) {
-    if (normalizeLabel(item.label) === norm) return { key: item.key, label: item.label };
-    const aliases = item.aliases ?? [];
-    if (aliases.some((a) => normalizeLabel(a) === norm)) return { key: item.key, label: item.label };
+    if (matchesItem(item, norm)) return { key: item.key, label: item.label };
   }
 
   return undefined;
@@ -34,7 +40,6 @@ export function dedupeAndCount(labels: string[]): DerivedSource[] {
     if (!cleaned) continue;
 
     const matched = mapToCatalog(cleaned);
-    // Use the canonical catalog label as the key if matched, otherwise the cleaned raw label
     const key = matched ? matched.key : normalizeLabel(cleaned);
     const displayLabel = matched ? matched.label : cleaned.replace(/[.]+$/g, "");
 
