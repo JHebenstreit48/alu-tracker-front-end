@@ -16,20 +16,18 @@ export default function SourceCarDropdown({ cars, onClose, anchorRef }: Props) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!anchorRef.current || !dropdownRef.current) return;
+    if (!anchorRef.current) return;
 
     const anchor = anchorRef.current.getBoundingClientRect();
-    const dropdown = dropdownRef.current.getBoundingClientRect();
     const footer = document.querySelector("footer")?.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
 
     const top = anchor.bottom + 6;
     const left = anchor.left + anchor.width / 2;
 
-    // Cap max-height so dropdown never overlaps footer
     const bottomLimit = footer ? footer.top - 8 : viewportHeight - 8;
     const availableHeight = bottomLimit - top;
-    const maxHeight = Math.max(80, Math.min(288, availableHeight)); // 288px = 18rem
+    const maxHeight = Math.max(80, Math.min(288, availableHeight));
 
     setStyle({
       position: "fixed",
@@ -42,7 +40,6 @@ export default function SourceCarDropdown({ cars, onClose, anchorRef }: Props) {
     });
   }, [anchorRef]);
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (
