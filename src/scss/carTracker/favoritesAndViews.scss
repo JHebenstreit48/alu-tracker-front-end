@@ -1,0 +1,203 @@
+@use '@scss/globals' as *;
+
+.favoritesSection,
+.viewsSection {
+  margin-bottom: 2.5rem;
+}
+
+.favoritesMessage,
+.viewsPlaceholder {
+  color: $color-accent-blue;
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.favoritesCount {
+  color: $color-accent-blue;
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.favoritesTable {
+  width: min(100%, 60rem);
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: #111;
+  border: 2px solid $color-gold-glow;
+  box-shadow: 0 0 18px rgba($color-gold-glow, 0.35);
+
+  th {
+    padding: 0.75rem 1rem;
+    font-size: 1.3rem;
+    color: $color-accent-blue;
+    background: #0d0016;
+    border-bottom: 1px solid rgba($td-border-color, 0.9);
+    text-align: center;
+  }
+
+  .labelMobile {
+    display: none;
+  }
+
+  td {
+    width: auto;
+    height: auto;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid rgba($td-border-color, 0.6);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.1rem;
+  }
+
+  tbody tr:hover {
+    background: rgba($color-gold-glow, 0.06);
+  }
+
+  .favoritesName a {
+    color: $color-accent-blue;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-gold-glow;
+    }
+  }
+
+  .favoritesClass {
+    color: $color-white;
+    font-weight: 700;
+  }
+
+  .favoritesRarity {
+    color: $rarity-text-neutral;
+
+    &.rarityUncommon { color: $rarity-text-uncommon; }
+    &.rarityRare     { color: $rarity-text-rare; }
+    &.rarityEpic     { color: $rarity-text-epic; }
+  }
+
+  .favoritesStars {
+    color: $color-gold-glow;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  @include maxw($cellphone-portrait) {
+    width: 94%;
+
+    thead tr,
+    tbody tr {
+      display: grid;
+      grid-template-columns: 1fr 8.5rem;
+      margin: 0;
+      border-bottom: none;
+    }
+
+    thead th:nth-child(3),
+    thead th:nth-child(4) {
+      display: none;
+    }
+
+    .labelDesktop {
+      display: none;
+    }
+
+    .labelMobile {
+      display: inline;
+    }
+
+    th {
+      font-size: 1.1rem;
+      padding: 0.6rem;
+      text-align: center;
+    }
+
+    thead th:first-child {
+      border-right: 1px solid rgba($td-border-color, 0.6);
+    }
+
+    tbody tr {
+      grid-template-areas:
+        'name class'
+        'name rarity'
+        'name stars';
+      border-top: 1px solid rgba($td-border-color, 0.6);
+    }
+
+    td {
+      display: block;
+      border: none;
+      padding: 0.2rem 0.5rem;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .favoritesName {
+      grid-area: name;
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-right: 1px solid rgba($td-border-color, 0.6);
+    }
+
+    .favoritesClass  { grid-area: class; padding-top: 0.5rem; }
+    .favoritesRarity { grid-area: rarity; }
+    .favoritesStars  { grid-area: stars; padding-bottom: 0.5rem; }
+  }
+}
+
+.carTrackerPage .trackerNavRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.3rem 1rem 0;
+
+  .carTrackerBackBtn,
+  .carTrackerFavoritesBtn {
+    margin: 0;
+  }
+
+  .carTrackerFavoritesBtn {
+    background-color: $color-black;
+    color: $color-accent-blue;
+    padding: $tracker-back-btn-padding;
+    font-size: $back-btn-font-size;
+    border: 1px solid $color-accent-blue;
+    border-radius: $back-btn-radius;
+    cursor: pointer;
+    transition: background-color $transition-medium;
+
+    &:hover {
+      background-color: $color-accent-blue;
+      color: $color-black;
+    }
+  }
+
+  .navLabelMobile {
+    display: none;
+  }
+
+  @include maxw($cellphone-portrait) {
+    margin: 0.5rem 0.5rem 0.75rem;
+    gap: 0.5rem;
+
+    .carTrackerBackBtn,
+    .carTrackerFavoritesBtn {
+      display: inline-flex;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.7rem;
+      white-space: nowrap;
+    }
+
+    .navLabelDesktop {
+      display: none;
+    }
+
+    .navLabelMobile {
+      display: inline;
+    }
+  }
+}

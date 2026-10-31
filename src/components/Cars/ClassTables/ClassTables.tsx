@@ -13,7 +13,7 @@ export default function ClassTables({
   trackerMode = false,
 }: ClassTablesProps) {
   const headerText = selectedClass === 'All Classes' ? 'All Classes' : selectedClass;
-  const { trackingEnabled, getTrackingForKey } = useCarListTracking();
+  const { getTrackingForKey } = useCarListTracking();
 
   return (
     <div>
