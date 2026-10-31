@@ -201,3 +201,60 @@
     }
   }
 }
+
+.viewsSubTitle {
+  color: $color-gold-glow;
+  text-align: center;
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.favoritesTable .viewsCount {
+  color: $color-accent-blue;
+  letter-spacing: normal;
+}
+
+.viewsBrandTable {
+  width: min(94%, 30rem);
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: #111;
+  border: 2px solid $color-gold-glow;
+  box-shadow: 0 0 18px rgba($color-gold-glow, 0.35);
+
+  th {
+    padding: 0.75rem 1rem;
+    font-size: 1.3rem;
+    color: $color-accent-blue;
+    background: #0d0016;
+    border-bottom: 1px solid rgba($td-border-color, 0.9);
+    text-align: center;
+  }
+
+  td {
+    width: auto;
+    height: auto;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid rgba($td-border-color, 0.6);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.1rem;
+    color: $color-white;
+  }
+
+  tbody tr:hover {
+    background: rgba($color-gold-glow, 0.06);
+  }
+
+  .viewsCount {
+    color: $color-accent-blue;
+  }
+
+  @include maxw($cellphone-portrait) {
+    th,
+    td {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+  }
+}
