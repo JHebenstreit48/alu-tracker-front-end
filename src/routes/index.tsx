@@ -8,19 +8,36 @@ const Brands = lazy(() => import('@/pages/MainPages/Brands/Brands'));
 const Cars = lazy(() => import('@/pages/MainPages/CarInfo/Cars'));
 const GarageLevels = lazy(() => import('@/pages/MainPages/GarageLevels/GarageLevels'));
 const LegendStorePrices = lazy(() => import('@/pages/MainPages/LegendStore/LegendStore'));
-const CarDetails = lazy(() => import('@/pages/Subpages/CarDetails'));
-const CarTracker = lazy(() => import('@/pages/Subpages/CarTracker'));
-const BrandInfo = lazy(() => import('@/pages/Subpages/BrandInfo'));
 const Feedback = lazy(() => import('@/pages/MainPages/Feedback/Feedback'));
-const Account = lazy(() => import('@/pages/Subpages/Account'));
-const CarDataSubmission = lazy(() => import('@/pages/Subpages/CarDataSubmission'));
-const About = lazy(() => import('@/pages/Subpages/About'));
-const Sources = lazy(() => import('@/pages/Subpages/Sources'));
-const AdminSubmissions = lazy(() => import('@/pages/Subpages/AdminSubmissions'));
-const QRCodePage = lazy(() => import('@/pages/Subpages/qrCode'));
-const ConfirmEmailChange = lazy(() => import('@/pages/Subpages/confirmEmailChange'));
-const ForgotPassword = lazy(() => import('@/pages/Subpages/forgotPassword'));
-const ForgotUsername = lazy(() => import('@/pages/Subpages/forgotUsername'));
+
+const CarDetails = lazy(() => import('@/pages/Subpages/CarData/CarDetailsAndTracker/CarDetails'));
+const CarTracker = lazy(() => import('@/pages/Subpages/CarData/CarDetailsAndTracker/CarTracker'));
+const Sources = lazy(() => import('@/pages/Subpages/CarData/CarDetailsAndTracker/Sources'));
+const FavoritesViews = lazy(
+  () => import('@/pages/Subpages/CarData/CarDetailsAndTracker/favoritesAndViews')
+);
+
+const About = lazy(() => import('@/pages/Subpages/Miscellaneous/About'));
+const BrandInfo = lazy(() => import('@/pages/Subpages/Miscellaneous/BrandInfo'));
+const QRCodePage = lazy(() => import('@/pages/Subpages/Miscellaneous/qrCode'));
+
+const Account = lazy(() => import('@/pages/Subpages/UserAccounts/AccountBasics/Account'));
+const ConfirmEmailChange = lazy(
+  () => import('@/pages/Subpages/UserAccounts/UpdateInfo/confirmEmailChange')
+);
+const ForgotPassword = lazy(
+  () => import('@/pages/Subpages/UserAccounts/forgotUsernameAndPassword/forgotPassword')
+);
+const ForgotUsername = lazy(
+  () => import('@/pages/Subpages/UserAccounts/forgotUsernameAndPassword/forgotUsername')
+);
+
+const CarDataSubmission = lazy(
+  () => import('@/pages/Subpages/CarData/CarDataUpdates/CarDataSubmission')
+);
+const AdminSubmissions = lazy(
+  () => import('@/pages/Subpages/CarData/CarDataUpdates/AdminSubmissions')
+);
 
 export const router = createBrowserRouter([
   {
@@ -73,6 +90,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <CarTracker />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/car-tracker/favorites',
+        element: (
+          <Suspense fallback={null}>
+            <FavoritesViews />
           </Suspense>
         ),
       },

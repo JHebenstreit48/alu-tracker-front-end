@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Shared/header/Header';
 // import SyncButton from '@/components/UserDataSync/SyncButton';
 import { useCarTrackerData } from '@/hooks/Tracking/useCarTrackerData';
@@ -9,6 +10,8 @@ import GarageLevels from '@/components/Tracking/Cars/Sections/GarageLevels';
 import '@/scss/carTracker/index.scss'
 
 export default function CarTrackerBody() {
+  const navigate = useNavigate();
+
   const {
     allCars,
     totalCars,
@@ -26,12 +29,21 @@ export default function CarTrackerBody() {
       {/* These live outside trackerSummaryBlock, like in the original file */}
       <Header />
 
-      <button
-        className="carTrackerBackBtn"
-        onClick={() => window.history.back()}
-      >
-        Back to Cars
-      </button>
+      <div className="trackerNavRow">
+        <button
+          className="carTrackerBackBtn"
+          onClick={() => window.history.back()}
+        >
+          Back to Cars
+        </button>
+
+        <button
+          className="carTrackerFavoritesBtn"
+          onClick={() => navigate('/car-tracker/favorites')}
+        >
+          Favorites &amp; Views
+        </button>
+      </div>
 
       {/* <SyncButton /> */}
 
