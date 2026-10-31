@@ -49,7 +49,7 @@ function CarsInner() {
 
   const { setFilteredCars } = useFilteredCarsContext();
 
-  const filteredCarsKey = JSON.stringify(filteredCars.map(c => c.normalizedKey));
+  const filteredCarsKey = JSON.stringify(filteredCars.map((c) => c.normalizedKey));
 
   useEffect(() => {
     setFilteredCars(filteredCars);
@@ -57,8 +57,28 @@ function CarsInner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredCarsKey]);
 
-  const { paginatedCars, totalFiltered, carsPerPage, handlePageSizeChange } =
-    useCarPagination(filteredCars);
+  const filtersKey = JSON.stringify([
+    searchTerm,
+    selectedStars,
+    selectedBrand,
+    selectedCountry,
+    selectedClass,
+    selectedRarity,
+    showOwned,
+    showKeyCars,
+  ]);
+
+  const {
+    paginatedCars,
+    carsPerPage,
+    currentPage,
+    totalPages,
+    totalFiltered,
+    rangeStart,
+    rangeEnd,
+    handlePageSizeChange,
+    handlePageChange,
+  } = useCarPagination(filteredCars, filtersKey);
 
   const toggleOwned = () => {
     const next = !showOwned;
@@ -88,21 +108,28 @@ function CarsInner() {
         showKeyCars,
         availableBrands: filteredBrands,
         availableCountries,
+        carsPerPage,
         onSearch: handleSearch,
         onStarsChange: handleStarFilter,
         onClassChange: handleClassChange,
         onRarityChange: handleRarityChange,
         onBrandChange: handleBrandChange,
         onCountryChange: handleCountryChange,
+        onPageSizeChange: handlePageSizeChange,
         onToggleOwned: toggleOwned,
         onToggleKeyCars: toggleKeyCars,
         onReset: handleResetFilters,
       }}
       cars={paginatedCars}
       selectedClass={selectedClass}
-      carsPerPage={carsPerPage}
-      handlePageSizeChange={handlePageSizeChange}
-      totalFiltered={totalFiltered}
+      pagination={{
+        currentPage,
+        totalPages,
+        totalFiltered,
+        rangeStart,
+        rangeEnd,
+        onPageChange: handlePageChange,
+      }}
     />
   );
 }

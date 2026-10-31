@@ -1,14 +1,15 @@
+import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import ClassTables from '@/components/Cars/ClassTables/ClassTables';
 import CarFilters from '@/components/Cars/Filters/CarFilters';
+import CarCount from '@/components/Cars/Filters/pagination/carCount';
+import Pagination from '@/components/Cars/Filters/pagination/pagination';
 import Header from '@/components/Shared/header/Header';
 import PageTab from '@/components/Shared/Navigation/PageTab';
 
-import { useNavigate } from 'react-router-dom';
-
 import '@/scss/cars/index.scss';
 import type { CarDataProps } from '@/types/Cars/Filters/carPageProps';
-
-const PAGE_SIZES = [25, 50, 100, 200] as const;
 
 export default function CarData({
   loading,
@@ -17,19 +18,21 @@ export default function CarData({
   filterProps,
   cars,
   selectedClass,
-  carsPerPage,
-  handlePageSizeChange,
-  totalFiltered,
+  pagination,
 }: CarDataProps) {
   const navigate = useNavigate();
+  const tableTopRef = useRef<HTMLDivElement>(null);
+
+  const changePage = (page: number) => {
+    pagination.onPageChange(page);
+    tableTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   if (error) {
     return (
       <div className="cars">
         <PageTab title="Cars">
-          <Header
-            className="carsHeader"
-          />
+          <Header className="carsHeader" />
           <div className="error-message">{error}</div>
         </PageTab>
       </div>
@@ -39,29 +42,30 @@ export default function CarData({
   return (
     <div className="cars">
       <PageTab title="Cars">
-        <Header
-          className="carsHeader"
-        />
+        <Header className="carsHeader" />
 
         <div className="filtersAndTrackerLink">
-          <CarFilters
-            {...filterProps}
-            availableStars={[3, 4, 5, 6]}
-          />
+          <CarFilters {...filterProps} availableStars={[3, 4, 5, 6]} />
           <div className="trackerSummaryLink">
-            <button
-              className="trackerSummary"
-              onClick={() => navigate('/car-tracker')}
-            >
+            <button className="trackerSummary" onClick={() => navigate('/car-tracker')}>
               Account Progress
             </button>
           </div>
         </div>
 
-        <p className="carCount">
-          Showing {cars.length} of {totalFiltered} car
-          {totalFiltered !== 1 ? 's' : ''}
-        </p>
+        <div ref={tableTopRef}>
+          <CarCount
+            rangeStart={pagination.rangeStart}
+            rangeEnd={pagination.rangeEnd}
+            totalFiltered={pagination.totalFiltered}
+          />
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            onPageChange={changePage}
+            position="top"
+          />
+        </div>
 
         <ClassTables
           cars={cars}
@@ -70,28 +74,12 @@ export default function CarData({
           trackerMode={trackerMode}
         />
 
-        <div className="pageSizeControl">
-          <span className="paginationLabel">Cars per page:</span>
-          <div className="pageSizeButtons">
-            {PAGE_SIZES.map((size) => (
-              <button
-                key={size}
-                onClick={() => handlePageSizeChange(size)}
-                disabled={carsPerPage === size}
-                className="carsPerPage"
-              >
-                {size}
-              </button>
-            ))}
-            <button
-              onClick={() => handlePageSizeChange(totalFiltered)}
-              disabled={carsPerPage === totalFiltered}
-              className="carsPerPage"
-            >
-              All
-            </button>
-          </div>
-        </div>
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={changePage}
+          position="bottom"
+        />
       </PageTab>
     </div>
   );

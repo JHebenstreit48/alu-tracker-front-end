@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { DropdownsProps } from '@/types/Cars/Filters/DropdownsProps';
+import type { PageSizeProps } from '@/types/Cars/Filters/pageSizeProps';
+import PageSizeFilter from '@/components/Cars/Filters/selects/pageSizeFilter';
 
 const renderStars = (count: number) => '★'.repeat(count);
 
@@ -9,15 +11,17 @@ export default function Dropdowns({
   onRarityChange,
   onBrandChange,
   onCountryChange,
+  onPageSizeChange,
   selectedStars,
   selectedClass,
   selectedRarity,
   selectedBrand,
   selectedCountry,
+  carsPerPage,
   availableStars,
   availableBrands,
   availableCountries,
-}: DropdownsProps) {
+}: DropdownsProps & PageSizeProps) {
   // 🔠 Defensive, stable sorting for brands
   const sortedBrands = useMemo(
     () =>
@@ -137,6 +141,8 @@ export default function Dropdowns({
           ))}
         </select>
       </label>
+
+      <PageSizeFilter carsPerPage={carsPerPage} onPageSizeChange={onPageSizeChange} />
     </>
   );
 }

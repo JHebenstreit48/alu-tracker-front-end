@@ -1,58 +1,71 @@
-import { useState, useEffect, useCallback } from "react";
-import { Car } from "@/types/shared/car";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { Car } from '@/types/shared/car';
+import { DEFAULT_PAGE_SIZE, isPageSize, type PageSize } from '@/utils/Cars/Filters/pagination';
 
-export function useCarPagination(filteredCars: Car[]) {
-  const [carsPerPage, setCarsPerPage] = useState(() => {
-    const saved = localStorage.getItem("carsPerPage");
-    return saved ? parseInt(saved, 10) : 25;
-  });
+const readNumber = (key: string) => parseInt(localStorage.getItem(key) ?? '', 10);
 
-  const [currentPage, setCurrentPage] = useState(() => {
-    const saved = localStorage.getItem("currentPage");
-    return saved ? parseInt(saved, 10) : 1;
-  });
+const readPageSize = (): PageSize => {
+  const saved = readNumber('carsPerPage');
+  return isPageSize(saved) ? saved : DEFAULT_PAGE_SIZE;
+};
+
+const readPage = (): number => {
+  const saved = readNumber('currentPage');
+  return saved > 0 ? saved : 1;
+};
+
+export function useCarPagination(filteredCars: Car[], resetKey: string) {
+  const [carsPerPage, setCarsPerPage] = useState<PageSize>(readPageSize);
+  const [currentPage, setCurrentPage] = useState<number>(readPage);
 
   const totalFiltered = filteredCars.length;
   const totalPages = Math.max(1, Math.ceil(totalFiltered / carsPerPage));
 
-  useEffect(() => {
-    // If filteredCars shrinks below current page range, reset to page 1
-    if (currentPage > totalPages) {
-      setCurrentPage(1);
-      localStorage.setItem("currentPage", "1");
-    }
-  }, [currentPage, totalPages]);
-
-  const paginatedCars = filteredCars.slice(
-    (currentPage - 1) * carsPerPage,
-    currentPage * carsPerPage
-  );
-
-  const handlePageSizeChange = useCallback((size: number) => {
-    setCarsPerPage(size);
-    localStorage.setItem("carsPerPage", String(size));
-    setCurrentPage(1);
-    localStorage.setItem("currentPage", "1");
+  const goToPage = useCallback((page: number) => {
+    setCurrentPage(page);
+    localStorage.setItem('currentPage', String(page));
   }, []);
+
+  const lastResetKey = useRef(resetKey);
+  useEffect(() => {
+    if (lastResetKey.current === resetKey) return;
+    lastResetKey.current = resetKey;
+    goToPage(1);
+  }, [resetKey, goToPage]);
+
+  useEffect(() => {
+    if (totalFiltered > 0 && currentPage > totalPages) goToPage(totalPages);
+  }, [currentPage, totalPages, totalFiltered, goToPage]);
+
+  const handlePageSizeChange = useCallback(
+    (size: PageSize) => {
+      setCarsPerPage(size);
+      localStorage.setItem('carsPerPage', String(size));
+      goToPage(1);
+    },
+    [goToPage]
+  );
 
   const handlePageChange = useCallback(
     (page: number) => {
       if (page < 1 || page > totalPages) return;
-      setCurrentPage(page);
-      localStorage.setItem("currentPage", String(page));
+      goToPage(page);
     },
-    [totalPages]
+    [totalPages, goToPage]
   );
+
+  const start = (currentPage - 1) * carsPerPage;
+  const paginatedCars = filteredCars.slice(start, start + carsPerPage);
 
   return {
     carsPerPage,
     currentPage,
-    paginatedCars,
-    totalFiltered,
     totalPages,
+    totalFiltered,
+    paginatedCars,
+    rangeStart: totalFiltered ? start + 1 : 0,
+    rangeEnd: start + paginatedCars.length,
     handlePageSizeChange,
     handlePageChange,
-    // you *can* keep setCurrentPage here if anything else uses it
-    setCurrentPage,
   };
 }
