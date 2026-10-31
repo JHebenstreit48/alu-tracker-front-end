@@ -15,6 +15,7 @@ import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
 import UnitToggle from '@/components/CarDetails/OtherComponents/UnitToggle';
 import CarNavArrows from '@/components/CarDetails/OtherComponents/carNavArrows';
+import { useRecordView } from '@/hooks/Tracking/useRecordView';
 
 import "@/scss/carDetails/index.scss";
 
@@ -40,6 +41,7 @@ export default function CarDetailsBody({ slug }: Props) {
 
   const handleKeyObtainedChange = useKeyObtained(car, setKeyObtained);
   useAutoSyncDependency([keyObtained, trackerMode, car?.brand, car?.model]);
+  useRecordView(car);
 
   const carTitle = car ? `${car.brand} ${car.model}` : 'Car Details';
   const pageTabTitle = car ? `${car.brand} ${car.model}` : 'Car Details';
