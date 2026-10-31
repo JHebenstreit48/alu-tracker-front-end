@@ -24,7 +24,7 @@ export default function CarTrackerBody() {
   return (
     <>
       {/* These live outside trackerSummaryBlock, like in the original file */}
-      <Header text="Car Tracker Summary" />
+      <Header />
 
       <button
         className="carTrackerBackBtn"
@@ -34,6 +34,8 @@ export default function CarTrackerBody() {
       </button>
 
       {/* <SyncButton /> */}
+
+      <h1 className="trackerPageTitle">Account Progress</h1>
 
       {/* Only the content sections sit inside trackerSummaryBlock */}
       <div className="trackerSummaryBlock">
