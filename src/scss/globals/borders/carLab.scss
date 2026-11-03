@@ -1,0 +1,17 @@
+@use './core' as *;
+@use '@scss/globals/colors/core' as *;
+
+// =============================
+// Car Lab — Borders
+// =============================
+$carlab-tab-border: 1px solid $purple-glow;
+$carlab-tab-active-border: 1px solid $gold-accent;
+$carlab-tab-radius: $card-radius;
+$carlab-panel-border: 1px solid rgba($gold-accent, 0.6);
+$carlab-notice-border: $filter-border;
+$carlab-control-border: 1px solid $purple-glow;
+$carlab-control-radius: 6px;
+$carlab-panel-radius: $card-radius;
+$carlab-badge-radius: 4px;
+$carlab-divider: 1px solid rgba($color-white, 0.12);
+$carlab-focus-outline: 2px solid $color-accent-blue;

@@ -234,13 +234,21 @@ type FirestoreStatusDoc = {
   createdAt?: Timestamp | Date | string;
 };
 
+type TimestampLike = { toDate: () => Date };
+
+function hasToDate(v: unknown): v is TimestampLike {
+  return (
+    typeof v === "object" &&
+    v !== null &&
+    typeof (v as { toDate?: unknown }).toDate === "function"
+  );
+}
+
 function toIsoString(v?: Timestamp | Date | string): string | undefined {
   if (!v) return undefined;
   if (typeof v === "string") return v;
   if (v instanceof Date) return v.toISOString();
-  if ("toDate" in v && typeof (v as any).toDate === "function") {
-    return (v as any).toDate().toISOString();
-  }
+  if (hasToDate(v)) return v.toDate().toISOString();
   return undefined;
 }
 

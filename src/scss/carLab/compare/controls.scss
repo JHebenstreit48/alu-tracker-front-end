@@ -1,0 +1,46 @@
+@use '@scss/globals/animations' as *;
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabToolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: $carlab-toolbar-gap;
+  }
+
+  .carLabSegment {
+    display: inline-flex;
+    overflow: hidden;
+    border: $carlab-control-border;
+    border-radius: $carlab-control-radius;
+  }
+
+  .carLabSegmentButton {
+    padding: $carlab-segment-padding;
+    border: 0;
+    background: $carlab-control-bg;
+    color: $carlab-control-text;
+    font-size: $carlab-small-size;
+    cursor: pointer;
+    transition: background-color $transition-base;
+
+    &[aria-pressed='true'] {
+      background: $carlab-segment-active-bg;
+      font-weight: $carlab-bold;
+    }
+
+    &:disabled {
+      color: $carlab-control-disabled-text;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: $carlab-focus-outline;
+      outline-offset: -2px;
+    }
+  }
+}

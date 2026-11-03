@@ -1,0 +1,63 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabLegend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $carlab-legend-gap;
+    margin: $carlab-chart-margin;
+    font-size: $carlab-small-size;
+    color: $carlab-text-muted;
+  }
+
+  .carLabLegendItem {
+    display: inline-flex;
+    align-items: center;
+    gap: $carlab-badge-gap;
+
+    &::before {
+      content: '';
+      width: $carlab-legend-swatch-width;
+      border-top: 3px solid currentColor;
+    }
+
+    &.seriesA {
+      color: $carlab-series-a;
+    }
+
+    &.seriesB {
+      color: $carlab-series-b;
+    }
+
+    &.keyDashed::before {
+      border-top-style: dashed;
+    }
+  }
+
+  .carLabChart {
+    overflow-x: auto;
+
+    svg {
+      display: block;
+      width: 100%;
+      min-width: $carlab-chart-min-width;
+      height: auto;
+    }
+  }
+
+  .carLabNotes {
+    margin: 0;
+    padding-left: $carlab-notes-indent;
+    font-size: $carlab-small-size;
+    color: $carlab-text-muted;
+  }
+
+  .carLabEmpty {
+    margin: 0;
+    padding: $carlab-table-cell-padding;
+    color: $carlab-text-muted;
+  }
+}

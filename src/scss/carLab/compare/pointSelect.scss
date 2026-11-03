@@ -1,0 +1,39 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabField {
+    display: flex;
+    flex-direction: column;
+    gap: $carlab-field-gap;
+  }
+
+  .carLabFieldLabel {
+    font-size: $carlab-label-size;
+    letter-spacing: $carlab-label-spacing;
+    text-transform: uppercase;
+    color: $carlab-text-muted;
+  }
+
+  .carLabSelect {
+    width: 100%;
+    padding: $carlab-control-padding;
+    border: $carlab-control-border;
+    border-radius: $carlab-control-radius;
+    background: $carlab-control-bg;
+    color: $carlab-control-text;
+    font-size: $carlab-text-size;
+
+    &:disabled {
+      color: $carlab-control-disabled-text;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: $carlab-focus-outline;
+      outline-offset: 2px;
+    }
+  }
+}

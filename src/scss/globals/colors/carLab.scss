@@ -1,0 +1,22 @@
+@use './core' as *;
+
+// =============================
+// Car Lab — Colors
+// =============================
+$carlab-series-a: $gold-accent;
+$carlab-series-b: $color-accent-blue;
+$carlab-area-a: rgba($gold-accent, 0.2);
+$carlab-area-b: rgba($color-accent-blue, 0.2);
+$carlab-panel-bg: $surface-dark-2;
+$carlab-panel-header-bg: $surface-dark-3;
+$carlab-text: $color-white;
+$carlab-text-muted: #bfb6cc;
+$carlab-text-on-series: $color-black;
+$carlab-grid-line: rgba($color-white, 0.12);
+$carlab-row-stripe: rgba($color-white, 0.04);
+$carlab-tab-bg: $surface-dark-3;
+$carlab-tab-active-bg: $purple-accent;
+$carlab-control-bg: $color-black;
+$carlab-control-text: $color-white;
+$carlab-control-disabled-text: $gray-555;
+$carlab-segment-active-bg: $purple-accent;

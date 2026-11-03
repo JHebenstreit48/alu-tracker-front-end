@@ -1,0 +1,29 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/shadows' as *;
+@use '@scss/globals/spacing' as *;
+
+.carLab {
+  .carLabTabs {
+    max-width: $carlab-page-max-width;
+    margin: 0 auto;
+    padding: $carlab-page-padding;
+  }
+
+  .carLabPlaceholder {
+    padding: $carlab-placeholder-padding;
+    color: $carlab-text-muted;
+  }
+
+  .carLabPanel {
+    display: flex;
+    flex-direction: column;
+    gap: $carlab-panel-gap;
+    padding: $carlab-panel-padding;
+    border: $carlab-panel-border;
+    border-radius: $carlab-panel-radius;
+    background: $carlab-panel-bg;
+    box-shadow: $carlab-panel-shadow;
+    color: $carlab-text;
+  }
+}
