@@ -1,0 +1,25 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabPanel.carLabNotice {
+    margin: $carlab-notice-margin;
+    padding: $carlab-notice-padding;
+    border: $carlab-notice-border;
+  }
+
+  .carLabNoticeTitle {
+    margin: 0;
+    font-size: $carlab-name-size;
+    font-weight: $carlab-bold;
+  }
+
+  .carLabNoticeText {
+    margin: 0;
+    font-size: $carlab-text-size;
+    line-height: $carlab-line-height;
+    color: $carlab-text-muted;
+  }
+}

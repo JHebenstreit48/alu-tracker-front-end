@@ -1,0 +1,38 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabBadge {
+    padding: $carlab-badge-padding;
+    border: $carlab-divider;
+    border-radius: $carlab-badge-radius;
+    font-size: $carlab-small-size;
+
+    &.isClass {
+      background: $carlab-text;
+      color: $carlab-panel-bg;
+      font-weight: $carlab-bold;
+    }
+  }
+
+  .carLabCoverage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $carlab-badge-gap $carlab-panel-gap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: $carlab-small-size;
+    color: $carlab-text-muted;
+
+    .has {
+      color: $carlab-text;
+    }
+  }
+
+  .carLabCoverageMark {
+    margin-right: $carlab-field-gap;
+  }
+}

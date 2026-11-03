@@ -8,6 +8,7 @@ const Brands = lazy(() => import('@/pages/MainPages/Brands/Brands'));
 const Cars = lazy(() => import('@/pages/MainPages/CarInfo/Cars'));
 const GarageLevels = lazy(() => import('@/pages/MainPages/GarageLevels/GarageLevels'));
 const LegendStorePrices = lazy(() => import('@/pages/MainPages/LegendStore/LegendStore'));
+const CarLab = lazy(() => import('@/pages/MainPages/carLab/CarLab'));
 const Feedback = lazy(() => import('@/pages/MainPages/Feedback/Feedback'));
 
 const CarDetails = lazy(() => import('@/pages/Subpages/CarData/CarDetailsAndTracker/CarDetails'));
@@ -114,6 +115,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <LegendStorePrices />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/car-lab',
+        element: (
+          <Suspense fallback={null}>
+            <CarLab />
           </Suspense>
         ),
       },

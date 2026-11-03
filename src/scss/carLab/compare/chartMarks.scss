@@ -1,0 +1,67 @@
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabAxisText {
+    fill: $carlab-text-muted;
+    font-size: $carlab-axis-size;
+
+    &.axisY {
+      text-anchor: end;
+    }
+
+    &.axisX {
+      text-anchor: middle;
+    }
+  }
+
+  .carLabGridLine {
+    stroke: $carlab-grid-line;
+    stroke-width: 1;
+  }
+
+  .carLabGuideLine {
+    stroke: $carlab-grid-line;
+    stroke-dasharray: 2 4;
+  }
+
+  .carLabLine {
+    fill: none;
+    stroke-width: 2.25;
+
+    &.seriesA {
+      stroke: $carlab-series-a;
+    }
+
+    &.seriesB {
+      stroke: $carlab-series-b;
+    }
+
+    &.isGap {
+      stroke-dasharray: 6 5;
+    }
+  }
+
+  .carLabMark {
+    &.seriesA {
+      fill: $carlab-series-a;
+      stroke: $carlab-panel-bg;
+    }
+
+    &.seriesB {
+      fill: $carlab-panel-bg;
+      stroke: $carlab-series-b;
+      stroke-width: 2;
+    }
+  }
+
+  .carLabBar {
+    &.seriesA {
+      fill: $carlab-series-a;
+    }
+
+    &.seriesB {
+      fill: $carlab-series-b;
+    }
+  }
+}

@@ -28,11 +28,12 @@ export default function Navigation({ isOpen }: INavigation) {
   const currentPath = useLocation().pathname;
 
   const links = [
-    { label: 'Brands', location: '/brands', go: () => navigate('/brands') },
-    { label: 'Cars', location: '/cars', go: () => navigate('/cars') },
-    { label: 'Garage Levels', location: '/garagelevels', go: () => navigate('/garagelevels') },
-    { label: 'Legend Store', location: '/legendstoreprices', go: () => navigate('/legendstoreprices') },
-  ];
+  { label: 'Brands', location: '/brands', go: () => navigate('/brands') },
+  { label: 'Cars', location: '/cars', go: () => navigate('/cars') },
+  { label: 'Garage Levels', location: '/garagelevels', go: () => navigate('/garagelevels') },
+  { label: 'Legend Store', location: '/legendstoreprices', go: () => navigate('/legendstoreprices') },
+  { label: 'Car Lab', location: '/car-lab', go: () => navigate('/car-lab') },
+];
 
   const isActive = (loc: string) =>
     loc === '/' ? currentPath === '/' : currentPath === loc || currentPath.startsWith(loc + '/');

@@ -1,0 +1,24 @@
+@use '@scss/globals/breakpoints/breakpoints' as *;
+@use '@scss/globals/breakpoints/mixins' as *;
+@use '@scss/globals/spacing' as *;
+
+.carLab {
+  .carLabCompare {
+    display: grid;
+    grid-template-columns: $carlab-cars-column-width minmax(0, 1fr);
+    gap: $carlab-compare-gap;
+    align-items: start;
+
+    @include maxw($tablet-landscape) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .carLabCompareCars,
+  .carLabCompareStage {
+    display: flex;
+    flex-direction: column;
+    gap: $carlab-stack-gap;
+    min-width: 0;
+  }
+}
