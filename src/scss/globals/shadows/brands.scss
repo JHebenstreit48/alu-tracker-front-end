@@ -1,0 +1,9 @@
+@use '@scss/globals/colors/core' as *;
+
+// =============================
+// Quick List — Glass Effect
+// =============================
+$quick-list-drop-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+$quick-list-inner-highlight:
+  inset 0 1px 0 rgba(255, 255, 255, 0.25),
+  inset 0 -1px 0 rgba(255, 255, 255, 0.04);

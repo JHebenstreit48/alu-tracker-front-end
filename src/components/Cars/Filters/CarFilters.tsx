@@ -1,9 +1,10 @@
-import { CarFiltersProps } from "@/types/Cars/Filters/CarFiltersProps";
-import Dropdowns from "@/components/Cars/Filters/Dropdowns";
-import Checkboxes from "@/components/Cars/Filters/Checkboxes";
-import SearchBar from "@/components/Cars/Filters/SearchBar";
+import { CarFiltersProps } from '@/types/Cars/Filters/CarFiltersProps';
 
-import "@/scss/cars/index.scss";
+import Dropdowns from '@/components/Cars/Filters/Dropdowns';
+import Checkboxes from '@/components/Cars/Filters/Checkboxes';
+import SearchBar from '@/components/Cars/Filters/SearchBar';
+
+import '@/scss/cars/index.scss';
 
 export default function CarFilters({
   onSearch,
@@ -12,12 +13,14 @@ export default function CarFilters({
   onRarityChange,
   onBrandChange,
   onCountryChange,
+  onPageSizeChange,
   onReset,
   selectedStars,
   selectedClass,
   selectedRarity,
   selectedBrand,
   selectedCountry,
+  carsPerPage,
   availableStars,
   availableBrands,
   availableCountries,
@@ -37,11 +40,13 @@ export default function CarFilters({
         onRarityChange={onRarityChange}
         onBrandChange={onBrandChange}
         onCountryChange={onCountryChange}
+        onPageSizeChange={onPageSizeChange}
         selectedStars={selectedStars}
         selectedClass={selectedClass}
         selectedRarity={selectedRarity}
         selectedBrand={selectedBrand}
         selectedCountry={selectedCountry}
+        carsPerPage={carsPerPage}
         availableStars={availableStars}
         availableBrands={availableBrands}
         availableCountries={availableCountries}

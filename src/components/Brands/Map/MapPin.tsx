@@ -2,8 +2,6 @@ import { Marker } from 'react-map-gl';
 import { useNavigate } from 'react-router-dom';
 import type { Brand } from '@/types/Brands';
 
-import '@/scss/brands/BrandMap.scss';
-
 export default function MapPin({ manufacturer }: { manufacturer: Brand }) {
   const navigate = useNavigate();
 

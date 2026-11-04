@@ -1,0 +1,30 @@
+@use '@scss/globals' as *;
+
+.trackerPageTitle {
+  text-align: center;
+  color: $color-gold-glow;
+  font-size: clamp(2rem, 2.6vw, 2.6rem);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0rem 0 2.5rem;
+
+  background: linear-gradient(
+    to bottom,
+    #fff6c2 0%,
+    #ffd84a 35%,
+    #e3a400 60%,
+    #a86e00 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  filter:
+    drop-shadow(1px 1px 0 #7a5200)
+    drop-shadow(1px 1px 0 #5c3d00)
+    drop-shadow(1px 1px 0 #3d2800)
+    drop-shadow(0 5px 6px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 0 12px rgba(21, 201, 232, 0.3));
+}

@@ -1,0 +1,78 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabCarTop {
+    display: grid;
+    grid-template-columns: $carlab-car-image-width minmax(0, 1fr);
+    gap: $carlab-panel-gap;
+    align-items: start;
+  }
+
+  .carLabCarImage {
+    display: grid;
+    width: $carlab-car-image-width;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: $carlab-badge-radius;
+    background: $carlab-panel-header-bg;
+
+    > * {
+      grid-area: 1 / 1;
+      place-self: center;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .carLabCarMonogram {
+    color: $carlab-text-muted;
+    font-size: $carlab-name-size;
+    font-weight: $carlab-bold;
+  }
+
+  .carLabCarId {
+    display: flex;
+    flex-direction: column;
+    gap: $carlab-field-gap;
+    min-width: 0;
+  }
+
+  .carLabCarSlot {
+    display: inline-grid;
+    place-items: center;
+    width: $carlab-slot-size;
+    height: $carlab-slot-size;
+    border-radius: $carlab-badge-radius;
+    color: $carlab-text-on-series;
+    font-size: $carlab-small-size;
+    font-weight: $carlab-bold;
+
+    &.slotA {
+      background: $carlab-series-a;
+    }
+
+    &.slotB {
+      background: $carlab-series-b;
+    }
+  }
+
+  .carLabCarName {
+    margin: 0;
+    font-size: $carlab-name-size;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .carLabCarBadges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $carlab-badge-gap;
+  }
+}

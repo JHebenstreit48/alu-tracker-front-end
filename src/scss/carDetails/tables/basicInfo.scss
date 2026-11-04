@@ -3,6 +3,39 @@
 @use '@scss/globals/colors/carDetails' as *;
 
 .carDetail {
+  // =============================
+  // Top card area:
+  //   [ Class info ] [ Blueprints ]
+  //   [     Obtainable Via       ]
+  // Columns cap at $info-table-width so larger monitors keep the same 2-column layout.
+  // =============================
+  .carDetailsTables {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, $info-table-width));
+    justify-content: center;
+    gap: 3rem;
+
+    .tableCard {
+      width: 100%;
+    }
+
+    // Spans both columns; sized to its content instead of the 36rem card minimum
+    .obtainableCard {
+      grid-column: 1 / -1;
+      min-height: unset;
+    }
+
+    @include maxw($cellphone-portrait) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 0.75rem;
+
+      .tableCard {
+        width: auto;
+      }
+    }
+  }
+
   .tableCard {
     width: $info-table-width;
     min-height: 36rem;
@@ -62,112 +95,5 @@
 
     font-size: $table-header-font-size-car-details !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  // =============================
-  // Obtainable Via Cell
-  // =============================
-  #obtainable-cell {
-    padding: 0;
-  }
-
-  .obtainable-list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .obtainable-group {
-    display: flex;
-    flex-direction: column;
-    padding-top: 0;
-
-    &--bordered {
-      border-top: 2px solid $obtainable-border-color;
-    }
-  }
-
-  .obtainable-status-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 2px solid $obtainable-border-color;
-    margin-bottom: 0;
-    padding: 0;
-  }
-
-  .obtainable-methods {
-    display: flex;
-    flex-direction: column;
-    padding: 6px 16px 8px 16px;
-
-    &--inline {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 4px 16px 6px 16px;
-    }
-  }
-
-  .obtainable-method-item {
-    font-size: 1rem;
-    text-align: left;
-    color: $color-white;
-    line-height: 1.8;
-  }
-
-  .obtainable-removed-meta {
-    font-size: 0.85rem;
-    color: $obtainable-removed-meta-color;
-    opacity: 0.8;
-    font-style: italic;
-    line-height: 1.8;
-  }
-
-  .obtainable-badge {
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 0.5rem;
-    width: 100%;
-    text-align: center;
-    border-radius: 0;
-    text-shadow: 1px 4px 3px rgba(0, 0, 0, 0.8);
-    letter-spacing: 0.04em;
-
-    &.obtainable-obsolete {
-      background-color: $obtainable-obsolete-bg;
-      color: $obtainable-obsolete-color;
-    }
-
-    &.obtainable-removed {
-      background-color: $obtainable-removed-bg;
-      color: $obtainable-removed-color;
-    }
-
-    &.obtainable-inactive {
-      background-color: $obtainable-inactive-bg;
-      color: $obtainable-inactive-color;
-    }
-
-    &.obtainable-recent {
-      background-color: $obtainable-recent-bg;
-      color: $color-gold-glow;
-    }
-
-    &.obtainable-present,
-    &.obtainable-current {
-      background-color: $obtainable-current-bg;
-      color: $obtainable-current-color;
-    }
-
-    &.obtainable-original {
-      background-color: $obtainable-original-bg;
-      color: $obtainable-original-color;
-    }
-
-    &.obtainable-upcoming {
-      background-color: $obtainable-upcoming-bg;
-      color: $obtainable-upcoming-color;
-    }
   }
 }

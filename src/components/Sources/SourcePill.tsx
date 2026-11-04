@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { useSourceCars } from "@/hooks/sources/useSourceCars";
 import SourceCarDropdown from "./SourceCarDropdown";
 import type { Car } from "@/types/shared/car";
-import "@/scss/MiscellaneousStyle/Sources.scss";
+
+import "@/scss/shared/sources.scss";
 
 type Props = {
   label: string;

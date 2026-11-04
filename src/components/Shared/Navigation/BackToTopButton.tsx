@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import '@/scss/MiscellaneousStyle/BackToTop.scss';
+import '@/scss/shared/backToTop.scss';
 
 const BackToTop: React.FC = () => {
   const [atBottom, setAtBottom] = useState(false);

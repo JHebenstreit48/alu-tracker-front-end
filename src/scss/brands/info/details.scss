@@ -1,0 +1,7 @@
+@use '@scss/globals/index' as *;
+
+.brand-details {
+  margin: 1.5rem 0;
+  font-size: $brand-details-font-size;
+  max-width: $brand-details-max-width;
+}

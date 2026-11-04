@@ -1,0 +1,18 @@
+import Header from '@/components/Shared/header/Header';
+import PageTab from '@/components/Shared/Navigation/PageTab';
+import AboutContent from '@/components/About/AboutContent';
+
+import '@/scss/shared/about.scss';
+
+export default function About() {
+  return (
+    <div>
+      <PageTab title="About">
+        <Header className="aboutHeader" />
+        <main className="PageBody">
+          <AboutContent />
+        </main>
+      </PageTab>
+    </div>
+  );
+}

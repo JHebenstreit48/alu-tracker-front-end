@@ -60,6 +60,8 @@
     select { width: var(--ctrl-w); }
   }
 
+  .pageSizeFilter { grid-area: pageSize; }
+
   .rarityFilter select {
     option {
       background-color: $color-black;

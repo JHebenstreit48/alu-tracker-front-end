@@ -1,0 +1,36 @@
+@use '@scss/globals/animations' as *;
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabTabList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $carlab-tab-gap;
+    margin-bottom: $carlab-tab-list-margin-bottom;
+  }
+
+  .carLabTab {
+    cursor: pointer;
+    padding: $carlab-tab-padding;
+    border: $carlab-tab-border;
+    border-radius: $carlab-tab-radius;
+    background: $carlab-tab-bg;
+    color: $carlab-text;
+    transition:
+      background-color $transition-base,
+      border-color $transition-base;
+
+    &:hover {
+      border: $carlab-tab-active-border;
+    }
+
+    &.is-active {
+      background: $carlab-tab-active-bg;
+      border: $carlab-tab-active-border;
+      font-weight: $carlab-bold;
+    }
+  }
+}

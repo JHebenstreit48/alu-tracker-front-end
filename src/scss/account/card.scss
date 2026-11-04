@@ -1,10 +1,11 @@
-@use "@scss/globals/index" as *;
+@use '@scss/globals/index' as *;
 
 /* ===== Cards ===== */
 .AccountPage .card {
   background: $account-panel-bg;
   border: $account-panel-border;
   border-radius: 12px;
+  margin: 0 0 1rem 0;
   padding: 1rem 1.1rem;
   box-shadow: $account-panel-shadow;
 
@@ -46,6 +47,7 @@
     color: $color-white;
     border: 1px solid rgba($purple-accent, 0.5);
     border-radius: 8px;
+    margin: 0.5rem 0 1rem;
     padding: 0.55rem 0.8rem;
     cursor: pointer;
     line-height: 1;
@@ -90,5 +92,10 @@
 
   @include maxw($cellphone-portrait) {
     padding: 0.85rem 0.9rem;
+  }
+
+  .sectionDivider {
+    border: none;
+    border-top: 1px solid $gold-accent;
   }
 }

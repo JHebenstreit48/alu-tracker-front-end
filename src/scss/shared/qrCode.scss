@@ -1,0 +1,162 @@
+.qrPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+.qrCard {
+  width: 100%;
+  max-width: 380px;
+  background: linear-gradient(160deg, rgba(30, 4, 64, 0.85) 0%, rgba(8, 1, 18, 0.95) 60%, rgba(30, 4, 64, 0.75) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 20px;
+  padding: 40px 32px 36px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 32px 80px rgba(0, 0, 0, 0.7);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #C9A84C, #8b5cf6, transparent);
+  }
+
+  &__wordmark {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  &__accent {
+    color: #C9A84C;
+  }
+
+  &__tagline {
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 32px;
+    opacity: 0.75;
+  }
+
+  &__wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  &__frame {
+    padding: 14px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.3), 0 8px 32px rgba(0, 0, 0, 0.5);
+
+    canvas {
+      display: block;
+      border-radius: 4px;
+    }
+  }
+
+  &__download {
+    display: block;
+    margin: 0 auto 24px;
+    background: transparent;
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    color: #C9A84C;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+
+    &:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: #C9A84C;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.3), rgba(139, 92, 246, 0.3), transparent);
+    margin-bottom: 24px;
+  }
+
+  &__info {
+    text-align: center;
+  }
+
+  &__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__role {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 16px;
+  }
+
+  &__url {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.04em;
+  }
+
+  &__hint {
+    margin-top: 28px;
+    text-align: center;
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.qrCard__back {
+  margin-top: 24px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #C9A84C;
+  }
+}

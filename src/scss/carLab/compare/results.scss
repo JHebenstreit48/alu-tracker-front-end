@@ -1,0 +1,75 @@
+@use '@scss/globals/borders' as *;
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabResultsTitle {
+    margin: 0;
+    font-size: $carlab-title-size;
+  }
+
+  .carLabResultsFor,
+  .carLabResultsNote {
+    margin: 0;
+    font-size: $carlab-small-size;
+    color: $carlab-text-muted;
+  }
+
+  .carLabSummary {
+    display: flex;
+    flex-direction: column;
+    gap: $carlab-field-gap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: $carlab-text-size;
+    line-height: $carlab-line-height;
+  }
+
+  .carLabTableWrap {
+    overflow-x: auto;
+  }
+
+  .carLabTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+
+    th,
+    td {
+      padding: $carlab-table-cell-padding;
+      border-bottom: $carlab-divider;
+      text-align: right;
+    }
+
+    th[scope='row'] {
+      text-align: left;
+      font-weight: $carlab-bold;
+    }
+
+    thead th {
+      background: $carlab-panel-header-bg;
+      color: $carlab-text-muted;
+      font-size: $carlab-label-size;
+      letter-spacing: $carlab-label-spacing;
+      text-transform: uppercase;
+
+      &:first-child {
+        text-align: left;
+      }
+    }
+
+    tbody tr:nth-child(even) {
+      background: $carlab-row-stripe;
+    }
+
+    .colA {
+      color: $carlab-series-a;
+    }
+
+    .colB {
+      color: $carlab-series-b;
+    }
+  }
+}

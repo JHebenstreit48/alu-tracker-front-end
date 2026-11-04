@@ -1,9 +1,10 @@
-import '@/scss/MiscellaneousStyle/StarRank.scss';
 import { useEffect, useState } from 'react';
 import { getCarTrackingData } from '@/utils/shared/StorageUtils';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import { getImageUrl } from '@/utils/shared/imageUrl';
 import { setCarTrackingDataWithSync } from '@/utils/CarDetails/SyncStorageUtils';
+
+import '@/scss/shared/starRank.scss';
 
 interface StarRatingProps {
   count: number;

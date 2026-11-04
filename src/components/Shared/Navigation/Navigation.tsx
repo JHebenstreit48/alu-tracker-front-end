@@ -1,10 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 interface INavigationButtons {
   label: string;
   onClick: () => void;
   isActive: boolean;
+}
+
+interface INavigation {
+  isOpen: boolean;
 }
 
 const NavigationButtons = ({ label, onClick, isActive }: INavigationButtons) => {
@@ -20,47 +23,34 @@ const NavigationButtons = ({ label, onClick, isActive }: INavigationButtons) => 
   );
 };
 
-export default function Navigation() {
+export default function Navigation({ isOpen }: INavigation) {
   const navigate = useNavigate();
   const currentPath = useLocation().pathname;
-  const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    { label: 'Brands', location: '/brands', go: () => navigate('/brands') },
-    { label: 'Cars', location: '/cars', go: () => navigate('/cars') },
-    { label: 'Garage Levels', location: '/garagelevels', go: () => navigate('/garagelevels') },
-    { label: 'Legend Store', location: '/legendstoreprices', go: () => navigate('/legendstoreprices') },
-  ];
+  { label: 'Brands', location: '/brands', go: () => navigate('/brands') },
+  { label: 'Cars', location: '/cars', go: () => navigate('/cars') },
+  { label: 'Garage Levels', location: '/garagelevels', go: () => navigate('/garagelevels') },
+  { label: 'Legend Store', location: '/legendstoreprices', go: () => navigate('/legendstoreprices') },
+  { label: 'Car Lab', location: '/car-lab', go: () => navigate('/car-lab') },
+];
 
   const isActive = (loc: string) =>
     loc === '/' ? currentPath === '/' : currentPath === loc || currentPath.startsWith(loc + '/');
 
   return (
-    <>
-      <button
-        className="Hamburger"
-        aria-label="Toggle navigation"
-        aria-expanded={isOpen}
-        aria-controls="main-nav"
-        onClick={() => setIsOpen((o) => !o)}
-        type="button"
-      >
-        ☰
-      </button>
-
-      <nav className={`NavigationWrapper ${isOpen ? 'open' : ''}`} aria-label="Primary">
-        <ul id="main-nav" className="nav-css">
-          {links.map((link) => (
-            <li key={link.label}>
-              <NavigationButtons
-                label={link.label}
-                onClick={link.go}
-                isActive={isActive(link.location)}
-              />
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </>
+    <nav className={`NavigationWrapper ${isOpen ? 'open' : ''}`} aria-label="Primary">
+      <ul id="main-nav" className="nav-css">
+        {links.map((link) => (
+          <li key={link.label}>
+            <NavigationButtons
+              label={link.label}
+              onClick={link.go}
+              isActive={isActive(link.location)}
+            />
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

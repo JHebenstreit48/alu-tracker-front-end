@@ -1,4 +1,5 @@
-import Header from '@/components/Shared/HeaderFooter/Header';
+import { useNavigate } from 'react-router-dom';
+import Header from '@/components/Shared/header/Header';
 // import SyncButton from '@/components/UserDataSync/SyncButton';
 import { useCarTrackerData } from '@/hooks/Tracking/useCarTrackerData';
 
@@ -9,6 +10,8 @@ import GarageLevels from '@/components/Tracking/Cars/Sections/GarageLevels';
 import '@/scss/carTracker/index.scss'
 
 export default function CarTrackerBody() {
+  const navigate = useNavigate();
+
   const {
     allCars,
     totalCars,
@@ -24,16 +27,27 @@ export default function CarTrackerBody() {
   return (
     <>
       {/* These live outside trackerSummaryBlock, like in the original file */}
-      <Header text="Car Tracker Summary" />
+      <Header />
 
-      <button
-        className="carTrackerBackBtn"
-        onClick={() => window.history.back()}
-      >
-        Back to Cars
-      </button>
+      <div className="trackerNavRow">
+        <button
+          className="carTrackerBackBtn"
+          onClick={() => window.history.back()}
+        >
+          Back to Cars
+        </button>
+
+        <button
+          className="carTrackerFavoritesBtn"
+          onClick={() => navigate('/car-tracker/favorites')}
+        >
+          Favorites &amp; Views
+        </button>
+      </div>
 
       {/* <SyncButton /> */}
+
+      <h1 className="trackerPageTitle">Account Progress</h1>
 
       {/* Only the content sections sit inside trackerSummaryBlock */}
       <div className="trackerSummaryBlock">

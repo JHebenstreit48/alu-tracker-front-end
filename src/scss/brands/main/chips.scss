@@ -1,0 +1,25 @@
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/brands' as *;
+
+.brand-quick-list-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $letter-chip-gap;
+  margin-bottom: $letter-chip-row-margin-bottom;
+}
+
+.letter-chip {
+  background: $letter-chip-bg;
+  color: $letter-chip-text-color;
+  border: none;
+  border-radius: 20px;
+  padding: $letter-chip-padding;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover,
+  &:focus-visible {
+    background: $letter-chip-active-bg;
+  }
+}

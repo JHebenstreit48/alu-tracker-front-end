@@ -1,0 +1,47 @@
+@use '@scss/globals/index' as *;
+@use '@scss/globals/colors/brands' as *;
+
+.brand-list-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: $brand-link-color;
+  font-weight: $brand-link-font-weight;
+
+  &:hover {
+    color: $brand-link-hover-color;
+
+    .brand-list-name {
+      text-decoration: underline;
+    }
+  }
+}
+
+.brand-list-logo-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $logo-slot-size;
+  height: $logo-slot-size;
+  flex-shrink: 0;
+
+  &--empty {
+    background: $logo-slot-empty-bg;
+    border-radius: 50%;
+  }
+}
+
+.brand-list-logo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-list-name {
+  line-height: 1.2;
+  font-size: $brand-list-name-font-size;
+}
