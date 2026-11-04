@@ -1,0 +1,27 @@
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabSimSlider {
+    width: 100%;
+    accent-color: $carlab-series-a;
+  }
+
+  .carLabSimReadout {
+    margin: 0;
+    font-size: $carlab-title-size;
+    font-weight: $carlab-bold;
+  }
+
+  .carLabSimToggle {
+    display: flex;
+    align-items: center;
+    gap: $carlab-badge-gap;
+    font-size: $carlab-text-size;
+
+    input {
+      accent-color: $carlab-series-a;
+    }
+  }
+}
