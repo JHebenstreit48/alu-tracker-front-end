@@ -3,17 +3,18 @@ import type { CarLabListItem } from '@/types/CarLab/carLab';
 import type { Slot } from '@/types/CarLab/compare';
 
 interface Props {
-  slot: Slot;
+  slot?: Slot;
+  label?: string;
   items: CarLabListItem[];
   value: string | null;
   exclude: string | null;
   onChange: (slug: string | null) => void;
 }
 
-export default function CarPicker({ slot, items, value, exclude, onChange }: Props) {
+export default function CarPicker({ slot = 'a', label, items, value, exclude, onChange }: Props) {
   const [query, setQuery] = useState('');
   const id = useId();
-  const label = slot === 'a' ? 'Car A' : 'Car B';
+  const heading = label ?? (slot === 'a' ? 'Car A' : 'Car B');
 
   const options = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -26,13 +27,13 @@ export default function CarPicker({ slot, items, value, exclude, onChange }: Pro
   return (
     <div className="carLabField">
       <label className="carLabFieldLabel" htmlFor={`${id}-select`}>
-        {label}
+        {heading}
       </label>
       <input
         className="carLabSelect"
         type="search"
         placeholder="Search cars"
-        aria-label={`Search ${label}`}
+        aria-label={`Search ${heading}`}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />

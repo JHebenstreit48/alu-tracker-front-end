@@ -1,0 +1,52 @@
+@use '@scss/globals/colors' as *;
+@use '@scss/globals/spacing' as *;
+@use '@scss/globals/typography' as *;
+
+.carLab {
+  .carLabSimTitle {
+    margin: 0;
+    color: $carlab-text-muted;
+    font-size: $carlab-label-size;
+    letter-spacing: $carlab-label-spacing;
+    text-transform: uppercase;
+  }
+
+  .carLabSimValue {
+    margin: 0;
+    font-size: $carlab-sim-value-size;
+    font-weight: $carlab-bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .carLabSimChart {
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .carLabSimArea {
+    fill: $carlab-area-a;
+  }
+
+  .carLabSimLine {
+    fill: none;
+    stroke: $carlab-series-a;
+    stroke-width: 2.25;
+
+    &.isGap {
+      stroke-dasharray: 6 5;
+    }
+  }
+
+  .carLabSimMarker {
+    fill: $carlab-series-a;
+    stroke: $carlab-panel-bg;
+  }
+
+  .carLabSimGuide {
+    stroke: $carlab-text-muted;
+    stroke-dasharray: 2 4;
+  }
+}
