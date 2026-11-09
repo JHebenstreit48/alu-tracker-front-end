@@ -2,7 +2,8 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ClassTables from '@/components/Cars/ClassTables/ClassTables';
-import CarFilters from '@/components/Cars/Filters/CarFilters';
+import CarFilters from '@/components/Cars/Filters/attributes/CarFilters';
+import ObtainMethodFilters from '@/components/Cars/Filters/obtainMethod/ObtainMethodsFilters';
 import CarCount from '@/components/Cars/Filters/pagination/carCount';
 import Pagination from '@/components/Cars/Filters/pagination/pagination';
 import Header from '@/components/Shared/header/Header';
@@ -16,6 +17,7 @@ export default function CarData({
   trackerMode,
   error,
   filterProps,
+  obtainMethodProps,
   cars,
   selectedClass,
   pagination,
@@ -52,6 +54,8 @@ export default function CarData({
             </button>
           </div>
         </div>
+
+        <ObtainMethodFilters {...obtainMethodProps} />
 
         <div ref={tableTopRef}>
           <CarCount

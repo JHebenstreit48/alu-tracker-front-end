@@ -1,0 +1,79 @@
+@use '@scss/globals/index' as *;
+
+.obtainMethodFilters {
+  box-sizing: border-box;
+  width: min(92vw, 58rem);
+  margin: 1rem auto 0;
+  padding: 1rem 1.5rem 1.5rem;
+  background: radial-gradient(120% 120% at 10% -10%, rgba(255, 215, 0, 0.06), transparent 60%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.55)), #0d0016;
+  border: $filter-border;
+  border-radius: 18px;
+  box-shadow: 0 0 0 1px rgba($color-gold-glow, 0.25) inset,
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba($color-gold-glow, 0.18);
+  color: $color-white;
+  font-size: $filter-font-size;
+  text-align: center;
+
+  .obtainMethodHeading {
+    font-size: clamp(1.6rem, 2.2vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    margin: 0.15rem 0 0.8rem;
+    text-shadow: 0 0 10px rgba($color-gold-glow, 0.28);
+  }
+
+  .obtainMethodBody {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+    align-items: end;
+  }
+
+  .obtainMethodField {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .obtainMethodSelect {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 14rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 10px;
+    background: #111;
+    color: $color-white;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .obtainMethodReset {
+    grid-column: 1 / -1;
+    justify-self: center;
+    padding: 0.5rem 1.6rem;
+    border-radius: 14px;
+    background: $reset-btn-bg;
+    color: $color-white;
+    border: 1px solid rgba($color-gold-glow, 0.35);
+    cursor: pointer;
+  }
+
+  @include maxw(900px) {
+    .obtainMethodBody {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @include maxw($cellphone-portrait) {
+    width: 20rem;
+
+    .obtainMethodBody {
+      grid-template-columns: 1fr;
+    }
+  }
+}
