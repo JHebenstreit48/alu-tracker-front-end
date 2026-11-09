@@ -1,7 +1,16 @@
 import type { Car, ObtainableStatus, ObtainableViaEntry } from '@/types/shared/car';
+import {
+  LEGACY_AREA,
+  type NormalizedMethod,
+} from '@/utils/CarDetails/obtainableVia/obtainableViaDates';
 
 /** Legacy shapes: string[], a single string, or no data. */
 export type LegacyObtainableVia = Exclude<Car['obtainableVia'], ObtainableViaEntry[]>;
+
+export type MethodAreaGroup = {
+  area: string;
+  methods: NormalizedMethod[];
+};
 
 /** Display order: what's available now first, history last. */
 const STATUS_ORDER: readonly ObtainableStatus[] = [
@@ -12,6 +21,20 @@ const STATUS_ORDER: readonly ObtainableStatus[] = [
   'inactive',
   'obsolete',
   'removed',
+];
+
+/** Display order for areas inside a status group; legacy methods last. */
+const AREA_ORDER: readonly string[] = [
+  'Daily Events',
+  'Special Events',
+  'Career',
+  'Multiplayer',
+  'Shop',
+  'Passes',
+  'Login Rewards',
+  'Gameloft Shop',
+  'Redeem Codes',
+  LEGACY_AREA,
 ];
 
 /** True when obtainableVia uses the grouped { status, methods[] } format. */
@@ -38,9 +61,28 @@ function statusRank(status: ObtainableStatus): number {
   return index === -1 ? STATUS_ORDER.length : index;
 }
 
+/** Unknown areas sort just before legacy methods. */
+function areaRank(area: string): number {
+  const index = AREA_ORDER.indexOf(area);
+  return index === -1 ? AREA_ORDER.length - 1.5 : index;
+}
+
 /** Returns a sorted copy; the original array is not changed. */
 export function sortObtainableGroups(groups: ObtainableViaEntry[]): ObtainableViaEntry[] {
   return [...groups].sort((a, b) => statusRank(a.status) - statusRank(b.status));
+}
+
+/** Groups methods by area, keeping their order inside each area. */
+export function groupMethodsByArea(methods: NormalizedMethod[]): MethodAreaGroup[] {
+  const groups = new Map<string, NormalizedMethod[]>();
+  for (const method of methods) {
+    const list = groups.get(method.area);
+    if (list) list.push(method);
+    else groups.set(method.area, [method]);
+  }
+  return [...groups.entries()]
+    .map(([area, list]) => ({ area, methods: list }))
+    .sort((a, b) => areaRank(a.area) - areaRank(b.area));
 }
 
 /** Legacy data as a list of method strings (empty list = no data). */
