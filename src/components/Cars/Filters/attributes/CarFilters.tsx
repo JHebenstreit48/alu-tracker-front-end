@@ -1,8 +1,8 @@
 import { CarFiltersProps } from '@/types/Cars/Filters/CarFiltersProps';
 
-import Dropdowns from '@/components/Cars/Filters/Dropdowns';
-import Checkboxes from '@/components/Cars/Filters/Checkboxes';
-import SearchBar from '@/components/Cars/Filters/SearchBar';
+import Dropdowns from '@/components/Cars/Filters/attributes/Dropdowns';
+import Checkboxes from '@/components/Cars/Filters/attributes/Checkboxes';
+import SearchBar from '@/components/Cars/Filters/attributes/SearchBar';
 
 import '@/scss/cars/index.scss';
 

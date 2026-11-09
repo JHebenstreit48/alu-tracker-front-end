@@ -5,19 +5,17 @@
   --card-bg: #0d0016;
   --card-grad-top: rgba(255, 215, 0, 0.06);
   --card-grad-bottom: rgba(0, 0, 0, 0.55);
-  --ctrl-w: clamp(11rem, 18vw, 13rem);
-  --search-w: clamp(11rem, 18vw, 13rem);
+  --ctrl-w: clamp(11rem, 16vw, 14rem);
+  --search-w: clamp(14rem, 40vw, 28rem);
 
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   grid-template-areas:
-    'heading heading'
-    'star    class'
-    'rarity  brand'
-    'country pageSize'
-    'search  search'
-    'owned   keycar'
-    'reset   reset';
+    'heading heading heading'
+    'class   brand   country'
+    'rarity  star    pageSize'
+    'search  search  search'
+    'owned   reset   keycar';
 
   background: radial-gradient(120% 120% at 10% -10%, var(--card-grad-top), transparent 60%),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.02), var(--card-grad-bottom)), var(--card-bg);
@@ -28,10 +26,11 @@
     0 0 18px rgba($color-gold-glow, 0.18);
   border-radius: 18px;
 
-  width: $filter-width;
+  width: min(92vw, 58rem);
+  margin-inline: auto;
   padding: $filter-padding;
   gap: $filter-gap;
-  column-gap: 0.5rem;
+  column-gap: 1.5rem;
   color: $color-white;
   font-size: $filter-font-size;
   text-align: center;
@@ -48,7 +47,6 @@
 
   .resetButton {
     grid-area: reset;
-    margin-top: 0.5rem;
     justify-self: center;
     background: linear-gradient(
       to bottom,
@@ -76,6 +74,35 @@
     }
   }
 
+  .ownedFilter {
+    justify-self: end;
+  }
+
+  .keyCarFilter {
+    justify-self: start;
+  }
+
+  // Medium screens: 2 columns
+  @include maxw(900px) {
+    --ctrl-w: clamp(11rem, 30vw, 13rem);
+    --search-w: clamp(14rem, 60vw, 24rem);
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'heading heading'
+      'class   brand'
+      'country rarity'
+      'star    pageSize'
+      'search  search'
+      'owned   keycar'
+      'reset   reset';
+
+    .resetButton {
+      margin-top: 0.5rem;
+    }
+  }
+
+  // Phones: 1 column
   @include maxw($cellphone-portrait) {
     --ctrl-w: 18rem;
     --search-w: 18rem;
@@ -87,11 +114,11 @@
     grid-template-columns: 1fr;
     grid-template-areas:
       'heading'
-      'star'
       'class'
-      'rarity'
       'brand'
       'country'
+      'rarity'
+      'star'
       'pageSize'
       'search'
       'owned'

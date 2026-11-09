@@ -1,5 +1,6 @@
 import type { Car } from '@/types/shared/car';
 import type { PageSize } from '@/utils/Cars/Filters/pagination';
+import type { ObtainMethodFiltersProps } from '@/types/Cars/Filters/ObtainMethodFiltersProps';
 
 export interface CarFilterProps {
   searchTerm: string;
@@ -39,6 +40,7 @@ export interface CarDataProps {
   trackerMode: boolean;
   error?: string | null;
   filterProps: CarFilterProps;
+  obtainMethodProps: ObtainMethodFiltersProps;
   cars: Car[];
   selectedClass: string;
   pagination: CarPaginationProps;

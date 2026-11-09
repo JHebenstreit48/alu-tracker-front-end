@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import CarData from '@/components/Cars/PageBody';
 import {
   FilteredCarsProvider,
@@ -7,8 +7,10 @@ import {
 } from '@/context/Cars/filteredCarsContext';
 
 import { useCarAPI, useCarFilters, useCarHandlers, useCarPagination } from '@/hooks/Cars';
+import { useObtainMethodFilters } from '@/hooks/Cars/useObtainMethodFilters';
 import { useTrackerMode } from '@/hooks/shared/useTrackerMode';
 import { getAllCarTrackingData } from '@/utils/shared/StorageUtils';
+import { matchesObtainMethod } from '@/utils/Cars/Filters/matchObtainMethod';
 
 function CarsInner() {
   const {
@@ -33,8 +35,9 @@ function CarsInner() {
   const { trackerMode } = useTrackerMode();
   const tracking = getAllCarTrackingData();
   const { cars, loading, error } = useCarAPI(selectedClass);
+  const obtainMethod = useObtainMethodFilters();
 
-  const { filteredCars, filteredBrands, availableCountries } = useCarFilters({
+  const { filteredCars: attributeFilteredCars, filteredBrands, availableCountries } = useCarFilters({
     cars,
     tracking,
     searchTerm,
@@ -46,6 +49,11 @@ function CarsInner() {
     showOwned,
     showKeyCars,
   });
+
+  const filteredCars = useMemo(
+    () => attributeFilteredCars.filter((car) => matchesObtainMethod(car, obtainMethod.values)),
+    [attributeFilteredCars, obtainMethod.values]
+  );
 
   const { setFilteredCars } = useFilteredCarsContext();
 
@@ -66,6 +74,7 @@ function CarsInner() {
     selectedRarity,
     showOwned,
     showKeyCars,
+    obtainMethod.values,
   ]);
 
   const {
@@ -90,6 +99,11 @@ function CarsInner() {
     const next = !showKeyCars;
     setShowKeyCars(next);
     localStorage.setItem('showKeyCars', String(next));
+  };
+
+  const resetAllFilters = () => {
+    handleResetFilters();
+    obtainMethod.reset();
   };
 
   return (
@@ -118,7 +132,13 @@ function CarsInner() {
         onPageSizeChange: handlePageSizeChange,
         onToggleOwned: toggleOwned,
         onToggleKeyCars: toggleKeyCars,
-        onReset: handleResetFilters,
+        onReset: resetAllFilters,
+      }}
+      obtainMethodProps={{
+        cars,
+        values: obtainMethod.values,
+        onChange: obtainMethod.setValue,
+        onReset: obtainMethod.reset,
       }}
       cars={paginatedCars}
       selectedClass={selectedClass}
