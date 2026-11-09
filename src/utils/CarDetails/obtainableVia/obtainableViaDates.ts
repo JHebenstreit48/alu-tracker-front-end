@@ -1,9 +1,14 @@
-import type { ObtainableMethod } from '@/types/shared/car';
+import type { ObtainableMethod, ObtainableMethodObject } from '@/types/shared/car';
 
 export type NormalizedMethod = {
+  area: string;
+  section?: string;
   name: string;
   dateLabel?: string;
 };
+
+/** Area used for legacy string methods and objects without an area. */
+export const LEGACY_AREA = 'Other';
 
 // Trailing "(...)" whose contents end in a 4-digit year, e.g. "(Sep 15 - Oct 14, 2026)".
 // Non-date parentheses like "(Support Car)" don't match and stay in the name.
@@ -46,16 +51,37 @@ export function formatDateRange(start?: string, end?: string): string | undefine
 function parseMethodString(method: string): NormalizedMethod {
   const trimmed = method.trim();
   const match = TRAILING_DATE_RANGE.exec(trimmed);
-  if (!match) return { name: trimmed };
+  if (!match) return { area: LEGACY_AREA, name: trimmed };
 
   const [, name, dates] = match;
-  if (!name || !dates) return { name: trimmed };
+  if (!name || !dates) return { area: LEGACY_AREA, name: trimmed };
 
-  return { name, dateLabel: dates.replace(/\s+-\s+/g, ' – ') };
+  return { area: LEGACY_AREA, name, dateLabel: dates.replace(/\s+-\s+/g, ' – ') };
 }
 
-/** Turns either method format into { name, dateLabel } for rendering. */
+/** { pack: "D", from: ["Class D Cup", "Open Class Cup"] } -> "D pack · Class D Cup, Open Class Cup" */
+function buildObjectName(method: ObtainableMethodObject): string {
+  const parts = [
+    method.pack ? `${method.pack} pack` : undefined,
+    method.from?.length ? method.from.join(', ') : undefined,
+    method.name?.trim(),
+  ].filter((part): part is string => Boolean(part));
+  return parts.join(' · ');
+}
+
+function parseMethodObject(method: ObtainableMethodObject): NormalizedMethod {
+  const area = method.area?.trim() || LEGACY_AREA;
+  const section = method.section?.trim() || undefined;
+  const dateLabel = formatDateRange(method.start, method.end);
+  const name = buildObjectName(method);
+
+  // Nothing but a section: show the section as the name
+  if (!name) return { area, name: section ?? '—', dateLabel };
+
+  return { area, section, name, dateLabel };
+}
+
+/** Turns either method format into { area, section, name, dateLabel } for rendering. */
 export function normalizeMethod(method: ObtainableMethod): NormalizedMethod {
-  if (typeof method === 'string') return parseMethodString(method);
-  return { name: method.name, dateLabel: formatDateRange(method.start, method.end) };
+  return typeof method === 'string' ? parseMethodString(method) : parseMethodObject(method);
 }
