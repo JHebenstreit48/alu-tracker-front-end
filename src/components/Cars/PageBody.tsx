@@ -24,6 +24,7 @@ export default function CarData({
 }: CarDataProps) {
   const navigate = useNavigate();
   const tableTopRef = useRef<HTMLDivElement>(null);
+  const showPagination = loading || cars.length > 0;
 
   const changePage = (page: number) => {
     pagination.onPageChange(page);
@@ -63,12 +64,14 @@ export default function CarData({
             rangeEnd={pagination.rangeEnd}
             totalFiltered={pagination.totalFiltered}
           />
-          <Pagination
-            currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            onPageChange={changePage}
-            position="top"
-          />
+          {showPagination && (
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={changePage}
+              position="top"
+            />
+          )}
         </div>
 
         <ClassTables
@@ -78,12 +81,14 @@ export default function CarData({
           trackerMode={trackerMode}
         />
 
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={changePage}
-          position="bottom"
-        />
+        {showPagination && (
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            onPageChange={changePage}
+            position="bottom"
+          />
+        )}
       </PageTab>
     </div>
   );

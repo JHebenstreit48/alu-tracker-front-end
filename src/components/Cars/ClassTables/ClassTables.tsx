@@ -14,6 +14,11 @@ export default function ClassTables({
 }: ClassTablesProps) {
   const headerText = selectedClass === 'All Classes' ? 'All Classes' : selectedClass;
   const { getTrackingForKey } = useCarListTracking();
+  const statusMessage = loading
+    ? 'Loading cars...'
+    : cars.length === 0
+      ? 'No cars match these filters.'
+      : null;
 
   return (
     <div>
@@ -30,10 +35,10 @@ export default function ClassTables({
             <th className="tableHeaders">Image/StarRank</th>
           </tr>
 
-          {loading || cars.length === 0 ? (
+          {statusMessage ? (
             <tr>
               <td colSpan={2}>
-                <p>Loading cars...</p>
+                <p>{statusMessage}</p>
               </td>
             </tr>
           ) : (
