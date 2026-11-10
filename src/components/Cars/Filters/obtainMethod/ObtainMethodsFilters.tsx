@@ -12,6 +12,7 @@ type SelectConfig = {
   key: ObtainMethodFilterKey;
   label: string;
   allLabel: string;
+  allLast?: boolean;
   options: SelectOption[];
 };
 
@@ -19,7 +20,7 @@ const toOptions = (list: string[]): SelectOption[] =>
   list.map((value) => ({ value, label: value }));
 
 const ObtainMethodFilters = ({ cars, values, onChange, onReset }: ObtainMethodFiltersProps) => {
-  const options = useMemo(() => getObtainMethodOptions(cars, values.area), [cars, values.area]);
+  const options = useMemo(() => getObtainMethodOptions(cars, values), [cars, values]);
 
   const selects: SelectConfig[] = [
     { key: 'area', label: 'Area', allLabel: 'All Areas', options: toOptions(options.areas) },
@@ -33,7 +34,8 @@ const ObtainMethodFilters = ({ cars, values, onChange, onReset }: ObtainMethodFi
     {
       key: 'status',
       label: 'Status',
-      allLabel: 'Any Status',
+      allLabel: 'All (past and current)',
+      allLast: true,
       options: options.statuses.map((status) => ({ value: status, label: formatStatus(status) })),
     },
   ];
@@ -41,25 +43,32 @@ const ObtainMethodFilters = ({ cars, values, onChange, onReset }: ObtainMethodFi
   return (
     <section className="obtainMethodFilters">
       <h2 className="obtainMethodHeading">Obtain Method</h2>
+      <p className="obtainMethodHint">
+        Showing current sources. Change Status to include past ones.
+      </p>
 
       <div className="obtainMethodBody">
-        {selects.map(({ key, label, allLabel, options: list }) => (
-          <label key={key} className="obtainMethodField">
-            <span className="obtainMethodLabel">{label}:</span>
-            <select
-              className="obtainMethodSelect"
-              value={values[key]}
-              onChange={(event) => onChange(key, event.target.value)}
-            >
-              <option value="">{allLabel}</option>
-              {list.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        ))}
+        {selects.map(({ key, label, allLabel, allLast, options: list }) => {
+          const allOption = <option value="">{allLabel}</option>;
+          return (
+            <label key={key} className="obtainMethodField">
+              <span className="obtainMethodLabel">{label}:</span>
+              <select
+                className="obtainMethodSelect"
+                value={values[key]}
+                onChange={(event) => onChange(key, event.target.value)}
+              >
+                {!allLast && allOption}
+                {list.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+                {allLast && allOption}
+              </select>
+            </label>
+          );
+        })}
 
         <button type="button" className="obtainMethodReset" onClick={onReset}>
           Clear Obtain Filters

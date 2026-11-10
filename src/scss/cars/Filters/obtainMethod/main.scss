@@ -24,6 +24,12 @@
     text-shadow: 0 0 10px rgba($color-gold-glow, 0.28);
   }
 
+  .obtainMethodHint {
+    margin: -0.4rem 0 1rem;
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
   .obtainMethodBody {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

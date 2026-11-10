@@ -17,8 +17,9 @@ export function collectObtainMethods(car: Car): StatusMethod[] {
   );
 }
 
+/** Status alone doesn't filter; it narrows results once area, section or pack is chosen. */
 export function hasObtainMethodFilter(values: ObtainMethodFilterValues): boolean {
-  return Object.values(values).some(Boolean);
+  return Boolean(values.area || values.section || values.pack);
 }
 
 function methodMatches({ status, method }: StatusMethod, values: ObtainMethodFilterValues): boolean {

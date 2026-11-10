@@ -4,30 +4,31 @@ import type {
   ObtainMethodFilterValues,
 } from '@/types/Cars/Filters/ObtainMethodFiltersProps';
 
-const STORAGE_KEY = 'obtainMethodFilters';
+const STORAGE_KEY = 'obtainMethodFilters:v2';
 
-export const EMPTY_OBTAIN_METHOD_FILTERS: ObtainMethodFilterValues = {
+/** Default: status Current, nothing else chosen. */
+export const DEFAULT_OBTAIN_METHOD_FILTERS: ObtainMethodFilterValues = {
   area: '',
   section: '',
   pack: '',
-  status: '',
+  status: 'current',
 };
 
-/** Saved filters from localStorage, or empty ones if missing or invalid. */
+/** Saved filters from localStorage, or the defaults if missing or invalid. */
 function loadSavedFilters(): ObtainMethodFilterValues {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return EMPTY_OBTAIN_METHOD_FILTERS;
+    if (!raw) return DEFAULT_OBTAIN_METHOD_FILTERS;
     const parsed: unknown = JSON.parse(raw);
-    if (typeof parsed !== 'object' || parsed === null) return EMPTY_OBTAIN_METHOD_FILTERS;
+    if (typeof parsed !== 'object' || parsed === null) return DEFAULT_OBTAIN_METHOD_FILTERS;
 
     const saved = parsed as Partial<Record<ObtainMethodFilterKey, unknown>>;
     const read = (key: ObtainMethodFilterKey): string =>
-      typeof saved[key] === 'string' ? (saved[key] as string) : '';
+      typeof saved[key] === 'string' ? (saved[key] as string) : DEFAULT_OBTAIN_METHOD_FILTERS[key];
 
     return { area: read('area'), section: read('section'), pack: read('pack'), status: read('status') };
   } catch {
-    return EMPTY_OBTAIN_METHOD_FILTERS;
+    return DEFAULT_OBTAIN_METHOD_FILTERS;
   }
 }
 
@@ -49,7 +50,7 @@ export function useObtainMethodFilters() {
     );
   }, []);
 
-  const reset = useCallback(() => setValues(EMPTY_OBTAIN_METHOD_FILTERS), []);
+  const reset = useCallback(() => setValues(DEFAULT_OBTAIN_METHOD_FILTERS), []);
 
   return { values, setValue, reset };
 }
