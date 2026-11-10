@@ -1,8 +1,15 @@
 import { useState, useCallback } from 'react';
 
+function loadSavedStars(): number | null {
+  const saved = localStorage.getItem('selectedStars');
+  if (!saved) return null;
+  const parsed = parseInt(saved, 10);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
 export function useCarHandlers() {
   const [searchTerm, setSearchTerm] = useState(localStorage.getItem('searchTerm') || '');
-  const [selectedStars, setSelectedStars] = useState<number | null>(null);
+  const [selectedStars, setSelectedStars] = useState<number | null>(loadSavedStars);
   const [selectedBrand, setSelectedBrand] = useState(localStorage.getItem('selectedBrand') || '');
   const [selectedCountry, setSelectedCountry] = useState(localStorage.getItem('selectedCountry') || '');
   const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem('selectedClass') || 'All Classes');
@@ -17,7 +24,10 @@ export function useCarHandlers() {
 
   const handleStarFilter = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    setSelectedStars(value ? parseInt(value, 10) : null);
+    const stars = value ? parseInt(value, 10) : null;
+    setSelectedStars(stars);
+    if (stars !== null) localStorage.setItem('selectedStars', String(stars));
+    else localStorage.removeItem('selectedStars');
   }, []);
 
   const handleClassChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,6 +65,7 @@ export function useCarHandlers() {
     setSelectedRarity(null);
 
     localStorage.removeItem('searchTerm');
+    localStorage.removeItem('selectedStars');
     localStorage.removeItem('selectedBrand');
     localStorage.removeItem('selectedCountry');
     localStorage.removeItem('selectedRarity');
