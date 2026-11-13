@@ -1,6 +1,6 @@
 import type { Car } from '@/types/shared/car';
 
-export type ObtainMethodFilterKey = 'area' | 'section' | 'pack' | 'status';
+export type ObtainMethodFilterKey = 'area' | 'section' | 'cup' | 'pack' | 'status';
 
 export type ObtainMethodFilterValues = Record<ObtainMethodFilterKey, string>;
 

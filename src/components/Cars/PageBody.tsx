@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ClassTables from '@/components/Cars/ClassTables/ClassTables';
+import DataNotice from '@/components/Cars/DataNotice/DataNotice';
 import CarFilters from '@/components/Cars/Filters/attributes/CarFilters';
 import ObtainMethodFilters from '@/components/Cars/Filters/obtainMethod/ObtainMethodsFilters';
 import CarCount from '@/components/Cars/Filters/pagination/carCount';
@@ -64,6 +65,7 @@ export default function CarData({
             rangeEnd={pagination.rangeEnd}
             totalFiltered={pagination.totalFiltered}
           />
+          <DataNotice />
           {showPagination && (
             <Pagination
               currentPage={pagination.currentPage}

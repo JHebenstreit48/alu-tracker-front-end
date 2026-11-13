@@ -3,7 +3,7 @@ import type {
   ObtainMethodFilterKey,
   ObtainMethodFiltersProps,
 } from '@/types/Cars/Filters/ObtainMethodFiltersProps';
-import { getObtainMethodOptions } from '@/utils/Cars/Filters/obtainMethodOptions';
+import { cupLabel, getObtainMethodOptions } from '@/utils/Cars/Filters/obtainMethodOptions';
 import { formatStatus } from '@/utils/CarDetails/obtainableVia';
 
 type SelectOption = { value: string; label: string };
@@ -25,6 +25,12 @@ const ObtainMethodFilters = ({ cars, values, onChange, onReset }: ObtainMethodFi
   const selects: SelectConfig[] = [
     { key: 'area', label: 'Area', allLabel: 'All Areas', options: toOptions(options.areas) },
     { key: 'section', label: 'Section', allLabel: 'All Sections', options: toOptions(options.sections) },
+    {
+      key: 'cup',
+      label: 'Cups',
+      allLabel: 'All Cups',
+      options: options.cups.map((cup) => ({ value: cup, label: cupLabel(cup) })),
+    },
     {
       key: 'pack',
       label: 'Class Packs',

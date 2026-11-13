@@ -32,8 +32,8 @@
 
   .obtainMethodBody {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem 1.5rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem 1rem;
     align-items: end;
   }
 
@@ -48,8 +48,8 @@
   .obtainMethodSelect {
     box-sizing: border-box;
     width: 100%;
-    max-width: 14rem;
-    padding: 0.45rem 0.8rem;
+    max-width: 12rem;
+    padding: 0.45rem 0.6rem;
     border-radius: 10px;
     background: #111;
     color: $color-white;
@@ -67,6 +67,12 @@
     color: $color-white;
     border: 1px solid rgba($color-gold-glow, 0.35);
     cursor: pointer;
+  }
+
+  @include maxw(1100px) {
+    .obtainMethodBody {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   @include maxw(900px) {
