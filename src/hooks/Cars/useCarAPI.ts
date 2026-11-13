@@ -2,10 +2,11 @@ import { useState, useCallback, useEffect } from "react";
 import {
   collection,
   getDocs,
+  getDocsFromCache,
   query,
   where,
   limit,
-  type QueryConstraint,
+  type Query,
   type QuerySnapshot,
   type DocumentData,
 } from "firebase/firestore";
@@ -127,6 +128,30 @@ function consumeSnap(snap: QuerySnapshot<DocumentData>, merged: Map<string, CarW
   });
 }
 
+/** Merge one or more snapshots into a sorted car list (brand, then model). */
+function toSortedList(snaps: QuerySnapshot<DocumentData>[]): Car[] {
+  const merged = new Map<string, CarWithMeta>();
+  snaps.forEach((snap) => consumeSnap(snap, merged));
+
+  return Array.from(merged.values())
+    .map((x) => x.car)
+    .sort((a, b) => {
+      const byBrand = (a.brand || "").localeCompare(b.brand || "");
+      return byBrand !== 0 ? byBrand : (a.model || "").localeCompare(b.model || "");
+    });
+}
+
+/** All cars, or one class (legacy "Class" and new "class" field names both checked). */
+function buildQueries(selectedClass: string): Query<DocumentData>[] {
+  const carsCol = collection(dbTracker, "cars");
+  const cap = 2000;
+  if (!selectedClass || selectedClass === "All Classes") return [query(carsCol, limit(cap))];
+  return [
+    query(carsCol, where("Class", "==", selectedClass), limit(cap)),
+    query(carsCol, where("class", "==", selectedClass), limit(cap)),
+  ];
+}
+
 export function useCarAPI(selectedClass: string) {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(false);
@@ -135,49 +160,30 @@ export function useCarAPI(selectedClass: string) {
   const loadCars = useCallback(async () => {
     setLoading(true);
     setError(null);
+    const queries = buildQueries(selectedClass);
+    let showedCached = false;
 
+    // 1) Show cars cached from the last visit right away, if any
     try {
-      const carsCol = collection(dbTracker, "cars");
-      const classFilterActive = selectedClass && selectedClass !== "All Classes";
-
-      const cap = 2000;
-      const merged = new Map<string, CarWithMeta>();
-
-      if (!classFilterActive) {
-        const snap = await getDocs(query(carsCol, limit(cap)));
-        consumeSnap(snap, merged);
-      } else {
-        const constraintsLegacy: QueryConstraint[] = [
-          where("Class", "==", selectedClass),
-          limit(cap),
-        ];
-        const constraintsNew: QueryConstraint[] = [
-          where("class", "==", selectedClass),
-          limit(cap),
-        ];
-
-        const [snapLegacy, snapNew] = await Promise.all([
-          getDocs(query(carsCol, ...constraintsLegacy)),
-          getDocs(query(carsCol, ...constraintsNew)),
-        ]);
-
-        consumeSnap(snapLegacy, merged);
-        consumeSnap(snapNew, merged);
+      const cached = toSortedList(await Promise.all(queries.map((q) => getDocsFromCache(q))));
+      if (cached.length > 0) {
+        setCars(cached);
+        setLoading(false);
+        showedCached = true;
       }
+    } catch {
+      // Nothing cached yet (first visit): wait for the server
+    }
 
-      const list = Array.from(merged.values()).map((x) => x.car);
-
-      list.sort((a, b) => {
-        const byBrand = (a.brand || "").localeCompare(b.brand || "");
-        if (byBrand !== 0) return byBrand;
-        return (a.model || "").localeCompare(b.model || "");
-      });
-
-      setCars(list);
+    // 2) Fresh data from the server replaces it
+    try {
+      setCars(toSortedList(await Promise.all(queries.map((q) => getDocs(q)))));
     } catch (err) {
       console.error("[useCarAPI] Failed to load cars from Firestore:", err);
-      setCars([]);
-      setError("Failed to fetch cars. Please try again later.");
+      if (!showedCached) {
+        setCars([]);
+        setError("Failed to fetch cars. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }

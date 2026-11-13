@@ -25,13 +25,19 @@ export interface NewStatsFormat {
   gold?: { gold?: StatBlock };
 }
 
-/** Structured method: dates as ISO strings, e.g. "2026-09-15" */
+/**
+ * Structured method: dates as ISO strings, e.g. "2026-09-15".
+ * debut: the car's first source, still running (also counts as "original" in filters).
+ * objective: a cup objective (win with another car), not a pack.
+ */
 export type ObtainableMethodObject = {
   area?: string;
   section?: string;
   currency?: string;
   pack?: string;
   from?: string[];
+  debut?: boolean;
+  objective?: boolean;
   name?: string;
   start?: string;
   end?: string;

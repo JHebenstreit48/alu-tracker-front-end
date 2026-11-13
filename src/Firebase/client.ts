@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -12,5 +18,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export const dbTracker = getFirestore(app);
+/** Firestore with a browser cache (IndexedDB), shared across tabs; falls back to no cache if unavailable. */
+function createFirestore(): Firestore {
+  try {
+    return initializeFirestore(app, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    });
+  } catch {
+    return getFirestore(app);
+  }
+}
+
+export const dbTracker = createFirestore();
 export const storageTracker = getStorage(app);

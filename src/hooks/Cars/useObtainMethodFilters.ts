@@ -4,12 +4,13 @@ import type {
   ObtainMethodFilterValues,
 } from '@/types/Cars/Filters/ObtainMethodFiltersProps';
 
-const STORAGE_KEY = 'obtainMethodFilters:v2';
+const STORAGE_KEY = 'obtainMethodFilters:v3';
 
 /** Default: status Current, nothing else chosen. */
 export const DEFAULT_OBTAIN_METHOD_FILTERS: ObtainMethodFilterValues = {
   area: '',
   section: '',
+  cup: '',
   pack: '',
   status: 'current',
 };
@@ -26,7 +27,13 @@ function loadSavedFilters(): ObtainMethodFilterValues {
     const read = (key: ObtainMethodFilterKey): string =>
       typeof saved[key] === 'string' ? (saved[key] as string) : DEFAULT_OBTAIN_METHOD_FILTERS[key];
 
-    return { area: read('area'), section: read('section'), pack: read('pack'), status: read('status') };
+    return {
+      area: read('area'),
+      section: read('section'),
+      cup: read('cup'),
+      pack: read('pack'),
+      status: read('status'),
+    };
   } catch {
     return DEFAULT_OBTAIN_METHOD_FILTERS;
   }

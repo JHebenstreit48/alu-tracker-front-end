@@ -59,9 +59,11 @@ function parseMethodString(method: string): NormalizedMethod {
   return { area: LEGACY_AREA, name, dateLabel: dates.replace(/\s+-\s+/g, ' – ') };
 }
 
-/** { pack: "D", from: ["Class D Cup", "Open Class Cup"] } -> "D pack · Class D Cup, Open Class Cup" */
+/** { debut: true, pack: "D", from: ["Class D Cup"] } -> "Debut · D pack · Class D Cup" */
 function buildObjectName(method: ObtainableMethodObject): string {
   const parts = [
+    method.debut ? 'Debut' : undefined,
+    method.objective ? 'Objective' : undefined,
     method.pack ? `${method.pack} pack` : undefined,
     method.from?.length ? method.from.join(', ') : undefined,
     method.name?.trim(),

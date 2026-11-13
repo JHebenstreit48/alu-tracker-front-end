@@ -1,0 +1,74 @@
+@use '@scss/globals/index' as *;
+
+.dataNotice {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.35rem;
+
+  .dataNoticeToggle {
+    background: none;
+    border: none;
+    border-radius: 8px;
+    padding: 0.2rem 0.5rem;
+    color: rgba($color-white, 0.65);
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0.5rem 0 1rem 0;
+
+    &:hover,
+    &:focus-visible {
+      color: $color-white;
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba($color-gold-glow, 0.6);
+      outline-offset: 2px;
+    }
+  }
+
+  .dataNoticePopover {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    box-sizing: border-box;
+    width: min(90vw, 26rem);
+    padding: 1rem 1.2rem;
+    background: #0d0016;
+    border: 1px solid rgba($color-gold-glow, 0.45);
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6),
+      0 0 14px rgba($color-gold-glow, 0.2);
+    color: $color-white;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    text-align: left;
+
+    p {
+      margin: 0 0 0.6rem;
+    }
+  }
+
+  .dataNoticeTitle {
+    font-weight: 700;
+    color: $color-gold-glow;
+  }
+
+  .dataNoticeLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.2rem;
+
+    a {
+      color: rgb(21, 201, 232);
+
+      &:hover,
+      &:focus-visible {
+        color: $color-white;
+      }
+    }
+  }
+}
