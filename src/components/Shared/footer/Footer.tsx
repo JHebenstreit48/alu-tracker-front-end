@@ -1,5 +1,5 @@
 import FooterLinks from "@/components/Shared/footer/footerLinks";
-import FooterMeta from "@/components/Shared/footer/FooterMeta";
+import FooterMeta from "@/components/Shared/footer/footerMeta";
 
 export default function Footer() {
   return (
