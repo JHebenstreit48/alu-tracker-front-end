@@ -15,6 +15,7 @@ import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
 import UnitToggle from '@/components/CarDetails/widgets/UnitToggle';
 import CarNavArrows from '@/components/CarDetails/widgets/carNavArrows';
+import CarSources from '@/components/CarDetails/widgets/CarSources';
 import { useRecordView } from '@/hooks/Tracking/useRecordView';
 
 import "@/scss/carDetails/index.scss";
@@ -96,6 +97,7 @@ export default function CarDetailsBody({ slug }: Props) {
               onKeyObtainedChange={handleKeyObtainedChange}
               unitPreference={unit}
             />
+            <CarSources sources={car.sources} />
             <hr className="content-divider" />
             <CommentsPanel
               normalizedKey={slug}

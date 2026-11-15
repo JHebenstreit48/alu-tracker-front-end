@@ -1,0 +1,61 @@
+.carSources {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem auto 1rem;
+  max-width: 28rem;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.sourcesButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #4da3ff;
+    outline-offset: 2px;
+  }
+}
+
+.sourcesArrow {
+  font-size: 0.7rem;
+}
+
+.sourcesPanel {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+.sourcesList {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+  color: #e6e6e6;
+}
+
+.sourcesEmpty {
+  margin: 0;
+  text-align: center;
+  color: #bbb;
+  font-style: italic;
+}
