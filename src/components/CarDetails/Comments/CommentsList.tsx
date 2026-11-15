@@ -1,4 +1,4 @@
-import Card from "@/components/CarDetails/OtherComponents/Comments/Card";
+import Card from "@/components/CarDetails/Comments/Card";
 import type { Filter, CommentItem } from "@/types/Comments";
 
 type Props = {

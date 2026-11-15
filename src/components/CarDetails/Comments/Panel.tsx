@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/SignupLogin/useAuth";
-import CommentForm from "@/components/CarDetails/OtherComponents/Comments/CommentForm";
-import CommentsList from "@/components/CarDetails/OtherComponents/Comments/CommentsList";
+import CommentForm from "@/components/CarDetails/Comments/CommentForm";
+import CommentsList from "@/components/CarDetails/Comments/CommentsList";
 import { useComments } from "@/hooks/Comments/useComments";
 import type { PanelProps } from "@/types/Comments";
 

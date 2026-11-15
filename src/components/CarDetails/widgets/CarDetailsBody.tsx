@@ -13,8 +13,8 @@ import { useTrackerMode } from '@/hooks/shared/useTrackerMode';
 import useKeyObtained from '@/hooks/CarDetails/useKeyObtained';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
-import UnitToggle from '@/components/CarDetails/OtherComponents/UnitToggle';
-import CarNavArrows from '@/components/CarDetails/OtherComponents/carNavArrows';
+import UnitToggle from '@/components/CarDetails/widgets/UnitToggle';
+import CarNavArrows from '@/components/CarDetails/widgets/carNavArrows';
 import { useRecordView } from '@/hooks/Tracking/useRecordView';
 
 import "@/scss/carDetails/index.scss";

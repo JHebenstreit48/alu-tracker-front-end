@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import OwnerControls from "@/components/CarDetails/OtherComponents/Comments/OwnerControls";
+import OwnerControls from "@/components/CarDetails/Comments/OwnerControls";
 
 export type CommentCardItem = {
   _id: string;
