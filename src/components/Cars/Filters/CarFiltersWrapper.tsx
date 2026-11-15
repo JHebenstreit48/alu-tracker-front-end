@@ -1,4 +1,4 @@
-import CarFilters from "@/components/Cars/Filters/CarFilters";
+import CarFilters from "@/components/Cars/Filters/attributes/CarFilters";
 import { useCarFilterLogic } from "@/utils/Cars/Filters/useCarFilterLogic";
 import { CarFiltersProps } from "@/types/Cars/Filters/CarFiltersProps";
 import { Car } from "@/types/shared/car";

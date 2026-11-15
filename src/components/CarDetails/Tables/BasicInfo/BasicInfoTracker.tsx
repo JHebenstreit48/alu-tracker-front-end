@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Car } from '@/types/shared/car';
-import StarRankSelector from '@/components/CarDetails/OtherComponents/StarRankSelector';
+import StarRankSelector from '@/components/CarDetails/widgets/StarRankSelector';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
 import {
   generateCarKey,

@@ -1,0 +1,24 @@
+@use "@scss/globals/index" as *;
+
+.Footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem 1.25rem;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.65);
+
+  .Footer__link {
+    font-size: 0.92rem;
+  }
+
+  @include maxw($cellphone-portrait) {
+    justify-content: center;
+    gap: 0.35rem 1rem;
+  }
+}
+
+.Footer__fineprint {
+  white-space: nowrap;
+}

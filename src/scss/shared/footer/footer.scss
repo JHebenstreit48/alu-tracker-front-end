@@ -3,105 +3,26 @@
 
 .Footer {
   position: relative;
-  left: 0;
-  right: 0;
   z-index: 1000;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  padding: 1.25rem 2rem;
 
-  gap: 1rem;
-  padding: 0.85rem 1rem;
-
-  background-image: $footer-gradient;
-  box-shadow:
-    0 -1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 -8px 24px rgba(0, 0, 0, 0.35);
-
-  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
-
-  &__links,
-  &__meta {
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    row-gap: 0.35rem;
-  }
-
-  &__links {
-    justify-content: flex-start;
-    gap: 0.75rem;
-  }
-
-  &__meta {
-    justify-content: flex-end;
-    gap: 0.45rem;
-    text-align: right;
-    opacity: 0.92;
-  }
-
-  &__dot,
-  &__sep {
-    color: color.change($gold-text, $alpha: 0.7);
-    font-size: 0.95rem;
-    user-select: none;
-  }
-
-  &__fineprint {
-    font-size: 0.9rem;
-    color: color.change($gold-text, $alpha: 0.85);
-    line-height: 1.1;
-  }
-
-  &__fineprint--nowrap {
-    white-space: nowrap;
-  }
-
-  &__link {
-    color: $gold-text;
-    text-decoration: none;
-
-    font-size: 1.02rem;
-    letter-spacing: 0.2px;
-
-    border-bottom: 1px solid transparent;
-    transition: border-color 140ms ease, opacity 140ms ease, transform 140ms ease;
-
-    &:hover,
-    &:focus-visible {
-      border-color: color.change($gold-text, $alpha: 0.6);
-      opacity: 0.96;
-      outline: none;
-      transform: translateY(-0.5px);
-    }
-
-    &--active {
-      color: $color-white;
-      border-color: $gold-text;
-    }
-  }
+  background: #0b0b0f;
+  border-top: 1px solid color.change($gold-text, $alpha: 0.35);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   @include maxw($cellphone-portrait) {
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 0.4rem;
-
-    padding: 0.8rem 0.9rem;
-
-    &__links {
-      justify-content: center;
-    }
-
-    &__meta {
-      justify-content: center;
-      text-align: center;
-    }
-
-    &__fineprint--nowrap {
-      white-space: normal;
-    }
+    gap: 1rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
   }
 }
