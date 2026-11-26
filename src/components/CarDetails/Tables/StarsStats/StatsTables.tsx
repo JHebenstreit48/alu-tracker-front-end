@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FullCar } from '@/types/shared/car';
-import type { GoldMaxStats, MaxStarStats, StockStats } from '@/types/CarDetails';
+import type { GoldMaxStats, StockStats } from '@/types/CarDetails';
 import type { StatSnapshot } from '@/utils/CarDetails/format';
 import { hasStats } from '@/utils/CarDetails/format';
 import { getStatsFromCar, type StarNumber } from '@/utils/CarDetails/getStarStats';
@@ -36,6 +36,11 @@ function goldSnapshot(car: Partial<GoldMaxStats>): StatSnapshot {
   };
 }
 
+/** Prefer a string `slug` if the car has one; otherwise its normalizedKey. */
+function carSlugOf(car: FullCar): string | undefined {
+  return typeof car.slug === 'string' ? car.slug : car.normalizedKey;
+}
+
 export default function StatsTables({ car, unitPreference }: Props) {
   const [mode, setMode] = useState<'maxStar' | 'stages'>('maxStar');
 
@@ -52,7 +57,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
 
       {mode === 'stages' ? (
         <div className="stageViewDisclaimerRow">
-          <StageViewDisclaimer carSlug={(car as any).slug} />
+          <StageViewDisclaimer carSlug={carSlugOf(car)} />
         </div>
       ) : null}
 
@@ -72,7 +77,7 @@ export default function StatsTables({ car, unitPreference }: Props) {
           <>
             {Array.from({ length: maxStars }, (_, i) => i + 1).map((n) => {
               const star = n as StarNumber;
-              const stats = getStatsFromCar(car as FullCar & MaxStarStats, star);
+              const stats = getStatsFromCar(car, star);
               if (!hasStats(stats)) return null;
 
               return (
