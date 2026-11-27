@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Car } from '@/types/shared/car';
 import { Blueprints } from '@/types/CarDetails';
@@ -6,17 +6,16 @@ import StarRank from '@/components/Shared/Stars/StarRank';
 
 import { getBlueprintRows, sumNumericBlueprints } from '@/utils/CarDetails/getBlueprintRows';
 import { useBlueprintTracker } from '@/hooks/CarDetails/useBlueprintTracker';
+import BlueprintsFixControl from '@/components/CarDetails/Tables/Blueprints/blueprintsFixControl';
 
 const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
-  if (car.model.includes('Security')) {
-    return <div className="noBlueprintData">No blueprint data available for security cars.</div>;
-  }
+  const isSecurityCar = car.model.includes('Security');
 
-  const rows = useMemo(() => getBlueprintRows(car as unknown as Record<string, unknown>), [car]);
-
-  if (rows.length === 0) {
-    return <div className="noBlueprintData">No blueprint data available.</div>;
-  }
+  // Hooks run before any early return (rules of hooks); security cars get no rows
+  const rows = useMemo(
+    () => (isSecurityCar ? [] : getBlueprintRows(car as unknown as Record<string, unknown>)),
+    [car, isSecurityCar]
+  );
 
   const isKeyCar = !!car.keyCar;
 
@@ -27,14 +26,11 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
     rows,
   });
 
-  const totalRequired = sumNumericBlueprints(rows);
-  const remaining = Math.max(0, totalRequired - tracker.totalOwned);
+  // Fix mode is per car, so it switches off when you open another car
+  const carId = `${car.brand}|${car.model}`;
+  const [fixingCarId, setFixingCarId] = useState<string | null>(null);
+  const isFixing = fixingCarId === carId;
 
-  /**
-   * Non-key cars: editableStar remains tracker.targetStar (unchanged).
-   * Key cars: pick the first star row with required > 0 that is not yet met.
-   * (This naturally skips 1★ when blueprints1Star = 0.)
-   */
   const editableStar = useMemo(() => {
     if (!isKeyCar) return tracker.targetStar;
     if (tracker.done) return tracker.targetStar;
@@ -51,6 +47,18 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
     // If everything is met (or data is weird), fall back to hook value
     return tracker.targetStar;
   }, [isKeyCar, tracker.done, tracker.targetStar, tracker.ownedByStar, rows]);
+
+  if (isSecurityCar) {
+    return <div className="noBlueprintData">No blueprint data available for security cars.</div>;
+  }
+
+  if (rows.length === 0) {
+    return <div className="noBlueprintData">No blueprint data available.</div>;
+  }
+
+  const totalRequired = sumNumericBlueprints(rows);
+  const remaining = Math.max(0, totalRequired - tracker.totalOwned);
+  const hasCompletedRows = tracker.done || rows.some((r) => r.star < editableStar);
 
   return (
     <table className="carInfoTable blueprintsTable">
@@ -75,7 +83,10 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
           const required = r.value;
           const owned = tracker.ownedByStar[star] ?? 0;
 
-          const isEditableRow = !tracker.done && star === editableStar;
+          // Default: only the current star; fix mode also unlocks completed stars
+          const isEditableRow = isFixing
+            ? tracker.done || (editableStar > 0 && star <= editableStar)
+            : !tracker.done && star === editableStar;
 
           // Lock rows only *after* the computed editable star (works even if 1★ requires 0)
           const isLockedRow = !tracker.done && star > editableStar;
@@ -105,6 +116,7 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
                   <input
                     type="number"
                     min={0}
+                    max={typeof required === 'number' ? required : undefined}
                     inputMode="numeric"
                     value={owned}
                     onChange={(e) => tracker.updateOwnedForStar(star, Number(e.target.value))}
@@ -124,6 +136,18 @@ const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) =>
             &nbsp;|&nbsp; Remaining: {remaining}
           </td>
         </tr>
+
+        {(hasCompletedRows || isFixing) && (
+          <tr>
+            <td colSpan={4} className="blueprintFixCell">
+              <BlueprintsFixControl
+                isFixing={isFixing}
+                onChange={(next) => setFixingCarId(next ? carId : null)}
+                confirmBeforeEditing={false}
+              />
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );

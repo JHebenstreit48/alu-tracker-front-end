@@ -8,20 +8,34 @@ import {
   setCarTrackingData,
 } from '@/utils/shared/StorageUtils';
 import { formatAddedDate } from '@/utils/CarDetails/formatDate';
+import { notifyCarTrackingChanged, onCarTrackingChanged } from '@/utils/CarDetails/carTrackingEvents';
 
 const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, forceOwned }) => {
   const carKey = generateCarKey(car.brand, car.model);
   const hasUserInteracted = useRef(false);
+  // Set by your clicks so only real changes are announced to the Blueprints table
+  const userChanged = useRef(false);
 
-  const [selectedStarRank, setSelectedStarRank] = useState<number>(0);
-  const [owned, setOwned] = useState<boolean>(false);
-  const [goldMaxed, setGoldMaxed] = useState<boolean>(false);
+  // Start from saved values so the first save never writes blanks over them
+  const [selectedStarRank, setSelectedStarRank] = useState<number>(() => {
+    const stars = getCarTrackingData(carKey).stars;
+    return typeof stars === 'number' ? stars : 0;
+  });
+  const [owned, setOwned] = useState<boolean>(() => getCarTrackingData(carKey).owned === true);
+  const [goldMaxed, setGoldMaxed] = useState<boolean>(
+    () => getCarTrackingData(carKey).goldMaxed === true
+  );
 
+  // Load on car change, and re-load when the Blueprints table changes the star rank
   useEffect(() => {
-    const data = getCarTrackingData(carKey);
-    setSelectedStarRank(typeof data.stars === 'number' ? data.stars : 0);
-    setOwned(data.owned === true);
-    setGoldMaxed(data.goldMaxed === true);
+    const load = () => {
+      const data = getCarTrackingData(carKey);
+      setSelectedStarRank(typeof data.stars === 'number' ? data.stars : 0);
+      setOwned(data.owned === true);
+      setGoldMaxed(data.goldMaxed === true);
+    };
+    load();
+    return onCarTrackingChanged(carKey, 'basicInfo', load);
   }, [carKey]);
 
   useEffect(() => {
@@ -32,6 +46,7 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
 
   const handleStarSelect = (value: number) => {
     hasUserInteracted.current = true;
+    userChanged.current = true;
     setSelectedStarRank(value);
   };
 
@@ -41,6 +56,10 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
 
   useEffect(() => {
     setCarTrackingData(carKey, { stars: selectedStarRank, owned, goldMaxed });
+    if (userChanged.current) {
+      userChanged.current = false;
+      notifyCarTrackingChanged(carKey, 'basicInfo');
+    }
   }, [carKey, selectedStarRank, owned, goldMaxed]);
 
   useAutoSyncDependency([selectedStarRank, owned, goldMaxed]);
@@ -89,7 +108,14 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
         <tr>
           <td style={{ textAlign: 'center' }}>
             <label>
-              <input type="checkbox" checked={owned} onChange={(e) => setOwned(e.target.checked)} />{' '}
+              <input
+                type="checkbox"
+                checked={owned}
+                onChange={(e) => {
+                  userChanged.current = true;
+                  setOwned(e.target.checked);
+                }}
+              />{' '}
               Owned
             </label>
           </td>
@@ -101,6 +127,7 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
                 checked={goldMaxed}
                 onChange={(e) => {
                   const isChecked = e.target.checked;
+                  userChanged.current = true;
                   setGoldMaxed(isChecked);
                   if (isChecked) setSelectedStarRank(car.stars);
                 }}

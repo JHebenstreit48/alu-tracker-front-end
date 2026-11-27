@@ -14,6 +14,8 @@ export interface CarTracking {
   KeyCar?: boolean;
   blueprints?: {
     ownedByStar?: Record<number, number>;
+    // Unix ms of the last real edit or last download; missing on older data (treated as 0)
+    updatedAt?: number;
   };
 }
 

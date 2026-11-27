@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState, useContext } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Footer from '@/components/Shared/footer/Footer';
 import { AuthContext } from '@/context/Auth/authContext';
-import { syncFromAccount } from '@/utils/UserDataSync/syncFromAccount';
+import { syncFromAccount } from '@/utils/UserDataSync/syncFromAccount/syncFromAccount';
 
 import '@/scss/globals/Reset.scss';
 import '@/scss/shared/page.scss';

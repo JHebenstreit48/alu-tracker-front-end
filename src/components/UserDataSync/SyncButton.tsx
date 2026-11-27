@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/Auth/authContext";
 import { syncToAccount } from "@/utils/UserDataSync/syncToAccount";
-import { syncFromAccount } from "@/utils/UserDataSync/syncFromAccount";
+import { syncFromAccount } from "@/utils/UserDataSync/syncFromAccount/syncFromAccount";
 
 export default function SyncButton() {
   const { token } = useContext(AuthContext);

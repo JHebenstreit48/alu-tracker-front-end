@@ -70,9 +70,10 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
       // ✅ Include blueprint tracking if present
       const ownedByStar = data.blueprints?.ownedByStar as Record<number, number> | undefined;
       if (ownedByStar && Object.keys(ownedByStar).length > 0) {
+        // Send the last real edit time, never "now" (0 for data saved before updatedAt existed)
         blueprintsByCar[label] = {
           ownedByStar,
-          updatedAt: Date.now(),
+          updatedAt: typeof data.blueprints?.updatedAt === 'number' ? data.blueprints.updatedAt : 0,
         };
       }
     }
@@ -103,10 +104,6 @@ export async function syncToAccount(token: string, opts: PushOptions = {}): Prom
       payload.keyCarsOwned.length === 0 &&
       gl.xp === 0;
 
-    // ✅ NOTE: intentionally NOT changing the existing empty-snapshot behavior.
-    // This means: if you ONLY have blueprints (no stars/owned/etc), sync may skip.
-    // With the hook change in useBlueprintTracker, stars will often exist anyway.
-    // If you want blueprint-only to sync, tell me and we’ll adjust this safely.
     if (isEmpty) {
       console.warn('⏭️ Skip sync: empty snapshot (protected)');
       return { success: true, skipped: true as const };
