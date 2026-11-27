@@ -26,7 +26,7 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
     () => getCarTrackingData(carKey).goldMaxed === true
   );
 
-  // Load on car change, and re-load when the Blueprints table changes the star rank
+  // Load on car change, and re-load after a download or when the Blueprints table changes the star rank
   useEffect(() => {
     const load = () => {
       const data = getCarTrackingData(carKey);
@@ -35,7 +35,12 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
       setGoldMaxed(data.goldMaxed === true);
     };
     load();
-    return onCarTrackingChanged(carKey, 'basicInfo', load);
+    window.addEventListener('user-progress-synced', load);
+    const stopListening = onCarTrackingChanged(carKey, 'basicInfo', load);
+    return () => {
+      window.removeEventListener('user-progress-synced', load);
+      stopListening();
+    };
   }, [carKey]);
 
   useEffect(() => {
@@ -137,7 +142,7 @@ const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, f
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
   );
 };
 
