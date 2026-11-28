@@ -3,7 +3,7 @@ import {
   getCarTrackingData,
   generateCarKey,
 } from "@/utils/shared/StorageUtils";
-import { setCarTrackingDataWithSync } from "@/utils/CarDetails/SyncStorageUtils";
+import { setCarTrackingDataWithSync } from "@/utils/CarDetails/miscellaneous/SyncStorageUtils";
 
 interface StarRankSelectorProps {
   maxStars: number;

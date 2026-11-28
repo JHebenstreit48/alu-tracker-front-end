@@ -15,6 +15,35 @@
   }
 
   // =============================
+  // Collapsible status band (button inside the badge)
+  // =============================
+  .obtainable-toggle {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  .obtainable-toggle-count {
+    opacity: 0.8;
+  }
+
+  .obtainable-toggle-arrow {
+    font-size: 0.8em;
+  }
+
+  // =============================
   // Area groups inside a status group
   // =============================
   .obtainable-area + .obtainable-area {

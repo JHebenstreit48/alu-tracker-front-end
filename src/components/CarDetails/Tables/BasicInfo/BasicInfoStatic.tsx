@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Car } from '@/types/shared/car';
 import StarRankSelector from '@/components/CarDetails/widgets/StarRankSelector';
-import { formatAddedDate } from '@/utils/CarDetails/formatDate';
+import { formatAddedDate } from '@/utils/CarDetails/formatting/formatDate';
 
 const BasicInfoStatic: React.FC<{ car: Car }> = ({ car }) => {
   return (

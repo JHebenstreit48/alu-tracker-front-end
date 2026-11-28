@@ -1,7 +1,7 @@
 import type { FullCar } from "@/types/shared/car";
 import type { StagesStats, StarKey, StageStatLine } from "@/types/CarDetails/Stats/StagesStats";
-import type { StatSnapshot } from "@/utils/CarDetails/format";
-import { hasStats } from "@/utils/CarDetails/format";
+import type { StatSnapshot } from "@/utils/CarDetails/formatting/format";
+import { hasStats } from "@/utils/CarDetails/formatting/format";
 
 import StatsCardTable from "@/components/CarDetails/Tables/StarsStats/components/StatsCardTable";
 import StageHeader from "@/components/CarDetails/Tables/StarsStats/components/StageHeader";

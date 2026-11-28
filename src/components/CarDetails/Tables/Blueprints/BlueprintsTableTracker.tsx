@@ -4,8 +4,8 @@ import { Car } from '@/types/shared/car';
 import { Blueprints } from '@/types/CarDetails';
 import StarRank from '@/components/Shared/Stars/StarRank';
 
-import { getBlueprintRows, sumNumericBlueprints } from '@/utils/CarDetails/getBlueprintRows';
-import { useBlueprintTracker } from '@/hooks/CarDetails/useBlueprintTracker';
+import { getBlueprintRows, sumNumericBlueprints } from '@/utils/CarDetails/blueprints/getBlueprintRows';
+import { useBlueprintTracker } from '@/hooks/CarDetails/blueprints/useBlueprintTracker';
 import BlueprintsFixControl from '@/components/CarDetails/Tables/Blueprints/blueprintsFixControl';
 
 const BlueprintsTableTracker: React.FC<{ car: Car & Blueprints }> = ({ car }) => {

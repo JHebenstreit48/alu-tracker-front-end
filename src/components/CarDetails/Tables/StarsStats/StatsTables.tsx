@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { FullCar } from '@/types/shared/car';
 import type { GoldMaxStats, StockStats } from '@/types/CarDetails';
-import type { StatSnapshot } from '@/utils/CarDetails/format';
-import { hasStats } from '@/utils/CarDetails/format';
-import { getStatsFromCar, type StarNumber } from '@/utils/CarDetails/getStarStats';
+import type { StatSnapshot } from '@/utils/CarDetails/formatting/format';
+import { hasStats } from '@/utils/CarDetails/formatting/format';
+import { getStatsFromCar, type StarNumber } from '@/utils/CarDetails/statsAndStages/getStarStats';
 
 import StarHeader from '@/components/CarDetails/Tables/StarsStats/components/StarHeader';
 import StatsCardTable from '@/components/CarDetails/Tables/StarsStats/components/StatsCardTable';

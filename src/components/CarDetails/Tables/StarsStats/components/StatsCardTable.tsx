@@ -1,5 +1,5 @@
-import type { StatSnapshot } from "@/utils/CarDetails/format";
-import { fmt, makeSpeedConverter } from "@/utils/CarDetails/format";
+import type { StatSnapshot } from "@/utils/CarDetails/formatting/format";
+import { fmt, makeSpeedConverter } from "@/utils/CarDetails/formatting/format";
 
 type Props = {
   title: React.ReactNode;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchCarDetail, fetchCarStatus } from "@/api/carDetails";
-import { mapApiStatus } from "@/utils/CarDetails/status";
+import { mapApiStatus } from "@/utils/CarDetails/miscellaneous/status";
 import {
   getCarTrackingData,
   setCarTrackingData,

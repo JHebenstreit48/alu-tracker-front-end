@@ -4,7 +4,7 @@ import {
   getCarTrackingData,
   generateCarKey,
 } from "@/utils/shared/StorageUtils";
-import { setCarTrackingDataWithSync } from "@/utils/CarDetails/SyncStorageUtils";
+import { setCarTrackingDataWithSync } from "@/utils/CarDetails/miscellaneous/SyncStorageUtils";
 import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
 
 interface Props {
