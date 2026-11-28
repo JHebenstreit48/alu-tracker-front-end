@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { useSourcesToggle } from "@/hooks/CarDetails/useSourcesToggle";
+import { useSourcesToggle } from "@/hooks/CarDetails/widgets/useSourcesToggle";
 
 interface Props {
   sources?: string[];

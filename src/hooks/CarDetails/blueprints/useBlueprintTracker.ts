@@ -10,8 +10,8 @@ import {
   saveOwnedByStarEdit,
   saveReachedStarRank,
   type BlueprintState,
-} from '@/utils/CarDetails/blueprintProgressStorage';
-import { notifyCarTrackingChanged, onCarTrackingChanged } from '@/utils/CarDetails/carTrackingEvents';
+} from '@/utils/CarDetails/blueprints/blueprintProgressStorage';
+import { notifyCarTrackingChanged, onCarTrackingChanged } from '@/utils/CarDetails/miscellaneous/carTrackingEvents';
 
 export function useBlueprintTracker(params: {
   brand: string;

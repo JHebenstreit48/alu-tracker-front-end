@@ -4,7 +4,7 @@ import { dbTracker } from "@/Firebase/client";
 import type { FullCar } from "@/types/shared/car";
 import type { ObtainableViaEntry } from "@/types/shared/car";
 import type { CarStatus, ApiStatusDoc } from "@/types/shared/status";
-import { mapApiStatus } from "@/utils/CarDetails/status";
+import { mapApiStatus } from "@/utils/CarDetails/miscellaneous/status";
 import { getCarImageUrl } from "@/utils/shared/imageUrl";
 
 type AnyObj = Record<string, unknown>;

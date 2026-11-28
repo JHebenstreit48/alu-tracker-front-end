@@ -8,11 +8,11 @@ import {
   CarTrackerToggle,
 } from '@/components/CarDetails/Sections';
 
-import { useCarDetailsPage } from '@/hooks/CarDetails/useCarDetailsPage';
+import { useCarDetailsPage } from '@/hooks/CarDetails/widgets/useCarDetailsPage';
 import { useTrackerMode } from '@/hooks/shared/useTrackerMode';
-import useKeyObtained from '@/hooks/CarDetails/useKeyObtained';
+import useKeyObtained from '@/hooks/CarDetails/keyCar/useKeyObtained';
 import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
-import usePreferredUnit from '@/hooks/CarDetails/usePreferredUnit';
+import usePreferredUnit from '@/hooks/CarDetails/widgets/usePreferredUnit';
 import UnitToggle from '@/components/CarDetails/widgets/UnitToggle';
 import CarNavArrows from '@/components/CarDetails/widgets/carNavArrows';
 import CarSources from '@/components/CarDetails/widgets/CarSources';

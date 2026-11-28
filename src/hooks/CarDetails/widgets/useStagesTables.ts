@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { FullCar } from "@/types/shared/car";
-import { buildStagesTables } from "@/utils/CarDetails/stages";
+import { buildStagesTables } from "@/utils/CarDetails/statsAndStages/stages";
 
 export function useStagesTables(car?: FullCar) {
   return useMemo(() => {

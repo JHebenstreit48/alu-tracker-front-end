@@ -4,7 +4,7 @@ import { Car } from "@/types/shared/car";
 import { Blueprints } from "@/types/CarDetails";
 import StarRank from "@/components/Shared/Stars/StarRank";
 
-import { getBlueprintRows, sumNumericBlueprints } from "@/utils/CarDetails/getBlueprintRows";
+import { getBlueprintRows, sumNumericBlueprints } from "@/utils/CarDetails/blueprints/getBlueprintRows";
 
 const BlueprintsTableStatic: React.FC<{ car: Car & Blueprints }> = ({ car }) => {
   // (Keep this check if you still want it, but note: you’re using `car.model` everywhere)

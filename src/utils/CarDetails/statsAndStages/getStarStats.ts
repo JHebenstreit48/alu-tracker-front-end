@@ -1,6 +1,6 @@
 import type { FullCar } from "@/types/shared/car";
 import type { MaxStarStats } from "@/types/CarDetails";
-import type { StatSnapshot } from "@/utils/CarDetails/format";
+import type { StatSnapshot } from "@/utils/CarDetails/formatting/format";
 
 export type StarNumber = 1 | 2 | 3 | 4 | 5 | 6;
 

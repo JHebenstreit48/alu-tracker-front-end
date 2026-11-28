@@ -1,15 +1,13 @@
-import { useEffect } from "react";
-import { useCarData } from "./useCarData";
-import { useCarNavigation } from "./useCarNavigation";
-import { useAutoSyncDependency } from "@/hooks/UserDataSync/useAutoSync";
-import {
-  generateCarKey,
-  getCarTrackingData,
-} from "@/utils/shared/StorageUtils";
-import { useKeyCarSeeding } from "@/hooks/CarDetails/useKeyCarSeeding";
+import { useEffect } from 'react';
+import { useCarData } from '@/hooks/CarDetails/basicInfo/useCarData';
+import { useCarNavigation } from '@/hooks/CarDetails/widgets/useCarNavigation';
+import { useAutoSyncDependency } from '@/hooks/UserDataSync/useAutoSync';
+import { generateCarKey, getCarTrackingData } from '@/utils/shared/StorageUtils';
+import { useKeyCarSeeding } from '@/hooks/CarDetails/keyCar/useKeyCarSeeding';
 
 export function useCarDetailsPage(slug: string | undefined) {
-  const { trackerMode, unitPreference, goBack, prevSlug, nextSlug, goToCar } = useCarNavigation(slug);
+  const { trackerMode, unitPreference, goBack, prevSlug, nextSlug, goToCar } =
+    useCarNavigation(slug);
   const { car, status, error, keyObtained, setKeyObtained } = useCarData(slug, trackerMode);
 
   useKeyCarSeeding(car, trackerMode);

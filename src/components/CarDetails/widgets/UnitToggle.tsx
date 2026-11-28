@@ -1,4 +1,4 @@
-import usePreferredUnit, { UnitPref } from "@/hooks/CarDetails/usePreferredUnit";
+import usePreferredUnit, { UnitPref } from "@/hooks/CarDetails/widgets/usePreferredUnit";
 
 interface Props {
   value?: UnitPref;                      // allow controlled or self-contained

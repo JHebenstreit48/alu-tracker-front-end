@@ -7,8 +7,8 @@ import {
   getCarTrackingData,
   setCarTrackingData,
 } from '@/utils/shared/StorageUtils';
-import { formatAddedDate } from '@/utils/CarDetails/formatDate';
-import { notifyCarTrackingChanged, onCarTrackingChanged } from '@/utils/CarDetails/carTrackingEvents';
+import { formatAddedDate } from '@/utils/CarDetails/formatting/formatDate';
+import { notifyCarTrackingChanged, onCarTrackingChanged } from '@/utils/CarDetails/miscellaneous/carTrackingEvents';
 
 const BasicInfoTracker: React.FC<{ car: Car; forceOwned?: boolean }> = ({ car, forceOwned }) => {
   const carKey = generateCarKey(car.brand, car.model);

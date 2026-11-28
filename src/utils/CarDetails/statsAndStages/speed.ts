@@ -1,4 +1,4 @@
-import type { UnitPref } from "@/hooks/CarDetails/usePreferredUnit";
+import type { UnitPref } from "@/hooks/CarDetails/widgets/usePreferredUnit";
 
 export const KPH_TO_MPH = 0.621371;
 
